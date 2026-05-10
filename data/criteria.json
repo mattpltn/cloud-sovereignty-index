@@ -162,7 +162,7 @@
           "id": "SOV-2-01",
           "title": "Extraterritorial Exposure",
           "type": "single",
-          "text": "Does the cloud service provider identify, at least once a year, any non-{{BLOC}} law relating directly to the cloud services that has cross-border implications for availability, confidentiality, or integrity, AND carry out a structured risk assessment of those laws?",
+          "text": "Does the cloud service provider, at least once a year, identify any laws from jurisdictions other than those in which the provider operates or the customer is located, that could compel the provider to disclose data, restrict access, suspend service, or otherwise act against the customer's interests — AND conduct a structured risk assessment of those laws?",
           "seal_contribution": 2,
           "points": 6,
           "source": {
@@ -185,7 +185,7 @@
               }
             },
             "national": {
-              "text": "Does the cloud service provider document procedures that allow the {{COUNTRY}} federal administration to verify compliance with C3A criteria by audit?",
+              "text": "Does the cloud service provider document procedures that allow {{NATIONAL_ADMIN}} to verify compliance with C3A criteria by audit?",
               "seal_contribution": 3,
               "points": 5,
               "source": {
@@ -689,7 +689,7 @@
           "id": "SOV-7-01",
           "title": "Security Certification",
           "type": "single",
-          "text": "Does the cloud service provider hold a current ISO 27001 certification or equivalent ENISA-recognised security scheme?",
+          "text": "Does the cloud service provider hold a current ISO 27001 certification or equivalent internationally recognised security certification (e.g. SOC 2 Type II, ISO 27017, or a nationally recognised equivalent)?",
           "seal_contribution": 1,
           "points": 5,
           "source": {
@@ -704,7 +704,7 @@
           "id": "SOV-7-02",
           "title": "GDPR Compliance",
           "type": "single",
-          "text": "Does the cloud service provider document and contractually commit to GDPR compliance for all processing of personal data under the cloud service?",
+          "text": "Does the cloud service provider document and contractually commit to compliance with the applicable personal data protection law (GDPR for EU/EEA customers, or the equivalent national or regional law) for all processing of personal data under the cloud service?",
           "seal_contribution": 1,
           "points": 5,
           "source": {
@@ -719,14 +719,14 @@
           "id": "SOV-7-03",
           "title": "NIS2 Compliance",
           "type": "single",
-          "text": "Where NIS2 Directive obligations apply to the cloud service provider or customer, does the provider demonstrate documented compliance with applicable NIS2 security and incident reporting requirements?",
+          "text": "Where a cybersecurity directive or national regulation imposes security and incident reporting obligations on the cloud service provider or customer (e.g. NIS2 in the EU, or equivalent national frameworks where applicable), does the provider demonstrate documented compliance with those requirements?",
           "seal_contribution": 2,
           "points": 5,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-7 contributing factor: NIS2 compliance"
           },
-          "supplementary_info": "For non-EU customers, select N/A if NIS2 does not apply. NIS2 applies to entities operating in the EU.",
+          "supplementary_info": "Select N/A if no equivalent national cybersecurity obligation applies. NIS2 applies to entities operating in the EU; other jurisdictions may have equivalent frameworks.",
           "decision_refs": [
             "DR-X02"
           ]
@@ -735,14 +735,14 @@
           "id": "SOV-7-04",
           "title": "DORA Compliance",
           "type": "single",
-          "text": "Where DORA (Digital Operational Resilience Act) obligations apply, does the cloud service provider meet the ICT third-party risk requirements under DORA?",
+          "text": "Where a financial sector operational resilience regulation imposes ICT third-party risk requirements on the cloud service provider or customer (e.g. DORA in the EU, or equivalent national financial sector regulation where applicable), does the provider meet those ICT third-party risk requirements?",
           "seal_contribution": 2,
           "points": 5,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-7 contributing factor: DORA compliance"
           },
-          "supplementary_info": "DORA applies to financial entities in the EU and their critical ICT third-party service providers. Select N/A if not applicable.",
+          "supplementary_info": "Select N/A if no equivalent financial sector ICT resilience obligation applies. DORA applies to financial entities operating in the EU; other jurisdictions may have equivalent national frameworks.",
           "decision_refs": [
             "DR-X02"
           ]

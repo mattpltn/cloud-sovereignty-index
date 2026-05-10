@@ -19,7 +19,7 @@ export interface TierContext {
 export function resolvePlaceholders(text: string, ctx: TierContext): string {
   const bloc = ctx.variant === 'EU-CSF' ? 'EU' : (ctx.country?.name ?? '—');
   const country = ctx.country?.name ?? '—';
-  const admin = ctx.country?.national_admin_label ?? '—';
+  const admin = ctx.country?.national_admin_label ?? 'the competent national authority';
   const emergency = ctx.country?.emergency_regime ?? '—';
 
   const countryAdj = ctx.country?.adj ?? '—';
@@ -49,6 +49,7 @@ export function effectiveTier(
 ): 'bloc' | 'national' | 'single' | null {
   if (questionType === 'single') return 'single';
   if (!ctx.country || !hasNational) return 'bloc';
+  if (ctx.variant === 'Generalized') return 'national'; // no supranational bloc outside EU
   if (ctx.nationalAnsweredYes) return null; // auto-satisfied
   return 'national';
 }

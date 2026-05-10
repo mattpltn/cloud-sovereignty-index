@@ -1,7 +1,7 @@
 {
   "instrument_version": "1.0",
   "register_version": "1.0",
-  "last_updated": "2026-05-09",
+  "last_updated": "2026-05-10",
   "project_name": "Cloud Sovereignty Index",
   "project_url": "https://cloudsovereigntyindex.org",
   "review_contact": "methodology@cloudsovereigntyindex.org",
@@ -659,6 +659,181 @@
       ],
       "review_status": "pending-external-review",
       "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A05",
+      "category": "adaptation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion",
+        "ids": ["SOV-2-01"]
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§2.2.1 SOV-2-01-C",
+        "verbatim": "Does the cloud service provider identify, at least once a year, any non-[BLOC] law relating directly to the cloud services that has cross-border implications for availability, confidentiality, or integrity, AND carry out a structured risk assessment of those laws?"
+      },
+      "adaptation": {
+        "summary": "Replaced 'non-[BLOC] law' with intent-focused language describing third-jurisdiction laws that could compel adverse action.",
+        "adapted_text": "Does the cloud service provider, at least once a year, identify any laws from jurisdictions other than those in which the provider operates or the customer is located, that could compel the provider to disclose data, restrict access, suspend service, or otherwise act against the customer's interests — AND conduct a structured risk assessment of those laws?"
+      },
+      "rationale": "The original phrasing 'non-[BLOC] law' is too broad and becomes meaningless for non-EU countries (e.g., 'non-Laos law'). The criterion's intent is to identify laws from a third jurisdiction — neither the provider's nor the customer's — that could compel adverse action. Examples: US CLOUD Act applying to US-headquartered providers serving non-US customers; export control laws restricting hardware supply. The rewrite makes this intent explicit without changing the scoring weight or SEAL contribution.",
+      "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",
+      "alternatives_considered": "Keep {{BLOC}} placeholder — rejected because it renders as the country name for Generalized variant, making the question misleadingly broad.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-10",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A06",
+      "category": "adaptation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion",
+        "ids": ["SOV-2-02 (national tier)"]
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§2.2.2 SOV-2-02-C2",
+        "verbatim": "Does the cloud service provider document procedures that allow the [COUNTRY] federal administration to verify compliance with C3A criteria by audit?"
+      },
+      "adaptation": {
+        "summary": "Replaced '[COUNTRY] federal administration' with '{{NATIONAL_ADMIN}}' placeholder that resolves to the correct national authority per country.",
+        "adapted_text": "Does the cloud service provider document procedures that allow {{NATIONAL_ADMIN}} to verify compliance with C3A criteria by audit?"
+      },
+      "rationale": "The C3A source references 'German federal administration' as the auditing authority. DR-A01 already generalised this for EU countries via national_admin_label. The same fix applies globally: non-EU countries also have a national_admin_label in countries.json (e.g. Laos → 'Lao PDR Government'). Using {{NATIONAL_ADMIN}} unifies the treatment and avoids the incorrect 'federal administration' label for unitary states (e.g. Laos, France, Japan). Fallback for countries without a defined label: 'the competent national authority'.",
+      "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",
+      "alternatives_considered": "Keep '{{COUNTRY}} federal administration' — rejected because it incorrectly implies a federal structure for unitary states.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-10",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A07",
+      "category": "adaptation",
+      "scope": "per-variant",
+      "applies_to": "Generalized",
+      "affected_element": {
+        "type": "logic",
+        "ids": ["effectiveTier", "all tiered questions"]
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§2 (tiered criterion structure)",
+        "verbatim": "National tier implies bloc tier compliance (C2 ⊆ C1)."
+      },
+      "adaptation": {
+        "summary": "For Generalized variant with a country set, the bloc-tier cascade is suppressed. Only the national tier is ever shown.",
+        "adapted_text": "effectiveTier returns 'national' for all tiered questions when variant=Generalized and country is set. The bloc tier is never presented as a fallback question."
+      },
+      "rationale": "The EU-CSF two-tier model (national → bloc fallback) reflects EU two-level governance: satisfying a national law (Germany) implies compliance with the supranational law (EU). Outside the EU, there is no supranational bloc. For Generalized variant, {{BLOC}} resolves to the country name, making national and bloc tiers identical questions about the same jurisdiction. The fix is to suppress the bloc cascade for Generalized variant when a country is selected. This also prevents duplicate entries in the priority improvements gap report.",
+      "authority": "Editorial. Scope: Generalized variant only. EU-CSF tier cascade is unchanged.",
+      "alternatives_considered": "Keep cascade for Generalized — rejected because it presents identical questions twice and implies a non-existent supranational authority.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-10",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A08",
+      "category": "adaptation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion",
+        "ids": ["SOV-7-01"]
+      },
+      "source": {
+        "doc": "EU-CSF",
+        "clause": "§4 SOV-7 contributing factor: security certification",
+        "verbatim": "Does the cloud service provider hold a current ISO 27001 certification or equivalent ENISA-recognised security scheme?"
+      },
+      "adaptation": {
+        "summary": "Replaced ENISA-specific reference with globally recognised certification equivalents.",
+        "adapted_text": "Does the cloud service provider hold a current ISO 27001 certification or equivalent internationally recognised security certification (e.g. SOC 2 Type II, ISO 27017, or a nationally recognised equivalent)?"
+      },
+      "rationale": "ENISA-recognised schemes apply only within the EU. ISO 27001 is globally applicable; outside the EU, equivalent recognised certifications include SOC 2 Type II, ISO 27017, or nationally recognised schemes. The rewrite preserves the criterion's intent (documented security controls under a recognised framework) while removing an EU-specific authority reference.",
+      "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",
+      "alternatives_considered": "Keep ENISA reference — rejected because ENISA has no authority outside the EU, making the question unanswerable for non-EU assessments.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-10",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A09",
+      "category": "adaptation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion",
+        "ids": ["SOV-7-02"]
+      },
+      "source": {
+        "doc": "EU-CSF",
+        "clause": "§4 SOV-7 contributing factor: GDPR compliance",
+        "verbatim": "Does the cloud service provider document and contractually commit to GDPR compliance for all processing of personal data under the cloud service?"
+      },
+      "adaptation": {
+        "summary": "Replaced GDPR-specific reference with jurisdiction-neutral language covering GDPR for EU/EEA and national equivalents elsewhere.",
+        "adapted_text": "Does the cloud service provider document and contractually commit to compliance with the applicable personal data protection law (GDPR for EU/EEA customers, or the equivalent national or regional law) for all processing of personal data under the cloud service?"
+      },
+      "rationale": "GDPR applies only to EU/EEA data subjects. For Generalized variant, the equivalent is the applicable national data protection law (e.g. PDPA in Thailand, PIPL in China, PDPB in India). The rewrite acknowledges GDPR for EU context while generalising to any national equivalent, keeping the criterion meaningful for all jurisdictions.",
+      "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",
+      "alternatives_considered": "Convert to tiered question (national = local law, bloc = GDPR) — considered but rejected as overengineering; a self-describing single question is simpler and equally accurate.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-10",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A10",
+      "category": "adaptation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion",
+        "ids": ["SOV-7-03"]
+      },
+      "source": {
+        "doc": "EU-CSF",
+        "clause": "§4 SOV-7 contributing factor: NIS2 compliance",
+        "verbatim": "Where NIS2 Directive obligations apply to the cloud service provider or customer, does the provider demonstrate documented compliance with applicable NIS2 security and incident reporting requirements?"
+      },
+      "adaptation": {
+        "summary": "Replaced NIS2-specific reference with jurisdiction-neutral language naming NIS2 as an EU example.",
+        "adapted_text": "Where a cybersecurity directive or national regulation imposes security and incident reporting obligations on the cloud service provider or customer (e.g. NIS2 in the EU, or equivalent national frameworks where applicable), does the provider demonstrate documented compliance with those requirements?"
+      },
+      "rationale": "NIS2 is EU-specific legislation. The criterion's intent is compliance with whichever mandatory cybersecurity and incident reporting regime applies in the customer's jurisdiction. The rewrite names NIS2 as the EU example while opening the criterion to equivalent national frameworks (e.g. Cyber Security Act in Singapore, CIRCIA in the US), avoiding a forced N/A for all non-EU customers.",
+      "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",
+      "alternatives_considered": "Keep NIS2 with a supplementary 'select N/A if outside EU' — rejected because it still names only the EU framework, making the criterion appear inapplicable even when a national equivalent exists.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-10",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A11",
+      "category": "adaptation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion",
+        "ids": ["SOV-7-04"]
+      },
+      "source": {
+        "doc": "EU-CSF",
+        "clause": "§4 SOV-7 contributing factor: DORA compliance",
+        "verbatim": "Where DORA (Digital Operational Resilience Act) obligations apply, does the cloud service provider meet the ICT third-party risk requirements under DORA?"
+      },
+      "adaptation": {
+        "summary": "Replaced DORA-specific reference with jurisdiction-neutral language naming DORA as an EU example.",
+        "adapted_text": "Where a financial sector operational resilience regulation imposes ICT third-party risk requirements on the cloud service provider or customer (e.g. DORA in the EU, or equivalent national financial sector regulation where applicable), does the provider meet those ICT third-party risk requirements?"
+      },
+      "rationale": "DORA is EU-specific legislation for financial entities. The underlying intent is compliance with whichever ICT third-party risk management regime applies in the relevant financial sector jurisdiction. The rewrite names DORA as the EU example while generalising to equivalent national frameworks (e.g. MAS TRM Guidelines in Singapore, SR 13-19 in the US), consistent with the approach taken for NIS2 in DR-A10.",
+      "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",
+      "alternatives_considered": "Keep DORA with supplementary 'select N/A if outside EU' — rejected for the same reason as NIS2 (DR-A10): the criterion should be answerable wherever equivalent obligations exist.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-10",
       "instrument_version": "1.0"
     }
   ]

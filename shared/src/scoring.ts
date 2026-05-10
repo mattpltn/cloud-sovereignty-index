@@ -151,6 +151,14 @@ export function scoreAssessment(
     }
   }
   gap_report.sort((a, b) => b.gap_score - a.gap_score);
+  // Deduplicate: keep only the highest-gap entry per question_id
+  const seen = new Set<string>();
+  const deduped: GapItem[] = [];
+  for (const g of gap_report) {
+    if (!seen.has(g.question_id)) { seen.add(g.question_id); deduped.push(g); }
+  }
+  gap_report.length = 0;
+  gap_report.push(...deduped);
   gap_report.forEach((g, i) => { g.priority = i + 1; });
 
   const overallSeal = Math.min(...objectives.map(o => o.seal_level));

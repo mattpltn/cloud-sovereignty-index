@@ -51,9 +51,9 @@ describe('resolvePlaceholders', () => {
     );
   });
 
-  it('falls back to — when no country provided', () => {
+  it('falls back gracefully when no country provided', () => {
     expect(resolvePlaceholders('In {{COUNTRY}} or {{NATIONAL_ADMIN}}', { variant: 'EU-CSF' })).toBe(
-      'In — or —'
+      'In — or the competent national authority'
     );
   });
 
