@@ -751,7 +751,7 @@
         "verbatim": "Does the cloud service provider hold a current ISO 27001 certification or equivalent ENISA-recognised security scheme?"
       },
       "adaptation": {
-        "summary": "Replaced ENISA-specific reference with globally recognised certification equivalents.",
+        "summary": "Replaced ENISA-specific reference with globally recognised certification equivalents. Applied in Generalized variant (online questionnaire, downloadable template Global Assessment sheet, and result page).",
         "adapted_text": "Does the cloud service provider hold a current ISO 27001 certification or equivalent internationally recognised security certification (e.g. SOC 2 Type II, ISO 27017, or a nationally recognised equivalent)?"
       },
       "rationale": "ENISA-recognised schemes apply only within the EU. ISO 27001 is globally applicable; outside the EU, equivalent recognised certifications include SOC 2 Type II, ISO 27017, or nationally recognised schemes. The rewrite preserves the criterion's intent (documented security controls under a recognised framework) while removing an EU-specific authority reference.",
@@ -776,8 +776,8 @@
         "verbatim": "Does the cloud service provider document and contractually commit to GDPR compliance for all processing of personal data under the cloud service?"
       },
       "adaptation": {
-        "summary": "Replaced GDPR-specific reference with jurisdiction-neutral language covering GDPR for EU/EEA and national equivalents elsewhere.",
-        "adapted_text": "Does the cloud service provider document and contractually commit to compliance with the applicable personal data protection law (GDPR for EU/EEA customers, or the equivalent national or regional law) for all processing of personal data under the cloud service?"
+        "summary": "EU-CSF variant retains GDPR wording. Generalized variant uses jurisdiction-neutral language referencing the applicable national data protection law. Applied in online questionnaire, downloadable template Global Assessment sheet, and result page.",
+        "adapted_text": "Does the cloud service provider document and contractually commit to compliance with the applicable national data protection law for all processing of personal data under the cloud service?"
       },
       "rationale": "GDPR applies only to EU/EEA data subjects. For Generalized variant, the equivalent is the applicable national data protection law (e.g. PDPA in Thailand, PIPL in China, PDPB in India). The rewrite acknowledges GDPR for EU context while generalising to any national equivalent, keeping the criterion meaningful for all jurisdictions.",
       "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",
@@ -801,8 +801,8 @@
         "verbatim": "Where NIS2 Directive obligations apply to the cloud service provider or customer, does the provider demonstrate documented compliance with applicable NIS2 security and incident reporting requirements?"
       },
       "adaptation": {
-        "summary": "Replaced NIS2-specific reference with jurisdiction-neutral language naming NIS2 as an EU example.",
-        "adapted_text": "Where a cybersecurity directive or national regulation imposes security and incident reporting obligations on the cloud service provider or customer (e.g. NIS2 in the EU, or equivalent national frameworks where applicable), does the provider demonstrate documented compliance with those requirements?"
+        "summary": "EU-CSF variant retains NIS2 wording. Generalized variant uses jurisdiction-neutral language referencing applicable national cybersecurity regulations. Applied in online questionnaire, downloadable template Global Assessment sheet, and result page.",
+        "adapted_text": "Where applicable national cybersecurity regulations impose security and incident reporting obligations on the cloud service provider or customer, does the provider demonstrate documented compliance with those requirements?"
       },
       "rationale": "NIS2 is EU-specific legislation. The criterion's intent is compliance with whichever mandatory cybersecurity and incident reporting regime applies in the customer's jurisdiction. The rewrite names NIS2 as the EU example while opening the criterion to equivalent national frameworks (e.g. Cyber Security Act in Singapore, CIRCIA in the US), avoiding a forced N/A for all non-EU customers.",
       "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",
@@ -826,8 +826,8 @@
         "verbatim": "Where DORA (Digital Operational Resilience Act) obligations apply, does the cloud service provider meet the ICT third-party risk requirements under DORA?"
       },
       "adaptation": {
-        "summary": "Replaced DORA-specific reference with jurisdiction-neutral language naming DORA as an EU example.",
-        "adapted_text": "Where a financial sector operational resilience regulation imposes ICT third-party risk requirements on the cloud service provider or customer (e.g. DORA in the EU, or equivalent national financial sector regulation where applicable), does the provider meet those ICT third-party risk requirements?"
+        "summary": "EU-CSF variant retains DORA wording. Generalized variant uses jurisdiction-neutral language referencing applicable financial sector resilience regulations. Applied in online questionnaire, downloadable template Global Assessment sheet, and result page.",
+        "adapted_text": "Where applicable financial sector regulations impose ICT third-party risk requirements on the cloud service provider or customer, does the provider meet those ICT third-party risk requirements?"
       },
       "rationale": "DORA is EU-specific legislation for financial entities. The underlying intent is compliance with whichever ICT third-party risk management regime applies in the relevant financial sector jurisdiction. The rewrite names DORA as the EU example while generalising to equivalent national frameworks (e.g. MAS TRM Guidelines in Singapore, SR 13-19 in the US), consistent with the approach taken for NIS2 in DR-A10.",
       "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",

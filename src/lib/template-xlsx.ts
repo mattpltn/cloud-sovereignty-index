@@ -89,7 +89,8 @@ function addAssessmentSheet(
 
     for (const q of obj.questions) {
       if (q.type === 'single') {
-        const text = resolvePlaceholders(q.text, ctx);
+        const rawText = (!euMode && q.text_generalized) ? q.text_generalized : q.text;
+        const text = resolvePlaceholders(rawText, ctx);
         const row = ws.addRow([q.id, 'single', obj.id, q.title, text, '']);
         row.fill = fill;
         row.getCell(6).dataValidation = ANSWER_VALIDATION;
