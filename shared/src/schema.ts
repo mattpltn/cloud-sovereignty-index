@@ -26,6 +26,7 @@ const QuestionBaseSchema = z.object({
 const SingleQuestionSchema = QuestionBaseSchema.extend({
   type: z.literal('single'),
   text: z.string(),
+  text_generalized: z.string().optional(),
   seal_contribution: z.number().int().min(0).max(4),
   points: z.number().positive(),
   source: SourceRefSchema,

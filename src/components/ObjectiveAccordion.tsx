@@ -55,7 +55,8 @@ function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string, ctx:
     const q = obj.questions.find((q: Question) => q.id === qid);
     if (!q) continue;
     if (q.type === 'single') {
-      return { title: q.title, text: resolvePlaceholders(q.text, ctx), source: q.source?.clause ?? '', supplementary: q.supplementary_info };
+      const text = (ctx.variant === 'Generalized' && q.text_generalized) ? q.text_generalized : q.text;
+      return { title: q.title, text: resolvePlaceholders(text, ctx), source: q.source?.clause ?? '', supplementary: q.supplementary_info };
     }
     if (q.type === 'tiered') {
       const tierData = tier === 'national' ? q.tiers.national : q.tiers.bloc;

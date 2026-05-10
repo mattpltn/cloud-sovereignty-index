@@ -5,13 +5,18 @@ import criteriaJson from '../../../data/criteria.json';
 import ImportAssessment from '../../components/ImportAssessment';
 import type { CriteriaFile } from '../../../shared/src/schema';
 
-const bloc = Astro.url.searchParams.get('bloc') ?? 'EU';
-const isEU = bloc === 'EU';
 const criteria = criteriaJson as unknown as CriteriaFile;
 
-const countries = isEU
-  ? [...countriesJson.EU, ...countriesJson.EEA_non_EU]
-  : countriesJson.non_EU;
+const euCodes = new Set([
+  ...countriesJson.EU.map(c => c.code),
+  ...countriesJson.EEA_non_EU.map(c => c.code),
+]);
+
+const allCountries = [
+  ...countriesJson.EU,
+  ...countriesJson.EEA_non_EU,
+  ...countriesJson.non_EU,
+].sort((a, b) => a.name.localeCompare(b.name));
 ---
 <!doctype html>
 <html lang="en">
@@ -28,20 +33,21 @@ const countries = isEU
   <main class="max-w-xl mx-auto px-6 py-12">
     <h1 class="text-2xl font-bold mb-2">Configure your assessment</h1>
     <p class="text-gray-600 text-sm mb-8">
-      {isEU ? 'EU / EEA variant: optional national tier available for your member state.' : 'Global variant: geographic references will be adapted to your country.'}
+      Select your country — the questionnaire and criteria wording will be adapted automatically.
     </p>
 
     <form id="setup-form" class="space-y-6">
-      <input type="hidden" name="variant" value={isEU ? 'EU-CSF' : 'Generalized'} />
+      <input type="hidden" id="variant-input" name="variant" value="EU-CSF" />
 
       <div>
         <label class="block text-sm font-medium mb-2">Country</label>
-        <select name="national_country" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
-          <option value="">— Select country (optional for EU) —</option>
-          {countries.map(c => (
+        <select name="national_country" id="country-select" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+          <option value="">— Select your country —</option>
+          {allCountries.map(c => (
             <option value={c.code}>{c.name}</option>
           ))}
         </select>
+        <p id="variant-badge" class="text-xs mt-1.5 text-gray-400 hidden"></p>
       </div>
 
       <div>
@@ -73,24 +79,44 @@ const countries = isEU
       client:load
       criteria={criteria}
       countries={countriesJson}
-      defaultVariant={isEU ? 'EU-CSF' : 'Generalized'}
+      defaultVariant="EU-CSF"
     />
   </main>
 
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <script>
-    const form = document.getElementById('setup-form') as HTMLFormElement;
-    const errorMsg = document.getElementById('error-msg') as HTMLElement;
+  <script define:vars={{ euCodes: [...euCodes] }}>
+    const euSet = new Set(euCodes);
+    const select = document.getElementById('country-select');
+    const variantInput = document.getElementById('variant-input');
+    const badge = document.getElementById('variant-badge');
+
+    select.addEventListener('change', () => {
+      const code = select.value;
+      if (!code) {
+        variantInput.value = 'EU-CSF';
+        badge.classList.add('hidden');
+        return;
+      }
+      const isEU = euSet.has(code);
+      variantInput.value = isEU ? 'EU-CSF' : 'Generalized';
+      badge.textContent = isEU
+        ? '✓ EU/EEA country — EU Cloud Sovereignty Framework criteria apply'
+        : '✓ Non-EU country — Generalized criteria with local framework references';
+      badge.className = `text-xs mt-1.5 ${isEU ? 'text-blue-600' : 'text-green-700'}`;
+    });
+
+    const form = document.getElementById('setup-form');
+    const errorMsg = document.getElementById('error-msg');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorMsg.classList.add('hidden');
 
       const fd = new FormData(form);
-      const variant = fd.get('variant') as string;
-      const national_country = fd.get('national_country') as string || undefined;
-      const company_name = fd.get('company_name') as string || undefined;
-      const turnstile_token = fd.get('cf-turnstile-response') as string ?? 'test-token';
+      const variant = fd.get('variant');
+      const national_country = fd.get('national_country') || undefined;
+      const company_name = fd.get('company_name') || undefined;
+      const turnstile_token = fd.get('cf-turnstile-response') ?? 'test-token';
 
       try {
         const res = await fetch('/api/assessments', {
@@ -103,11 +129,19 @@ const countries = isEU
           }),
         });
         if (!res.ok) {
-          const err = await res.json() as { error: unknown };
+          const err = await res.json();
           throw new Error(JSON.stringify(err.error));
         }
-        const data = await res.json() as { id: string };
+        const data = await res.json();
         localStorage.setItem(`csi:${data.id}`, JSON.stringify({ answers: {} }));
+
+        // Track recent assessments for the resume feature
+        try {
+          const recent = JSON.parse(localStorage.getItem('csi:recent') ?? '[]');
+          recent.unshift({ id: data.id, created: new Date().toISOString() });
+          localStorage.setItem('csi:recent', JSON.stringify(recent.slice(0, 5)));
+        } catch {}
+
         window.location.href = `/assess/${data.id}/created`;
       } catch (err) {
         errorMsg.textContent = String(err);

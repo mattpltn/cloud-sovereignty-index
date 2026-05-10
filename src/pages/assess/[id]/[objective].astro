@@ -48,9 +48,9 @@ if (countryCode) {
   <title>{obj.id}: {obj.title} — Cloud Sovereignty Index</title>
 </head>
 <body class="bg-white text-gray-900 min-h-screen">
-  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
-    <nav class="flex gap-2 text-xs text-gray-400">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between gap-4">
+    <a href="/" class="font-semibold text-lg tracking-tight shrink-0">Cloud Sovereignty Index</a>
+    <nav class="flex gap-2 text-xs text-gray-400 flex-wrap">
       {objectiveIds.map(oid => (
         <a
           href={`/assess/${id}/${oid}`}
@@ -60,6 +60,9 @@ if (countryCode) {
         </a>
       ))}
     </nav>
+    <button id="save-link-btn" class="text-xs px-2.5 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 transition shrink-0">
+      Save link
+    </button>
   </header>
 
   <main class="max-w-2xl mx-auto px-6 py-8">
@@ -83,5 +86,23 @@ if (countryCode) {
   <footer class="border-t border-gray-100 px-6 py-4 text-xs text-gray-400 text-center mt-12">
     Assessment ID: {id} · <a href={`/assess/${id}/created`} class="underline">Your URL</a>
   </footer>
+
+  <script define:vars={{ id }}>
+    document.getElementById('save-link-btn')?.addEventListener('click', () => {
+      const url = `${window.location.origin}/assess/${id}/SOV-1`;
+      navigator.clipboard.writeText(url).then(() => {
+        const btn = document.getElementById('save-link-btn');
+        if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Save link'; }, 2000); }
+      });
+      // Ensure this assessment is in the recent list
+      try {
+        const recent = JSON.parse(localStorage.getItem('csi:recent') ?? '[]');
+        if (!recent.find((r) => r.id === id)) {
+          recent.unshift({ id, created: new Date().toISOString() });
+          localStorage.setItem('csi:recent', JSON.stringify(recent.slice(0, 5)));
+        }
+      } catch {}
+    });
+  </script>
 </body>
 </html>

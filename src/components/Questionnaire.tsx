@@ -118,12 +118,13 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
 
         if (q.type === 'single') {
           const val = answers[q.id]?.value as AnswerValue | undefined;
+          const qText = (variant === 'Generalized' && q.text_generalized) ? q.text_generalized : q.text;
           return (
             <QuestionCard
               key={q.id}
               id={q.id}
               title={q.title}
-              text={resolvePlaceholders(q.text, ctx)}
+              text={resolvePlaceholders(qText, ctx)}
               sealContribution={q.seal_contribution}
               points={q.points}
               source={`${q.source.doc} ${q.source.clause}`}

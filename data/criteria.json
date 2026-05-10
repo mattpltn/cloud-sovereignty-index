@@ -689,7 +689,8 @@
           "id": "SOV-7-01",
           "title": "Security Certification",
           "type": "single",
-          "text": "Does the cloud service provider hold a current ISO 27001 certification or equivalent internationally recognised security certification (e.g. SOC 2 Type II, ISO 27017, or a nationally recognised equivalent)?",
+          "text": "Does the cloud service provider hold a current ISO 27001 certification or equivalent ENISA-recognised security scheme?",
+          "text_generalized": "Does the cloud service provider hold a current ISO 27001 certification or equivalent internationally recognised security certification (e.g. SOC 2 Type II, ISO 27017, or a nationally recognised equivalent)?",
           "seal_contribution": 1,
           "points": 5,
           "source": {
@@ -704,7 +705,8 @@
           "id": "SOV-7-02",
           "title": "GDPR Compliance",
           "type": "single",
-          "text": "Does the cloud service provider document and contractually commit to compliance with the applicable personal data protection law (GDPR for EU/EEA customers, or the equivalent national or regional law) for all processing of personal data under the cloud service?",
+          "text": "Does the cloud service provider document and contractually commit to GDPR compliance for all processing of personal data under the cloud service?",
+          "text_generalized": "Does the cloud service provider document and contractually commit to compliance with the applicable national data protection law for all processing of personal data under the cloud service?",
           "seal_contribution": 1,
           "points": 5,
           "source": {
@@ -719,7 +721,8 @@
           "id": "SOV-7-03",
           "title": "NIS2 Compliance",
           "type": "single",
-          "text": "Where a cybersecurity directive or national regulation imposes security and incident reporting obligations on the cloud service provider or customer (e.g. NIS2 in the EU, or equivalent national frameworks where applicable), does the provider demonstrate documented compliance with those requirements?",
+          "text": "Where NIS2 Directive obligations apply to the cloud service provider or customer, does the provider demonstrate documented compliance with applicable NIS2 security and incident reporting requirements?",
+          "text_generalized": "Where applicable national cybersecurity regulations impose security and incident reporting obligations on the cloud service provider or customer, does the provider demonstrate documented compliance with those requirements?",
           "seal_contribution": 2,
           "points": 5,
           "source": {
@@ -735,7 +738,8 @@
           "id": "SOV-7-04",
           "title": "DORA Compliance",
           "type": "single",
-          "text": "Where a financial sector operational resilience regulation imposes ICT third-party risk requirements on the cloud service provider or customer (e.g. DORA in the EU, or equivalent national financial sector regulation where applicable), does the provider meet those ICT third-party risk requirements?",
+          "text": "Where DORA (Digital Operational Resilience Act) obligations apply, does the cloud service provider meet the ICT third-party risk requirements under DORA?",
+          "text_generalized": "Where applicable financial sector regulations impose ICT third-party risk requirements on the cloud service provider or customer, does the provider meet those ICT third-party risk requirements?",
           "seal_contribution": 2,
           "points": 5,
           "source": {
