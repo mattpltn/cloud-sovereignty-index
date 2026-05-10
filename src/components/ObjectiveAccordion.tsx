@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { CriteriaFile, Question } from '../../shared/src/schema.js';
 import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
 
@@ -87,6 +87,19 @@ export default function ObjectiveAccordion({ objectives, criteria, country, vari
   const [open, setOpen] = useState<Set<string>>(new Set());
   const ctx = { variant, country };
 
+  // Auto-open objective targeted by URL hash (e.g. #obj-SOV-5)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.startsWith('#obj-')) {
+      const objId = hash.slice(5); // e.g. "SOV-5"
+      setOpen(new Set([objId]));
+      // Small delay to let the DOM render before scrolling
+      setTimeout(() => {
+        document.getElementById(`obj-${objId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, []);
+
   function toggle(id: string) {
     setOpen(prev => {
       const next = new Set(prev);
@@ -104,7 +117,7 @@ export default function ObjectiveAccordion({ objectives, criteria, country, vari
         const isOpen = open.has(obj.objective_id);
 
         return (
-          <div key={obj.objective_id} className="border border-gray-100 rounded-lg overflow-hidden">
+          <div key={obj.objective_id} id={`obj-${obj.objective_id}`} className="border border-gray-100 rounded-lg overflow-hidden scroll-mt-4">
             {/* Header row — clickable */}
             <button
               onClick={() => toggle(obj.objective_id)}
