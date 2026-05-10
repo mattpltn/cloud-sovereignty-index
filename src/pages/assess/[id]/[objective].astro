@@ -39,36 +39,48 @@ if (countryCode) {
   const all = [...countriesJson.EU, ...countriesJson.EEA_non_EU, ...countriesJson.non_EU];
   country = all.find(c => c.code === countryCode);
 }
+
+const resumeUrl = `${Astro.url.origin}/assess/${id}/SOV-1`;
 ---
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{obj.id}: {obj.title} — Cloud Sovereignty Index</title>
+  <title>{obj.title} ({obj.id}) — Cloud Sovereignty Index</title>
 </head>
 <body class="bg-white text-gray-900 min-h-screen">
-  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between gap-4">
-    <a href="/" class="font-semibold text-lg tracking-tight shrink-0">Cloud Sovereignty Index</a>
-    <nav class="flex gap-2 text-xs text-gray-400 flex-wrap">
+  <header class="border-b border-gray-200 px-6 py-3 flex items-center justify-between gap-4">
+    <a href="/" class="font-semibold text-base tracking-tight shrink-0">Cloud Sovereignty Index</a>
+    <nav class="flex gap-1 text-xs text-gray-400 flex-wrap">
       {objectiveIds.map(oid => (
         <a
           href={`/assess/${id}/${oid}`}
-          class={`px-2 py-1 rounded ${oid === objective ? 'bg-gray-900 text-white' : 'hover:bg-gray-100'}`}
+          class={`px-2 py-1 rounded font-mono ${oid === objective ? 'bg-gray-900 text-white' : 'hover:bg-gray-100'}`}
         >
           {oid}
         </a>
       ))}
     </nav>
-    <button id="save-link-btn" class="text-xs px-2.5 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 transition shrink-0">
-      Save link
-    </button>
   </header>
+
+  {/* Resume banner */}
+  <div class="bg-amber-50 border-b border-amber-100 px-6 py-2 flex items-center justify-between gap-4 text-xs text-amber-800">
+    <span>Bookmark this page to resume your assessment later.</span>
+    <div class="flex items-center gap-2 shrink-0">
+      <span id="url-display" class="font-mono text-amber-700 hidden sm:inline">{resumeUrl}</span>
+      <button id="copy-resume-btn" class="bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-800 font-medium px-2.5 py-1 rounded-lg transition">
+        Copy link
+      </button>
+    </div>
+  </div>
 
   <main class="max-w-2xl mx-auto px-6 py-8">
     <div class="mb-6">
-      <div class="text-xs font-mono text-gray-400 mb-1">{obj.id}</div>
-      <h1 class="text-2xl font-bold mb-2">{obj.title}</h1>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-0.5 rounded">{obj.id}</span>
+        <h1 class="text-xl font-bold">{obj.title}</h1>
+      </div>
       <p class="text-sm text-gray-600">{obj.description}</p>
     </div>
 
@@ -83,16 +95,11 @@ if (countryCode) {
     />
   </main>
 
-  <footer class="border-t border-gray-100 px-6 py-4 text-xs text-gray-400 text-center mt-12">
-    Assessment ID: {id} · <a href={`/assess/${id}/created`} class="underline">Your URL</a>
-  </footer>
-
-  <script define:vars={{ id }}>
-    document.getElementById('save-link-btn')?.addEventListener('click', () => {
-      const url = `${window.location.origin}/assess/${id}/SOV-1`;
-      navigator.clipboard.writeText(url).then(() => {
-        const btn = document.getElementById('save-link-btn');
-        if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Save link'; }, 2000); }
+  <script define:vars={{ resumeUrl }}>
+    document.getElementById('copy-resume-btn')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(resumeUrl).then(() => {
+        const btn = document.getElementById('copy-resume-btn');
+        if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy link'; }, 2000); }
       });
     });
   </script>
