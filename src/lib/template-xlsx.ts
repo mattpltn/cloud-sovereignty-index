@@ -1,11 +1,11 @@
-import ExcelJS from 'exceljs';
+import type ExcelJS from 'exceljs';
 import type { CriteriaFile } from '../../shared/src/schema.js';
 import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
 
 interface Country { code: string; name: string }
 interface CountriesFile { EU: Country[]; EEA_non_EU: Country[]; non_EU: Country[] }
 
-const ANSWER_VALIDATION: ExcelJS.DataValidation = {
+const ANSWER_VALIDATION = {
   type: 'list',
   allowBlank: true,
   formulae: ['"yes,no,partial,n/a"'],
@@ -13,11 +13,11 @@ const ANSWER_VALIDATION: ExcelJS.DataValidation = {
   errorStyle: 'stop',
   errorTitle: 'Invalid answer',
   error: 'Please select: yes, no, partial, or n/a',
-};
+} as ExcelJS.DataValidation;
 
-const HEADER_FILL: ExcelJS.Fill = {
+const HEADER_FILL = {
   type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE5E7EB' },
-};
+} as ExcelJS.Fill;
 const INPUT_FILL: ExcelJS.Fill = {
   type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF08A' },
 };
@@ -149,6 +149,7 @@ export async function buildTemplateXlsx(
   criteria: CriteriaFile,
   countries: CountriesFile,
 ): Promise<Blob> {
+  const ExcelJS = (await import('exceljs')).default;
   const wb = new ExcelJS.Workbook();
   wb.creator = 'Cloud Sovereignty Index';
   wb.created = new Date();
@@ -287,6 +288,7 @@ export interface ParsedXlsx {
 const VALID_ANSWERS = new Set(['yes', 'no', 'partial', 'n/a']);
 
 export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
+  const ExcelJS = (await import('exceljs')).default;
   const wb = new ExcelJS.Workbook();
   await wb.xlsx.load(buffer);
 

@@ -39,9 +39,5 @@ export default defineConfig({
         '@shared': resolve(__dirname, '../shared/src'),
       },
     },
-    // exceljs uses Node.js Buffer/stream — keep it browser-side only
-    ssr: {
-      external: ['exceljs'],
-    },
   },
 });
