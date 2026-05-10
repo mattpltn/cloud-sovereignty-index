@@ -19,7 +19,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Deploy to Cloudflare Workers
-        run: npx wrangler deploy
+        working-directory: workers
+        run: pnpm wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 4ddcad5cc14108c6d18c116fe99f089f
