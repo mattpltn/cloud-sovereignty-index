@@ -1,0 +1,32 @@
+{
+  "instrument_version": "1.0",
+  "instrument_name": "Cloud Sovereignty Index",
+  "instrument_short": "CSI",
+  "base_framework": "EU Cloud Sovereignty Framework v1.2.1",
+  "base_standard": "BSI C5:2020",
+  "ttl_months": 12,
+  "corpus": {
+    "enabled": true,
+    "anonymized": true,
+    "opt_in_required": true,
+    "fields_retained": ["variant", "country_code", "scope_ids", "role", "objectives", "overall_score", "seal_levels", "submitted_at"]
+  },
+  "scoring": {
+    "weights": {
+      "SOV-1": 0.15,
+      "SOV-2": 0.10,
+      "SOV-3": 0.10,
+      "SOV-4": 0.15,
+      "SOV-5": 0.20,
+      "SOV-6": 0.15,
+      "SOV-7": 0.10,
+      "SOV-8": 0.05
+    },
+    "evidence_required_for_seal": false,
+    "partial_seal_contribution": false
+  },
+  "turnstile": {
+    "site_key_test": "1x00000000000000000000AA",
+    "secret_key_test": "1x0000000000000000000000000000000AA"
+  }
+}

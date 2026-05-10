@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-seal-0: #dc2626;
+    --color-seal-1: #f97316;
+    --color-seal-2: #eab308;
+    --color-seal-3: #22c55e;
+    --color-seal-4: #16a34a;
+  }
+}

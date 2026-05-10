@@ -1,0 +1,150 @@
+---
+import '../styles/global.css';
+import criteriaJson from '../../data/criteria.json';
+import type { CriteriaFile } from '../../shared/src/schema';
+
+const criteria = criteriaJson as unknown as CriteriaFile;
+const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovereignty', 'Digital Resilience', 'Full Digital Sovereignty'];
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Methodology — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+    <nav class="text-sm text-gray-600">
+      <a href="/methodology/decisions" class="hover:text-gray-900">Decisions Register</a>
+    </nav>
+  </header>
+  <main class="max-w-2xl mx-auto px-6 py-12">
+    <h1 class="text-3xl font-bold mb-2">Methodology</h1>
+    <p class="text-gray-500 text-sm mb-10">Instrument v{criteria.instrument_version}</p>
+
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold mb-3">1. Overview</h2>
+      <p class="text-sm text-gray-700 leading-relaxed">
+        The Cloud Sovereignty Index (CSI) is a structured self-assessment instrument for evaluating the
+        sovereignty posture of cloud services. It is based on the EU Cloud Sovereignty Framework (EU-CSF) v1.2.1
+        and BSI Criteria Enabling Cloud Computing Autonomy (C3A) v1.0.
+      </p>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold mb-3">2. Objectives & Weights</h2>
+      <div class="space-y-2">
+        {criteria.objectives.map(obj => (
+          <div class="flex items-center gap-4 py-2 border-b border-gray-100">
+            <div class="w-14 font-mono text-xs text-gray-400">{obj.id}</div>
+            <div class="flex-1 text-sm font-medium">{obj.title}</div>
+            <div class="text-sm text-gray-500">{Math.round(obj.weight * 100)}%</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold mb-3">3. SEAL Levels</h2>
+      <div class="space-y-3">
+        {criteria.seal_levels.map(sl => (
+          <div class="flex items-start gap-4">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+              style={{ backgroundColor: ['#dc2626','#f97316','#eab308','#22c55e','#16a34a'][sl.level] }}>
+              {sl.level}
+            </div>
+            <div>
+              <div class="text-sm font-medium">{sl.name}</div>
+              <div class="text-xs text-gray-500 leading-relaxed">{sl.description}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold mb-3">4. Scoring</h2>
+      <div class="text-sm text-gray-700 space-y-3 leading-relaxed">
+        <p>Each question carries a point value and a SEAL contribution level (1–4).</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Yes</strong>: full points awarded, counts toward SEAL</li>
+          <li><strong>Partial</strong>: half points, does not count toward SEAL</li>
+          <li><strong>No</strong>: 0 points, does not count toward SEAL</li>
+          <li><strong>N/A</strong>: excluded from numerator and denominator</li>
+        </ul>
+        <p>
+          The weighted score formula is: <code class="bg-gray-100 px-1 rounded">Score = Σ (Score(SOVₙ) / MaxScore(SOVₙ)) × Weight(SOVₙ) × 100</code>
+        </p>
+        <p>
+          SEAL per objective: the highest level L such that ALL criteria with seal_contribution ≤ L
+          are answered Yes (weakest-link rule, per EU CSF §4).
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold mb-3">5. Tiered Criteria & Country Adaptation</h2>
+      <div class="text-sm text-gray-700 space-y-3 leading-relaxed">
+        <p>
+          BSI C3A defines criteria at two levels: <strong>bloc-level (EU)</strong> and <strong>national-level
+          (Germany in the source document)</strong>. The national tier is a strictly higher bar than the
+          bloc tier — it applies to a specific member state rather than the EU as a whole.
+        </p>
+
+        <p><strong>Nesting rule:</strong> National tier ⊆ Bloc tier. A cloud provider that satisfies the
+          national-level requirement (e.g., "data stored in France") automatically satisfies the
+          bloc-level requirement ("data stored in the EU"). The reverse is not true.</p>
+
+        <p><strong>Questionnaire flow for EU/EEA assessments with a country selected:</strong></p>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li>The national tier question is shown first (e.g., "…stored in France").</li>
+          <li>If the answer is <strong>Yes</strong> → the EU-level requirement is auto-satisfied. Only the national tier is scored; no further question is shown for that criterion.</li>
+          <li>If the answer is <strong>No, Partial, or N/A</strong> → the EU-level (bloc) fallback question is shown immediately below. The respondent can still satisfy the EU-level requirement independently. Both tiers are scored at their respective levels.</li>
+        </ol>
+
+        <p><strong>Scoring of tiered criteria:</strong></p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>National = Yes</strong> → national tier points and SEAL contribution counted; bloc tier auto-credited for SEAL at the lower contribution level (no double-counting of points).</li>
+          <li><strong>National = No/Partial, Bloc = Yes</strong> → bloc tier points and SEAL contribution counted at the bloc level. National tier scored as answered (0 or half points).</li>
+          <li><strong>Both = No</strong> → 0 points for both tiers.</li>
+        </ul>
+
+        <p><strong>Text substitution:</strong> Geographic placeholders are resolved at render time.
+          <code class="bg-gray-100 px-1 rounded">{"{{COUNTRY}}"}</code> → selected member state name (e.g., "France").
+          <code class="bg-gray-100 px-1 rounded">{"{{BLOC}}"}</code> → "EU" (EU-CSF variant) or the country name (Generalized variant).
+          <code class="bg-gray-100 px-1 rounded">{"{{NATIONAL_ADMIN}}"}</code> and
+          <code class="bg-gray-100 px-1 rounded">{"{{EMERGENCY_REGIME}}"}</code> → country-specific values from the methodology dataset.
+        </p>
+
+        <p>
+          All adaptations and substitutions are documented in the{' '}
+          <a href="/methodology/decisions" class="text-blue-600 underline">Decisions Register</a>.
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-10">
+      <h2 class="text-xl font-semibold mb-3">6. Sources</h2>
+      <div class="space-y-2">
+        {criteria.source_documents.map(doc => (
+          <div class="text-sm border border-gray-200 rounded-lg p-3">
+            <div class="font-medium">{doc.title}</div>
+            <div class="text-gray-500 text-xs">{doc.publisher} · v{doc.version} · {doc.date}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold mb-3">7. Limitations</h2>
+      <p class="text-sm text-gray-700 leading-relaxed">
+        This is a self-assessment instrument, not a certification. Per C3A §1.1: "The C3A Framework
+        is not binding in itself." The score is an indicative measure. Results depend on the accuracy
+        and honesty of responses. No liability is accepted for decisions made based on assessment results.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

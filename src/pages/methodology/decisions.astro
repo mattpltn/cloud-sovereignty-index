@@ -1,0 +1,77 @@
+---
+import '../../styles/global.css';
+import registerJson from '../../../data/decisions-register.json';
+
+const entries = registerJson.entries;
+
+const categories = [...new Set(entries.map(e => e.category))].sort();
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Decisions Register — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center gap-4">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+    <span class="text-gray-300">/</span>
+    <a href="/methodology" class="text-sm text-gray-600 hover:text-gray-900">Methodology</a>
+    <span class="text-gray-300">/</span>
+    <span class="text-sm">Decisions Register</span>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-6 py-12">
+    <h1 class="text-2xl font-bold mb-2">Decisions Register</h1>
+    <p class="text-sm text-gray-600 mb-6">
+      Every deviation from the source frameworks is documented here.
+      {entries.length} entries.
+    </p>
+
+    <div class="flex gap-2 flex-wrap mb-8" id="filters">
+      <button data-cat="" class="filter-btn px-3 py-1 text-xs rounded-full border border-gray-300 bg-gray-900 text-white">
+        All
+      </button>
+      {categories.map(cat => (
+        <button data-cat={cat} class="filter-btn px-3 py-1 text-xs rounded-full border border-gray-300 hover:bg-gray-100 capitalize">
+          {cat}
+        </button>
+      ))}
+    </div>
+
+    <div class="space-y-6" id="entries">
+      {entries.map(entry => (
+          <div id={entry.id} class="border border-gray-200 rounded-xl p-5" data-cat={entry.category}>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="font-mono text-sm font-semibold">{entry.id}</span>
+              <span class="text-xs px-2 py-0.5 bg-gray-100 rounded-full capitalize">{entry.category}</span>
+              <span class="text-xs px-2 py-0.5 bg-gray-50 border rounded-full text-gray-500">{entry.review_status}</span>
+            </div>
+            <p class="text-sm text-gray-700 leading-relaxed mb-2">{entry.rationale}</p>
+            <p class="text-xs text-gray-400"><strong>Authority:</strong> {entry.authority}</p>
+          </div>
+      ))}
+    </div>
+  </main>
+
+  <script>
+    const btns = document.querySelectorAll('.filter-btn');
+    const entries = document.querySelectorAll('#entries > [data-cat]');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = (btn as HTMLElement).dataset.cat ?? '';
+        btns.forEach(b => {
+          b.classList.toggle('bg-gray-900', (b as HTMLElement).dataset.cat === cat);
+          b.classList.toggle('text-white', (b as HTMLElement).dataset.cat === cat);
+        });
+        entries.forEach(e => {
+          const el = e as HTMLElement;
+          el.style.display = (!cat || el.dataset.cat === cat) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>

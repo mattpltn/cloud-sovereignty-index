@@ -1,0 +1,32 @@
+[
+  {
+    "level": 0,
+    "label": "No Sovereignty",
+    "description": "The cloud service does not meet any sovereignty criteria. Fundamental controls over data, operations, and legal exposure are absent.",
+    "color": "#dc2626"
+  },
+  {
+    "level": 1,
+    "label": "Basic Sovereignty",
+    "description": "Minimal sovereignty controls are in place. Core data residency and basic contractual protections exist but operational and legal independence is limited.",
+    "color": "#f97316"
+  },
+  {
+    "level": 2,
+    "label": "Substantial Sovereignty",
+    "description": "Significant sovereignty controls are implemented. Data residency, access controls, and key contractual protections are in place, with some operational independence.",
+    "color": "#eab308"
+  },
+  {
+    "level": 3,
+    "label": "High Sovereignty",
+    "description": "Comprehensive sovereignty controls are implemented. Strong data, operational, and legal independence with robust mechanisms to resist extraterritorial interference.",
+    "color": "#22c55e"
+  },
+  {
+    "level": 4,
+    "label": "Full Digital Sovereignty",
+    "description": "Maximum sovereignty controls are in place. Complete data, operational, and legal independence with verified resistance to extraterritorial access and full auditability.",
+    "color": "#16a34a"
+  }
+]

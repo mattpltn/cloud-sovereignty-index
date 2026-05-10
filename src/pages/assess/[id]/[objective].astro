@@ -1,0 +1,86 @@
+---
+import '../../../styles/global.css';
+import Questionnaire from '../../../components/Questionnaire';
+import criteriaJson from '../../../../data/criteria.json';
+import countriesJson from '../../../../data/countries.json';
+import type { CriteriaFile } from '../../../../shared/src/schema';
+
+export const prerender = false;
+
+const criteria = criteriaJson as unknown as CriteriaFile;
+const { id, objective } = Astro.params;
+
+// Validate objective
+const objectiveIds = criteria.objectives.map(o => o.id);
+if (!objectiveIds.includes(objective!)) {
+  return Astro.redirect(`/assess/${id}/SOV-1`);
+}
+
+const obj = criteria.objectives.find(o => o.id === objective)!;
+
+// Fetch assessment from API to get country/variant
+let variant: 'EU-CSF' | 'Generalized' = 'EU-CSF';
+let countryCode: string | undefined;
+let country;
+
+try {
+  const res = await fetch(`http://localhost:8787/api/assessments/${id}`);
+  if (res.ok) {
+    const data = await res.json() as { variant: string; national_country?: string };
+    variant = data.variant as 'EU-CSF' | 'Generalized';
+    countryCode = data.national_country ?? undefined;
+  }
+} catch {
+  // Workers not running — continue without country data
+}
+
+if (countryCode) {
+  const all = [...countriesJson.EU, ...countriesJson.EEA_non_EU, ...countriesJson.non_EU];
+  country = all.find(c => c.code === countryCode);
+}
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{obj.id}: {obj.title} — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+    <nav class="flex gap-2 text-xs text-gray-400">
+      {objectiveIds.map(oid => (
+        <a
+          href={`/assess/${id}/${oid}`}
+          class={`px-2 py-1 rounded ${oid === objective ? 'bg-gray-900 text-white' : 'hover:bg-gray-100'}`}
+        >
+          {oid}
+        </a>
+      ))}
+    </nav>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-6 py-8">
+    <div class="mb-6">
+      <div class="text-xs font-mono text-gray-400 mb-1">{obj.id}</div>
+      <h1 class="text-2xl font-bold mb-2">{obj.title}</h1>
+      <p class="text-sm text-gray-600">{obj.description}</p>
+    </div>
+
+    <Questionnaire
+      client:load
+      id={id!}
+      objectiveId={objective!}
+      criteria={criteria}
+      country={country}
+      variant={variant}
+      allObjectiveIds={objectiveIds}
+    />
+  </main>
+
+  <footer class="border-t border-gray-100 px-6 py-4 text-xs text-gray-400 text-center mt-12">
+    Assessment ID: {id} · <a href={`/assess/${id}/created`} class="underline">Your URL</a>
+  </footer>
+</body>
+</html>

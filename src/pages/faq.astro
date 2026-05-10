@@ -1,0 +1,331 @@
+---
+import '../styles/global.css';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ — Cloud Sovereignty Index</title>
+  <meta name="description" content="Frequently asked questions about the Cloud Sovereignty Index assessment tool." />
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+    <nav class="flex gap-6 text-sm text-gray-600">
+      <a href="/methodology" class="hover:text-gray-900">Methodology</a>
+      <a href="/corpus" class="hover:text-gray-900">Public Corpus</a>
+      <a href="/privacy" class="hover:text-gray-900">Privacy</a>
+    </nav>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-6 py-12">
+    <h1 class="text-3xl font-bold mb-2">Frequently Asked Questions</h1>
+    <p class="text-gray-500 text-sm mb-10">
+      What this tool is, how it works, and what it won't do.
+    </p>
+
+    <div class="space-y-10">
+
+      <!-- ── Purpose ──────────────────────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Purpose & context</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the Cloud Sovereignty Index?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              It is a structured self-assessment instrument that lets organisations evaluate how well
+              a cloud service supports their digital sovereignty goals. You answer a set of questions
+              about a cloud provider or deployment, and the tool produces a weighted score from 0–100%
+              and a SEAL level from 0 (No Sovereignty) to 4 (Full Digital Sovereignty).
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Why does this tool exist?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Cloud sovereignty is increasingly relevant for public administrations, regulated
+              industries, and any organisation that needs to retain meaningful control over its data
+              and operations in the cloud. Existing frameworks (BSI C5, EU-CSF) are technically
+              sound but require significant expertise to apply. This tool makes those criteria
+              accessible as an interactive questionnaire with plain-language questions and immediate
+              scoring.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Is this a certification or a legal opinion?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              No. This is a self-assessment instrument, not a certification. Per the BSI C3A §1.1:
+              <em>"The C3A Framework is not binding in itself."</em> The score is indicative only
+              and depends entirely on the accuracy and honesty of the answers provided. The result
+              carries no legal weight and should not be treated as a substitute for formal audit,
+              legal advice, or procurement due diligence.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Are you affiliated with BSI, the European Commission, or any standards body?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              No. The Cloud Sovereignty Index is an independent project. We are not affiliated with
+              the German Federal Office for Information Security (BSI), the European Commission,
+              ENISA, or any other standards body. We reference and apply their published frameworks
+              — specifically BSI Criteria Enabling Cloud Computing Autonomy (C3A) v1.0 and EU Cloud
+              Sovereignty Framework v1.2.1 — but we do not speak on their behalf. See the
+              <a href="/methodology" class="text-blue-600 underline">Methodology page</a> for a
+              full list of source documents.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Germany / source framework ─────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Germany, the EU, and other countries</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Why does the source material reference Germany?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              The BSI C3A criteria were developed by Germany's federal cybersecurity authority (BSI)
+              and were written with German public administration as the reference context. This means
+              some criteria — such as "data must be stored within a specific jurisdiction" or
+              "the provider must be registered under national law" — originally referred to German
+              territory or German law.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              This tool systematically replaces those references with geographic placeholders
+              (<code class="bg-gray-100 px-1 rounded text-xs">{"{{COUNTRY}}"}</code>,
+              <code class="bg-gray-100 px-1 rounded text-xs">{"{{BLOC}}"}</code>, etc.) that are
+              resolved at assessment time based on the country you select. So when you run an
+              assessment for France, the questions will read "…stored in France" and "…registered
+              under French law." This substitution is a simulation of how the criteria would apply —
+              national legislation and administrative structures will differ. The
+              <a href="/methodology/decisions" class="text-blue-600 underline">Decisions Register</a>
+              documents every such adaptation.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the difference between the EU assessment and the Global assessment?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              The <strong>EU / EEA assessment</strong> uses the EU Cloud Sovereignty Framework (EU-CSF)
+              as its primary lens. Questions reference the EU as the bloc-level jurisdiction. For EU
+              or EEA member states, you can additionally select a specific country to unlock a
+              second tier of criteria: these are the <em>national-level</em> questions, which are
+              strictly more demanding than the EU-level requirement. For example, "data stored in the
+              EU" (EU tier) vs. "data stored in France" (national tier).
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              The <strong>Global assessment</strong> adapts the same criteria for any country outside
+              the EU/EEA. The "bloc" level is replaced by your selected country's jurisdiction.
+              Only the bloc-level (country-level) questions are shown — there is no second tier
+              because the source framework does not define sub-national criteria in the global
+              context.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">How accurate is the country-level adaptation for non-EU countries?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              The geographic substitution is a best-effort adaptation. The underlying criteria were
+              written for the EU regulatory environment. Concepts like "supervisory authority" or
+              "emergency regime" map directly to most legal systems, but details of national law will
+              differ significantly. For non-EU countries, treat the score as a directional indicator
+              of how a cloud provider would fare under equivalent criteria, not as a precise
+              regulatory compliance measurement. Country-specific legal review is always needed for
+              compliance decisions.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">If I select France (EU), which questions appear?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              For each tiered criterion, you first see the France-specific (national tier) question.
+              If you answer Yes, the EU-level requirement is automatically satisfied and no further
+              question is shown for that criterion. If you answer No, Partial, or N/A, the EU-level
+              fallback question appears immediately below, so you can still satisfy the EU-level
+              requirement even if you cannot meet the stricter France-level bar.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Scoring ──────────────────────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Scoring & SEAL levels</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What do the answer options mean?</h3>
+            <ul class="text-sm text-gray-700 space-y-1 leading-relaxed list-none">
+              <li><strong>Yes</strong> — the criterion is fully met. Full points, counts toward SEAL level.</li>
+              <li><strong>No</strong> — the criterion is not met. Zero points, does not count toward SEAL.</li>
+              <li><strong>Partial</strong> — the criterion is partially met. Half points, but does <em>not</em> count toward SEAL (the SEAL level uses a weakest-link rule).</li>
+              <li><strong>N/A</strong> — the criterion does not apply to this deployment. Excluded from both numerator and denominator, so it does not penalise the score.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the SEAL level?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              SEAL stands for Sovereignty Evaluation and Assurance Level. It is a 0–4 scale:
+              0 = No Sovereignty, 1 = Jurisdictional Sovereignty, 2 = Data Sovereignty,
+              3 = Digital Resilience, 4 = Full Digital Sovereignty. Each criterion contributes
+              to a specific SEAL level (1–4). The SEAL level for an objective is the highest
+              level L such that every criterion with seal_contribution ≤ L has been answered Yes
+              — a single failed criterion at level 1 drops the objective to SEAL 0. The overall
+              SEAL is the lowest SEAL across all objectives (weakest link across all dimensions).
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Why is my overall score high but my SEAL level low?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              The percentage score and the SEAL level measure different things. The score is a
+              weighted average of how many points you earned across all questions — partial answers
+              count toward it. The SEAL level is a strict threshold: a single No or Partial on a
+              foundational criterion (SEAL contribution level 1) drops the objective to SEAL 0,
+              regardless of how well you scored on everything else. This is intentional — the SEAL
+              level is designed to identify the most critical sovereignty gaps, not be averaged away.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Who can use it ──────────────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Who can use this tool</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Who is this tool designed for?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              The instrument is designed to be used by anyone who needs to evaluate a cloud
+              service's sovereignty posture:
+            </p>
+            <ul class="text-sm text-gray-700 mt-2 space-y-1 list-disc pl-5 leading-relaxed">
+              <li><strong>Cloud customers</strong> (public administrations, enterprises, NGOs) assessing a provider or a planned procurement.</li>
+              <li><strong>Cloud providers</strong> doing a self-assessment of their own offering before a customer engagement.</li>
+              <li><strong>Auditors and consultants</strong> producing a third-party assessment of a deployment on behalf of a client.</li>
+              <li><strong>Researchers and policymakers</strong> comparing sovereignty postures across providers or jurisdictions using the <a href="/corpus" class="text-blue-600 underline">public corpus</a>.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Does the service model (IaaS, PaaS, SaaS…) change anything in the assessment?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              From a sovereignty <em>scoring</em> perspective: no. The same set of criteria and the
+              same scoring logic applies regardless of whether you are assessing an IaaS, PaaS, or
+              SaaS service. The BSI C3A and EU-CSF criteria were written to be applicable across
+              service models — sovereignty properties such as jurisdiction of data storage, legal
+              access by third parties, or portability are relevant for all of them.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              In practice, different service models place different responsibilities on the customer
+              vs. the provider. An IaaS customer controls the software stack; a SaaS customer does
+              not. Some questions may therefore be more or less applicable in practice — use
+              <strong>N/A</strong> where a criterion genuinely does not apply to the deployment you
+              are assessing.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Data & Privacy ─────────────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Data & privacy</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What data do you store?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              We store your answers, the assessment metadata you provided (variant, country, service
+              model, role), and the optional company name. All of this is stored under a random
+              128-bit UUID that you receive in the URL. That URL is the only access control — anyone
+              who has it can read and modify the assessment.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              We do <strong>not</strong> collect email addresses, IP addresses, browser fingerprints,
+              or cookies. See the full <a href="/privacy" class="text-blue-600 underline">Privacy page</a> for details.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">How long is the data kept?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Assessments that have not been accessed for 12 months are permanently deleted.
+              There is no account, no login, no recovery path — if you lose the URL, the data
+              is inaccessible. Save your URL or export a copy of your answers from the result page.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the public corpus?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              When submitting an assessment, you can opt in to share an anonymised version of your
+              results with the public corpus. If you do, we publish: your score, SEAL level,
+              variant, country, service model, role, and the month/year of submission (not the
+              exact date). Company name is never included. The corpus is browsable at
+              <a href="/corpus" class="text-blue-600 underline">/corpus</a> and is intended for
+              researchers and policymakers studying aggregate cloud sovereignty postures.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Can I audit your privacy claims?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Yes. The backend Workers code that handles data storage and the scoring engine are
+              published as open source. You can verify that we do not log IPs, do not set cookies,
+              and that the anonymisation applied to corpus entries matches what we describe. Link
+              on the <a href="/privacy" class="text-blue-600 underline">Privacy page</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Offline template ─────────────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Offline template & import</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Can I fill in the questionnaire offline or share it with my cloud provider?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Yes. From the <a href="/assess/setup?bloc=EU" class="text-blue-600 underline">setup page</a>
+              you can download a blank Excel template (.xlsx). The template includes a Setup sheet
+              (country selection, company name), an EU Assessment sheet, a Global Assessment sheet,
+              and a Privacy notice. Fill in the answer column for each question (accepted values:
+              <code class="bg-gray-100 px-1 rounded text-xs">yes</code>,
+              <code class="bg-gray-100 px-1 rounded text-xs">no</code>,
+              <code class="bg-gray-100 px-1 rounded text-xs">partial</code>,
+              <code class="bg-gray-100 px-1 rounded text-xs">n/a</code>), then upload the file
+              on the same page to get a scored result instantly.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Why would I send the template to my cloud provider?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Some of the questions ask about internal controls, data processing agreements, or
+              technical capabilities that only the provider can answer accurately. You can send
+              the blank template to your provider's pre-sales, compliance, or security team and ask
+              them to complete the answer column. Once returned, upload the file on the setup page
+              to generate your assessment. You retain full control — nothing is submitted until you
+              review and confirm.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="border-t border-gray-100 px-6 py-6 text-center text-xs text-gray-400">
+    Cloud Sovereignty Index v1.0 · Not affiliated with BSI, the European Commission, or any standards body ·
+    <a href="/methodology" class="underline">Methodology</a> ·
+    <a href="/privacy" class="underline">Privacy</a>
+  </footer>
+</body>
+</html>

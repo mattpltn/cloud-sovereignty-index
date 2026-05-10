@@ -1,0 +1,138 @@
+---
+import '../../../styles/global.css';
+import ScoreHero from '../../../components/ScoreHero';
+import ExportAnswers from '../../../components/ExportAnswers';
+import criteriaJson from '../../../../data/criteria.json';
+import type { CriteriaFile } from '../../../../shared/src/schema';
+export const prerender = false;
+
+const criteria = criteriaJson as unknown as CriteriaFile;
+
+const { id } = Astro.params;
+
+let record: Record<string, unknown> | null = null;
+let result: Record<string, unknown> | null = null;
+
+// Works locally (Vite proxy) and on Cloudflare Pages (same-origin Pages Function)
+const apiBase = new URL('/api', Astro.request.url).toString();
+try {
+  const res = await fetch(`${apiBase}/assessments/${id}`);
+  if (res.ok) {
+    record = await res.json() as Record<string, unknown>;
+    if (record.computed_score) {
+      result = typeof record.computed_score === 'string'
+        ? JSON.parse(record.computed_score as string)
+        : record.computed_score as Record<string, unknown>;
+    }
+  }
+} catch {
+  // Workers not available
+}
+
+const score = (result?.overall_score as number) ?? 0;
+const sealLevel = (result?.seal_level as number) ?? 0;
+const variant = (record?.variant as string) ?? 'EU-CSF';
+const instrumentVersion = (record?.instrument_version as string) ?? '1.0';
+const objectives = (result?.objectives as Array<Record<string, unknown>>) ?? [];
+
+const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
+
+interface ObjRow {
+  id: string;
+  title: string;
+  seal: number;
+  pct: number;
+  color: string;
+}
+
+const objRows: ObjRow[] = objectives.map(obj => {
+  const seal = (obj.seal_level as number) ?? 0;
+  const raw = (obj.raw_score as number) ?? 0;
+  const max = (obj.max_score as number) ?? 0;
+  const pct = max > 0 ? Math.round((raw / max) * 100) : 0;
+  return { id: obj.objective_id as string, title: obj.title as string, seal, pct, color: SEAL_COLORS[seal] ?? '#6b7280' };
+});
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assessment Result — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+    <div class="flex gap-3">
+      <button id="copy-url-btn" class="text-sm text-blue-600 hover:underline">Share result</button>
+      <ExportAnswers
+        client:load
+        assessmentId={id!}
+        criteria={criteria}
+        result={result}
+      />
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-6 py-8">
+    {result ? (
+      <>
+        <ScoreHero
+          client:load
+          score={score}
+          sealLevel={sealLevel}
+          variant={variant}
+          instrumentVersion={instrumentVersion}
+        />
+
+        <div class="mt-8">
+          <h2 class="font-semibold text-base mb-4">Results by objective</h2>
+          <div class="space-y-3">
+            {objRows.map(row => (
+              <div class="flex items-center gap-4 p-3 border border-gray-100 rounded-lg">
+                <div class="w-16 text-xs font-mono text-gray-500">{row.id}</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium mb-1">{row.title}</div>
+                  <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div class="h-full rounded-full" style={`width: ${row.pct}%; background-color: ${row.color}`} />
+                  </div>
+                </div>
+                <div class="text-sm font-medium" style={`color: ${row.color}`}>{row.pct}%</div>
+                <div class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style={`background-color: ${row.color}`}>
+                  SEAL {row.seal}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="mt-8 p-4 bg-gray-50 rounded-xl text-sm text-gray-600">
+          <p class="font-medium text-gray-900 mb-1">Methodological note</p>
+          <p>
+            This is a self-assessment, not a certification. Results are indicative based on your responses.
+            All criteria sourced from BSI C5:2020 and EU Cloud Sovereignty Framework v1.2.1.
+          </p>
+        </div>
+      </>
+    ) : (
+      <div class="py-20 text-center text-gray-400">
+        {record ? 'Assessment not yet submitted.' : 'Assessment not found.'}
+        {record && (
+          <a href={`/assess/${id}/review`} class="block mt-4 text-blue-600 underline">
+            Go to review page
+          </a>
+        )}
+      </div>
+    )}
+  </main>
+
+  <script define:vars={{ id }}>
+    document.getElementById('copy-url-btn')?.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const btn = document.getElementById('copy-url-btn');
+        if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Share result'; }, 2000); }
+      });
+    });
+  </script>
+</body>
+</html>

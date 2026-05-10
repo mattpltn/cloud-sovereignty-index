@@ -1,0 +1,119 @@
+---
+import '../../styles/global.css';
+import countriesJson from '../../../data/countries.json';
+import criteriaJson from '../../../data/criteria.json';
+import ImportAssessment from '../../components/ImportAssessment';
+import type { CriteriaFile } from '../../../shared/src/schema';
+
+const bloc = Astro.url.searchParams.get('bloc') ?? 'EU';
+const isEU = bloc === 'EU';
+const criteria = criteriaJson as unknown as CriteriaFile;
+
+const countries = isEU
+  ? [...countriesJson.EU, ...countriesJson.EEA_non_EU]
+  : countriesJson.non_EU;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup Assessment — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+  </header>
+
+  <main class="max-w-xl mx-auto px-6 py-12">
+    <h1 class="text-2xl font-bold mb-2">Configure your assessment</h1>
+    <p class="text-gray-600 text-sm mb-8">
+      {isEU ? 'EU / EEA variant: optional national tier available for your member state.' : 'Global variant: geographic references will be adapted to your country.'}
+    </p>
+
+    <form id="setup-form" class="space-y-6">
+      <input type="hidden" name="variant" value={isEU ? 'EU-CSF' : 'Generalized'} />
+
+      <div>
+        <label class="block text-sm font-medium mb-2">Country</label>
+        <select name="national_country" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+          <option value="">— Select country (optional for EU) —</option>
+          {countries.map(c => (
+            <option value={c.code}>{c.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">
+          Organisation name <span class="text-gray-400 font-normal">(optional)</span>
+        </label>
+        <input type="text" name="company_name" placeholder="Acme Corp"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        <p class="text-xs text-gray-400 mt-1">Not indexed. Stored only in your assessment record.</p>
+      </div>
+
+      <div class="cf-turnstile" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA'} data-theme="light"></div>
+
+      <button type="submit"
+        class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
+        Start assessment
+      </button>
+
+      <p id="error-msg" class="text-red-600 text-sm hidden"></p>
+    </form>
+
+    <div class="relative flex items-center py-6">
+      <div class="flex-grow border-t border-gray-200"></div>
+      <span class="mx-4 text-xs text-gray-400">or import existing answers</span>
+      <div class="flex-grow border-t border-gray-200"></div>
+    </div>
+
+    <ImportAssessment
+      client:load
+      criteria={criteria}
+      countries={countriesJson}
+      defaultVariant={isEU ? 'EU-CSF' : 'Generalized'}
+    />
+  </main>
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script>
+    const form = document.getElementById('setup-form') as HTMLFormElement;
+    const errorMsg = document.getElementById('error-msg') as HTMLElement;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.classList.add('hidden');
+
+      const fd = new FormData(form);
+      const variant = fd.get('variant') as string;
+      const national_country = fd.get('national_country') as string || undefined;
+      const company_name = fd.get('company_name') as string || undefined;
+      const turnstile_token = fd.get('cf-turnstile-response') as string ?? 'test-token';
+
+      try {
+        const res = await fetch('/api/assessments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            variant, national_country, company_name, turnstile_token,
+            service_models: ['all'],
+            user_role: 'customer',
+          }),
+        });
+        if (!res.ok) {
+          const err = await res.json() as { error: unknown };
+          throw new Error(JSON.stringify(err.error));
+        }
+        const data = await res.json() as { id: string };
+        localStorage.setItem(`csi:${data.id}`, JSON.stringify({ answers: {} }));
+        window.location.href = `/assess/${data.id}/created`;
+      } catch (err) {
+        errorMsg.textContent = String(err);
+        errorMsg.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

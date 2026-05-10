@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+  </header>
+  <main class="max-w-2xl mx-auto px-6 py-12 prose prose-gray">
+    <h1>Privacy</h1>
+    <blockquote>
+      Your assessment is stored on Cloudflare D1 under a cryptographically-random ID.
+      Anyone with the URL can read or modify the assessment — that is the access control.
+      We do not collect emails, IPs, or fingerprints. The only optional identifying information
+      is the company name field, which you supply voluntarily and which is part of your assessment
+      payload, not stored separately or indexed. Assessments inactive for 12 months are deleted.
+      The Cloud Sovereignty Index source code, including the persistence Workers, is public —
+      you can audit our claims.
+    </blockquote>
+    <p>The privacy claim is enforced by published Worker code anyone can audit.</p>
+    <h2>What we store</h2>
+    <ul>
+      <li>Your answers (stored under a random ID, accessible only via URL)</li>
+      <li>Company name, if you voluntarily provide it</li>
+      <li>Assessment metadata: variant, country, service models, role</li>
+    </ul>
+    <h2>What we never collect</h2>
+    <ul>
+      <li>Email addresses</li>
+      <li>IP addresses</li>
+      <li>Browser fingerprints or cookies</li>
+      <li>Any identifying information beyond what you explicitly type</li>
+    </ul>
+    <h2>Data retention</h2>
+    <p>Assessments are deleted automatically 12 months after last activity.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,665 @@
+{
+  "instrument_version": "1.0",
+  "register_version": "1.0",
+  "last_updated": "2026-05-09",
+  "project_name": "Cloud Sovereignty Index",
+  "project_url": "https://cloudsovereigntyindex.org",
+  "review_contact": "methodology@cloudsovereigntyindex.org",
+  "categories": {
+    "substitution": "Pure find-and-replace from the source (e.g., 'Germany' → 'France'). Mechanical, low-risk. Recorded for completeness.",
+    "adaptation": "The source is country-specific in concept, not just name. Requires editorial judgment; preserves intent while changing form.",
+    "derivation": "We inferred something the source did not state. Highest justification burden.",
+    "exclusion": "We deliberately did not implement something from the source, with justification.",
+    "extension": "We added something neither source has, with justification."
+  },
+  "entries": [
+    {
+      "id": "DR-S01",
+      "category": "substitution",
+      "scope": "per-country",
+      "applies_to": "all_eu_non_de",
+      "affected_element": {
+        "type": "criterion-set",
+        "ids": ["SOV-1-01-C2", "SOV-1-02-C2", "SOV-1-03-C2", "SOV-3-01-C4", "SOV-4-01-C2", "SOV-4-04-C2", "SOV-5-05-C2"]
+      },
+      "source": {
+        "doc": "C3A",
+        "clauses": ["§2.1.1", "§2.1.2", "§2.1.3", "§2.3.1", "§2.4.1", "§2.4.4", "§2.5.5"],
+        "verbatim_pattern": "...Germany..."
+      },
+      "adaptation": {
+        "summary": "Geographic name 'Germany' substituted with the user-selected EU member state name.",
+        "adapted_text": "Each affected criterion reads with {{COUNTRY}} substituted for 'Germany'. Substitution is mechanical."
+      },
+      "rationale": "C3A's national tier is structurally generic; only the country name is Germany-specific in these criteria. The semantic content (jurisdiction, residence, control, residency, SOC location, capacity management) applies identically to any EU member state. Substitution preserves the criterion's intent without modification.",
+      "authority": "Editorial. Supported by C3A §1.2's framing of the catalogue as adopting EU CSF structure across member states.",
+      "alternatives_considered": [
+        "Restrict national tier to Germany only — rejected because it would prevent 26 other EU member states from using the assessment meaningfully"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-S02",
+      "category": "substitution",
+      "scope": "per-variant",
+      "applies_to": ["Generalized"],
+      "affected_element": {
+        "type": "criterion-set",
+        "ids": "all-bloc-tier-criteria"
+      },
+      "source": {
+        "doc": "C3A",
+        "clauses": ["all C1 criteria"],
+        "verbatim_pattern": "...EU..."
+      },
+      "adaptation": {
+        "summary": "Bloc reference 'EU' substituted with the user-defined trusted bloc (Generalized variant only).",
+        "adapted_text": "All bloc-tier criteria read with {{BLOC}} substituted for 'EU' where {{BLOC}} is defined by the user at Step 0 (e.g., 'United Kingdom', 'Switzerland + EFTA', 'Five Eyes')."
+      },
+      "rationale": "EU CSF and C3A both anchor on EU as the trusted bloc. For non-EU users this anchor is not meaningful. The Generalized variant lets users define their own trusted bloc to preserve the framework's structure while being honest that the reference point has changed.",
+      "authority": "Editorial. The EU CSF does not contemplate non-EU users; this is an extension governed by DR-E01.",
+      "alternatives_considered": [
+        "Force non-EU users to use EU as the bloc — rejected as misrepresenting their actual sovereignty position",
+        "Drop the bloc tier entirely for Generalized variant — rejected because it removes the SEAL-1 layer of analysis"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A01",
+      "category": "adaptation",
+      "scope": "per-country",
+      "applies_to": "all_eu_non_de",
+      "affected_element": {
+        "type": "question",
+        "id": "SOV-2-02"
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§2.2.2 SOV-2-02-C2",
+        "verbatim": "The cloud service provider MUST document procedures that allow the German federal administration to verify compliance with the C3A criteria by an audit."
+      },
+      "adaptation": {
+        "summary": "'German federal administration' replaced with country-equivalent national administration label",
+        "adapted_text": "The cloud service provider MUST document procedures that allow the {{NATIONAL_ADMIN}} to verify compliance with the C3A criteria by an audit.",
+        "per_country_resolution": {
+          "AT": "Austrian federal administration",
+          "BE": "Belgian federal administration",
+          "BG": "Bulgarian central administration",
+          "CY": "Cypriot central government",
+          "CZ": "Czech central administration",
+          "DE": "German federal administration (verbatim from source)",
+          "DK": "Danish central administration",
+          "EE": "Estonian central government",
+          "ES": "Spanish General State Administration (Administración General del Estado)",
+          "FI": "Finnish central administration",
+          "FR": "French central administration",
+          "GR": "Hellenic central administration",
+          "HR": "Croatian central administration",
+          "HU": "Hungarian central administration",
+          "IE": "Irish central administration",
+          "IT": "Italian central administration",
+          "LT": "Lithuanian central administration",
+          "LU": "Luxembourg central administration",
+          "LV": "Latvian central administration",
+          "MT": "Maltese central administration",
+          "NL": "Dutch central administration (Rijksoverheid)",
+          "PL": "Polish central administration",
+          "PT": "Portuguese central administration",
+          "RO": "Romanian central administration",
+          "SE": "Swedish central administration",
+          "SI": "Slovenian central administration",
+          "SK": "Slovak central administration"
+        }
+      },
+      "rationale": "C3A's German tier names the German federal administration as the auditing authority. Other EU member states have analogous national-level administrations but with different names and constitutional structures (federal vs unitary, central vs decentralised). The criterion's intent — that a national-level public administration can audit the provider — is universal; the institutional label varies. Where a country has multiple potential auditing bodies, the most common 'central administration' framing is used.",
+      "authority": "Editorial. Each country's specific administration name should ideally be reviewed by a national legal expert before locking the language.",
+      "alternatives_considered": [
+        "Use generic phrasing 'the relevant national authority' — rejected as too vague to be auditable",
+        "Name the specific cybersecurity authority (e.g., ANSSI in France) — rejected because the C3A criterion explicitly says 'federal administration', meaning the procurement-side administration, not the cybersecurity regulator"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A02",
+      "category": "adaptation",
+      "scope": "per-country",
+      "applies_to": "all_eu_non_de",
+      "affected_element": {
+        "type": "question",
+        "id": "SOV-2-03"
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§2.2.3 SOV-2-03-C2",
+        "verbatim": "If Germany declares a state of defense, the cloud service provider MUST enable the German federal administration to take over the capabilities required to operate the cloud, including the necessary material assets and personnel, within the framework of legal possibilities."
+      },
+      "adaptation": {
+        "summary": "Germany-specific 'state of defense' constitutional concept (Verteidigungsfall, Article 115a Basic Law) replaced with country-equivalent emergency-powers regime",
+        "adapted_text": "If {{COUNTRY}} declares a state of emergency or defense under its applicable constitutional regime ({{EMERGENCY_REGIME}}), the cloud service provider MUST enable the {{NATIONAL_ADMIN}} to take over the capabilities required to operate the cloud, including the necessary material assets and personnel, within the framework of legal possibilities.",
+        "per_country_resolution": {
+          "DE": "Verteidigungsfall (Basic Law Article 115a) — verbatim from source",
+          "FR": "état d'urgence / état de siège (Constitution Article 36)",
+          "IT": "stato di guerra (Constitution Article 78)",
+          "ES": "estado de alarma / excepción / sitio (Constitution Article 116)",
+          "PL": "stan wojenny / stan wyjątkowy (Constitution Articles 229–234)",
+          "AT": "Notstand (B-VG Article 18(3))",
+          "BE": "état d'urgence / noodtoestand",
+          "PT": "estado de sítio / estado de emergência (Constitution Article 19)",
+          "NL": "noodtoestand (Coördinatiewet uitzonderingstoestanden)",
+          "_default_for_others": "national emergency or defense regime under applicable constitutional law"
+        }
+      },
+      "rationale": "C3A encodes a Germany-specific constitutional concept (Verteidigungsfall). The criterion's intent — enabling national takeover of cloud operations during a national emergency — is universal across EU member states, but the legal trigger varies substantially. Some countries have multi-tier regimes (Spain, Poland), some have unitary regimes (France's état d'urgence), and some lack a directly equivalent concept. We preserve the intent and substitute each country's analogous regime, listing the closest constitutional anchor.",
+      "authority": "Editorial. The mapping of national emergency regimes is based on publicly available constitutional law summaries and should be reviewed by national legal experts before being locked. Countries marked '_default_for_others' need bespoke review.",
+      "alternatives_considered": [
+        "Drop the national tier of this criterion entirely for non-Germany countries — rejected because state-takeover capability is a meaningful sovereignty control that distinguishes higher-SEAL providers",
+        "Keep verbatim 'state of defense' phrasing — rejected because it's not a recognized legal concept in most EU countries; users would not know how to answer",
+        "Use only the EU-tier criterion (SOV-2-03-C1) for non-Germany countries — rejected because it removes the national-level escalation"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A03",
+      "category": "adaptation",
+      "scope": "per-country",
+      "applies_to": "all_eu_non_de",
+      "affected_element": {
+        "type": "question",
+        "id": "SOV-4-01"
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§2.4.1 SOV-4-01-C2",
+        "verbatim": "All personnel who have logical or physical access to infrastructure used to operate the cloud service, as well as those who are responsible for customer support, and all persons who have management control of the cloud service provider MUST be EU citizens with Germany as main residency."
+      },
+      "adaptation": {
+        "summary": "Personnel residency tier nuance — at national tier, residency is country-specific but citizenship remains EU-bloc-anchored",
+        "adapted_text": "All personnel ... MUST be EU citizens with {{COUNTRY}} as main residency.",
+        "note": "Citizenship requirement (EU citizens) is preserved verbatim; only residency is substituted. This is intentional — see rationale."
+      },
+      "rationale": "C3A's national tier raises the residency requirement (Germany) but keeps the citizenship requirement at EU level. This is a deliberate design choice in C3A: personnel sovereignty is a two-axis concept (citizenship + residency), and the national tier escalates only one axis. We preserve this structure rather than tightening citizenship to the chosen country, because that would be a stricter requirement than C3A's German tier itself imposes.",
+      "authority": "Editorial. This is a faithful reading of C3A §2.4.1; we make it explicit because users may otherwise expect both axes to escalate.",
+      "alternatives_considered": [
+        "Tighten citizenship to the chosen country alongside residency — rejected because it exceeds even C3A's German national tier",
+        "Add a separate 'AC' to optionally tighten citizenship — flagged for v1.5 consideration"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A04",
+      "category": "adaptation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "supplementary-info",
+        "ids": ["§1.2", "§2.5.1"]
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§1.2 and §2.5.1",
+        "verbatim": "References BSI publications: C5:2026, IT-Grundschutz, HA Benchmark compact, TR-03183-2."
+      },
+      "adaptation": {
+        "summary": "BSI-specific informative references supplemented with country/EU equivalents in supplementary information",
+        "adapted_text": "Where C3A references German technical guidance (BSI publications), this assessment retains the original reference AND adds equivalent national/EU references where one exists.",
+        "per_country_resolution": {
+          "DE": "BSI C5:2026 (verbatim)",
+          "FR": "BSI C5:2026 (informative) + SecNumCloud (national equivalent)",
+          "ES": "BSI C5:2026 (informative) + ENS / Esquema Nacional de Seguridad (national equivalent)",
+          "IT": "BSI C5:2026 (informative) + ACN cloud qualification (national equivalent)",
+          "_default_for_others": "BSI C5:2026 (informative) + ISO 27001 / future EUCS (general equivalents)"
+        }
+      },
+      "rationale": "C3A's informative references to BSI publications make sense for German users but are unhelpful for users in other countries who have their own national security frameworks. We retain the BSI references for honesty about the source, and add country-specific equivalents to be useful. This is informative only — does not affect scoring.",
+      "authority": "Editorial. The list of national equivalents should be expanded as users from additional countries provide feedback.",
+      "alternatives_considered": [
+        "Strip BSI references entirely for non-Germany users — rejected because it would obscure the source",
+        "Translate BSI references mechanically — rejected because BSI publications have no direct equivalents in most countries"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-D01",
+      "category": "derivation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "scoring-rule",
+        "id": "seal-mapping"
+      },
+      "source": {
+        "doc": "C3A and EU CSF",
+        "clause": "C3A entire catalogue + CSF §3 SEAL definitions",
+        "verbatim": "C3A does not assign SEAL levels to its criteria. CSF §3 defines five SEAL levels (0–4) but does not map them to C3A criteria."
+      },
+      "adaptation": {
+        "summary": "SEAL contribution per C3A criterion is assigned by this assessment instrument, based on CSF §3 SEAL level definitions and the substantive content of each C3A criterion",
+        "adapted_text": "The full SEAL mapping is defined in `criteria.json` and reproduced in §9 of the build brief. Each criterion's SEAL contribution is set based on which CSF SEAL level its content best embodies (e.g., jurisdiction → SEAL-1; data residence → SEAL-2; effective control → SEAL-3; full operational autonomy → SEAL-4)."
+      },
+      "rationale": "Neither source assigns SEAL levels to specific criteria. To compute SEAL per objective, we must derive a mapping. The mapping is anchored in CSF §3's definitions: SEAL-1 = formal jurisdictional sovereignty, SEAL-2 = data sovereignty with material non-EU dependencies, SEAL-3 = digital resilience with marginal non-EU control, SEAL-4 = full sovereignty with no critical non-EU dependencies. Each C3A criterion is mapped to the SEAL level that, if that criterion fails, the objective cannot reasonably be claimed to have reached.",
+      "authority": "Editorial. This is the single largest derivation in the instrument and the most important one to subject to external review.",
+      "alternatives_considered": [
+        "Treat all C3A criteria as SEAL-2 baseline — rejected because it loses the framework's gradient structure",
+        "Use C3A 'criterion vs additional criterion' as proxy for SEAL — partially adopted: ACs default to one SEAL level higher than their base criterion",
+        "Wait for an external authority (BSI, ENISA) to publish a mapping before launching — rejected because no such mapping exists or is announced; we publish ours transparently and welcome revision"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-D02",
+      "category": "derivation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "scoring-rule",
+        "id": "point-values"
+      },
+      "source": {
+        "doc": "EU CSF",
+        "clause": "§5",
+        "verbatim": "The computation of the Sovereignty Score uses the points allocated to the question proposed in the tender, weighted as below."
+      },
+      "adaptation": {
+        "summary": "Point values per question are assigned by this instrument; CSF presupposes points exist but does not define them",
+        "adapted_text": "Points per question are assigned in `criteria.json` based on objective complexity (how many criteria contribute to the objective), with values typically ranging 3–7. Point values are normalized away by the CSF formula's division by Max.Score, so absolute values do not affect the final score, only relative weighting within an objective."
+      },
+      "rationale": "CSF §5 references 'points allocated to the question proposed in the tender' but does not specify them — this is left to each tender. Since this instrument is not a specific tender, we assign default point values that produce reasonable intra-objective weighting. Because the CSF formula divides by Max.Score, the absolute point values cancel out at the objective level; only relative differences between questions within the same objective affect the score.",
+      "authority": "Editorial. Low-impact derivation due to the normalization in CSF §5's formula.",
+      "alternatives_considered": [
+        "All questions worth equal points (1 each) — adopted as the default with deviations only for questions that are objectively more weighty (e.g., effective control, source code availability)",
+        "Weight by SEAL contribution — rejected because SEAL is a separate calculation and conflating them would double-count"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-D03",
+      "category": "derivation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "scoring-rule",
+        "id": "seal-aggregation"
+      },
+      "source": {
+        "doc": "EU CSF",
+        "clause": "§4",
+        "verbatim": "Material weaknesses identified in one or more contributing factor will result in lowering the overall assurance level recognized for the objective."
+      },
+      "adaptation": {
+        "summary": "Weakest-link rule: an objective's SEAL is the highest level L such that ALL questions with seal_contribution ≤ L are answered 'yes'",
+        "adapted_text": "Implementation: traverse SEAL levels 1→4 in order; for each level L, check that every question whose seal_contribution ≤ L is answered 'yes'; the objective's SEAL is the highest L for which this holds. A 'partial' or 'no' answer at any gating level immediately caps the SEAL."
+      },
+      "rationale": "CSF §4 mandates that weaknesses lower the assurance level but doesn't specify the exact aggregation rule. The strictest interpretation — weakest-link — best matches the framing of SEAL as a 'minimum assurance level' (CSF §1: 'tenders that do not offer the required minimum levels of assurance consistently across all objectives will be rejected'). A claim of 'SEAL-3' must mean every requirement up to and including level 3 is satisfied; otherwise the claim is false.",
+      "authority": "Editorial, but tightly constrained by CSF §4 and §1's 'minimum assurance' framing.",
+      "alternatives_considered": [
+        "Average SEAL contributions across questions — rejected as inconsistent with 'minimum assurance' framing",
+        "Allow up to N% of gating questions to fail at each level — rejected as weakening the gate beyond what CSF supports",
+        "Use majority voting per level — rejected for same reasons as averaging"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-D04",
+      "category": "derivation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "presentation-rule",
+        "id": "score-banding"
+      },
+      "source": {
+        "doc": "EU CSF",
+        "clause": "§5",
+        "verbatim": "The CSF defines a 0–100% Sovereignty Score but does not band it qualitatively."
+      },
+      "adaptation": {
+        "summary": "Score bands: Limited (<40%) / Moderate (40–70%) / Strong (70–90%) / Full (>90%)",
+        "adapted_text": "Bands are presentation-only and do not affect any calculation. They exist to make the percentage scannable on the result page."
+      },
+      "rationale": "Pure UX choice. Unbanded percentages are hard to interpret at a glance. The thresholds are calibrated so most realistic providers fall into Moderate or Strong, with Limited reserved for providers with multiple structural sovereignty deficits and Full reserved for providers achieving near-complete sovereignty.",
+      "authority": "Editorial. UX-only.",
+      "alternatives_considered": [
+        "No banding, just the percentage — rejected for poor scannability",
+        "Five bands instead of four — rejected as overly granular for a self-assessment tool",
+        "Calibrate bands to real provider distribution after launch — flagged for v1.x revisit"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-D05",
+      "category": "derivation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "scoring-rule",
+        "id": "partial-answer-handling"
+      },
+      "source": {
+        "doc": "EU CSF and C3A",
+        "clause": "—",
+        "verbatim": "Neither source defines a 'partial' answer state; both implicitly assume binary (criterion met / not met)."
+      },
+      "adaptation": {
+        "summary": "'Partial' answers earn half the question's points for the score, but do NOT satisfy the SEAL gate",
+        "adapted_text": "A 'partial' answer is treated as: 0.5 × points for raw score; not satisfied for SEAL aggregation."
+      },
+      "rationale": "Real cloud services often partially meet a criterion (e.g., key management is offered for IaaS but not SaaS). A binary yes/no forces users to answer 'no' for partial cases, understating actual sovereignty. The score handles this gracefully via half-points; SEAL cannot, because SEAL is by design a binary gate (you either meet a level or you don't). This split treatment preserves both: granular scoring AND strict gating.",
+      "authority": "Editorial. Design choice for self-assessment honesty.",
+      "alternatives_considered": [
+        "Treat 'partial' as 'yes' — rejected as too lenient and would inflate SEAL claims",
+        "Treat 'partial' as 'no' — rejected because it under-credits genuine partial implementations in the score",
+        "Allow user-supplied percentage 0–100 instead of yes/partial/no — rejected as impractical for self-assessment; users cannot reliably calibrate"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-X01",
+      "category": "exclusion",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion-set",
+        "ids": ["SOV-4-09", "SOV-6-01"]
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§2.4.9 and §2.6.1",
+        "verbatim": "C3A's Disconnect criterion (SOV-4-09) and Source Code Availability criterion (SOV-6-01) are anchored at EU level only — there are no C2 (Germany) variants for these criteria."
+      },
+      "adaptation": {
+        "summary": "National tier omitted for inherently bloc-anchored criteria",
+        "adapted_text": "SOV-4-09 (Disconnect) and SOV-6-01 (Source Code Availability) carry tier_scope='eu-only' in criteria.json. They have no national variant for any country. The user's national tier choice does not modify these criteria."
+      },
+      "rationale": "C3A itself anchors these two criteria at EU level only, with no German national tier. The Disconnect criterion is about cutting non-EU connections (which is meaningful at bloc level but not national level — disconnecting from other EU countries makes no sense). The Source Code Availability criterion requires backup in the EU (which is meaningful at bloc level for resilience). We preserve C3A's design rather than inventing a national tier where the source doesn't have one.",
+      "authority": "Faithful to C3A.",
+      "alternatives_considered": [
+        "Invent a national-tier variant (e.g., 'disconnect from non-Germany') — rejected as exceeding source intent and producing nonsensical criteria"
+      ],
+      "review_status": "endorsed-by-source",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-X02",
+      "category": "exclusion",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "objective",
+        "id": "SOV-7"
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§1.2",
+        "verbatim": "Two areas of the EU CSF are intentionally not covered by the C3A: SOV-7 Security & Compliance Sovereignty is already covered by established BSI publications like C5:2026, IT-Grundschutz or the HA Benchmark compact."
+      },
+      "adaptation": {
+        "summary": "SOV-7 questions sourced from CSF contributing factors directly, since C3A delegates to BSI C5",
+        "adapted_text": "SOV-7 (Security & Compliance Sovereignty) questions are derived from CSF §4's contributing factors for SOV-7, not from C3A. A C5:2026 attestation question is included at Step 0 to flag whether the C3A precondition holds."
+      },
+      "rationale": "C3A explicitly excludes SOV-7. CSF includes it. To produce a complete 8-objective assessment matching CSF's structure, we need SOV-7 questions; we derive them from CSF's contributing factors directly.",
+      "authority": "Faithful to both sources.",
+      "alternatives_considered": [
+        "Skip SOV-7 entirely — rejected because it is a CSF objective with significant weight (10%) and skipping it would distort the score",
+        "Require a separate C5 audit attestation as the only SOV-7 evidence — adopted as a Step 0 gate but not as the only signal; CSF contributing factors provide additional dimensions"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-X03",
+      "category": "exclusion",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "objective",
+        "id": "SOV-8"
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§1.2",
+        "verbatim": "The aspects of SOV-8 Environmental Sustainability are not part of the area of BSI's responsibility."
+      },
+      "adaptation": {
+        "summary": "SOV-8 questions sourced from CSF contributing factors directly, since C3A explicitly excludes this objective",
+        "adapted_text": "SOV-8 (Environmental Sustainability) questions are derived from CSF §4's contributing factors for SOV-8, not from C3A."
+      },
+      "rationale": "Same logic as DR-X02: C3A explicitly excludes the objective; CSF includes it; we use CSF directly.",
+      "authority": "Faithful to both sources.",
+      "alternatives_considered": [
+        "Skip SOV-8 entirely — rejected because it is a CSF objective with weight (5%) and skipping it would distort the score, even if the weight is small"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-E01",
+      "category": "extension",
+      "scope": "per-variant",
+      "applies_to": ["Generalized"],
+      "affected_element": {
+        "type": "variant",
+        "id": "Generalized"
+      },
+      "source": {
+        "doc": "EU CSF and C3A",
+        "clause": "—",
+        "verbatim": "Neither source contemplates non-EU users. The EU CSF is anchored on EU sovereignty by design; C3A is anchored on Germany within the EU."
+      },
+      "adaptation": {
+        "summary": "A Generalized variant lets non-EU users run the assessment with their home jurisdiction substituted for EU/Germany",
+        "adapted_text": "The Generalized variant uses identical structure, methodology, weights, and SEAL levels as the EU-CSF variant, but with bloc and country anchors substituted to the user's chosen jurisdiction. Reports are clearly labelled 'Generalized variant' and explicitly stated as not directly comparable to EU-CSF reports."
+      },
+      "rationale": "Non-EU companies running the unmodified EU CSF assessment would mechanically score near zero on jurisdiction, control, and personnel criteria, even with excellent national sovereignty. This is unhelpful and dishonest. The Generalized variant preserves the methodology while being explicit that the reference frame is the user's jurisdiction. It is presented as a *derived* framework, not as the EU CSF itself.",
+      "authority": "Editorial. Not endorsed by either source. Documented as a derived framework in the user-facing methodology.",
+      "alternatives_considered": [
+        "Refuse non-EU users — rejected as needlessly restrictive for a self-assessment tool",
+        "Force non-EU users to anchor on EU — rejected as misrepresenting their actual sovereignty",
+        "Invent a fully separate framework — rejected because preserving the CSF/C3A structure enables comparison with EU peers (with the caveat about non-direct comparability)"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-E02",
+      "category": "extension",
+      "scope": "per-variant",
+      "applies_to": ["Generalized"],
+      "affected_element": {
+        "type": "setup-question",
+        "id": "trusted-bloc-definition"
+      },
+      "source": {
+        "doc": "—",
+        "clause": "—",
+        "verbatim": "Not in source."
+      },
+      "adaptation": {
+        "summary": "Generalized-variant users define their trusted bloc at Step 0 (e.g., 'United Kingdom only', 'UK + EU + EFTA', 'Five Eyes', 'CPTPP')",
+        "adapted_text": "The user-defined trusted bloc replaces 'EU' in all bloc-tier criteria for the Generalized variant. The chosen bloc is shown on every report and stamped on the PDF."
+      },
+      "rationale": "Disconnect-style criteria require a definition of 'inside vs outside' the trusted zone. EU users have this defined automatically (the EU). Non-EU users must define it explicitly, since 'their bloc' might be national, regional (EFTA, CPTPP), or alliance-based (Five Eyes). Forcing them to use EU as the bloc would be incoherent.",
+      "authority": "Editorial. Required by DR-E01.",
+      "alternatives_considered": [
+        "Default to user's home country only — rejected because most realistic non-EU users still rely on regional partners (e.g., UK relies heavily on EU/EFTA)",
+        "Predefined bloc options only — rejected as overly restrictive; allowed as preset suggestions with free-text option"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-E03",
+      "category": "extension",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "feature",
+        "id": "evidence-layer"
+      },
+      "source": {
+        "doc": "—",
+        "clause": "—",
+        "verbatim": "Not in source. C3A presupposes a formal audit; this instrument is self-assessment."
+      },
+      "adaptation": {
+        "summary": "Evidence layer (text descriptions and URLs) attached to 'yes' answers; unsupported claims flagged in report. File uploads were considered and excluded for v1.",
+        "adapted_text": "Each 'yes' answer can carry optional supporting evidence as a text description or URL. The result report flags answers without evidence as 'attested but not demonstrated'. Evidence does not affect the score; it affects the report's honesty. File uploads are not supported in v1 due to the static-first architecture (no server, no blob storage) and to avoid creating a privacy surface for sensitive procurement evidence."
+      },
+      "rationale": "Self-assessment without evidence handling is too easy to game. Adding optional evidence and explicit unsupported-claim flags lets the user be honest about what's substantiated. A buyer reviewing the report can prioritize verifying unsupported claims.",
+      "authority": "Editorial. Not in source but consistent with both sources' emphasis on 'verifiable criteria' (C3A §1.1) and 'supporting evidence' (CSF §1).",
+      "alternatives_considered": [
+        "Require evidence for every yes (block submission without it) — rejected because it would make the assessment too costly for early-stage exploration",
+        "No evidence layer — rejected because it makes self-assessment unaccountable",
+        "Support file uploads (PDFs, attestation reports) — rejected for v1 because the static-first architecture has no server-side storage, and adding blob storage would create a privacy surface for sensitive procurement evidence. Flagged for possible v2 consideration if institutional users require it."
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-E04",
+      "category": "extension",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "setup-question",
+        "id": "c5-prerequisite"
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§1.2",
+        "verbatim": "C3A presupposes that the cloud service provider meets the C5 criteria, as they reflect the security aspect of the sovereignty definition."
+      },
+      "adaptation": {
+        "summary": "C5:2026 attestation question added at Step 0; result report flags the assessment if 'no'",
+        "adapted_text": "Step 0 includes: 'Does the provider hold a current BSI C5:2026 attestation (or equivalent)?'. A 'no' or 'unknown' does not block the assessment but adds a banner on the result page: 'This assessment is calibrated for providers meeting BSI C5:2026. The provider has not attested to C5 — interpret SOV-1 to SOV-6 results with caution; SOV-7 results may be incomplete.'"
+      },
+      "rationale": "C3A §1.2 explicitly presupposes C5 compliance but doesn't operationalize this — a provider could complete a C3A audit without ever confirming C5. This instrument operationalizes the precondition as a Step 0 question with a transparency flag on the result, rather than leaving it as an unstated assumption.",
+      "authority": "Faithful operationalization of C3A §1.2.",
+      "alternatives_considered": [
+        "Block assessment without C5 — rejected as too restrictive (the assessment still produces useful signal even without C5)",
+        "Ignore the C5 precondition — rejected because it leaves the assumption implicit and undermines the methodology's integrity"
+      ],
+      "review_status": "endorsed-by-source",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-D06",
+      "category": "derivation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "operational-policy",
+        "id": "assessment-ttl"
+      },
+      "source": {
+        "doc": "—",
+        "clause": "—",
+        "verbatim": "Neither source defines a retention or deletion policy for assessments — they describe methodology, not infrastructure."
+      },
+      "adaptation": {
+        "summary": "Assessments inactive for 12 months are deleted by a daily Cron Trigger Worker; updated_at is refreshed on every write, extending the TTL",
+        "adapted_text": "Every assessment row in D1 carries an `expires_at` field set to `updated_at + 12 months`. A daily Cron Trigger prunes rows where `expires_at < now()`. Users see the expiry date in the assessment page footer.",
+        "configuration": "TTL is configurable in /data/config.json under `assessment_ttl_months`. Default 12. Changes require a deploy."
+      },
+      "rationale": "A persistence layer creates two obligations: bound storage growth and bound residual privacy risk from data hoarding. 12 months balances institutional procurement cycles (some procurement processes run 6+ months end-to-end, so a TTL shorter than that would frustrate legitimate users) against not retaining assessment data indefinitely. The TTL refreshes on every write, so an actively-used assessment is never deleted out from under a user.",
+      "authority": "Editorial. Operational policy choice.",
+      "alternatives_considered": [
+        "No TTL (keep forever) — rejected because it accumulates assessments from one-time anonymous users indefinitely, growing storage and residual privacy exposure with no offsetting benefit",
+        "Shorter TTL (3 or 6 months) — rejected because procurement cycles can exceed 6 months; would frustrate genuine institutional users",
+        "Longer TTL (24 months) — considered; rejected as excessive for a self-assessment tool. May be revisited based on user feedback",
+        "User-controlled TTL with default — considered; rejected for v1 simplicity but flagged for v1.x if users request it"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-E05",
+      "category": "extension",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "architecture",
+        "id": "server-backed-persistence"
+      },
+      "source": {
+        "doc": "—",
+        "clause": "—",
+        "verbatim": "Not in source. Both sources are framework documents; neither prescribes how an implementing assessment is hosted or persists state."
+      },
+      "adaptation": {
+        "summary": "Assessments are persisted server-side in Cloudflare D1 under cryptographically-random URL-safe IDs. The URL is the access mechanism — anyone with the URL can read or modify the assessment. No accounts, no logins, no email recovery.",
+        "adapted_text": "Architecturally: POST /api/assessments creates a row with a UUIDv4 ID. The frontend stores the assessment URL in localStorage as a write-through cache. PATCH /api/assessments/:id is debounced to once per 3 seconds plus a flush on objective navigation. The same ID URL serves both the editor (while status='draft') and the read-only result (while status='submitted'). Workers source code is in the public repo; anyone can audit what the persistence layer does."
+      },
+      "rationale": "Pattern A (browser-only state) was the v1 default but had two serious limitations: no multi-device resume without download/upload friction, and no shareable result links. For an instrument intended to be cited and shared in institutional contexts (procurement teams, multilateral banks), these were real costs. Pattern B trades architectural privacy (no data on a server) for policy-enforced privacy (data on a server, but with no identifying information attached and a published code path that anyone can audit). The trade-off is acknowledged on the privacy page.",
+      "authority": "Editorial. Operational and UX choice. Audited via published Worker source code.",
+      "alternatives_considered": [
+        "Pattern A: browser-only state with download/upload save-and-resume — rejected after weighing the cross-device friction against research-tool credibility (DR-E05's parent decision)",
+        "Add user accounts and email recovery — rejected because it adds a privacy surface (email collection) that's worse than the unguessable-ID model and requires authentication infrastructure",
+        "Use a third-party backend (Supabase, Firebase) — rejected to keep the entire stack in Cloudflare's ecosystem and within the free tier",
+        "End-to-end encrypt the assessment with a key in the URL fragment — considered; rejected as overengineering for v1 but flagged for possible v1.x. Users running highly sensitive assessments can be advised to delete after PDF export."
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-E06",
+      "category": "extension",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "feature",
+        "id": "anonymous-public-corpus"
+      },
+      "source": {
+        "doc": "—",
+        "clause": "—",
+        "verbatim": "Not in source. Neither framework anticipates a corpus of self-assessments."
+      },
+      "adaptation": {
+        "summary": "At submit time, users can opt in to contribute their assessment to a public anonymized corpus. Default off. Disclosure under the checkbox lists exactly what's shared and what's never shared. Withdrawable at any time.",
+        "adapted_text": "Pre-submit checkbox: `[ ] Contribute this assessment to the public Cloud Sovereignty Index corpus (anonymized)`.\n\nWhat IS shared if the user opts in:\n• Variant (EU-CSF or Generalized) and country code (2-letter ISO)\n• Service models in scope\n• Role (customer or provider)\n• Computed scores and SEAL levels per objective\n• Instrument version\n• Month of submission (no finer timestamp)\n\nWhat is NEVER shared:\n• Company name\n• Evidence text or URLs\n• Assessment URL\n• IP addresses or other identifying information\n\nUsers can withdraw their contribution at any time by visiting their assessment URL and unchecking the box, which sets share_publicly=0. The next /api/corpus cache refresh (≤5 minutes) removes them from the public dataset."
+      },
+      "rationale": "A research tool gains citation strength from a usage corpus over time. Pattern A made this impossible; Pattern B makes it trivial. An opt-in approach with full disclosure preserves user privacy while building a public dataset that itself becomes a research artifact ('Cloud Sovereignty Index Public Corpus, vintage 2026-Q4'). Default-off and full-disclosure are non-negotiable: users must affirmatively choose to contribute, and must know exactly what's contributed.",
+      "authority": "Editorial. Audited via published Worker source code (the anonymization is enforced by the public_corpus VIEW in D1, which strips company_name, answers, evidence, and timestamp precision).",
+      "alternatives_considered": [
+        "Default-on with opt-out — rejected as inappropriate for a research instrument; users may not notice they're contributing",
+        "No corpus at all — rejected because it forgoes a major research-credibility benefit of having server-side state at no marginal privacy cost (since opt-in is required)",
+        "Default-off corpus, but require an email to opt in — rejected because email collection contradicts the project's privacy posture",
+        "Share the full assessment (including evidence) anonymized — rejected because evidence text often contains organizational-identifying detail; safer to limit to scores and SEAL levels"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-09",
+      "instrument_version": "1.0"
+    }
+  ]
+}

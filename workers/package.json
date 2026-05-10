@@ -1,0 +1,19 @@
+{
+  "name": "@csi/workers",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local --persist-to ./.wrangler/state",
+    "build": "wrangler deploy --dry-run",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241205.0",
+    "wrangler": "^3.99.0"
+  }
+}

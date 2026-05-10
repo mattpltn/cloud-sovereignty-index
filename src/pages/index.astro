@@ -1,0 +1,85 @@
+---
+import '../styles/global.css';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cloud Sovereignty Index</title>
+  <meta name="description" content="Assess your cloud provider's sovereignty posture against the EU Cloud Sovereignty Framework." />
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+    <nav class="flex gap-6 text-sm text-gray-600">
+      <a href="/faq" class="hover:text-gray-900">FAQ</a>
+      <a href="/methodology" class="hover:text-gray-900">Methodology</a>
+      <a href="/corpus" class="hover:text-gray-900">Public Corpus</a>
+      <a href="/privacy" class="hover:text-gray-900">Privacy</a>
+    </nav>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-6 py-16">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold tracking-tight mb-4">
+        Cloud Sovereignty Assessment
+      </h1>
+      <p class="text-lg text-gray-600 max-w-xl mx-auto">
+        Assess your cloud provider's sovereignty posture against the EU Cloud Sovereignty Framework v1.2.1,
+        powered by BSI C5:2020 criteria.
+      </p>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2 mb-12">
+      <a href="/assess/setup?bloc=EU" class="block border border-gray-200 rounded-xl p-6 hover:border-blue-400 hover:shadow-sm transition group">
+        <div class="font-semibold text-base mb-2 group-hover:text-blue-600">EU / EEA Assessment</div>
+        <p class="text-sm text-gray-600">
+          For cloud services used by EU or EEA organisations. Evaluates against the EU Cloud Sovereignty Framework
+          with optional national-tier criteria for your member state.
+        </p>
+        <div class="mt-4 text-sm font-medium text-blue-600">Start assessment →</div>
+      </a>
+
+      <a href="/assess/setup?bloc=non-EU" class="block border border-gray-200 rounded-xl p-6 hover:border-blue-400 hover:shadow-sm transition group">
+        <div class="font-semibold text-base mb-2 group-hover:text-blue-600">Global Assessment</div>
+        <p class="text-sm text-gray-600">
+          For cloud services outside the EU. The same criteria apply with your country substituted for
+          geographic references — sovereignty principles are universal.
+        </p>
+        <div class="mt-4 text-sm font-medium text-blue-600">Start assessment →</div>
+      </a>
+    </div>
+
+    <div class="text-center mb-10">
+      <p class="text-sm text-gray-500">
+        Need to collect answers offline or send to your cloud provider?
+        <a href="/assess/setup?bloc=EU" id="template-link" class="text-blue-600 hover:underline ml-1">
+          Download blank assessment template (CSV) →
+        </a>
+      </p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-3 text-center text-sm text-gray-600 border-t border-gray-100 pt-10">
+      <div>
+        <div class="font-semibold text-gray-900 mb-1">8 objectives</div>
+        Strategic, Legal, Data, Operational, Supply Chain, Technology, Security, Sustainability
+      </div>
+      <div>
+        <div class="font-semibold text-gray-900 mb-1">SEAL levels 0–4</div>
+        From No Sovereignty to Full Digital Sovereignty, with a weighted 0–100% score
+      </div>
+      <div>
+        <div class="font-semibold text-gray-900 mb-1">Open methodology</div>
+        All decisions documented, all criteria traceable to source frameworks
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-gray-100 px-6 py-6 text-center text-xs text-gray-400">
+    Cloud Sovereignty Index v1.0 · Based on EU Cloud Sovereignty Framework v1.2.1 and BSI C5:2020 ·
+    <a href="/methodology" class="underline">Methodology</a> ·
+    <a href="/privacy" class="underline">Privacy</a>
+  </footer>
+</body>
+</html>

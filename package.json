@@ -1,0 +1,16 @@
+{
+  "name": "cloud-sovereignty-index",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n workers,astro -c blue,green \"pnpm --filter @csi/workers dev\" \"cd src && node node_modules/.bin/astro dev --port 4321\"",
+    "build": "pnpm --filter shared build && pnpm --filter workers build && pnpm --filter src build",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "vitest": "^2.1.8",
+    "typescript": "^5.7.3"
+  }
+}

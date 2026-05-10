@@ -1,0 +1,1369 @@
+{
+  "EU": [
+    {
+      "code": "AT",
+      "name": "Austria",
+      "adj": "Austrian",
+      "national_admin_label": "Austrian federal administration",
+      "emergency_regime": "Kriegszustand (B-VG Article 9a)"
+    },
+    {
+      "code": "BE",
+      "name": "Belgium",
+      "adj": "Belgian",
+      "national_admin_label": "Belgian federal administration",
+      "emergency_regime": "état de guerre / état de siège (Constitution Article 167)"
+    },
+    {
+      "code": "BG",
+      "name": "Bulgaria",
+      "adj": "Bulgarian",
+      "national_admin_label": "Bulgarian Council of Ministers",
+      "emergency_regime": "state of war or state of emergency (Constitution Article 64)"
+    },
+    {
+      "code": "HR",
+      "name": "Croatia",
+      "adj": "Croatian",
+      "national_admin_label": "Croatian Government",
+      "emergency_regime": "ratno stanje / izvanredno stanje (Constitution Article 101)"
+    },
+    {
+      "code": "CY",
+      "name": "Cyprus",
+      "adj": "Cypriot",
+      "national_admin_label": "Cypriot Council of Ministers",
+      "emergency_regime": "state of emergency (Constitution Article 183)"
+    },
+    {
+      "code": "CZ",
+      "name": "Czech Republic",
+      "adj": "Czech",
+      "national_admin_label": "Czech Government",
+      "emergency_regime": "stav ohrožení státu / válečný stav (Constitutional Act 110/1998)"
+    },
+    {
+      "code": "DK",
+      "name": "Denmark",
+      "adj": "Danish",
+      "national_admin_label": "Danish central administration",
+      "emergency_regime": "state of war (Defence Act §17)"
+    },
+    {
+      "code": "EE",
+      "name": "Estonia",
+      "adj": "Estonian",
+      "national_admin_label": "Estonian Government",
+      "emergency_regime": "state of war / state of emergency (Emergency Act §14)"
+    },
+    {
+      "code": "FI",
+      "name": "Finland",
+      "adj": "Finnish",
+      "national_admin_label": "Finnish Government",
+      "emergency_regime": "poikkeusolot / sotatila (Readiness Act 1552/2011)"
+    },
+    {
+      "code": "FR",
+      "name": "France",
+      "adj": "French",
+      "national_admin_label": "French central administration",
+      "emergency_regime": "état d'urgence / état de siège (Constitution Article 36)",
+      "national_extensions": [
+        "SecNumCloud"
+      ]
+    },
+    {
+      "code": "DE",
+      "name": "Germany",
+      "adj": "German",
+      "national_admin_label": "German federal administration",
+      "emergency_regime": "Verteidigungsfall (Basic Law Article 115a)",
+      "national_extensions": [
+        "BSI C5"
+      ],
+      "is_source_verbatim": true
+    },
+    {
+      "code": "GR",
+      "name": "Greece",
+      "adj": "Greek",
+      "national_admin_label": "Greek Government",
+      "emergency_regime": "κατάσταση πολιορκίας / state of siege (Constitution Article 48)"
+    },
+    {
+      "code": "HU",
+      "name": "Hungary",
+      "adj": "Hungarian",
+      "national_admin_label": "Hungarian Government",
+      "emergency_regime": "háborús veszélyhelyzet / state of war danger (Fundamental Law Article 49)"
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "adj": "Irish",
+      "national_admin_label": "Irish Government",
+      "emergency_regime": "national emergency (Constitution Article 28.3)"
+    },
+    {
+      "code": "IT",
+      "name": "Italy",
+      "adj": "Italian",
+      "national_admin_label": "Italian central administration",
+      "emergency_regime": "stato di guerra (Constitution Article 78)"
+    },
+    {
+      "code": "LV",
+      "name": "Latvia",
+      "adj": "Latvian",
+      "national_admin_label": "Latvian Cabinet of Ministers",
+      "emergency_regime": "kara stāvoklis / state of war (Constitution Article 62)"
+    },
+    {
+      "code": "LT",
+      "name": "Lithuania",
+      "adj": "Lithuanian",
+      "national_admin_label": "Lithuanian Government",
+      "emergency_regime": "karo padėtis / war state (Constitution Article 142)"
+    },
+    {
+      "code": "LU",
+      "name": "Luxembourg",
+      "adj": "Luxembourgish",
+      "national_admin_label": "Luxembourg Government",
+      "emergency_regime": "état de guerre (Constitution Article 37)"
+    },
+    {
+      "code": "MT",
+      "name": "Malta",
+      "adj": "Maltese",
+      "national_admin_label": "Maltese Government",
+      "emergency_regime": "state of public emergency (Constitution Article 47)"
+    },
+    {
+      "code": "NL",
+      "name": "Netherlands",
+      "adj": "Dutch",
+      "national_admin_label": "Dutch central government",
+      "emergency_regime": "oorlogstoestand / state of war (Exceptional Circumstances Act)"
+    },
+    {
+      "code": "PL",
+      "name": "Poland",
+      "adj": "Polish",
+      "national_admin_label": "Polish central administration",
+      "emergency_regime": "stan wojenny / stan wyjątkowy (Constitution Articles 229–234)"
+    },
+    {
+      "code": "PT",
+      "name": "Portugal",
+      "adj": "Portuguese",
+      "national_admin_label": "Portuguese Government",
+      "emergency_regime": "estado de guerra / estado de emergência (Constitution Article 19)"
+    },
+    {
+      "code": "RO",
+      "name": "Romania",
+      "adj": "Romanian",
+      "national_admin_label": "Romanian Government",
+      "emergency_regime": "stare de asediu / state of siege (Constitution Article 93)"
+    },
+    {
+      "code": "SK",
+      "name": "Slovakia",
+      "adj": "Slovak",
+      "national_admin_label": "Slovak Government",
+      "emergency_regime": "vojnový stav / war state (Constitutional Act 227/2002)"
+    },
+    {
+      "code": "SI",
+      "name": "Slovenia",
+      "adj": "Slovenian",
+      "national_admin_label": "Slovenian Government",
+      "emergency_regime": "izredne razmere / state of emergency (Constitution Article 92)"
+    },
+    {
+      "code": "ES",
+      "name": "Spain",
+      "adj": "Spanish",
+      "national_admin_label": "Spanish central administration",
+      "emergency_regime": "estado de alarma / excepción / sitio (Constitution Article 116)",
+      "national_extensions": [
+        "ENS"
+      ]
+    },
+    {
+      "code": "SE",
+      "name": "Sweden",
+      "adj": "Swedish",
+      "national_admin_label": "Swedish Government",
+      "emergency_regime": "höjd beredskap / elevated preparedness (Total Defence Act 1992:1403)"
+    }
+  ],
+  "EEA_non_EU": [
+    {
+      "code": "IS",
+      "name": "Iceland",
+      "adj": "Icelandic",
+      "national_admin_label": "Icelandic Government",
+      "emergency_regime": "state of emergency (Emergency Management Act)"
+    },
+    {
+      "code": "LI",
+      "name": "Liechtenstein",
+      "adj": "Liechtenstein",
+      "national_admin_label": "Liechtenstein Government",
+      "emergency_regime": "state of emergency (Constitution Article 10)"
+    },
+    {
+      "code": "NO",
+      "name": "Norway",
+      "adj": "Norwegian",
+      "national_admin_label": "Norwegian Government",
+      "emergency_regime": "krigsutbruddet / state of war (Constitution Article 26)"
+    }
+  ],
+  "non_EU": [
+    {
+      "code": "AF",
+      "name": "Afghanistan",
+      "adj": "Afghan",
+      "national_admin_label": "Afghan Government",
+      "emergency_regime": "state of emergency (Constitution Article 143)"
+    },
+    {
+      "code": "AL",
+      "name": "Albania",
+      "adj": "Albanian",
+      "national_admin_label": "Albanian Government",
+      "emergency_regime": "state of emergency (Constitution Article 170)"
+    },
+    {
+      "code": "DZ",
+      "name": "Algeria",
+      "adj": "Algerian",
+      "national_admin_label": "Algerian Government",
+      "emergency_regime": "state of emergency (Constitution Article 107)"
+    },
+    {
+      "code": "AD",
+      "name": "Andorra",
+      "adj": "Andorran",
+      "national_admin_label": "Andorran Government",
+      "emergency_regime": "state of emergency (Constitution Article 42)"
+    },
+    {
+      "code": "AO",
+      "name": "Angola",
+      "adj": "Angolan",
+      "national_admin_label": "Angolan Government",
+      "emergency_regime": "state of emergency (Constitution Article 60)"
+    },
+    {
+      "code": "AG",
+      "name": "Antigua and Barbuda",
+      "adj": "Antiguan",
+      "national_admin_label": "Government of Antigua and Barbuda",
+      "emergency_regime": "state of emergency (Constitution Section 21)"
+    },
+    {
+      "code": "AR",
+      "name": "Argentina",
+      "adj": "Argentine",
+      "national_admin_label": "Argentine national government",
+      "emergency_regime": "estado de sitio / state of siege (Constitution Article 23)"
+    },
+    {
+      "code": "AM",
+      "name": "Armenia",
+      "adj": "Armenian",
+      "national_admin_label": "Armenian Government",
+      "emergency_regime": "state of emergency (Constitution Article 120)"
+    },
+    {
+      "code": "AU",
+      "name": "Australia",
+      "adj": "Australian",
+      "national_admin_label": "Australian Government",
+      "emergency_regime": "national security emergency (Defence Act Part IIIAAA)"
+    },
+    {
+      "code": "AZ",
+      "name": "Azerbaijan",
+      "adj": "Azerbaijani",
+      "national_admin_label": "Azerbaijani Government",
+      "emergency_regime": "state of emergency (Constitution Article 112)"
+    },
+    {
+      "code": "BS",
+      "name": "Bahamas",
+      "adj": "Bahamian",
+      "national_admin_label": "Bahamian Government",
+      "emergency_regime": "state of emergency (Constitution Article 29)"
+    },
+    {
+      "code": "BH",
+      "name": "Bahrain",
+      "adj": "Bahraini",
+      "national_admin_label": "Bahraini Government",
+      "emergency_regime": "state of emergency (Constitution Article 36)"
+    },
+    {
+      "code": "BD",
+      "name": "Bangladesh",
+      "adj": "Bangladeshi",
+      "national_admin_label": "Bangladeshi Government",
+      "emergency_regime": "state of emergency (Constitution Article 141A)"
+    },
+    {
+      "code": "BB",
+      "name": "Barbados",
+      "adj": "Barbadian",
+      "national_admin_label": "Barbadian Government",
+      "emergency_regime": "state of emergency (Constitution Section 25)"
+    },
+    {
+      "code": "BY",
+      "name": "Belarus",
+      "adj": "Belarusian",
+      "national_admin_label": "Belarusian Government",
+      "emergency_regime": "state of emergency (Constitution Article 84)"
+    },
+    {
+      "code": "BZ",
+      "name": "Belize",
+      "adj": "Belizean",
+      "national_admin_label": "Belizean Government",
+      "emergency_regime": "state of emergency (Constitution Section 18)"
+    },
+    {
+      "code": "BJ",
+      "name": "Benin",
+      "adj": "Beninese",
+      "national_admin_label": "Beninese Government",
+      "emergency_regime": "état d'urgence (Constitution Article 68)"
+    },
+    {
+      "code": "BT",
+      "name": "Bhutan",
+      "adj": "Bhutanese",
+      "national_admin_label": "Royal Government of Bhutan",
+      "emergency_regime": "state of emergency (Constitution Article 33)"
+    },
+    {
+      "code": "BO",
+      "name": "Bolivia",
+      "adj": "Bolivian",
+      "national_admin_label": "Bolivian national government",
+      "emergency_regime": "estado de sitio (Constitution Article 137)"
+    },
+    {
+      "code": "BA",
+      "name": "Bosnia and Herzegovina",
+      "adj": "Bosnian",
+      "national_admin_label": "Council of Ministers of BiH",
+      "emergency_regime": "state of emergency (Constitution Article V)"
+    },
+    {
+      "code": "BW",
+      "name": "Botswana",
+      "adj": "Batswana",
+      "national_admin_label": "Botswana Government",
+      "emergency_regime": "state of emergency (Constitution Section 17)"
+    },
+    {
+      "code": "BR",
+      "name": "Brazil",
+      "adj": "Brazilian",
+      "national_admin_label": "Brazilian Federal Government",
+      "emergency_regime": "estado de sítio / state of siege (Constitution Article 137)"
+    },
+    {
+      "code": "BN",
+      "name": "Brunei",
+      "adj": "Bruneian",
+      "national_admin_label": "Brunei Government",
+      "emergency_regime": "state of emergency (Emergency Powers Act)"
+    },
+    {
+      "code": "BF",
+      "name": "Burkina Faso",
+      "adj": "Burkinabé",
+      "national_admin_label": "Burkinabé Government",
+      "emergency_regime": "état d'urgence (Constitution Article 82)"
+    },
+    {
+      "code": "BI",
+      "name": "Burundi",
+      "adj": "Burundian",
+      "national_admin_label": "Burundian Government",
+      "emergency_regime": "état d'urgence (Constitution Article 110)"
+    },
+    {
+      "code": "CV",
+      "name": "Cabo Verde",
+      "adj": "Cape Verdean",
+      "national_admin_label": "Cape Verdean Government",
+      "emergency_regime": "estado de emergência (Constitution Article 277)"
+    },
+    {
+      "code": "KH",
+      "name": "Cambodia",
+      "adj": "Cambodian",
+      "national_admin_label": "Cambodian Government",
+      "emergency_regime": "state of emergency (Law on State of Emergency)"
+    },
+    {
+      "code": "CM",
+      "name": "Cameroon",
+      "adj": "Cameroonian",
+      "national_admin_label": "Cameroonian Government",
+      "emergency_regime": "état d'urgence (Constitution Article 9)"
+    },
+    {
+      "code": "CA",
+      "name": "Canada",
+      "adj": "Canadian",
+      "national_admin_label": "Canadian Government",
+      "emergency_regime": "public welfare / international emergency (Emergencies Act)"
+    },
+    {
+      "code": "CF",
+      "name": "Central African Republic",
+      "adj": "Central African",
+      "national_admin_label": "CAR Government",
+      "emergency_regime": "état d'urgence (Constitution Article 43)"
+    },
+    {
+      "code": "TD",
+      "name": "Chad",
+      "adj": "Chadian",
+      "national_admin_label": "Chadian Government",
+      "emergency_regime": "état d'urgence (Constitution Article 87)"
+    },
+    {
+      "code": "CL",
+      "name": "Chile",
+      "adj": "Chilean",
+      "national_admin_label": "Chilean Government",
+      "emergency_regime": "estado de excepción (Constitution Article 39)"
+    },
+    {
+      "code": "CN",
+      "name": "China",
+      "adj": "Chinese",
+      "national_admin_label": "Chinese central government",
+      "emergency_regime": "state of emergency (Emergency Response Law)"
+    },
+    {
+      "code": "CO",
+      "name": "Colombia",
+      "adj": "Colombian",
+      "national_admin_label": "Colombian national government",
+      "emergency_regime": "estado de conmoción exterior (Constitution Article 213)"
+    },
+    {
+      "code": "KM",
+      "name": "Comoros",
+      "adj": "Comorian",
+      "national_admin_label": "Comorian Government",
+      "emergency_regime": "état d'urgence (Constitution Article 13)"
+    },
+    {
+      "code": "CD",
+      "name": "Congo (DRC)",
+      "adj": "Congolese",
+      "national_admin_label": "DRC Government",
+      "emergency_regime": "état d'urgence (Constitution Article 85)"
+    },
+    {
+      "code": "CG",
+      "name": "Congo (Republic)",
+      "adj": "Congolese",
+      "national_admin_label": "Republic of Congo Government",
+      "emergency_regime": "état d'urgence (Constitution Article 86)"
+    },
+    {
+      "code": "CR",
+      "name": "Costa Rica",
+      "adj": "Costa Rican",
+      "national_admin_label": "Costa Rican Government",
+      "emergency_regime": "state of emergency (Constitution Article 121)"
+    },
+    {
+      "code": "CU",
+      "name": "Cuba",
+      "adj": "Cuban",
+      "national_admin_label": "Cuban Government",
+      "emergency_regime": "estado de guerra / state of war (Constitution Article 99)"
+    },
+    {
+      "code": "CI",
+      "name": "Côte d'Ivoire",
+      "adj": "Ivorian",
+      "national_admin_label": "Ivorian Government",
+      "emergency_regime": "état d'urgence (Constitution Article 73)"
+    },
+    {
+      "code": "DJ",
+      "name": "Djibouti",
+      "adj": "Djiboutian",
+      "national_admin_label": "Djiboutian Government",
+      "emergency_regime": "état d'urgence (Constitution Article 39)"
+    },
+    {
+      "code": "DM",
+      "name": "Dominica",
+      "adj": "Dominican",
+      "national_admin_label": "Dominican Government",
+      "emergency_regime": "state of emergency (Constitution Section 20)"
+    },
+    {
+      "code": "DO",
+      "name": "Dominican Republic",
+      "adj": "Dominican",
+      "national_admin_label": "Dominican Government",
+      "emergency_regime": "estado de excepción (Constitution Article 262)"
+    },
+    {
+      "code": "EC",
+      "name": "Ecuador",
+      "adj": "Ecuadorian",
+      "national_admin_label": "Ecuadorian Government",
+      "emergency_regime": "estado de excepción (Constitution Article 164)"
+    },
+    {
+      "code": "EG",
+      "name": "Egypt",
+      "adj": "Egyptian",
+      "national_admin_label": "Egyptian Government",
+      "emergency_regime": "state of emergency (Emergency Law 162/1958)"
+    },
+    {
+      "code": "SV",
+      "name": "El Salvador",
+      "adj": "Salvadoran",
+      "national_admin_label": "Salvadoran Government",
+      "emergency_regime": "estado de emergencia (Constitution Article 29)"
+    },
+    {
+      "code": "GQ",
+      "name": "Equatorial Guinea",
+      "adj": "Equatoguinean",
+      "national_admin_label": "Equatoguinean Government",
+      "emergency_regime": "state of emergency (Fundamental Law)"
+    },
+    {
+      "code": "ER",
+      "name": "Eritrea",
+      "adj": "Eritrean",
+      "national_admin_label": "Eritrean Government",
+      "emergency_regime": "state of emergency"
+    },
+    {
+      "code": "SZ",
+      "name": "Eswatini",
+      "adj": "Swazi",
+      "national_admin_label": "Swazi Government",
+      "emergency_regime": "state of emergency (Constitution Section 29)"
+    },
+    {
+      "code": "ET",
+      "name": "Ethiopia",
+      "adj": "Ethiopian",
+      "national_admin_label": "Ethiopian Government",
+      "emergency_regime": "state of emergency (Constitution Article 93)"
+    },
+    {
+      "code": "FJ",
+      "name": "Fiji",
+      "adj": "Fijian",
+      "national_admin_label": "Fijian Government",
+      "emergency_regime": "state of emergency (Constitution Section 45)"
+    },
+    {
+      "code": "GA",
+      "name": "Gabon",
+      "adj": "Gabonese",
+      "national_admin_label": "Gabonese Government",
+      "emergency_regime": "état d'urgence (Constitution Article 25)"
+    },
+    {
+      "code": "GM",
+      "name": "Gambia",
+      "adj": "Gambian",
+      "national_admin_label": "Gambian Government",
+      "emergency_regime": "state of emergency (Constitution Section 33)"
+    },
+    {
+      "code": "GE",
+      "name": "Georgia",
+      "adj": "Georgian",
+      "national_admin_label": "Georgian Government",
+      "emergency_regime": "state of emergency (Constitution Article 46)"
+    },
+    {
+      "code": "GH",
+      "name": "Ghana",
+      "adj": "Ghanaian",
+      "national_admin_label": "Ghanaian Government",
+      "emergency_regime": "state of emergency (Constitution Article 31)"
+    },
+    {
+      "code": "GD",
+      "name": "Grenada",
+      "adj": "Grenadian",
+      "national_admin_label": "Grenadian Government",
+      "emergency_regime": "state of emergency (Constitution Section 17)"
+    },
+    {
+      "code": "GT",
+      "name": "Guatemala",
+      "adj": "Guatemalan",
+      "national_admin_label": "Guatemalan Government",
+      "emergency_regime": "estado de calamidad pública (Constitution Article 139)"
+    },
+    {
+      "code": "GN",
+      "name": "Guinea",
+      "adj": "Guinean",
+      "national_admin_label": "Guinean Government",
+      "emergency_regime": "état d'urgence (Constitution Article 89)"
+    },
+    {
+      "code": "GW",
+      "name": "Guinea-Bissau",
+      "adj": "Guinean",
+      "national_admin_label": "Guinea-Bissau Government",
+      "emergency_regime": "estado de emergência (Constitution Article 103)"
+    },
+    {
+      "code": "GY",
+      "name": "Guyana",
+      "adj": "Guyanese",
+      "national_admin_label": "Guyanese Government",
+      "emergency_regime": "state of emergency (Constitution Article 168)"
+    },
+    {
+      "code": "HT",
+      "name": "Haiti",
+      "adj": "Haitian",
+      "national_admin_label": "Haitian Government",
+      "emergency_regime": "état d'urgence (Constitution Article 276)"
+    },
+    {
+      "code": "HN",
+      "name": "Honduras",
+      "adj": "Honduran",
+      "national_admin_label": "Honduran Government",
+      "emergency_regime": "estado de excepción (Constitution Article 187)"
+    },
+    {
+      "code": "IN",
+      "name": "India",
+      "adj": "Indian",
+      "national_admin_label": "Indian central government",
+      "emergency_regime": "national emergency (Constitution Article 352)"
+    },
+    {
+      "code": "ID",
+      "name": "Indonesia",
+      "adj": "Indonesian",
+      "national_admin_label": "Indonesian Government",
+      "emergency_regime": "state of emergency (Emergency Law 23/1959)"
+    },
+    {
+      "code": "IR",
+      "name": "Iran",
+      "adj": "Iranian",
+      "national_admin_label": "Iranian Government",
+      "emergency_regime": "state of emergency (Constitution Article 79)"
+    },
+    {
+      "code": "IQ",
+      "name": "Iraq",
+      "adj": "Iraqi",
+      "national_admin_label": "Iraqi Government",
+      "emergency_regime": "martial law / state of emergency (Constitution Article 61(9))"
+    },
+    {
+      "code": "IL",
+      "name": "Israel",
+      "adj": "Israeli",
+      "national_admin_label": "Israeli Government",
+      "emergency_regime": "state of emergency (Basic Law: The Government)"
+    },
+    {
+      "code": "JM",
+      "name": "Jamaica",
+      "adj": "Jamaican",
+      "national_admin_label": "Jamaican Government",
+      "emergency_regime": "state of emergency (Constitution Section 26)"
+    },
+    {
+      "code": "JP",
+      "name": "Japan",
+      "adj": "Japanese",
+      "national_admin_label": "Japanese Government",
+      "emergency_regime": "national emergency (Cabinet Act)"
+    },
+    {
+      "code": "JO",
+      "name": "Jordan",
+      "adj": "Jordanian",
+      "national_admin_label": "Jordanian Government",
+      "emergency_regime": "martial law / state of emergency (Martial Law Law)"
+    },
+    {
+      "code": "KZ",
+      "name": "Kazakhstan",
+      "adj": "Kazakhstani",
+      "national_admin_label": "Kazakhstani Government",
+      "emergency_regime": "state of emergency (Law on State of Emergency)"
+    },
+    {
+      "code": "KE",
+      "name": "Kenya",
+      "adj": "Kenyan",
+      "national_admin_label": "Kenyan Government",
+      "emergency_regime": "state of emergency (Constitution Article 58)"
+    },
+    {
+      "code": "KI",
+      "name": "Kiribati",
+      "adj": "I-Kiribati",
+      "national_admin_label": "Kiribati Government",
+      "emergency_regime": "state of emergency (Constitution Section 11)"
+    },
+    {
+      "code": "KW",
+      "name": "Kuwait",
+      "adj": "Kuwaiti",
+      "national_admin_label": "Kuwaiti Government",
+      "emergency_regime": "martial law (Constitution Article 69)"
+    },
+    {
+      "code": "KG",
+      "name": "Kyrgyzstan",
+      "adj": "Kyrgyz",
+      "national_admin_label": "Kyrgyz Government",
+      "emergency_regime": "state of emergency (Constitution Article 73)"
+    },
+    {
+      "code": "LA",
+      "name": "Laos",
+      "adj": "Lao",
+      "national_admin_label": "Lao PDR Government",
+      "emergency_regime": "state of emergency (Law on State of Emergency)"
+    },
+    {
+      "code": "LB",
+      "name": "Lebanon",
+      "adj": "Lebanese",
+      "national_admin_label": "Lebanese Government",
+      "emergency_regime": "state of emergency (State of Emergency Act 1952)"
+    },
+    {
+      "code": "LS",
+      "name": "Lesotho",
+      "adj": "Basotho",
+      "national_admin_label": "Lesotho Government",
+      "emergency_regime": "state of emergency (Constitution Section 23)"
+    },
+    {
+      "code": "LR",
+      "name": "Liberia",
+      "adj": "Liberian",
+      "national_admin_label": "Liberian Government",
+      "emergency_regime": "state of emergency (Constitution Article 86)"
+    },
+    {
+      "code": "LY",
+      "name": "Libya",
+      "adj": "Libyan",
+      "national_admin_label": "Libyan Government",
+      "emergency_regime": "state of emergency"
+    },
+    {
+      "code": "MG",
+      "name": "Madagascar",
+      "adj": "Malagasy",
+      "national_admin_label": "Malagasy Government",
+      "emergency_regime": "état d'urgence (Constitution Article 61)"
+    },
+    {
+      "code": "MW",
+      "name": "Malawi",
+      "adj": "Malawian",
+      "national_admin_label": "Malawian Government",
+      "emergency_regime": "state of emergency (Constitution Section 45)"
+    },
+    {
+      "code": "MY",
+      "name": "Malaysia",
+      "adj": "Malaysian",
+      "national_admin_label": "Malaysian Government",
+      "emergency_regime": "state of emergency (Constitution Article 150)"
+    },
+    {
+      "code": "MV",
+      "name": "Maldives",
+      "adj": "Maldivian",
+      "national_admin_label": "Maldivian Government",
+      "emergency_regime": "state of emergency (Constitution Article 253)"
+    },
+    {
+      "code": "ML",
+      "name": "Mali",
+      "adj": "Malian",
+      "national_admin_label": "Malian Government",
+      "emergency_regime": "état d'urgence (Constitution Article 50)"
+    },
+    {
+      "code": "MH",
+      "name": "Marshall Islands",
+      "adj": "Marshallese",
+      "national_admin_label": "Marshall Islands Government",
+      "emergency_regime": "state of emergency (Constitution Article IX)"
+    },
+    {
+      "code": "MR",
+      "name": "Mauritania",
+      "adj": "Mauritanian",
+      "national_admin_label": "Mauritanian Government",
+      "emergency_regime": "état d'urgence (Constitution Article 39)"
+    },
+    {
+      "code": "MU",
+      "name": "Mauritius",
+      "adj": "Mauritian",
+      "national_admin_label": "Mauritian Government",
+      "emergency_regime": "state of emergency (Constitution Section 18)"
+    },
+    {
+      "code": "MX",
+      "name": "Mexico",
+      "adj": "Mexican",
+      "national_admin_label": "Mexican Government",
+      "emergency_regime": "suspensión de garantías (Constitution Article 29)"
+    },
+    {
+      "code": "FM",
+      "name": "Micronesia",
+      "adj": "Micronesian",
+      "national_admin_label": "Federated States of Micronesia Government",
+      "emergency_regime": "state of emergency (Constitution Article IX)"
+    },
+    {
+      "code": "MD",
+      "name": "Moldova",
+      "adj": "Moldovan",
+      "national_admin_label": "Moldovan Government",
+      "emergency_regime": "state of emergency (Constitution Article 66)"
+    },
+    {
+      "code": "MC",
+      "name": "Monaco",
+      "adj": "Monegasque",
+      "national_admin_label": "Monegasque Government",
+      "emergency_regime": "state of emergency (Constitution Article 55)"
+    },
+    {
+      "code": "MN",
+      "name": "Mongolia",
+      "adj": "Mongolian",
+      "national_admin_label": "Mongolian Government",
+      "emergency_regime": "state of emergency (Constitution Article 25)"
+    },
+    {
+      "code": "ME",
+      "name": "Montenegro",
+      "adj": "Montenegrin",
+      "national_admin_label": "Montenegrin Government",
+      "emergency_regime": "vanredno stanje (Constitution Article 101)"
+    },
+    {
+      "code": "MA",
+      "name": "Morocco",
+      "adj": "Moroccan",
+      "national_admin_label": "Moroccan Government",
+      "emergency_regime": "état d'exception (Constitution Article 59)"
+    },
+    {
+      "code": "MZ",
+      "name": "Mozambique",
+      "adj": "Mozambican",
+      "national_admin_label": "Mozambican Government",
+      "emergency_regime": "estado de emergência (Constitution Article 282)"
+    },
+    {
+      "code": "MM",
+      "name": "Myanmar",
+      "adj": "Burmese",
+      "national_admin_label": "Myanmar Government",
+      "emergency_regime": "state of emergency (Constitution Article 410)"
+    },
+    {
+      "code": "NA",
+      "name": "Namibia",
+      "adj": "Namibian",
+      "national_admin_label": "Namibian Government",
+      "emergency_regime": "state of emergency (Constitution Article 26)"
+    },
+    {
+      "code": "NR",
+      "name": "Nauru",
+      "adj": "Nauruan",
+      "national_admin_label": "Nauruan Government",
+      "emergency_regime": "state of emergency (Constitution Article 78)"
+    },
+    {
+      "code": "NP",
+      "name": "Nepal",
+      "adj": "Nepali",
+      "national_admin_label": "Nepali Government",
+      "emergency_regime": "state of emergency (Constitution Article 273)"
+    },
+    {
+      "code": "NZ",
+      "name": "New Zealand",
+      "adj": "New Zealander",
+      "national_admin_label": "New Zealand Government",
+      "emergency_regime": "national emergency (Civil Defence Emergency Management Act)"
+    },
+    {
+      "code": "NI",
+      "name": "Nicaragua",
+      "adj": "Nicaraguan",
+      "national_admin_label": "Nicaraguan Government",
+      "emergency_regime": "estado de emergencia (Constitution Article 185)"
+    },
+    {
+      "code": "NE",
+      "name": "Niger",
+      "adj": "Nigerien",
+      "national_admin_label": "Nigerien Government",
+      "emergency_regime": "état d'urgence (Constitution Article 67)"
+    },
+    {
+      "code": "NG",
+      "name": "Nigeria",
+      "adj": "Nigerian",
+      "national_admin_label": "Nigerian Federal Government",
+      "emergency_regime": "state of emergency (Constitution Section 305)"
+    },
+    {
+      "code": "KP",
+      "name": "North Korea",
+      "adj": "North Korean",
+      "national_admin_label": "DPRK Government",
+      "emergency_regime": "state of emergency"
+    },
+    {
+      "code": "MK",
+      "name": "North Macedonia",
+      "adj": "Macedonian",
+      "national_admin_label": "North Macedonian Government",
+      "emergency_regime": "воена состојба (Constitution Article 124)"
+    },
+    {
+      "code": "OM",
+      "name": "Oman",
+      "adj": "Omani",
+      "national_admin_label": "Omani Government",
+      "emergency_regime": "state of emergency (Basic Law Article 42)"
+    },
+    {
+      "code": "PK",
+      "name": "Pakistan",
+      "adj": "Pakistani",
+      "national_admin_label": "Pakistani Government",
+      "emergency_regime": "state of emergency (Constitution Article 232)"
+    },
+    {
+      "code": "PW",
+      "name": "Palau",
+      "adj": "Palauan",
+      "national_admin_label": "Palauan Government",
+      "emergency_regime": "state of emergency (Constitution Article VIII)"
+    },
+    {
+      "code": "PA",
+      "name": "Panama",
+      "adj": "Panamanian",
+      "national_admin_label": "Panamanian Government",
+      "emergency_regime": "estado de urgencia (Constitution Article 55)"
+    },
+    {
+      "code": "PG",
+      "name": "Papua New Guinea",
+      "adj": "Papua New Guinean",
+      "national_admin_label": "Papua New Guinea Government",
+      "emergency_regime": "state of emergency (Constitution Section 228)"
+    },
+    {
+      "code": "PY",
+      "name": "Paraguay",
+      "adj": "Paraguayan",
+      "national_admin_label": "Paraguayan Government",
+      "emergency_regime": "estado de excepción (Constitution Article 288)"
+    },
+    {
+      "code": "PE",
+      "name": "Peru",
+      "adj": "Peruvian",
+      "national_admin_label": "Peruvian Government",
+      "emergency_regime": "estado de emergencia (Constitution Article 137)"
+    },
+    {
+      "code": "PH",
+      "name": "Philippines",
+      "adj": "Filipino",
+      "national_admin_label": "Philippine Government",
+      "emergency_regime": "martial law / state of emergency (Constitution Article VII Section 18)"
+    },
+    {
+      "code": "QA",
+      "name": "Qatar",
+      "adj": "Qatari",
+      "national_admin_label": "Qatari Government",
+      "emergency_regime": "state of emergency (Constitution Article 69)"
+    },
+    {
+      "code": "RW",
+      "name": "Rwanda",
+      "adj": "Rwandan",
+      "national_admin_label": "Rwandan Government",
+      "emergency_regime": "state of emergency (Constitution Article 110)"
+    },
+    {
+      "code": "KN",
+      "name": "Saint Kitts and Nevis",
+      "adj": "Kittitian",
+      "national_admin_label": "St Kitts and Nevis Government",
+      "emergency_regime": "state of emergency (Constitution Section 18)"
+    },
+    {
+      "code": "LC",
+      "name": "Saint Lucia",
+      "adj": "Saint Lucian",
+      "national_admin_label": "Saint Lucia Government",
+      "emergency_regime": "state of emergency (Constitution Section 17)"
+    },
+    {
+      "code": "VC",
+      "name": "Saint Vincent and the Grenadines",
+      "adj": "Vincentian",
+      "national_admin_label": "St Vincent and the Grenadines Government",
+      "emergency_regime": "state of emergency (Constitution Section 17)"
+    },
+    {
+      "code": "WS",
+      "name": "Samoa",
+      "adj": "Samoan",
+      "national_admin_label": "Samoan Government",
+      "emergency_regime": "state of emergency (Constitution Article 104)"
+    },
+    {
+      "code": "SM",
+      "name": "San Marino",
+      "adj": "San Marinese",
+      "national_admin_label": "San Marino Government",
+      "emergency_regime": "state of emergency"
+    },
+    {
+      "code": "SA",
+      "name": "Saudi Arabia",
+      "adj": "Saudi",
+      "national_admin_label": "Saudi Arabian Government",
+      "emergency_regime": "state of emergency (Basic Law Article 60)"
+    },
+    {
+      "code": "SN",
+      "name": "Senegal",
+      "adj": "Senegalese",
+      "national_admin_label": "Senegalese Government",
+      "emergency_regime": "état d'urgence (Constitution Article 69)"
+    },
+    {
+      "code": "RS",
+      "name": "Serbia",
+      "adj": "Serbian",
+      "national_admin_label": "Serbian Government",
+      "emergency_regime": "vanredno stanje (Constitution Article 200)"
+    },
+    {
+      "code": "SC",
+      "name": "Seychelles",
+      "adj": "Seychellois",
+      "national_admin_label": "Seychellois Government",
+      "emergency_regime": "state of emergency (Constitution Article 40)"
+    },
+    {
+      "code": "SL",
+      "name": "Sierra Leone",
+      "adj": "Sierra Leonean",
+      "national_admin_label": "Sierra Leonean Government",
+      "emergency_regime": "state of emergency (Constitution Section 29)"
+    },
+    {
+      "code": "SG",
+      "name": "Singapore",
+      "adj": "Singaporean",
+      "national_admin_label": "Singapore Government",
+      "emergency_regime": "state of emergency (Constitution Article 150)"
+    },
+    {
+      "code": "SB",
+      "name": "Solomon Islands",
+      "adj": "Solomon Islander",
+      "national_admin_label": "Solomon Islands Government",
+      "emergency_regime": "state of emergency (Constitution Section 32)"
+    },
+    {
+      "code": "SO",
+      "name": "Somalia",
+      "adj": "Somali",
+      "national_admin_label": "Somali Federal Government",
+      "emergency_regime": "state of emergency (Constitution Article 88)"
+    },
+    {
+      "code": "ZA",
+      "name": "South Africa",
+      "adj": "South African",
+      "national_admin_label": "South African Government",
+      "emergency_regime": "state of emergency (Constitution Section 37)"
+    },
+    {
+      "code": "KR",
+      "name": "South Korea",
+      "adj": "South Korean",
+      "national_admin_label": "South Korean Government",
+      "emergency_regime": "비상계엄 / martial law (Martial Law Act)"
+    },
+    {
+      "code": "SS",
+      "name": "South Sudan",
+      "adj": "South Sudanese",
+      "national_admin_label": "South Sudanese Government",
+      "emergency_regime": "state of emergency (Constitution Article 189)"
+    },
+    {
+      "code": "LK",
+      "name": "Sri Lanka",
+      "adj": "Sri Lankan",
+      "national_admin_label": "Sri Lankan Government",
+      "emergency_regime": "state of emergency (Public Security Ordinance)"
+    },
+    {
+      "code": "SD",
+      "name": "Sudan",
+      "adj": "Sudanese",
+      "national_admin_label": "Sudanese Government",
+      "emergency_regime": "state of emergency (Constitution Article 135)"
+    },
+    {
+      "code": "SR",
+      "name": "Suriname",
+      "adj": "Surinamese",
+      "national_admin_label": "Surinamese Government",
+      "emergency_regime": "state of emergency (Constitution Article 24)"
+    },
+    {
+      "code": "CH",
+      "name": "Switzerland",
+      "adj": "Swiss",
+      "national_admin_label": "Swiss Federal Council",
+      "emergency_regime": "state of emergency (EpG / ordinance powers)"
+    },
+    {
+      "code": "SY",
+      "name": "Syria",
+      "adj": "Syrian",
+      "national_admin_label": "Syrian Government",
+      "emergency_regime": "state of emergency"
+    },
+    {
+      "code": "ST",
+      "name": "São Tomé and Príncipe",
+      "adj": "São Toméan",
+      "national_admin_label": "São Tomé and Príncipe Government",
+      "emergency_regime": "estado de emergência (Constitution Article 23)"
+    },
+    {
+      "code": "TW",
+      "name": "Taiwan",
+      "adj": "Taiwanese",
+      "national_admin_label": "Taiwanese Government",
+      "emergency_regime": "state of emergency (Act for the Special Relief Measures)"
+    },
+    {
+      "code": "TJ",
+      "name": "Tajikistan",
+      "adj": "Tajik",
+      "national_admin_label": "Tajik Government",
+      "emergency_regime": "state of emergency (Constitution Article 70)"
+    },
+    {
+      "code": "TZ",
+      "name": "Tanzania",
+      "adj": "Tanzanian",
+      "national_admin_label": "Tanzanian Government",
+      "emergency_regime": "state of emergency (Constitution Article 32)"
+    },
+    {
+      "code": "TH",
+      "name": "Thailand",
+      "adj": "Thai",
+      "national_admin_label": "Thai Government",
+      "emergency_regime": "state of emergency (Emergency Decree)"
+    },
+    {
+      "code": "TL",
+      "name": "Timor-Leste",
+      "adj": "Timorese",
+      "national_admin_label": "Timor-Leste Government",
+      "emergency_regime": "estado de emergência (Constitution Article 25)"
+    },
+    {
+      "code": "TG",
+      "name": "Togo",
+      "adj": "Togolese",
+      "national_admin_label": "Togolese Government",
+      "emergency_regime": "état d'urgence (Constitution Article 127)"
+    },
+    {
+      "code": "TO",
+      "name": "Tonga",
+      "adj": "Tongan",
+      "national_admin_label": "Tongan Government",
+      "emergency_regime": "state of emergency (Emergency Powers Act)"
+    },
+    {
+      "code": "TT",
+      "name": "Trinidad and Tobago",
+      "adj": "Trinidadian",
+      "national_admin_label": "Trinidad and Tobago Government",
+      "emergency_regime": "state of emergency (Constitution Section 8)"
+    },
+    {
+      "code": "TN",
+      "name": "Tunisia",
+      "adj": "Tunisian",
+      "national_admin_label": "Tunisian Government",
+      "emergency_regime": "état d'exception (Constitution Article 80)"
+    },
+    {
+      "code": "TR",
+      "name": "Turkey",
+      "adj": "Turkish",
+      "national_admin_label": "Turkish Government",
+      "emergency_regime": "olağanüstü hal / state of emergency (Constitution Article 119)"
+    },
+    {
+      "code": "TM",
+      "name": "Turkmenistan",
+      "adj": "Turkmen",
+      "national_admin_label": "Turkmen Government",
+      "emergency_regime": "state of emergency (Constitution Article 71)"
+    },
+    {
+      "code": "TV",
+      "name": "Tuvalu",
+      "adj": "Tuvaluan",
+      "national_admin_label": "Tuvaluan Government",
+      "emergency_regime": "state of emergency (Constitution Schedule 2)"
+    },
+    {
+      "code": "UG",
+      "name": "Uganda",
+      "adj": "Ugandan",
+      "national_admin_label": "Ugandan Government",
+      "emergency_regime": "state of emergency (Constitution Article 110)"
+    },
+    {
+      "code": "UA",
+      "name": "Ukraine",
+      "adj": "Ukrainian",
+      "national_admin_label": "Ukrainian Government",
+      "emergency_regime": "воєнний стан / martial law (Law on Legal Regime of Martial Law)"
+    },
+    {
+      "code": "AE",
+      "name": "United Arab Emirates",
+      "adj": "Emirati",
+      "national_admin_label": "UAE Federal Government",
+      "emergency_regime": "state of emergency (Constitution Article 144)"
+    },
+    {
+      "code": "GB",
+      "name": "United Kingdom",
+      "adj": "British",
+      "national_admin_label": "UK central government",
+      "emergency_regime": "emergency powers (Civil Contingencies Act 2004 Part 2)"
+    },
+    {
+      "code": "US",
+      "name": "United States",
+      "adj": "American",
+      "national_admin_label": "US Federal Government",
+      "emergency_regime": "national emergency (National Emergencies Act / Defense Production Act)"
+    },
+    {
+      "code": "UY",
+      "name": "Uruguay",
+      "adj": "Uruguayan",
+      "national_admin_label": "Uruguayan Government",
+      "emergency_regime": "medidas prontas de seguridad (Constitution Article 168)"
+    },
+    {
+      "code": "UZ",
+      "name": "Uzbekistan",
+      "adj": "Uzbek",
+      "national_admin_label": "Uzbek Government",
+      "emergency_regime": "state of emergency (Constitution Article 93)"
+    },
+    {
+      "code": "VU",
+      "name": "Vanuatu",
+      "adj": "Ni-Vanuatu",
+      "national_admin_label": "Vanuatu Government",
+      "emergency_regime": "state of emergency (Constitution Article 54)"
+    },
+    {
+      "code": "VE",
+      "name": "Venezuela",
+      "adj": "Venezuelan",
+      "national_admin_label": "Venezuelan Government",
+      "emergency_regime": "estado de excepción (Constitution Article 337)"
+    },
+    {
+      "code": "VN",
+      "name": "Vietnam",
+      "adj": "Vietnamese",
+      "national_admin_label": "Vietnamese Government",
+      "emergency_regime": "state of emergency (Law on National Defense)"
+    },
+    {
+      "code": "YE",
+      "name": "Yemen",
+      "adj": "Yemeni",
+      "national_admin_label": "Yemeni Government",
+      "emergency_regime": "state of emergency (Constitution Article 124)"
+    },
+    {
+      "code": "ZM",
+      "name": "Zambia",
+      "adj": "Zambian",
+      "national_admin_label": "Zambian Government",
+      "emergency_regime": "state of emergency (Constitution Article 30)"
+    },
+    {
+      "code": "ZW",
+      "name": "Zimbabwe",
+      "adj": "Zimbabwean",
+      "national_admin_label": "Zimbabwean Government",
+      "emergency_regime": "state of emergency (Constitution Section 113)"
+    }
+  ]
+}

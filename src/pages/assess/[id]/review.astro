@@ -1,0 +1,91 @@
+---
+import '../../../styles/global.css';
+export const prerender = false;
+
+const { id } = Astro.params;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review & Submit — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+  </header>
+
+  <main class="max-w-xl mx-auto px-6 py-10">
+    <h1 class="text-2xl font-bold mb-2">Review & submit</h1>
+    <p class="text-gray-600 text-sm mb-8">
+      Check your answers before submitting. You can go back and change any answer.
+      Once submitted, the assessment is locked.
+    </p>
+
+    <div id="answer-summary" class="mb-8 text-sm text-gray-600">Loading answers…</div>
+
+    <div class="border border-gray-200 rounded-xl p-5 mb-6">
+      <h2 class="font-semibold text-base mb-3">Contribute to public corpus</h2>
+      <label class="flex items-start gap-3 cursor-pointer">
+        <input type="checkbox" id="corpus-opt-in" class="mt-0.5 rounded" />
+        <span class="text-sm text-gray-700 leading-relaxed">
+          Contribute this assessment to the public Cloud Sovereignty Index corpus (anonymized).
+          <br />
+          <span class="text-xs text-gray-500 mt-1 block">
+            What's shared: variant, jurisdiction (ISO code only), service models, scores, SEAL levels, instrument version, submission month.
+            What's not shared: company name, evidence text, IP address, precise timestamp.
+          </span>
+        </span>
+      </label>
+    </div>
+
+    <button id="submit-btn"
+      class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
+      Submit assessment
+    </button>
+
+    <p id="error-msg" class="text-red-600 text-sm mt-3 hidden"></p>
+  </main>
+
+  <script define:vars={{ id }}>
+    // Show answer summary from localStorage
+    const cached = JSON.parse(localStorage.getItem(`csi:${id}`) ?? '{}');
+    const answers = cached.answers ?? {};
+    const count = Object.keys(answers).length;
+    const summary = document.getElementById('answer-summary');
+    if (summary) {
+      summary.textContent = `${count} question${count !== 1 ? 's' : ''} answered.`;
+    }
+
+    document.getElementById('submit-btn')?.addEventListener('click', async () => {
+      const sharePublicly = (document.getElementById('corpus-opt-in')).checked;
+      const errorMsg = document.getElementById('error-msg');
+
+      try {
+        // Flush answers first
+        const patchRes = await fetch(`/api/assessments/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ answers }),
+        });
+        if (!patchRes.ok) throw new Error('Failed to save answers');
+
+        const res = await fetch(`/api/assessments/${id}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ share_publicly: sharePublicly }),
+        });
+        if (!res.ok) throw new Error('Submit failed');
+
+        window.location.href = `/assess/${id}/result`;
+      } catch (err) {
+        if (errorMsg) {
+          errorMsg.textContent = String(err);
+          errorMsg.classList.remove('hidden');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

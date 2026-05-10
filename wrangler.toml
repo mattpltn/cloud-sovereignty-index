@@ -1,0 +1,14 @@
+name = "cloud-sovereignty-index-api"
+main = "workers/src/index.ts"
+compatibility_date = "2024-12-05"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "cloud-sovereignty-index-prod"
+database_id = "2ecd5bff-e6a9-4e9e-a1e9-0b63e19b1562"
+migrations_dir = "workers/migrations"
+
+[dev]
+port = 8787
+local_protocol = "http"
