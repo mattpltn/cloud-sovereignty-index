@@ -87,17 +87,21 @@ export default function ObjectiveAccordion({ objectives, criteria, country, vari
   const [open, setOpen] = useState<Set<string>>(new Set());
   const ctx = { variant, country };
 
-  // Auto-open objective targeted by URL hash (e.g. #obj-SOV-5)
+  // Open and scroll to objective targeted by URL hash (e.g. #obj-SOV-5)
+  function handleHash(hash: string) {
+    if (!hash.startsWith('#obj-')) return;
+    const objId = hash.slice(5);
+    setOpen(prev => new Set([...prev, objId]));
+    setTimeout(() => {
+      document.getElementById(`obj-${objId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
+
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash.startsWith('#obj-')) {
-      const objId = hash.slice(5); // e.g. "SOV-5"
-      setOpen(new Set([objId]));
-      // Small delay to let the DOM render before scrolling
-      setTimeout(() => {
-        document.getElementById(`obj-${objId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
+    handleHash(window.location.hash);
+    const onHashChange = () => handleHash(window.location.hash);
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
   function toggle(id: string) {
