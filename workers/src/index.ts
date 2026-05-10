@@ -106,7 +106,11 @@ app.get('/api/assessments/:id', async (c) => {
   const row = await c.env.DB.prepare('SELECT * FROM assessments WHERE id = ?').bind(id).first();
   if (!row) return c.json({ error: 'Not found' }, 404);
 
-  return c.json(row);
+  const historyResult = await c.env.DB.prepare(
+    'SELECT id, submitted_at, seal_level, overall_score FROM assessment_history WHERE assessment_id = ? ORDER BY submitted_at DESC'
+  ).bind(id).all();
+
+  return c.json({ ...row, history: historyResult.results });
 });
 
 // ── PATCH /api/assessments/:id ────────────────────────────────────────────────
@@ -127,16 +131,16 @@ app.patch('/api/assessments/:id', async (c) => {
   const parsed = PatchSchema.safeParse(body);
   if (!parsed.success) return c.json({ error: parsed.error.issues }, 400);
 
-  const existing = await c.env.DB.prepare('SELECT id,status FROM assessments WHERE id = ?').bind(id).first();
+  const existing = await c.env.DB.prepare('SELECT id FROM assessments WHERE id = ?').bind(id).first();
   if (!existing) return c.json({ error: 'Not found' }, 404);
-  if ((existing as { status: string }).status === 'submitted') return c.json({ error: 'Assessment already submitted' }, 409);
 
   const data = parsed.data;
   const ts = now();
   const exp = expiresAt();
 
-  const sets: string[] = ['updated_at = ?', 'expires_at = ?'];
-  const vals: unknown[] = [ts, exp];
+  // Reset to draft so the assessment can be re-submitted
+  const sets: string[] = ['updated_at = ?', 'expires_at = ?', 'status = ?', 'computed_score = ?', 'finalized_at = ?'];
+  const vals: unknown[] = [ts, exp, 'draft', null, null];
 
   if (data.answers !== undefined) { sets.push('answers = ?'); vals.push(JSON.stringify(data.answers)); }
   if (data.share_publicly !== undefined) { sets.push('share_publicly = ?'); vals.push(data.share_publicly ? 1 : 0); }
@@ -166,7 +170,7 @@ app.post('/api/assessments/:id/submit', async (c) => {
 
   const row = await c.env.DB.prepare('SELECT * FROM assessments WHERE id = ?').bind(id).first() as Record<string, unknown> | null;
   if (!row) return c.json({ error: 'Not found' }, 404);
-  if (row.status === 'submitted') return c.json({ error: 'Already submitted' }, 409);
+  // Allow re-submission (answers may have been updated)
 
   const answers = JSON.parse(row.answers as string ?? '{}');
   const result = scoreAssessment(answers, criteria, id, {
@@ -178,6 +182,12 @@ app.post('/api/assessments/:id/submit', async (c) => {
   });
 
   const ts = now();
+
+  await c.env.DB.prepare(
+    `INSERT INTO assessment_history (assessment_id, submitted_at, seal_level, overall_score, answers_snapshot, computed_score)
+     VALUES (?, ?, ?, ?, ?, ?)`
+  ).bind(id, ts, result.seal_level, result.overall_score, row.answers, JSON.stringify(result)).run();
+
   await c.env.DB.prepare(
     `UPDATE assessments SET status='submitted', share_publicly=?, computed_score=?, finalized_at=?, updated_at=? WHERE id=?`
   ).bind(parsed.data.share_publicly ? 1 : 0, JSON.stringify(result), ts, ts, id).run();

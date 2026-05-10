@@ -38,6 +38,9 @@ const instrumentVersion = (record?.instrument_version as string) ?? '1.0';
 const objectives = (result?.objectives as Array<Record<string, unknown>>) ?? [];
 const gapReport = (result?.gap_report as Array<Record<string, unknown>>) ?? [];
 const companyName = (record?.company_name as string | undefined) || undefined;
+
+interface HistoryEntry { id: number; submitted_at: string; seal_level: number; overall_score: number }
+const history = (record?.history as HistoryEntry[]) ?? [];
 const countryCode = (record?.national_country as string | undefined) || undefined;
 
 // Look up country object for placeholder resolution
@@ -232,6 +235,50 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
             overallSeal={sealLevel}
           />
         </div>
+
+        {/* ── Submission history ───────────────────────────────────────────── */}
+        {history.length > 0 && (
+          <div class="mt-8">
+            <h2 class="font-semibold text-base mb-3">Submission history</h2>
+            <div class="border border-gray-100 rounded-lg overflow-hidden">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="bg-gray-50 text-gray-500 text-left">
+                    <th class="px-4 py-2 font-medium">#</th>
+                    <th class="px-4 py-2 font-medium">Date</th>
+                    <th class="px-4 py-2 font-medium">Score</th>
+                    <th class="px-4 py-2 font-medium">SEAL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {history.map((entry, i) => {
+                    const isCurrent = i === 0;
+                    const color = SEAL_COLORS[entry.seal_level] ?? '#6b7280';
+                    const date = new Date(entry.submitted_at).toLocaleString('en-GB', {
+                      day: 'numeric', month: 'short', year: 'numeric',
+                      hour: '2-digit', minute: '2-digit'
+                    });
+                    return (
+                      <tr class={`border-t border-gray-100 ${isCurrent ? 'bg-blue-50' : ''}`}>
+                        <td class="px-4 py-2 text-gray-500 font-mono">
+                          {history.length - i}
+                          {isCurrent && <span class="ml-2 text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-medium">current</span>}
+                        </td>
+                        <td class="px-4 py-2 text-gray-700">{date}</td>
+                        <td class="px-4 py-2 font-medium" style={`color: ${color}`}>{Math.round(entry.overall_score)}%</td>
+                        <td class="px-4 py-2">
+                          <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style={`background-color: ${color}`}>
+                            SEAL {entry.seal_level}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         <div class="mt-8 p-4 bg-gray-50 rounded-xl text-sm text-gray-600">
           <p class="font-medium text-gray-900 mb-1">Methodological note</p>
