@@ -24,7 +24,8 @@ let countryCode: string | undefined;
 let country;
 
 try {
-  const res = await fetch(`http://localhost:8787/api/assessments/${id}`);
+  const apiBase = new URL('/api', Astro.request.url).toString();
+  const res = await fetch(`${apiBase}/assessments/${id}`);
   if (res.ok) {
     const data = await res.json() as { variant: string; national_country?: string };
     variant = data.variant as 'EU-CSF' | 'Generalized';

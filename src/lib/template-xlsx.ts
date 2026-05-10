@@ -2,7 +2,7 @@ import type ExcelJS from 'exceljs';
 import type { CriteriaFile } from '../../shared/src/schema.js';
 import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
 
-interface Country { code: string; name: string }
+interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
 interface CountriesFile { EU: Country[]; EEA_non_EU: Country[]; non_EU: Country[] }
 
 const ANSWER_VALIDATION = {
@@ -44,6 +44,7 @@ function addAssessmentSheet(
   sheetName: string,
   criteria: CriteriaFile,
   euMode: boolean,
+  country?: Country,
 ) {
   const ws = wb.addWorksheet(sheetName);
 
@@ -74,9 +75,9 @@ function addAssessmentSheet(
 
   ws.views = [{ state: 'frozen', ySplit: 1 }];
 
-  const euCtx = { variant: 'EU-CSF' as const };
-  const globalCtx = { variant: 'Generalized' as const };
-  const ctx = euMode ? euCtx : globalCtx;
+  const ctx = euMode
+    ? { variant: 'EU-CSF' as const, country }
+    : { variant: 'Generalized' as const, country };
 
   // For non-EU mode, resolve bloc text with generic placeholder
   const blocBlocLabel = euMode ? 'EU' : 'your country';
@@ -113,17 +114,6 @@ function addAssessmentSheet(
           natRow.height = Math.min(60, Math.ceil(natText.length / 80) * 15 + 15);
           natRow.getCell(5).alignment = { wrapText: true, vertical: 'top' };
           // Note explaining placeholders
-          natRow.getCell(5).note = {
-            texts: [
-              { font: { bold: true }, text: 'Country-specific question\n' },
-              { text: 'Replace placeholders before use:\n' },
-              { text: '{{COUNTRY}} → your member state (e.g. France)\n' },
-              { text: '{{COUNTRY_ADJ}} → adjective (e.g. French)\n' },
-              { text: '{{NATIONAL_ADMIN}} → your national admin body\n' },
-              { text: '{{EMERGENCY_REGIME}} → your legal emergency regime\n' },
-              { text: '\nThis row only applies when assessing against a specific EU member state.' },
-            ],
-          };
         }
       }
     }
@@ -148,6 +138,7 @@ function addAssessmentSheet(
 export async function buildTemplateXlsx(
   criteria: CriteriaFile,
   countries: CountriesFile,
+  selectedCountryCode?: string,
 ): Promise<Blob> {
   const ExcelJS = (await import('exceljs')).default;
   const wb = new ExcelJS.Workbook();
@@ -192,6 +183,10 @@ export async function buildTemplateXlsx(
     ...countries.non_EU,
   ].sort((a, b) => a.name.localeCompare(b.name));
 
+  const selectedCountry = selectedCountryCode
+    ? allCountries.find(c => c.code === selectedCountryCode)
+    : undefined;
+
   // Write country list to a hidden helper column (Z) for data validation
   // ExcelJS list validation from a range is more reliable than a giant inline string
   const hiddenSheet = wb.addWorksheet('__countries__');
@@ -230,8 +225,8 @@ export async function buildTemplateXlsx(
   setup.getCell('B10').font = { color: { argb: 'FF6B7280' } };
 
   // ── Sheets 2 & 3: Assessment questions ─────────────────────────────────────
-  addAssessmentSheet(wb, 'EU Assessment', criteria, true);
-  addAssessmentSheet(wb, 'Global Assessment', criteria, false);
+  addAssessmentSheet(wb, 'EU Assessment', criteria, true, selectedCountry);
+  addAssessmentSheet(wb, 'Global Assessment', criteria, false, selectedCountry);
 
   // ── Sheet 4: Privacy ───────────────────────────────────────────────────────
   const privacy = wb.addWorksheet('Privacy');

@@ -68,9 +68,12 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
 
   async function handleTemplateDownload() {
     try {
+      const countrySelect = document.querySelector<HTMLSelectElement>('select[name="national_country"]');
+      const selectedCountryCode = countrySelect?.value || undefined;
       const blob = await buildTemplateXlsx(
         criteria,
         countries as Parameters<typeof buildTemplateXlsx>[1],
+        selectedCountryCode,
       );
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
