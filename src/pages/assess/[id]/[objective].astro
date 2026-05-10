@@ -94,14 +94,6 @@ if (countryCode) {
         const btn = document.getElementById('save-link-btn');
         if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Save link'; }, 2000); }
       });
-      // Ensure this assessment is in the recent list
-      try {
-        const recent = JSON.parse(localStorage.getItem('csi:recent') ?? '[]');
-        if (!recent.find((r) => r.id === id)) {
-          recent.unshift({ id, created: new Date().toISOString() });
-          localStorage.setItem('csi:recent', JSON.stringify(recent.slice(0, 5)));
-        }
-      } catch {}
     });
   </script>
 </body>
