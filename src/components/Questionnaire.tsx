@@ -144,8 +144,10 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
         const natVal = answers[natKey]?.value as AnswerValue | undefined;
         const blocVal = answers[blocKey]?.value as AnswerValue | undefined;
         const natSatisfied = natVal === 'yes';
-        // Show bloc fallback when: no country selected, OR national was answered but not yes
-        const showBloc = !hasNational || (natVal !== undefined && !natSatisfied);
+        // Generalized variant has no supranational bloc — national tier is the only tier
+        const isGeneralized = variant === 'Generalized';
+        // Show bloc fallback when: no country selected, OR national was answered but not yes (EU-CSF only)
+        const showBloc = !isGeneralized && (!hasNational || (natVal !== undefined && !natSatisfied));
 
         return (
           <div key={q.id} className="border border-gray-200 rounded-xl overflow-hidden">
@@ -167,7 +169,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                   {resolvePlaceholders(q.tiers.national!.text, ctx)}
                 </p>
                 <AnswerButtons questionKey={natKey} value={natVal} onAnswer={handleAnswer} />
-                {natSatisfied && (
+                {natSatisfied && !isGeneralized && (
                   <p className="mt-3 text-xs text-green-600 bg-green-50 rounded-lg px-3 py-2">
                     ✓ {country!.name} tier satisfied — EU tier is automatically satisfied.
                   </p>
