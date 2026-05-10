@@ -120,6 +120,12 @@ Deployed automatically on push to `main`:
 
 ---
 
+## License
+
+[CC BY-NC 4.0](LICENSE) — free to use, share, and adapt for non-commercial purposes with attribution. Commercial use (paid products, consulting services, white-labelling) requires permission — open an issue to discuss.
+
+---
+
 ## Based on
 
 - [EU Cloud Sovereignty Framework v1.2.1](https://digitaleurope.org/resources/cloud-sovereignty/)
