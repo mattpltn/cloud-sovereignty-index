@@ -47,21 +47,24 @@ function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string, ctx:
 }
 
 function buildNarrative(result: AssessmentResult, criteria: CriteriaFile): string {
-  const { overall_score, seal_level, objectives } = result;
+  const { overall_score, seal_level, objectives, variant } = result;
+  const isGeneralized = variant === 'Generalized';
+  const levelPrefix = isGeneralized ? 'CSL' : 'SEAL';
   const sealLabel = SEAL_LABELS[seal_level] ?? 'Unknown';
   const bottlenecks = objectives.filter(o => o.seal_level === seal_level && seal_level < 4);
   const strengths = objectives.filter(o => o.seal_level >= 3);
 
-  let text = `This assessment achieved an overall score of ${Math.round(overall_score)}%, corresponding to SEAL level ${seal_level} — ${sealLabel}. `;
+  let text = `This assessment achieved an overall score of ${Math.round(overall_score)}%, corresponding to ${levelPrefix} level ${seal_level} — ${sealLabel}. `;
+  text += `The ${levelPrefix} level uses a pass/fail gate per objective; the % score reflects partial credit across all criteria. `;
 
   if (seal_level === 4) {
     text += 'All objectives meet the highest sovereignty threshold.';
   } else {
     if (bottlenecks.length > 0) {
-      text += `The SEAL level is currently limited by ${bottlenecks.map(o => o.title).join(', ')}, which have not reached the next threshold. `;
+      text += `The ${levelPrefix} level is currently limited by ${bottlenecks.map(o => o.title).join(', ')}, which have not reached the next threshold. `;
     }
     if (strengths.length > 0) {
-      text += `Strong performance was observed in ${strengths.map(o => o.title).join(', ')} (SEAL ${Math.min(...strengths.map(o => o.seal_level))}+). `;
+      text += `Strong performance was observed in ${strengths.map(o => o.title).join(', ')} (${levelPrefix} ${Math.min(...strengths.map(o => o.seal_level))}+). `;
     }
     const topGap = result.gap_report[0];
     if (topGap) {
@@ -114,6 +117,11 @@ export async function buildReportPdf(
     footer: { position: 'absolute', bottom: 32, left: 48, right: 48, fontSize: 8, color: '#9ca3af', flexDirection: 'row', justifyContent: 'space-between' },
   });
 
+  const isGeneralized = result.variant === 'Generalized';
+  const levelPrefix = isGeneralized ? 'CSL' : 'SEAL';
+  const frameworkLine = isGeneralized
+    ? `Cloud Sovereignty Framework (Generalized) / BSI C5:2026`
+    : `EU Cloud Sovereignty Framework v1.2.1 / BSI C5:2026`;
   const sealColor = SEAL_COLORS_HEX[result.seal_level] ?? '#6b7280';
   const strengths = result.objectives.filter(o => o.seal_level >= 3);
   const weaknesses = result.objectives.filter(o => o.seal_level <= 1 || (o.seal_level === result.seal_level && result.seal_level < 4));
@@ -128,11 +136,11 @@ export async function buildReportPdf(
         h(Text, { style: styles.coverTitle }, 'Cloud Sovereignty\nAssessment Report'),
         h(Text, { style: styles.coverSub }, companyName ? `${companyName}` : 'Confidential Assessment'),
         h(Text, { style: styles.coverMeta }, `Date: ${dateStr}`),
-        h(Text, { style: styles.coverMeta }, `Framework: ${result.variant} — EU Cloud Sovereignty Framework v1.2.1 / BSI C5:2020`),
+        h(Text, { style: styles.coverMeta }, `Framework: ${frameworkLine}`),
         country && h(Text, { style: styles.coverMeta }, `Country: ${country.name}`),
         h(View, { style: styles.coverSealBox },
           h(Text, { style: { ...styles.coverSealScore, color: sealColor } }, `${Math.round(result.overall_score)}%`),
-          h(Text, { style: styles.coverSealLabel }, `SEAL ${result.seal_level} — ${SEAL_LABELS[result.seal_level]}`),
+          h(Text, { style: styles.coverSealLabel }, `${levelPrefix} ${result.seal_level} — ${SEAL_LABELS[result.seal_level]}`),
         ),
       ),
       h(View, { style: styles.footer },
@@ -154,7 +162,7 @@ export async function buildReportPdf(
         h(Text, { style: styles.colId }, 'ID'),
         h(Text, { style: styles.colTitle }, 'Objective'),
         h(Text, { style: styles.colPct }, 'Score'),
-        h(Text, { style: styles.colSeal }, 'SEAL'),
+        h(Text, { style: styles.colSeal }, levelPrefix),
       ),
       ...result.objectives.map((obj, i) => {
         const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
@@ -163,19 +171,19 @@ export async function buildReportPdf(
           h(Text, { style: { ...styles.colId, color } }, obj.objective_id),
           h(Text, { style: styles.colTitle }, obj.title),
           h(Text, { style: { ...styles.colPct, color } }, `${pct}%`),
-          h(Text, { style: { ...styles.colSeal, color } }, `SEAL ${obj.seal_level}`),
+          h(Text, { style: { ...styles.colSeal, color } }, `${levelPrefix} ${obj.seal_level}`),
         );
       }),
 
       // Strengths
       h(Text, { style: styles.sectionTitle }, '3. Strengths'),
       strengths.length === 0
-        ? h(Text, { style: styles.bodyText }, 'No objective has reached SEAL 3 yet.')
+        ? h(Text, { style: styles.bodyText }, `No objective has reached ${levelPrefix} 3 yet.`)
         : h(View, {},
             ...strengths.map(obj => {
               const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
               return h(View, { key: obj.objective_id, style: styles.strengthCard },
-                h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — SEAL ${obj.seal_level}, ${pct}%`),
+                h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.seal_level}, ${pct}%`),
                 h(Text, { style: styles.cardBody },
                   obj.questions.filter(q => q.value === 'yes').length + ' of ' + obj.questions.length + ' criteria met.'
                 ),
@@ -192,7 +200,7 @@ export async function buildReportPdf(
               const topQ = result.gap_report.find(g => g.objective_id === obj.objective_id);
               const topTitle = topQ ? getQuestionTitle(criteria, topQ.question_id) : '';
               return h(View, { key: obj.objective_id, style: styles.weakCard },
-                h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — SEAL ${obj.seal_level}`),
+                h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.seal_level}`),
                 h(Text, { style: styles.cardBody },
                   `Score: ${obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0}% (${obj.raw_score}/${obj.max_score} points).` +
                   (topTitle ? ` Top gap: ${topTitle} (${topQ?.question_id}).` : '')
@@ -229,16 +237,16 @@ export async function buildReportPdf(
       h(Text, { style: styles.sectionTitle }, '6. Methodology & Disclaimer'),
       h(View, { style: styles.noteBox },
         h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
-          'This report is a self-assessment based on the EU Cloud Sovereignty Framework v1.2.1 and BSI C5:2020 criteria. ' +
+          'This report is a self-assessment based on the EU Cloud Sovereignty Framework v1.2.1 and BSI C5:2026 criteria. ' +
           'It is not an official certification and has not been verified by an accredited auditor. ' +
           'Results are indicative and based solely on the responses provided.'
         ),
         h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
-          'SEAL levels are determined by the minimum score across all objectives — a single underperforming area caps the overall level. ' +
-          'The overall percentage score reflects weighted points earned across all criteria.'
+          `${levelPrefix} levels are determined by the minimum score across all objectives — a single underperforming area caps the overall level. ` +
+          'The overall percentage score reflects weighted points earned across all criteria (partial credit applies).'
         ),
         h(Text, { style: styles.bodyText },
-          'This tool is not affiliated with or endorsed by the German Federal Office for Information Security (BSI) or the European Commission. ' +
+          'This tool is not affiliated with or endorsed by BSI or the European Commission. ' +
           'Published under the MIT license at github.com/mattpltn/cloud-sovereignty-index.'
         ),
       ),

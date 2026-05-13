@@ -1,6 +1,6 @@
 # Cloud Sovereignty Index
 
-Assess your cloud provider's sovereignty posture against the **EU Cloud Sovereignty Framework v1.2.1**, powered by BSI C5:2020 criteria.
+Assess your cloud provider's sovereignty posture against the **EU Cloud Sovereignty Framework v1.2.1**, powered by BSI C5:2026 criteria.
 
 **Live tool → [cloud-sovereignty-index.pages.dev](https://cloud-sovereignty-index.pages.dev)**
 
@@ -12,7 +12,7 @@ The Cloud Sovereignty Index guides you through a structured assessment of a clou
 
 - Strategic · Legal · Data · Operational · Supply Chain · Technology · Security · Sustainability
 
-Each question maps to a BSI C5:2020 control. Answers produce a weighted **0–100% score** and a **SEAL level** (0–4):
+Each question maps to a BSI C5:2026 control. Answers produce a weighted **0–100% score** and a **SEAL level** (0–4):
 
 | SEAL | Label |
 |------|-------|
@@ -129,4 +129,4 @@ Deployed automatically on push to `main`:
 ## Based on
 
 - [EU Cloud Sovereignty Framework v1.2.1](https://digitaleurope.org/resources/cloud-sovereignty/)
-- [BSI C5:2020](https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html)
+- [BSI C5:2026](https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html)

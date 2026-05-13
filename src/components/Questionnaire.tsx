@@ -164,7 +164,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                     </span>
                   </div>
                   <span className="text-xs text-gray-400 whitespace-nowrap">
-                    SEAL {q.tiers.national!.seal_contribution} · {q.tiers.national!.points}pt
+                    Level {q.tiers.national!.seal_contribution} · {q.tiers.national!.points}pt
                   </span>
                 </div>
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
@@ -198,7 +198,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                     )}
                   </div>
                   <span className="text-xs text-gray-400 whitespace-nowrap">
-                    SEAL {q.tiers.bloc.seal_contribution} · {q.tiers.bloc.points}pt
+                    Level {q.tiers.bloc.seal_contribution} · {q.tiers.bloc.points}pt
                   </span>
                 </div>
                 {hasNational && (
@@ -259,7 +259,7 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
           <span className="text-xs font-mono text-gray-400 mr-2">{id}</span>
           <span className="text-sm font-medium">{title}</span>
         </div>
-        <span className="text-xs text-gray-400 whitespace-nowrap">SEAL {sealContribution} · {points}pt</span>
+        <span className="text-xs text-gray-400 whitespace-nowrap">Level {sealContribution} · {points}pt</span>
       </div>
       <p className="text-sm text-gray-700 mb-4 leading-relaxed">{text}</p>
       <div className="flex flex-wrap gap-2 mb-3">

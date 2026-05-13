@@ -58,6 +58,7 @@ const weaknesses = objectives.filter(o => (o.seal_level as number) <= 1 ||
 
 const SEAL_LABELS = ['No Sovereignty', 'Minimal Sovereignty', 'Partial Sovereignty', 'Substantial Sovereignty', 'Full Digital Sovereignty'];
 const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
+const levelPrefix = variant === 'Generalized' ? 'CSL' : 'SEAL';
 
 // Top 5 priority improvements — look up question title from criteria
 interface GapItem { objective_id: string; question_id: string; tier: string; priority: number }
@@ -126,7 +127,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
             <>
               <p class="mb-2">
                 Your score of <strong>{Math.round(score)}%</strong> reflects points earned across all criteria.
-                Your SEAL level is capped at <strong style={`color: ${SEAL_COLORS[sealLevel]}`}>SEAL {sealLevel} — {SEAL_LABELS[sealLevel]}</strong> because
+                Your {levelPrefix} level is capped at <strong style={`color: ${SEAL_COLORS[sealLevel]}`}>{levelPrefix} {sealLevel} — {SEAL_LABELS[sealLevel]}</strong> because
                 the following {bottlenecks.length === 1 ? 'objective has' : 'objectives have'} not yet reached the next threshold:
                 <strong> {bottlenecks.map(o => o.title as string).join(', ')}</strong>.
               </p>
@@ -155,7 +156,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
                       <span class="text-xs text-gray-500 ml-2">{obj.objective_id as string}</span>
                     </div>
                     <span class="text-sm font-medium" style={`color: ${color}`}>{pct}%</span>
-                    <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style={`background-color: ${color}`}>SEAL {seal}</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style={`background-color: ${color}`}>{levelPrefix} {seal}</span>
                   </div>
                 );
               })}
@@ -190,7 +191,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
                         {isBottleneck && <span class="ml-2 text-xs bg-red-200 text-red-800 px-1.5 py-0.5 rounded font-medium">Limiting SEAL</span>}
                       </div>
                       <span class="text-sm font-medium" style={`color: ${color}`}>{pct}%</span>
-                      <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style={`background-color: ${color}`}>SEAL {seal}</span>
+                      <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style={`background-color: ${color}`}>{levelPrefix} {seal}</span>
                     </div>
                     {topGapTitle && (
                       <p class="text-xs text-gray-600">Top gap: {topGapTitle} ({topGap?.question_id})</p>
@@ -247,7 +248,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
                     <th class="px-4 py-2 font-medium">#</th>
                     <th class="px-4 py-2 font-medium">Date</th>
                     <th class="px-4 py-2 font-medium">Score</th>
-                    <th class="px-4 py-2 font-medium">SEAL</th>
+                    <th class="px-4 py-2 font-medium">{levelPrefix}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -268,7 +269,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
                         <td class="px-4 py-2 font-medium" style={`color: ${color}`}>{Math.round(entry.overall_score)}%</td>
                         <td class="px-4 py-2">
                           <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style={`background-color: ${color}`}>
-                            SEAL {entry.seal_level}
+                            {levelPrefix} {entry.seal_level}
                           </span>
                         </td>
                       </tr>
@@ -284,7 +285,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
           <p class="font-medium text-gray-900 mb-1">Methodological note</p>
           <p>
             This is a self-assessment, not a certification. Results are indicative based on your responses.
-            All criteria sourced from BSI C5:2020 and EU Cloud Sovereignty Framework v1.2.1.
+            All criteria sourced from BSI C5:2026 and EU Cloud Sovereignty Framework v1.2.1.
           </p>
         </div>
       </>

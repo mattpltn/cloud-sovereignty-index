@@ -47,7 +47,12 @@ const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovere
     </section>
 
     <section class="mb-10">
-      <h2 class="text-xl font-semibold mb-3">3. SEAL Levels</h2>
+      <h2 class="text-xl font-semibold mb-3">3. SEAL / CSL Levels</h2>
+      <p class="text-sm text-gray-600 mb-4">
+        For EU/EEA assessments the metric is the <strong>SEAL</strong> (Sovereignty Evaluation and Assessment Level).
+        For non-EU (Generalized) assessments the equivalent metric is the <strong>CSL</strong> (Cloud Sovereignty Level).
+        Both use identical methodology — only the label differs to avoid implying EU procurement compliance for non-EU organisations.
+      </p>
       <div class="space-y-3">
         {criteria.seal_levels.map(sl => (
           <div class="flex items-start gap-4">
