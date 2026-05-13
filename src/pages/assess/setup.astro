@@ -75,12 +75,14 @@ const allCountries = [
       <div class="flex-grow border-t border-gray-200"></div>
     </div>
 
-    <ImportAssessment
-      client:load
-      criteria={criteria}
-      countries={countriesJson}
-      defaultVariant="EU-CSF"
-    />
+    <div id="import">
+      <ImportAssessment
+        client:load
+        criteria={criteria}
+        countries={countriesJson}
+        defaultVariant="EU-CSF"
+      />
+    </div>
   </main>
 
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
