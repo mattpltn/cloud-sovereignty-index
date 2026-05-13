@@ -72,19 +72,20 @@ const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovere
     <section class="mb-10">
       <h2 class="text-xl font-semibold mb-3">4. Scoring</h2>
       <div class="text-sm text-gray-700 space-y-3 leading-relaxed">
-        <p>Each question carries a point value and a SEAL contribution level (1–4).</p>
+        <p>Each question carries a point value and a sovereignty contribution level (1–4).</p>
         <ul class="list-disc pl-5 space-y-1">
-          <li><strong>Yes</strong>: full points awarded, counts toward SEAL</li>
-          <li><strong>Partial</strong>: half points, does not count toward SEAL</li>
-          <li><strong>No</strong>: 0 points, does not count toward SEAL</li>
+          <li><strong>Yes</strong>: full points awarded, counts toward the sovereignty level</li>
+          <li><strong>Partial</strong>: half points, does not count toward the sovereignty level</li>
+          <li><strong>No</strong>: 0 points, does not count toward the sovereignty level</li>
           <li><strong>N/A</strong>: excluded from numerator and denominator</li>
         </ul>
         <p>
           The weighted score formula is: <code class="bg-gray-100 px-1 rounded">Score = Σ (Score(SOVₙ) / MaxScore(SOVₙ)) × Weight(SOVₙ) × 100</code>
         </p>
         <p>
-          SEAL per objective: the highest level L such that ALL criteria with seal_contribution ≤ L
-          are answered Yes (weakest-link rule, per EU CSF §4).
+          Level per objective: the highest level L such that ALL criteria with contribution ≤ L
+          are answered Yes (weakest-link rule, per EU CSF §4). Displayed as SEAL for EU/EEA
+          assessments and CSL for Generalized (non-EU) assessments.
         </p>
       </div>
     </section>
@@ -111,8 +112,8 @@ const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovere
 
         <p><strong>Scoring of tiered criteria:</strong></p>
         <ul class="list-disc pl-5 space-y-1">
-          <li><strong>National = Yes</strong> → national tier points and SEAL contribution counted; bloc tier auto-credited for SEAL at the lower contribution level (no double-counting of points).</li>
-          <li><strong>National = No/Partial, Bloc = Yes</strong> → bloc tier points and SEAL contribution counted at the bloc level. National tier scored as answered (0 or half points).</li>
+          <li><strong>National = Yes</strong> → national tier points and sovereignty contribution counted; bloc tier auto-credited at the lower contribution level (no double-counting of points).</li>
+          <li><strong>National = No/Partial, Bloc = Yes</strong> → bloc tier points and sovereignty contribution counted at the bloc level. National tier scored as answered (0 or half points).</li>
           <li><strong>Both = No</strong> → 0 points for both tiers.</li>
         </ul>
 

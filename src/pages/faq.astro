@@ -38,7 +38,7 @@ import '../styles/global.css';
               It is a structured self-assessment instrument that lets organisations evaluate how well
               a cloud service supports their digital sovereignty goals. You answer a set of questions
               about a cloud provider or deployment, and the tool produces a weighted score from 0–100%
-              and a SEAL level from 0 (No Sovereignty) to 4 (Full Digital Sovereignty).
+              and a sovereignty level from 0 (No Sovereignty) to 4 (Full Digital Sovereignty) — shown as SEAL for EU/EEA assessments and CSL for non-EU assessments.
             </p>
           </div>
 
@@ -154,41 +154,44 @@ import '../styles/global.css';
 
       <!-- ── Scoring ──────────────────────────────────────────────────────── -->
       <section>
-        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Scoring & SEAL levels</h2>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Scoring & sovereignty levels</h2>
 
         <div class="space-y-6">
           <div>
             <h3 class="text-sm font-semibold mb-1">What do the answer options mean?</h3>
             <ul class="text-sm text-gray-700 space-y-1 leading-relaxed list-none">
-              <li><strong>Yes</strong> — the criterion is fully met. Full points, counts toward SEAL level.</li>
-              <li><strong>No</strong> — the criterion is not met. Zero points, does not count toward SEAL.</li>
-              <li><strong>Partial</strong> — the criterion is partially met. Half points, but does <em>not</em> count toward SEAL (the SEAL level uses a weakest-link rule).</li>
+              <li><strong>Yes</strong> — the criterion is fully met. Full points, counts toward the sovereignty level.</li>
+              <li><strong>No</strong> — the criterion is not met. Zero points, does not count toward the sovereignty level.</li>
+              <li><strong>Partial</strong> — the criterion is partially met. Half points, but does <em>not</em> count toward the sovereignty level (it uses a weakest-link rule).</li>
               <li><strong>N/A</strong> — the criterion does not apply to this deployment. Excluded from both numerator and denominator, so it does not penalise the score.</li>
             </ul>
           </div>
 
           <div>
-            <h3 class="text-sm font-semibold mb-1">What is the SEAL level?</h3>
+            <h3 class="text-sm font-semibold mb-1">What is the SEAL / CSL level?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              SEAL stands for Sovereignty Evaluation and Assurance Level. It is a 0–4 scale:
-              0 = No Sovereignty, 1 = Jurisdictional Sovereignty, 2 = Data Sovereignty,
-              3 = Digital Resilience, 4 = Full Digital Sovereignty. Each criterion contributes
-              to a specific SEAL level (1–4). The SEAL level for an objective is the highest
-              level L such that every criterion with seal_contribution ≤ L has been answered Yes
-              — a single failed criterion at level 1 drops the objective to SEAL 0. The overall
-              SEAL is the lowest SEAL across all objectives (weakest link across all dimensions).
+              For EU/EEA assessments the metric is the <strong>SEAL</strong> (Sovereignty Evaluation and Assurance Level).
+              For non-EU (Generalized) assessments the equivalent metric is the <strong>CSL</strong> (Cloud Sovereignty Level).
+              Both use identical methodology — only the label differs to avoid implying EU procurement compliance for non-EU organisations.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              The scale is 0–4: 0 = No Sovereignty, 1 = Jurisdictional Sovereignty, 2 = Data Sovereignty,
+              3 = Digital Resilience, 4 = Full Digital Sovereignty. Each criterion carries a contribution level (1–4).
+              The level for an objective is the highest level L such that every criterion with contribution ≤ L
+              is answered Yes — a single failed criterion at level 1 drops the objective to 0.
+              The overall level is the lowest across all objectives (weakest link).
             </p>
           </div>
 
           <div>
-            <h3 class="text-sm font-semibold mb-1">Why is my overall score high but my SEAL level low?</h3>
+            <h3 class="text-sm font-semibold mb-1">Why is my overall score high but my sovereignty level low?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              The percentage score and the SEAL level measure different things. The score is a
+              The percentage score and the sovereignty level measure different things. The score is a
               weighted average of how many points you earned across all questions — partial answers
-              count toward it. The SEAL level is a strict threshold: a single No or Partial on a
-              foundational criterion (SEAL contribution level 1) drops the objective to SEAL 0,
-              regardless of how well you scored on everything else. This is intentional — the SEAL
-              level is designed to identify the most critical sovereignty gaps, not be averaged away.
+              count toward it. The sovereignty level is a strict threshold: a single No or Partial on a
+              foundational criterion (contribution level 1) drops the objective to level 0,
+              regardless of how well you scored on everything else. This is intentional — the level
+              is designed to identify the most critical sovereignty gaps, not be averaged away.
             </p>
           </div>
         </div>
@@ -265,7 +268,7 @@ import '../styles/global.css';
             <h3 class="text-sm font-semibold mb-1">What is the public corpus?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
               When submitting an assessment, you can opt in to share an anonymised version of your
-              results with the public corpus. If you do, we publish: your score, SEAL level,
+              results with the public corpus. If you do, we publish: your score, sovereignty level (SEAL/CSL),
               variant, country, service model, role, and the month/year of submission (not the
               exact date). Company name is never included. The corpus is browsable at
               <a href="/corpus" class="text-blue-600 underline">/corpus</a> and is intended for

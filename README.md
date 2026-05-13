@@ -12,26 +12,30 @@ The Cloud Sovereignty Index guides you through a structured assessment of a clou
 
 - Strategic · Legal · Data · Operational · Supply Chain · Technology · Security · Sustainability
 
-Each question maps to a BSI C5:2026 control. Answers produce a weighted **0–100% score** and a **SEAL level** (0–4):
+Each question maps to a BSI C5:2026 control. Answers produce a weighted **0–100% score** and a **sovereignty level** (0–4).
 
-| SEAL | Label |
-|------|-------|
+The level is displayed as **SEAL** (Sovereignty Evaluation and Assurance Level) for EU/EEA assessments and **CSL** (Cloud Sovereignty Level) for non-EU assessments. Both use identical methodology — only the label differs.
+
+| Level | Label |
+|-------|-------|
 | 0 | No Sovereignty |
 | 1 | Minimal Sovereignty |
 | 2 | Partial Sovereignty |
 | 3 | Substantial Sovereignty |
 | 4 | Full Digital Sovereignty |
 
+The % score awards partial credit across all criteria. The SEAL/CSL level uses a stricter pass/fail gate per objective — a single unanswered foundational criterion caps the level regardless of overall score.
+
 ---
 
 ## Variants
 
-| Variant | Who it's for |
-|---------|-------------|
-| **EU / EEA** | Organisations in EU or EEA member states. Includes an optional national tier with country-specific criteria (e.g. ANSSI for France, BSI for Germany). |
-| **Global** | Any country outside the EU. Same criteria, with your country substituted for geographic references. |
+| Variant | Metric | Who it's for |
+|---------|--------|-------------|
+| **EU / EEA** | SEAL | Organisations in EU or EEA member states. Includes an optional national tier with country-specific criteria (e.g. ANSSI for France, BSI for Germany). |
+| **Global** | CSL | Any country outside the EU. Same criteria, with your country substituted for geographic references. No second (EU bloc) tier. |
 
-The framework was originally designed around Germany and the BSI. The EU and global variants are simulations of how the same principles apply elsewhere — not official certifications.
+The framework was originally designed around Germany and the BSI. The EU and global variants are simulations of how the same principles apply elsewhere — not official certifications. "CSL" is used instead of "SEAL" for non-EU assessments to avoid implying EU procurement compliance.
 
 ---
 
