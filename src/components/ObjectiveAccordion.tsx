@@ -54,14 +54,15 @@ function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string, ctx:
   for (const obj of criteria.objectives) {
     const q = obj.questions.find((q: Question) => q.id === qid);
     if (!q) continue;
+    const title = (ctx.variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
     if (q.type === 'single') {
       const text = (ctx.variant === 'Generalized' && q.text_generalized) ? q.text_generalized : q.text;
-      return { title: q.title, text: resolvePlaceholders(text, ctx), source: q.source?.clause ?? '', supplementary: q.supplementary_info };
+      return { title, text: resolvePlaceholders(text, ctx), source: q.source?.clause ?? '', supplementary: q.supplementary_info };
     }
     if (q.type === 'tiered') {
       const tierData = tier === 'national' ? q.tiers.national : q.tiers.bloc;
       if (!tierData) return null;
-      return { title: q.title, text: resolvePlaceholders(tierData.text, ctx), source: tierData.source?.clause ?? '', supplementary: q.supplementary_info };
+      return { title, text: resolvePlaceholders(tierData.text, ctx), source: tierData.source?.clause ?? '', supplementary: q.supplementary_info };
     }
   }
   return null;

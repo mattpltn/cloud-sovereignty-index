@@ -119,11 +119,12 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
         if (q.type === 'single') {
           const val = answers[q.id]?.value as AnswerValue | undefined;
           const qText = (variant === 'Generalized' && q.text_generalized) ? q.text_generalized : q.text;
+          const qTitle = (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
           return (
             <QuestionCard
               key={q.id}
               id={q.id}
-              title={q.title}
+              title={qTitle}
               text={resolvePlaceholders(qText, ctx)}
               sealContribution={q.seal_contribution}
               points={q.points}
@@ -138,6 +139,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
         }
 
         // Tiered question
+        const tieredTitle = (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
         const hasNational = !!country && !!q.tiers.national;
         const natKey = `${q.id}:national`;
         const blocKey = `${q.id}:bloc`;
@@ -156,7 +158,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                 <div className="flex items-start justify-between gap-4 mb-3">
                   <div>
                     <span className="text-xs font-mono text-gray-400 mr-2">{q.id}</span>
-                    <span className="text-sm font-medium">{q.title}</span>
+                    <span className="text-sm font-medium">{tieredTitle}</span>
                     <span className="ml-2 text-xs bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">
                       {country!.name} tier
                     </span>
@@ -185,7 +187,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                 <div className="flex items-start justify-between gap-4 mb-3">
                   <div>
                     {!hasNational && <span className="text-xs font-mono text-gray-400 mr-2">{q.id}</span>}
-                    {!hasNational && <span className="text-sm font-medium">{q.title}</span>}
+                    {!hasNational && <span className="text-sm font-medium">{tieredTitle}</span>}
                     {hasNational && (
                       <span className="text-sm font-medium text-gray-500">
                         Fallback: EU tier

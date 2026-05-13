@@ -67,7 +67,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
   for (const obj of criteria.objectives) {
     const q = obj.questions.find(q => q.id === g.question_id);
     if (q) {
-      title = q.title;
+      title = (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
       if (q.type === 'single') source = q.source?.clause ?? '';
       else if (q.type === 'tiered') source = (g.tier === 'national' ? q.tiers.national?.source?.clause : q.tiers.bloc?.source?.clause) ?? '';
       break;
@@ -178,7 +178,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
                 if (topGap) {
                   for (const o of criteria.objectives) {
                     const q = o.questions.find(q => q.id === topGap.question_id);
-                    if (q) { topGapTitle = q.title; break; }
+                    if (q) { topGapTitle = (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title; break; }
                   }
                 }
                 return (

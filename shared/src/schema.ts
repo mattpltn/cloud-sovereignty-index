@@ -20,6 +20,7 @@ const TierSchema = z.object({
 const QuestionBaseSchema = z.object({
   id: z.string().regex(/^SOV-\d+-\d+$/),
   title: z.string(),
+  title_generalized: z.string().optional(),
   supplementary_info: z.string().optional(),
 });
 

@@ -280,6 +280,7 @@
         {
           "id": "SOV-3-03",
           "title": "Data Residence — Derived & Account Data in EU",
+          "title_generalized": "Data Residence — Derived & Account Data",
           "type": "single",
           "text": "The cloud service provider MUST provide a service option where cloud service derived data and account data are exclusively stored and processed in {{BLOC}}.",
           "seal_contribution": 1,
@@ -704,6 +705,7 @@
         {
           "id": "SOV-7-02",
           "title": "GDPR Compliance",
+          "title_generalized": "Data Protection Law Compliance",
           "type": "single",
           "text": "Does the cloud service provider document and contractually commit to GDPR compliance for all processing of personal data under the cloud service?",
           "text_generalized": "Does the cloud service provider document and contractually commit to compliance with the applicable national data protection law for all processing of personal data under the cloud service?",
@@ -720,6 +722,7 @@
         {
           "id": "SOV-7-03",
           "title": "NIS2 Compliance",
+          "title_generalized": "Cybersecurity Regulation Compliance",
           "type": "single",
           "text": "Where NIS2 Directive obligations apply to the cloud service provider or customer, does the provider demonstrate documented compliance with applicable NIS2 security and incident reporting requirements?",
           "text_generalized": "Where applicable national cybersecurity regulations impose security and incident reporting obligations on the cloud service provider or customer, does the provider demonstrate documented compliance with those requirements?",
@@ -737,6 +740,7 @@
         {
           "id": "SOV-7-04",
           "title": "DORA Compliance",
+          "title_generalized": "Financial Sector ICT Resilience Compliance",
           "type": "single",
           "text": "Where DORA (Digital Operational Resilience Act) obligations apply, does the cloud service provider meet the ICT third-party risk requirements under DORA?",
           "text_generalized": "Where applicable financial sector regulations impose ICT third-party risk requirements on the cloud service provider or customer, does the provider meet those ICT third-party risk requirements?",
@@ -784,6 +788,7 @@
         {
           "id": "SOV-7-07",
           "title": "Independent EU Audit Capacity",
+          "title_generalized": "Independent Local Audit Capacity",
           "type": "single",
           "text": "Can the cloud service and its sovereignty controls be audited by an independent {{BLOC}}-based auditor, without requiring access or cooperation from non-{{BLOC}} entities?",
           "seal_contribution": 3,
