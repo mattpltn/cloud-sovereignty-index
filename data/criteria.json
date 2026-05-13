@@ -30,27 +30,32 @@
     {
       "level": 0,
       "name": "No Sovereignty",
-      "description": "Service, technology or operations under exclusive control of non-EU third parties, governed entirely in non-EU jurisdictions."
+      "description": "Service, technology or operations under exclusive control of non-EU third parties, governed entirely in non-EU jurisdictions.",
+      "description_generalized": "Service, technology or operations under exclusive control of extra-national third parties, governed entirely outside the assessed jurisdiction."
     },
     {
       "level": 1,
       "name": "Jurisdictional Sovereignty",
-      "description": "EU law formally applies with limited practical enforceability; service, technology or operations under exclusive control of non-EU third parties."
+      "description": "EU law formally applies with limited practical enforceability; service, technology or operations under exclusive control of non-EU third parties.",
+      "description_generalized": "National law formally applies with limited practical enforceability; service, technology or operations under exclusive control of extra-national third parties."
     },
     {
       "level": 2,
       "name": "Data Sovereignty",
-      "description": "EU law applicable and enforceable, with material non-EU dependencies remaining; service, technology or operations under indirect control of non-EU third parties."
+      "description": "EU law applicable and enforceable, with material non-EU dependencies remaining; service, technology or operations under indirect control of non-EU third parties.",
+      "description_generalized": "National law applicable and enforceable, with material extra-national dependencies remaining; service, technology or operations under indirect control of extra-national third parties."
     },
     {
       "level": 3,
       "name": "Digital Resilience",
-      "description": "EU law applicable and enforceable, EU actors exercising meaningful but not full influence; service, technology or operations under marginal control of non-EU third parties."
+      "description": "EU law applicable and enforceable, EU actors exercising meaningful but not full influence; service, technology or operations under marginal control of non-EU third parties.",
+      "description_generalized": "National law applicable and enforceable, national actors exercising meaningful but not full influence; service, technology or operations under marginal control of extra-national third parties."
     },
     {
       "level": 4,
       "name": "Full Digital Sovereignty",
-      "description": "Technology and operations under complete EU control, subject only to EU law, with no critical non-EU dependencies."
+      "description": "Technology and operations under complete EU control, subject only to EU law, with no critical non-EU dependencies.",
+      "description_generalized": "Technology and operations under complete national control, subject only to national law, with no critical extra-national dependencies."
     }
   ],
   "objectives": [

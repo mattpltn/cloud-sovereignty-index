@@ -873,7 +873,7 @@
       "source": {
         "doc": "EU-CSF",
         "clause": "§3",
-        "verbatim": "SEAL — Sovereignty Evaluation and Assurance Level. Five levels: SEAL 0 (No Sovereignty) to SEAL 4 (Full Digital Sovereignty)."
+        "verbatim": "SEAL — Sovereignty Effectiveness Assurance Level (EU-CSF §3). Five levels: SEAL 0 (No Sovereignty) to SEAL 4 (Full Digital Sovereignty)."
       },
       "adaptation": {
         "summary": "For Generalized (non-EU) assessments, the sovereignty level is displayed as 'CSL' (Cloud Sovereignty Level) instead of 'SEAL'. The underlying methodology, scoring weights, contribution levels, and seal_level data field are unchanged.",

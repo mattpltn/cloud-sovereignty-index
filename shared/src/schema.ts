@@ -67,6 +67,7 @@ export const SealLevelInCriteriaSchema = z.object({
   level: z.number().int().min(0).max(4),
   name: z.string(),
   description: z.string(),
+  description_generalized: z.string().optional(),
 });
 
 export const CriteriaFileSchema = z.object({
