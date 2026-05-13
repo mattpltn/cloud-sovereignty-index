@@ -885,6 +885,31 @@
       "review_status": "pending-external-review",
       "created": "2026-05-13",
       "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-E07",
+      "category": "evidence",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "export",
+        "ids": ["EU Assessment sheet", "Global Assessment sheet"]
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§1.1",
+        "verbatim": "The C3A criteria are intended to be verifiable. Cloud service providers must be able to provide evidence for each criterion."
+      },
+      "adaptation": {
+        "summary": "Three columns added to the XLSX assessment template between question_text and answer: evidence_expected (pre-filled per criterion, locked), evidence_provided (free text, CSP fills), evidence_type (dropdown: Audit report / certification, Contract clause, Public documentation, Provider statement, Verbal / none).",
+        "adapted_text": "Column layout (A–I): question_id | tier | objective | question_title | question_text | evidence_expected | evidence_provided | evidence_type | answer. Columns G, H, I are editable by the CSP; A–F are locked. evidence_type values are descriptive and are not scoring inputs — the tool surfaces evidence distribution in reports but does not auto-degrade Yes answers based on evidence weakness, preserving customer judgment."
+      },
+      "rationale": "A Yes answer with no supporting evidence reference has limited value in a customer–provider dialogue. The evidence columns operationalise C3A §1.1's 'verifiable criteria' framing and EU-CSF §1's 'supporting evidence' framing. The evidence_type dropdown enables downstream analysis of evidence quality distribution across providers without requiring scoring engine changes.",
+      "authority": "Editorial. Scope: XLS export and future report display only. No change to scoring engine, weights, methodology, or data schema in the stored assessment.",
+      "alternatives_considered": "Weight Yes answers by evidence type in the scoring engine — rejected as it introduces subjectivity into what should be a factual self-assessment. Require evidence before accepting Yes — rejected as too prescriptive for a self-assessment instrument.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-13",
+      "instrument_version": "1.0"
     }
   ]
 }

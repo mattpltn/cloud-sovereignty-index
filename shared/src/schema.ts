@@ -82,7 +82,7 @@ export const CriteriaFileSchema = z.object({
 
 export const DecisionEntrySchema = z.object({
   id: z.string().regex(/^DR-[A-Z]\d+$/),
-  category: z.enum(['substitution', 'adaptation', 'derivation', 'exclusion', 'extension']),
+  category: z.enum(['substitution', 'adaptation', 'derivation', 'exclusion', 'extension', 'evidence']),
   rationale: z.string(),
   authority: z.string(),
   alternatives_considered: z.union([z.string(), z.array(z.string())]),
