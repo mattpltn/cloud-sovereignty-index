@@ -120,6 +120,10 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
 
       const variant = detectedVariant ?? defaultVariant;
 
+      // Read the Turnstile token from the widget already on the page
+      const turnstileInput = document.querySelector<HTMLInputElement>('input[name="cf-turnstile-response"]');
+      const turnstile_token = turnstileInput?.value || 'test-token';
+
       const res = await fetch('/api/assessments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -129,7 +133,7 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
           service_models: ['IaaS'],
           user_role: 'customer',
           company_name: detectedCompany || undefined,
-          turnstile_token: 'test-token',
+          turnstile_token,
         }),
       });
 
