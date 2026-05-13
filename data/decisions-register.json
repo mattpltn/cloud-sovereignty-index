@@ -860,6 +860,31 @@
       "review_status": "pending-external-review",
       "created": "2026-05-13",
       "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A13",
+      "category": "adaptation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "display",
+        "ids": ["all"]
+      },
+      "source": {
+        "doc": "EU-CSF",
+        "clause": "§3",
+        "verbatim": "SEAL — Sovereignty Evaluation and Assurance Level. Five levels: SEAL 0 (No Sovereignty) to SEAL 4 (Full Digital Sovereignty)."
+      },
+      "adaptation": {
+        "summary": "For Generalized (non-EU) assessments, the sovereignty level is displayed as 'CSL' (Cloud Sovereignty Level) instead of 'SEAL'. The underlying methodology, scoring weights, contribution levels, and seal_level data field are unchanged.",
+        "adapted_text": "EU/EEA assessments display 'SEAL N — [label]'. Generalized assessments display 'CSL N — [label]'. The internal field name seal_level is retained for backwards compatibility. No scoring logic is affected."
+      },
+      "rationale": "SEAL is a term coined by the EU Cloud Sovereignty Framework and is associated with EU procurement criteria (EU-CSF §1: 'public procurement tenders'). Applying the SEAL label to a non-EU assessment implies alignment with EU procurement requirements that may not be relevant to the assessed organisation's jurisdiction. CSL (Cloud Sovereignty Level) uses identical methodology and the same 0–4 scale but avoids the EU-anchored branding. This distinction is important for organisations in countries such as Algeria, Laos, or Brazil where EU procurement rules do not apply.",
+      "authority": "Editorial. Scope: display only. No change to scoring engine, weights, or data schema.",
+      "alternatives_considered": "Keep SEAL for all variants — rejected because it misleads non-EU users into believing their result has EU procurement significance. Use a fully different scale name and mapping — rejected as unnecessary complexity when the methodology is identical.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-13",
+      "instrument_version": "1.0"
     }
   ]
 }
