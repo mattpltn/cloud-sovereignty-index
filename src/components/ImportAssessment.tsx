@@ -120,9 +120,8 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
 
       const variant = detectedVariant ?? defaultVariant;
 
-      // Read the Turnstile token from the widget already on the page
-      const turnstileInput = document.querySelector<HTMLInputElement>('input[name="cf-turnstile-response"]');
-      const turnstile_token = turnstileInput?.value || 'test-token';
+      // Read Turnstile token stored by the callback on the page
+      const turnstile_token = (window as Record<string, unknown>).__turnstileToken as string || 'test-token';
 
       const res = await fetch('/api/assessments', {
         method: 'POST',

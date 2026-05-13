@@ -59,7 +59,7 @@ const allCountries = [
         <p class="text-xs text-gray-400 mt-1">Not indexed. Stored only in your assessment record.</p>
       </div>
 
-      <div class="cf-turnstile" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA'} data-theme="light"></div>
+      <div class="cf-turnstile" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA'} data-theme="light" data-callback="onTurnstileSolved"></div>
 
       <button type="submit"
         class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
@@ -86,6 +86,11 @@ const allCountries = [
   </main>
 
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script>
+    // Store the solved token globally so ImportAssessment can read it
+    window.__turnstileToken = '';
+    function onTurnstileSolved(token) { window.__turnstileToken = token; }
+  </script>
   <script define:vars={{ euCodes: [...euCodes] }}>
     const euSet = new Set(euCodes);
     const select = document.getElementById('country-select');
