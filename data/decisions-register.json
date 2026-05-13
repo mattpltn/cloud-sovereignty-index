@@ -910,6 +910,78 @@
       "review_status": "pending-external-review",
       "created": "2026-05-13",
       "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-E08",
+      "category": "extension",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion-set",
+        "ids": ["SOV-3-08", "SOV-3-09"]
+      },
+      "source": {
+        "doc": "C5:2026",
+        "clauses": ["OPS-30", "OPS-31", "OPS-32", "OPS-33"]
+      },
+      "adaptation": {
+        "summary": "Two new Data Sovereignty criteria added to reflect BSI C5:2026 OPS-30/31 (multi-tenant data separation) and OPS-32/33 (confidential computing / TEE, Additional Complement). These areas were not addressed in C5:2020 and represent material new obligations under C5:2026.",
+        "adapted_text": "SOV-3-08 (Tenant Data Separation): requires documented logical and cryptographic separation of tenant data across all service layers with annual risk assessment review. SOV-3-09 (Confidential Computing): conditionally requires TEE policies, hardware memory encryption documentation, remote attestation procedures, and customer-facing verification interfaces, or explicit disclosure that the capability is not offered."
+      },
+      "rationale": "C5:2026 introduces OPS-30/31 as mandatory controls and OPS-32/33 as Additional Complement (strongly recommended). Multi-tenancy isolation and confidential computing are directly relevant to data sovereignty: both determine whether a customer's data can be isolated from provider access and from co-tenant exposure. Omitting these from the sovereignty assessment while citing C5:2026 would create a false signal of C5:2026 coverage.",
+      "authority": "Faithful operationalization of C5:2026. SEAL contributions: SOV-3-08 gates SEAL-2 (data sovereignty baseline); SOV-3-09 gates SEAL-3 (only applies when TEE capability is claimed).",
+      "alternatives_considered": "Reference C5:2026 compliance as a whole without specific criteria — rejected as it hides the specific gaps from assessors and CSPs. Include SOV-3-09 only as informative — rejected as C5:2026 positions OPS-32/33 as strongly recommended Additional Complement, not informative only.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-14",
+      "instrument_version": "1.1"
+    },
+    {
+      "id": "DR-E09",
+      "category": "extension",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion-set",
+        "ids": ["SOV-4-11", "SOV-4-12"]
+      },
+      "source": {
+        "doc": "C5:2026",
+        "clauses": ["OPS-34", "OPS-35", "BCM-01", "BCM-02", "BCM-03", "BCM-04"]
+      },
+      "adaptation": {
+        "summary": "Two new Operational Sovereignty criteria added: SOV-4-11 (Container Security, from C5:2026 OPS-34/35) and SOV-4-12 (Business Continuity Management, from C5:2026 BCM-01–04, a new standalone domain in C5:2026).",
+        "adapted_text": "SOV-4-11 (Container Security): conditionally requires full container lifecycle policies including image signing, runtime monitoring, and decommissioning, or explicit disclosure if containers are not used. SOV-4-12 (Business Continuity Management): requires a BCM system with BIA, BCP, documented RTO/RPO, and annual testing — distinct from SOV-4-09/10 which address network-level disconnect/reconnect only."
+      },
+      "rationale": "C5:2026 introduces a new BCM domain (BCM-01–04) absent from C5:2020 and makes container security explicit via OPS-34/35. Both are directly relevant to operational sovereignty: BCM ensures a provider can maintain service under disruption, while container security governs a dominant runtime environment in modern cloud operations. Without these criteria, the assessment understates operational risk for container-heavy providers.",
+      "authority": "Faithful operationalization of C5:2026. SEAL contributions: SOV-4-11 gates SEAL-2 (conditional on container use); SOV-4-12 gates SEAL-2 (unconditional BCM baseline).",
+      "alternatives_considered": "Treat BCM as covered by existing SOV-4-09/10 — rejected as those criteria address only network disconnect/reconnect, not organisational continuity planning. Make container security informative — rejected because C5:2026 OPS-34/35 are mandatory controls, not Advisory.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-14",
+      "instrument_version": "1.1"
+    },
+    {
+      "id": "DR-E10",
+      "category": "extension",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion-set",
+        "ids": ["SOV-5-06"]
+      },
+      "source": {
+        "doc": "C5:2026",
+        "clauses": ["CRY Additional Complement"]
+      },
+      "adaptation": {
+        "summary": "New Supply Chain Sovereignty criterion SOV-5-06 (Post-Quantum Cryptography Readiness) derived from BSI C5:2026 CRY domain Additional Complement. Requires a documented cryptographic inventory and PQC migration roadmap.",
+        "adapted_text": "SOV-5-06 requires: (a) a cryptographic inventory covering all algorithms, protocols, and key management mechanisms; (b) a PQC migration roadmap assessing quantum vulnerability, identifying algorithms to replace, and defining migration timelines to NIST FIPS 203/204/205 or BSI TR-02102 equivalents; (c) consideration of hybrid cryptographic approaches during the transition period."
+      },
+      "rationale": "C5:2026 introduces PQC strategy documentation as an Additional Complement (strongly recommended) in the CRY domain, reflecting BSI's position that quantum computing represents a near-term threat to current asymmetric cryptography. PQC readiness is a supply chain concern because cryptographic dependencies span software libraries, hardware security modules, and third-party services — all supply chain components inventoried in SOV-5-01 and SOV-5-02. A provider without a PQC roadmap has an undisclosed supply chain risk.",
+      "authority": "Faithful operationalization of C5:2026 CRY domain. SEAL contribution: SOV-5-06 gates SEAL-3 for SOV-5 (digital resilience).",
+      "alternatives_considered": "Add PQC as supplementary_info on existing cryptography criteria — rejected as C5:2026 treats it as a distinct inventorying and planning obligation, not an extension of existing controls. Make it informative only — rejected as BSI's Additional Complement classification signals strong expectation of compliance by mandatory adoption date (2027-06-01).",
+      "review_status": "pending-external-review",
+      "created": "2026-05-14",
+      "instrument_version": "1.1"
     }
   ]
 }

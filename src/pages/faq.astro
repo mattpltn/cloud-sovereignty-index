@@ -80,6 +80,40 @@ import '../styles/global.css';
         </div>
       </section>
 
+      <!-- ── C5:2026 ────────────────────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">BSI C5 and C5:2026</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the difference between BSI C5:2020 and BSI C5:2026?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              BSI C5:2026 (Cloud Computing Compliance Criteria Catalogue, published March 2026, mandatory from June 2027) expands substantially on C5:2020. The main differences relevant to this assessment are:
+            </p>
+            <ul class="text-sm text-gray-700 leading-relaxed mt-2 space-y-2 list-disc pl-5">
+              <li><strong>47 new controls</strong>, bringing the total from 121 to 168. C5:2026 also introduces 462 sub-criteria with two new sub-types: "Additional Sharpen" (narrowing existing requirements) and "Additional Complement" (extending requirements with supplementary obligations).</li>
+              <li><strong>Multi-tenancy isolation (OPS-30/31)</strong>: C5:2026 adds explicit mandatory controls requiring documented logical and cryptographic separation of customer data between tenants, including detection procedures and annual risk-assessment reviews. C5:2020 addressed isolation only implicitly.</li>
+              <li><strong>Confidential Computing / TEE (OPS-32/33)</strong>: C5:2026 introduces Additional Complement controls for Trusted Execution Environments (TEEs), requiring hardware-level memory encryption (e.g. Intel TDX, AMD SEV-SNP), remote attestation procedures, and customer-facing verification interfaces — or explicit disclosure if the capability is not offered.</li>
+              <li><strong>Container Security (OPS-34/35)</strong>: C5:2026 mandates documented lifecycle policies for containers in production (image signing, runtime monitoring, decommissioning), conditional on the provider using container technologies. C5:2020 had no dedicated container controls.</li>
+              <li><strong>Business Continuity Management domain (BCM-01–04)</strong>: C5:2026 introduces a standalone BCM domain requiring a formal BCM system with BIA, BCP, documented RTO/RPO, and annual testing. This was not a separate domain in C5:2020.</li>
+              <li><strong>Post-Quantum Cryptography (CRY Additional Complement)</strong>: C5:2026 requires a documented cryptographic inventory and a PQC migration roadmap identifying quantum-vulnerable algorithms and defining timelines for migration to NIST FIPS 203/204/205 or BSI TR-02102 equivalents.</li>
+              <li><strong>Capacity Management (OPS-01/02/03)</strong>: C5:2026 splits the former OPS-04 capacity management control into three dedicated controls — OPS-01 (Planning), OPS-02 (Monitoring), OPS-03 (Controlling of Resources). References to "C5 OPS-04" in older documents should be read as OPS-01/02/03 in C5:2026.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              This assessment (v1.1) incorporates these C5:2026 additions as criteria SOV-3-08, SOV-3-09, SOV-4-11, SOV-4-12, and SOV-5-06. See the
+              <a href="/methodology/decisions" class="text-blue-600 underline">Decisions Register</a> entries DR-E08, DR-E09, DR-E10 for the full rationale.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Does a BSI C5:2026 attestation automatically satisfy the relevant criteria in this assessment?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              A current C5:2026 attestation is strong evidence for the C5-sourced criteria (SOV-5-03 through SOV-5-05, SOV-3-08, SOV-3-09, SOV-4-11, SOV-4-12, SOV-5-06), but it does not automatically satisfy C3A-sourced criteria such as jurisdictional data residency, operating personnel location, or source code availability — those go beyond C5's scope. If a provider holds a valid C5:2026 Type II attestation and the attestation scope covers the service being assessed, you can answer "Yes" to matching criteria and cite the attestation as evidence. The assessment still requires you to verify that the attestation scope matches the service and that the attestation is current.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <!-- ── Germany / source framework ─────────────────────────────────── -->
       <section>
         <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Germany, the EU, and other countries</h2>

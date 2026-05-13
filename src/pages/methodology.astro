@@ -141,12 +141,35 @@ const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovere
     <section class="mb-10">
       <h2 class="text-xl font-semibold mb-3">6. Sources</h2>
       <div class="space-y-2">
-        {criteria.source_documents.map(doc => (
-          <div class="text-sm border border-gray-200 rounded-lg p-3">
-            <div class="font-medium">{doc.title}</div>
-            <div class="text-gray-500 text-xs">{doc.publisher} · v{doc.version} · {doc.date}</div>
-          </div>
-        ))}
+        {criteria.source_documents.map(doc => {
+          const links: Record<string, { url: string; label: string }[]> = {
+            'EU-CSF': [
+              { url: 'https://digital-strategy.ec.europa.eu/en/policies/cloud-sovereignty', label: 'Overview' },
+            ],
+            'C3A': [
+              { url: 'https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/CloudComputing/C3A/BSI-C3A-v1.0.pdf', label: 'PDF' },
+            ],
+            'C5:2026': [
+              { url: 'https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Compliance-Controls-Catalogue-C5/compliance-controls-catalogue-c5.html', label: 'Overview' },
+              { url: 'https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/CloudComputing/ComplianceControlsCatalogue/2026/C5_2026_editable.xlsx?__blob=publicationFile&v=4', label: 'XLSX' },
+              { url: 'https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/CloudComputing/ComplianceControlsCatalogue/2026/C5_2026_changelog.xlsx?__blob=publicationFile&v=2', label: 'Changelog' },
+            ],
+          };
+          const docLinks = links[doc.id] ?? [];
+          return (
+            <div class="text-sm border border-gray-200 rounded-lg p-3">
+              <div class="font-medium">{doc.title}</div>
+              <div class="text-gray-500 text-xs">{doc.publisher} · v{doc.version} · {doc.date}</div>
+              {docLinks.length > 0 && (
+                <div class="flex gap-3 mt-1">
+                  {docLinks.map(link => (
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" class="text-xs text-blue-600 underline">{link.label}</a>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </section>
 

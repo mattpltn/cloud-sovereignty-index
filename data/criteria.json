@@ -1,5 +1,5 @@
 {
-  "instrument_version": "1.0",
+  "instrument_version": "1.1",
   "source_documents": [
     {
       "id": "EU-CSF",
@@ -14,6 +14,13 @@
       "date": "2026-04-27",
       "publisher": "BSI",
       "title": "Criteria enabling Cloud Computing Autonomy"
+    },
+    {
+      "id": "C5:2026",
+      "version": "2026",
+      "date": "2026-03",
+      "publisher": "BSI",
+      "title": "Cloud Computing Compliance Criteria Catalogue 2026"
     }
   ],
   "weights": {
@@ -349,6 +356,34 @@
             "clause": "§2.3.5 SOV-3-05-C"
           },
           "supplementary_info": ""
+        },
+        {
+          "id": "SOV-3-08",
+          "title": "Tenant Data Separation",
+          "type": "single",
+          "text": "The cloud service provider MUST implement and maintain documented policies and technical measures for the logical and cryptographic separation of customer data, derived data, and account data between tenants and from provider-internal data. Separation measures MUST cover all cloud service layers and include detection and response procedures. The risk assessment underlying the separation approach MUST be reviewed at least annually.",
+          "seal_contribution": 2,
+          "points": 5,
+          "source": {
+            "doc": "C5:2026",
+            "clause": "OPS-30, OPS-31"
+          },
+          "supplementary_info": "Derived from BSI C5:2026 OPS-30 and OPS-31. Addresses multi-tenancy isolation requirements introduced in C5:2026. Cryptographic separation is required on shared physical or logical resources where applicable.",
+          "decision_refs": ["DR-E08"]
+        },
+        {
+          "id": "SOV-3-09",
+          "title": "Confidential Computing",
+          "type": "single",
+          "text": "If the cloud service provider offers confidential computing capabilities, the provider MUST document policies and technical measures for the use of Trusted Execution Environments (TEEs), including hardware-level memory encryption (e.g. Intel TDX, AMD SEV-SNP), remote attestation procedures, and verification interfaces available to the customer. The provider MUST be able to demonstrate that data-in-use is protected from provider access under normal operational conditions. If confidential computing is not offered, the provider MUST explicitly disclose this limitation.",
+          "seal_contribution": 3,
+          "points": 6,
+          "source": {
+            "doc": "C5:2026",
+            "clause": "OPS-32, OPS-33"
+          },
+          "supplementary_info": "Derived from BSI C5:2026 OPS-32 and OPS-33 (Additional Complement). Conditionally applicable — only required if the CSP offers confidential computing as a service capability. Remote attestation must be cryptographically rooted in trusted hardware.",
+          "decision_refs": ["DR-E08"]
         }
       ]
     },
@@ -544,6 +579,34 @@
             "clause": "§2.4.10 SOV-4-10-C"
           },
           "supplementary_info": ""
+        },
+        {
+          "id": "SOV-4-11",
+          "title": "Container Security",
+          "type": "single",
+          "text": "If the cloud service provider uses container technologies in production, the provider MUST implement and maintain documented policies and technical measures for the full container lifecycle: image creation, validation, storage, deployment, operation, and decommissioning. Policies MUST cover inventory management, malware protection, logging and monitoring, data separation, access control, encryption, network security, change management, and hardening. Container images MUST be cryptographically signed and verified before deployment. If containers are not used in production, the provider MUST explicitly disclose this.",
+          "seal_contribution": 2,
+          "points": 5,
+          "source": {
+            "doc": "C5:2026",
+            "clause": "OPS-34, OPS-35"
+          },
+          "supplementary_info": "Derived from BSI C5:2026 OPS-34 and OPS-35. Conditionally applicable — only required if container technologies (Docker, Kubernetes, OCI-compatible runtimes) are deployed in production to deliver the assessed service.",
+          "decision_refs": ["DR-E09"]
+        },
+        {
+          "id": "SOV-4-12",
+          "title": "Business Continuity Management",
+          "type": "single",
+          "text": "The cloud service provider MUST maintain a Business Continuity Management (BCM) system covering goals, roles, responsibilities, Business Impact Analysis (BIA), Business Continuity Plans (BCP) with documented Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO), and regular testing of continuity procedures. BCM plans MUST be reviewed and tested at least annually.",
+          "seal_contribution": 2,
+          "points": 6,
+          "source": {
+            "doc": "C5:2026",
+            "clause": "BCM-01, BCM-02, BCM-03, BCM-04"
+          },
+          "supplementary_info": "Derived from BSI C5:2026 BCM-01 through BCM-04, a new standalone domain in C5:2026. SOV-4-09 (Disconnect) and SOV-4-10 (Reconnect) address network-level continuity; this criterion addresses the broader organisational BCM system. Alignment with ISO 22301 or BSI 200-4 is recommended.",
+          "decision_refs": ["DR-E09"]
         }
       ]
     },
@@ -611,7 +674,7 @@
           "type": "tiered",
           "tiers": {
             "bloc": {
-              "text": "Capacity management MUST be performed in {{BLOC}} in accordance with C5.",
+              "text": "Capacity management MUST be performed in {{BLOC}} in accordance with C5:2026 (OPS-01 Capacity Management – Planning, OPS-02 – Monitoring, OPS-03 – Controlling of Resources).",
               "seal_contribution": 2,
               "points": 5,
               "source": {
@@ -623,7 +686,7 @@
               ]
             },
             "national": {
-              "text": "Capacity management MUST be performed in {{COUNTRY}} in accordance with C5.",
+              "text": "Capacity management MUST be performed in {{COUNTRY}} in accordance with C5:2026 (OPS-01 Capacity Management – Planning, OPS-02 – Monitoring, OPS-03 – Controlling of Resources).",
               "seal_contribution": 3,
               "points": 5,
               "source": {
@@ -635,6 +698,20 @@
               ]
             }
           }
+        },
+        {
+          "id": "SOV-5-06",
+          "title": "Post-Quantum Cryptography Readiness",
+          "type": "single",
+          "text": "The cloud service provider MUST maintain a documented cryptographic inventory covering all cryptographic algorithms, protocols, and key management mechanisms used to deliver the service. The provider MUST have a documented Post-Quantum Cryptography (PQC) migration roadmap that: (a) assesses the vulnerability of current cryptographic systems to quantum computing threats; (b) identifies algorithms to be replaced; and (c) defines timelines for migration to quantum-resistant algorithms (e.g. NIST FIPS 203/204/205 or BSI-recommended equivalents). Hybrid cryptographic approaches MUST be considered during the transition period.",
+          "seal_contribution": 3,
+          "points": 6,
+          "source": {
+            "doc": "C5:2026",
+            "clause": "CRY Additional Complement"
+          },
+          "supplementary_info": "Derived from BSI C5:2026 CRY domain Additional Complement requirements for post-quantum cryptography. The cryptographic inventory underpins the SBOM requirement in SOV-5-01. Migration timelines should reference BSI's PQC migration guidelines (BSI TR-02102 series).",
+          "decision_refs": ["DR-E10"]
         }
       ]
     },
