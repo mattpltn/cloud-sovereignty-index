@@ -211,7 +211,7 @@
               }
             },
             "national": {
-              "text": "If {{COUNTRY}} declares a state of defense, can the cloud service provider enable the {{COUNTRY}} federal administration to take over the capabilities required to operate the cloud (including material assets and personnel) within the framework of legal possibilities?",
+              "text": "If {{COUNTRY}} declares a state of defense, can the cloud service provider enable {{NATIONAL_ADMIN}} to take over the capabilities required to operate the cloud (including material assets and personnel) within the framework of legal possibilities?",
               "seal_contribution": 4,
               "points": 6,
               "source": {
@@ -220,7 +220,7 @@
               }
             }
           },
-          "supplementary_info": "This usually means that documentation, source code, and administration tools are held in a portable format so that a federal administration can use them."
+          "supplementary_info": "This usually means that documentation, source code, and administration tools are held in a portable format so that the competent national authority can use them."
         }
       ]
     },

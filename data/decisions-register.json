@@ -1,7 +1,7 @@
 {
   "instrument_version": "1.0",
   "register_version": "1.0",
-  "last_updated": "2026-05-10",
+  "last_updated": "2026-05-13",
   "project_name": "Cloud Sovereignty Index",
   "project_url": "https://cloudsovereigntyindex.org",
   "review_contact": "methodology@cloudsovereigntyindex.org",
@@ -834,6 +834,31 @@
       "alternatives_considered": "Keep DORA with supplementary 'select N/A if outside EU' — rejected for the same reason as NIS2 (DR-A10): the criterion should be answerable wherever equivalent obligations exist.",
       "review_status": "pending-external-review",
       "created": "2026-05-10",
+      "instrument_version": "1.0"
+    },
+    {
+      "id": "DR-A12",
+      "category": "adaptation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "criterion",
+        "ids": ["SOV-2-03 (national tier)", "SOV-2-03 supplementary_info"]
+      },
+      "source": {
+        "doc": "C3A",
+        "clause": "§2.2.3 SOV-2-03-C2",
+        "verbatim": "If [COUNTRY] declares a state of defense, can the cloud service provider enable the [COUNTRY] federal administration to take over the capabilities required to operate the cloud?"
+      },
+      "adaptation": {
+        "summary": "Replaced '[COUNTRY] federal administration' with '{{NATIONAL_ADMIN}}' in the national tier text and removed 'federal administration' from supplementary_info.",
+        "adapted_text": "If {{COUNTRY}} declares a state of defense, can the cloud service provider enable {{NATIONAL_ADMIN}} to take over the capabilities required to operate the cloud (including material assets and personnel) within the framework of legal possibilities?"
+      },
+      "rationale": "Same rationale as DR-A06: the C3A source uses 'German federal administration' because Germany is a federal state. This is incorrect for unitary states (e.g. Algeria, France, Laos). Using {{NATIONAL_ADMIN}} resolves to the correct national authority label per country. The supplementary_info was also updated to remove the word 'federal' for the same reason.",
+      "authority": "Editorial. Scope: global. No change to scoring weight or SEAL level.",
+      "alternatives_considered": "Keep 'federal administration' — rejected because it is factually incorrect for the majority of non-federal states and confuses respondents.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-13",
       "instrument_version": "1.0"
     }
   ]
