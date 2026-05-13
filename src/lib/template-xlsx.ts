@@ -88,10 +88,11 @@ function addAssessmentSheet(
     objIndex++;
 
     for (const q of obj.questions) {
+      const displayTitle = (!euMode && q.title_generalized) ? q.title_generalized : q.title;
       if (q.type === 'single') {
         const rawText = (!euMode && q.text_generalized) ? q.text_generalized : q.text;
         const text = resolvePlaceholders(rawText, ctx);
-        const row = ws.addRow([q.id, 'single', obj.id, q.title, text, '']);
+        const row = ws.addRow([q.id, 'single', obj.id, displayTitle, text, '']);
         row.fill = fill;
         row.getCell(6).dataValidation = ANSWER_VALIDATION;
         row.height = Math.min(60, Math.ceil(text.length / 80) * 15 + 15);
@@ -100,7 +101,7 @@ function addAssessmentSheet(
         // bloc row
         const blocText = q.tiers.bloc.text.replace(/\{\{BLOC\}\}/g, blocBlocLabel);
         const resolvedBloc = resolvePlaceholders(blocText, ctx);
-        const blocRow = ws.addRow([q.id, 'bloc', obj.id, q.title, resolvedBloc, '']);
+        const blocRow = ws.addRow([q.id, 'bloc', obj.id, displayTitle, resolvedBloc, '']);
         blocRow.fill = fill;
         blocRow.getCell(6).dataValidation = ANSWER_VALIDATION;
         blocRow.height = Math.min(60, Math.ceil(resolvedBloc.length / 80) * 15 + 15);
@@ -109,12 +110,11 @@ function addAssessmentSheet(
         // national row (EU mode only, with note about placeholders)
         if (euMode && q.tiers.national) {
           const natText = q.tiers.national.text; // keep placeholders intact
-          const natRow = ws.addRow([q.id, 'national', obj.id, q.title, natText, '']);
+          const natRow = ws.addRow([q.id, 'national', obj.id, displayTitle, natText, '']);
           natRow.fill = fill;
           natRow.getCell(6).dataValidation = ANSWER_VALIDATION;
           natRow.height = Math.min(60, Math.ceil(natText.length / 80) * 15 + 15);
           natRow.getCell(5).alignment = { wrapText: true, vertical: 'top' };
-          // Note explaining placeholders
         }
       }
     }
