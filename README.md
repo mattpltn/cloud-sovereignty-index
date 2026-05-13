@@ -41,7 +41,7 @@ The framework was originally designed around Germany and the BSI. The EU and glo
 
 ## Offline workflow
 
-Don't want to answer questions in the browser? Download a blank **XLSX template** from the setup page, fill it in (or send it to your cloud provider), then upload it to generate your score. The template has:
+Don't want to answer questions in the browser? Download a blank **XLSX template** at `/assess/template.xlsx`, fill it in (or send it to your cloud provider), then upload it on the setup page to generate your score. The template has:
 
 - **Setup sheet** — country dropdown, optional company name
 - **EU Assessment sheet** — all questions with answer dropdowns
