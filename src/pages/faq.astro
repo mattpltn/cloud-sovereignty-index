@@ -290,32 +290,57 @@ import '../styles/global.css';
 
       <!-- ── Offline template ─────────────────────────────────────────────── -->
       <section>
-        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Offline template & import</h2>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Offline template & CSP evidence</h2>
 
         <div class="space-y-6">
           <div>
             <h3 class="text-sm font-semibold mb-1">Can I fill in the questionnaire offline or share it with my cloud provider?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              Yes. You can <a href="/assess/template.xlsx" class="text-blue-600 underline">download a blank Excel template (.xlsx)</a> directly, or find the download button on the <a href="/assess/setup#import" class="text-blue-600 underline">setup page</a>. The template includes a Setup sheet
-              (country selection, company name), an EU Assessment sheet, a Global Assessment sheet,
-              and a Privacy notice. Fill in the answer column for each question (accepted values:
-              <code class="bg-gray-100 px-1 rounded text-xs">yes</code>,
-              <code class="bg-gray-100 px-1 rounded text-xs">no</code>,
-              <code class="bg-gray-100 px-1 rounded text-xs">partial</code>,
-              <code class="bg-gray-100 px-1 rounded text-xs">n/a</code>), then upload the file
-              on the same page to get a scored result instantly.
+              Yes. <a href="/assess/template.xlsx" class="text-blue-600 underline">Download the blank Excel template (.xlsx)</a> and send it to your cloud service provider (CSP). The CSP fills in their answers and returns the file; you upload it on the <a href="/assess/setup#import" class="text-blue-600 underline">setup page</a> to generate a scored result instantly. Nothing is submitted until you review and confirm.
             </p>
           </div>
 
           <div>
-            <h3 class="text-sm font-semibold mb-1">Why would I send the template to my cloud provider?</h3>
+            <h3 class="text-sm font-semibold mb-1">What does the template contain?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed mb-2">
+              The template has four sheets:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-1 list-disc pl-5 leading-relaxed">
+              <li><strong>Setup</strong> — country selection and optional company name.</li>
+              <li><strong>EU Assessment</strong> — all criteria for EU/EEA organisations, including national-tier questions.</li>
+              <li><strong>Global Assessment</strong> — same criteria adapted for non-EU countries.</li>
+              <li><strong>Privacy</strong> — what data is and is not collected by this tool.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              Each assessment sheet has nine columns. The first five are pre-filled and locked by CSI (question ID, tier, objective, title, question text). The last four are for the CSP to complete:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-1 list-disc pl-5 leading-relaxed mt-2">
+              <li><strong>evidence_expected</strong> — locked, pre-filled by CSI. Describes exactly what evidence should be provided for each criterion: the document type, required fields, and where to find it (e.g. "Current ISO 27001 certificate with explicit scope statement covering the assessed services, plus issue/expiry dates").</li>
+              <li><strong>evidence_provided</strong> — free text, filled by the CSP. The CSP enters a document name, URL, contract clause reference, attestation ID, or page number. If no evidence is available, "none available" is an acceptable entry.</li>
+              <li><strong>evidence_type</strong> — dropdown, filled by the CSP. Classifies the type of evidence: <em>Audit report / certification</em>, <em>Contract clause</em>, <em>Public documentation</em>, <em>Provider statement</em>, or <em>Verbal / none</em>.</li>
+              <li><strong>answer</strong> — dropdown (yes / no / partial / n/a), filled by the CSP.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Why does the template ask for evidence references, not just answers?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              Some of the questions ask about internal controls, data processing agreements, or
-              technical capabilities that only the provider can answer accurately. You can send
-              the blank template to your provider's pre-sales, compliance, or security team and ask
-              them to complete the answer column. Once returned, upload the file on the setup page
-              to generate your assessment. You retain full control — nothing is submitted until you
-              review and confirm.
+              A "Yes" answer with no supporting reference is a claim, not evidence. The evidence columns turn the template into an audit-ready document that records <em>what</em> was claimed and <em>where</em> it can be verified. This matters in three scenarios:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-2">
+              <li><strong>Procurement due diligence.</strong> If a procurement decision is challenged, the completed template shows not only the score but the specific documents that supported each answer. Reviewers can verify references without re-running the assessment.</li>
+              <li><strong>Audit support.</strong> Internal or external auditors can spot-check answers against cited evidence (certificates, DPA clauses, SOC 2 sections) without needing to interview the provider again. BSI C3A §1.1 requires that criteria be verifiable — the evidence column is the mechanism that makes this possible in practice.</li>
+              <li><strong>Provider accountability.</strong> A CSP that provides document references is making a traceable commitment. If a cited certificate expires or a contract clause is later amended, the discrepancy becomes visible. This creates a higher bar than an uncorroborated self-declaration.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              The evidence columns do <strong>not</strong> affect the score — a "Yes" backed only by a provider statement scores the same as a "Yes" backed by a BSI C5 attestation. The scoring engine deliberately does not penalise evidence quality, leaving that judgment to the assessor. What the columns provide is a paper trail that makes the assessment defensible.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Why would I send this to my CSP rather than filling it in myself?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Many criteria ask about internal provider controls that you as a customer cannot verify directly: personnel jurisdiction policies, disconnect test results, SBOM availability, source code backup frequency. The CSP is the only party who can accurately answer these — and who can attach the document references that make those answers credible. Sending the template to the provider's compliance or pre-sales team and asking them to complete it with evidence references is the most defensible approach, and creates a natural checkpoint in your procurement or vendor review process.
             </p>
           </div>
         </div>
