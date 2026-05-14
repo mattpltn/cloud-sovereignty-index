@@ -1,5 +1,5 @@
 import type { CriteriaFile, Question } from './schema.js';
-import type { AssessmentResult, ObjectiveResult, QuestionResult, GapItem, AnswerMap } from './types.js';
+import type { AssessmentResult, ObjectiveResult, QuestionResult, GapItem, AnswerMap, C5SupplementaryResult, C5DomainResult } from './types.js';
 
 function computeSealLevel(results: QuestionResult[]): number {
   for (let level = 4; level >= 1; level--) {
@@ -76,6 +76,41 @@ function scoreTieredQuestion(
   return results;
 }
 
+function computeC5Supplementary(answers: AnswerMap, criteria: CriteriaFile): C5SupplementaryResult {
+  const details: C5SupplementaryResult['details'] = [];
+  const domainMap = new Map<string, C5DomainResult>();
+
+  for (const obj of criteria.objectives) {
+    for (const q of obj.questions) {
+      if (q.type !== 'single') continue;
+      if (q.source.doc !== 'C5:2026') continue;
+      const stored = answers[q.id];
+      const value = stored?.value ?? 'n/a';
+      details.push({ question_id: q.id, title: q.title, value, source_clause: q.source.clause });
+
+      if (value === 'n/a') continue;
+      const domain = q.source.clause.split(/[\s,-]/)[0]; // "OPS", "BCM", "CRY"
+      if (!domainMap.has(domain)) domainMap.set(domain, { domain, met: 0, partial: 0, not_met: 0, applicable: 0 });
+      const d = domainMap.get(domain)!;
+      d.applicable++;
+      if (value === 'yes') d.met++;
+      else if (value === 'partial') d.partial++;
+      else d.not_met++;
+    }
+  }
+
+  const by_domain = Array.from(domainMap.values());
+  const applicable = by_domain.reduce((s, d) => s + d.applicable, 0);
+  return {
+    applicable,
+    met: by_domain.reduce((s, d) => s + d.met, 0),
+    partial: by_domain.reduce((s, d) => s + d.partial, 0),
+    not_met: by_domain.reduce((s, d) => s + d.not_met, 0),
+    by_domain,
+    details,
+  };
+}
+
 export function scoreAssessment(
   answers: AnswerMap,
   criteria: CriteriaFile,
@@ -90,6 +125,9 @@ export function scoreAssessment(
     let max = 0;
 
     for (const q of obj.questions) {
+      // C5:2026 questions are scored separately — they do not contribute to SEAL or sovereignty score
+      if (q.type === 'single' && q.source.doc === 'C5:2026') continue;
+
       let results: QuestionResult[];
 
       if (q.type === 'tiered') {
@@ -162,6 +200,7 @@ export function scoreAssessment(
   gap_report.forEach((g, i) => { g.priority = i + 1; });
 
   const overallSeal = Math.min(...objectives.map(o => o.seal_level));
+  const c5_supplementary = computeC5Supplementary(answers, criteria);
 
   return {
     assessment_id: assessmentId,
@@ -173,6 +212,7 @@ export function scoreAssessment(
     seal_level: overallSeal,
     objectives,
     gap_report,
+    c5_supplementary,
     instrument_version: meta.instrument_version,
     assessed_at: new Date().toISOString(),
   };

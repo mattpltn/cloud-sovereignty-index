@@ -24,6 +24,23 @@ export interface QuestionResult {
   flagged_unsupported: boolean;
 }
 
+export interface C5DomainResult {
+  domain: string;
+  met: number;
+  partial: number;
+  not_met: number;
+  applicable: number;
+}
+
+export interface C5SupplementaryResult {
+  applicable: number;
+  met: number;
+  partial: number;
+  not_met: number;
+  by_domain: C5DomainResult[];
+  details: Array<{ question_id: string; title: string; value: string; source_clause: string }>;
+}
+
 export interface AssessmentResult {
   assessment_id: string;
   variant: Variant;
@@ -34,6 +51,7 @@ export interface AssessmentResult {
   seal_level: number;
   objectives: ObjectiveResult[];
   gap_report: GapItem[];
+  c5_supplementary?: C5SupplementaryResult;
   instrument_version: string;
   assessed_at: string;
 }

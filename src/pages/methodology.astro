@@ -90,23 +90,43 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
     </section>
 
     <section class="mb-10">
-      <h2 class="text-xl font-semibold mb-3">4. Scoring</h2>
-      <div class="text-sm text-gray-700 space-y-3 leading-relaxed">
-        <p>Each question carries a point value and a sovereignty contribution level (1–4).</p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li><strong>Yes</strong>: full points awarded, counts toward the sovereignty level</li>
-          <li><strong>Partial</strong>: half points, does not count toward the sovereignty level</li>
-          <li><strong>No</strong>: 0 points, does not count toward the sovereignty level</li>
-          <li><strong>N/A</strong>: excluded from numerator and denominator</li>
-        </ul>
+      <h2 class="text-xl font-semibold mb-3">4. Scoring — Two Independent Tracks</h2>
+      <div class="text-sm text-gray-700 space-y-4 leading-relaxed">
         <p>
-          The weighted score formula is: <code class="bg-gray-100 px-1 rounded">Score = Σ (Score(SOVₙ) / MaxScore(SOVₙ)) × Weight(SOVₙ) × 100</code>
+          The assessment produces two independent outputs from the same set of answers. The two tracks are completely separate: Track B results have zero influence on Track A.
         </p>
-        <p>
-          Level per objective: the highest level L such that ALL criteria with contribution ≤ L
-          are answered Yes (weakest-link rule, per EU CSF §4). Displayed as SEAL for EU/EEA
-          assessments and CSL for Generalized (non-EU) assessments.
-        </p>
+
+        <div class="border border-blue-200 bg-blue-50 rounded-lg p-4 space-y-2">
+          <p class="font-semibold text-blue-900">Track A — Sovereignty Score (SEAL / CSL)</p>
+          <p class="text-blue-800">Sources: EU-CSF v1.2.1 and BSI C3A v1.0 — 44 questions.</p>
+          <ul class="list-disc pl-5 space-y-1 text-blue-800">
+            <li><strong>Yes</strong>: full points, counts toward sovereignty level gate</li>
+            <li><strong>Partial</strong>: half points, does not satisfy the gate</li>
+            <li><strong>No</strong>: 0 points, does not satisfy the gate</li>
+            <li><strong>N/A</strong>: excluded from both numerator and denominator</li>
+          </ul>
+          <p class="text-blue-800">
+            Weighted score: <code class="bg-blue-100 px-1 rounded">Score = Σ (Score(SOVₙ) / MaxScore(SOVₙ)) × Weight(SOVₙ) × 100</code>
+          </p>
+          <p class="text-blue-800">
+            SEAL level per objective: highest level L such that ALL criteria with contribution ≤ L are answered Yes (weakest-link rule, EU-CSF §4). Overall SEAL = minimum across all objectives. Displayed as SEAL for EU/EEA assessments and CSL for Generalized assessments.
+          </p>
+        </div>
+
+        <div class="border border-gray-200 bg-gray-50 rounded-lg p-4 space-y-2">
+          <p class="font-semibold text-gray-800">Track B — BSI C5:2026 Supplementary Indicators</p>
+          <p class="text-gray-700">Source: BSI C5:2026 — 5 questions covering OPS, BCM, and CRY domains.</p>
+          <p class="text-gray-700">
+            Output: met / partial / not-met count per C5 domain. Displayed as a supplementary panel on the result page.
+          </p>
+          <div class="border-l-2 border-amber-400 pl-3 mt-2">
+            <p class="font-semibold text-amber-800">Important: This is not a BSI C5:2026 compliance assessment.</p>
+            <p class="text-amber-700">BSI C5:2026 has 168 controls across 12+ domains. This tool covers 5 controls selected because they are adjacent to sovereignty concerns (multi-tenant data isolation, confidential computing, container security, business continuity, and post-quantum cryptography readiness). A provider scoring well here may still fail a full C5:2026 audit. A provider that holds a full C5:2026 Type II attestation will likely satisfy all 5 indicators, but the reverse is not true.</p>
+          </div>
+          <p class="text-gray-600 text-xs mt-2">
+            Selection rationale: the 5 controls were chosen because they extend the C3A data, operational, and supply chain sovereignty objectives into areas C5:2026 introduced as new domains in 2026 (OPS-30–35, BCM-01–04, CRY Additional Complement). They are documented in the <a href="/methodology/decisions" class="text-blue-600 underline">Decisions Register</a> (DR-E08, DR-E09, DR-E10, DR-D07).
+          </p>
+        </div>
       </div>
     </section>
 

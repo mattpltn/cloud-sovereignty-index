@@ -35,6 +35,7 @@ const score = (result?.overall_score as number) ?? 0;
 const sealLevel = (result?.seal_level as number) ?? 0;
 const variant = (record?.variant as string) ?? 'EU-CSF';
 const instrumentVersion = (record?.instrument_version as string) ?? '1.0';
+const c5Supplementary = (result?.c5_supplementary as import('../../../../shared/src/types').C5SupplementaryResult | undefined);
 const objectives = (result?.objectives as Array<Record<string, unknown>>) ?? [];
 const gapReport = (result?.gap_report as Array<Record<string, unknown>>) ?? [];
 const companyName = (record?.company_name as string | undefined) || undefined;
@@ -117,6 +118,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
           sealLevel={sealLevel}
           variant={variant}
           instrumentVersion={instrumentVersion}
+          c5Supplementary={c5Supplementary}
         />
 
         {/* ── SEAL explanation ──────────────────────────────────────────────── */}

@@ -982,6 +982,30 @@
       "review_status": "pending-external-review",
       "created": "2026-05-14",
       "instrument_version": "1.1"
+    },
+    {
+      "id": "DR-D07",
+      "category": "derivation",
+      "scope": "global",
+      "applies_to": "all",
+      "affected_element": {
+        "type": "scoring-rule",
+        "ids": ["scoring-engine", "AssessmentResult", "ScoreHero"]
+      },
+      "source": {
+        "doc": "C5:2026",
+        "clauses": ["OPS-30", "OPS-31", "OPS-32", "OPS-33", "OPS-34", "OPS-35", "BCM-01", "BCM-02", "BCM-03", "BCM-04", "CRY Additional Complement"]
+      },
+      "adaptation": {
+        "summary": "Two-track scoring design: Track A (sovereignty) computed exclusively from EU-CSF and C3A sourced questions; Track B (C5:2026 supplementary) computed independently from the 5 C5:2026-sourced questions. Track B has zero influence on SEAL level, sovereignty score, or gap report.",
+        "adapted_text": "Discriminator: question.source.doc === 'C5:2026'. Track A produces: overall_score (0–100), seal_level (0–4), objectives[], gap_report[]. Track B produces: c5_supplementary { applicable, met, partial, not_met, by_domain[], details[] }. Track B is displayed as a supplementary panel on the result page with explicit disclaimer that it does not represent a full C5:2026 compliance assessment (C5:2026 has 168 controls; this tool covers 5)."
+      },
+      "rationale": "SEAL levels are defined by EU-CSF §3 and operationalised by BSI C3A. Neither framework references C5:2026 controls. Assigning seal_contribution values to C5:2026 security controls and including them in SEAL gate computation would produce a false SEAL signal: a provider could be capped at SEAL-1 because of a Container Security gap that has no bearing on jurisdictional data sovereignty. The two-track design preserves the integrity of the SEAL metric while still surfacing C5:2026 compliance signals as genuinely useful supplementary information.",
+      "authority": "Derivation. No published document establishes a mapping from BSI C5:2026 controls to SEAL levels. This design decision is editorial and is documented here for full transparency.",
+      "alternatives_considered": "Remove C5:2026 controls entirely — rejected because the 5 controls provide useful operational and supply-chain intelligence that complements C3A. Keep C5 controls in SEAL gate with seal_contribution — rejected because it produces a misleading SEAL level. Mark C5 controls as informative in the questionnaire without any scoring — rejected because a met/partial/not_met count per domain gives actionable information without corrupting the sovereignty metric.",
+      "review_status": "pending-external-review",
+      "created": "2026-05-14",
+      "instrument_version": "1.1"
     }
   ]
 }
