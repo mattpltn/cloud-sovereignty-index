@@ -1,5 +1,6 @@
 import type { CriteriaFile, Question } from '../../shared/src/schema.js';
 import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult } from '../../shared/src/types.js';
+import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
 
 interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
 
@@ -71,6 +72,9 @@ export async function buildReportPdf(
     ];
   }
 
+  const tierCtx = { variant: result.variant, country: country as Parameters<typeof resolvePlaceholders>[1]['country'] };
+  function resolve(text: string): string { return resolvePlaceholders(text, tierCtx); }
+
   function buildGapSection(
     gaps: Array<{ objective_id: string; question_id: string; tier: string; gap_score: number }>,
     sectionLabel: string,
@@ -83,17 +87,19 @@ export async function buildReportPdf(
         : h(View, {},
             ...topGaps.map((gap, i) => {
               const meta = getQuestionMeta(criteria, gap.question_id, gap.tier);
+              const rawText = resolve(meta.text);
+              const rawSupp = resolve(meta.supplementary);
               const children: unknown[] = [
                 h(Text, { style: styles.cardTitle }, `#${i + 1}. ${meta.title} — ${gap.question_id}`),
               ];
               if (meta.source) children.push(h(Text, { style: { ...styles.cardBody, color: '#9ca3af', marginBottom: 2 } }, `Ref: ${meta.source}`));
-              if (meta.text) children.push(h(Text, { style: { ...styles.cardBody, marginBottom: meta.supplementary ? 2 : 0 } },
-                meta.text.slice(0, 400) + (meta.text.length > 400 ? '…' : '')
+              if (rawText) children.push(h(Text, { style: { ...styles.cardBody, marginBottom: rawSupp ? 2 : 0 } },
+                rawText.slice(0, 400) + (rawText.length > 400 ? '…' : '')
               ));
-              if (meta.supplementary) children.push(h(Text, { style: { ...styles.cardBody, color: '#6b7280' } },
-                meta.supplementary.slice(0, 200) + (meta.supplementary.length > 200 ? '…' : '')
+              if (rawSupp) children.push(h(Text, { style: { ...styles.cardBody, color: '#6b7280' } },
+                rawSupp.slice(0, 200) + (rawSupp.length > 200 ? '…' : '')
               ));
-              return h(View, { key: i, style: styles.improvCard }, ...children);
+              return h(View, { key: i, style: styles.improvCard, wrap: false }, ...children);
             }),
           ),
     ];
@@ -196,7 +202,7 @@ export async function buildReportPdf(
         ? h(Text, { style: styles.bodyText }, `No objective has reached ${levelPrefix} 3 yet.`)
         : h(View, {}, ...strengths.map(obj => {
             const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
-            return h(View, { key: obj.objective_id, style: styles.strengthCard },
+            return h(View, { key: obj.objective_id, style: styles.strengthCard, wrap: false },
               h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.seal}, ${pct}%`),
             );
           })),
@@ -206,7 +212,7 @@ export async function buildReportPdf(
         : h(View, {}, ...weaknesses.map(obj => {
             const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
             const topGap = result.eu_csf!.gap_report.find(g => g.objective_id === obj.objective_id);
-            return h(View, { key: obj.objective_id, style: styles.weakCard },
+            return h(View, { key: obj.objective_id, style: styles.weakCard, wrap: false },
               h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.seal}, ${pct}%`),
               topGap ? h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`) : null,
             );
@@ -251,7 +257,7 @@ export async function buildReportPdf(
       }),
       failedCriteria.length > 0 ? h(View, {},
         h(Text, { style: styles.subSectionTitle }, 'Failed Criteria'),
-        ...failedCriteria.map(fc => h(View, { key: fc.question_id, style: styles.weakCard },
+        ...failedCriteria.map(fc => h(View, { key: fc.question_id, style: styles.weakCard, wrap: false },
           h(Text, { style: styles.cardTitle }, `${fc.question_id} — ${fc.title}`),
           h(Text, { style: styles.cardBody }, `Tier: ${fc.tier}`),
         )),
@@ -281,7 +287,7 @@ export async function buildReportPdf(
         ? h(Text, { style: styles.bodyText }, `No objective has reached ${levelPrefix} 3 yet.`)
         : h(View, {}, ...strengths.map(obj => {
             const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
-            return h(View, { key: obj.objective_id, style: styles.strengthCard },
+            return h(View, { key: obj.objective_id, style: styles.strengthCard, wrap: false },
               h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.csl}, ${pct}%`),
             );
           })),
@@ -291,7 +297,7 @@ export async function buildReportPdf(
         : h(View, {}, ...weaknesses.map(obj => {
             const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
             const topGap = result.csi_composite!.gap_report.find(g => g.objective_id === obj.objective_id);
-            return h(View, { key: obj.objective_id, style: styles.weakCard },
+            return h(View, { key: obj.objective_id, style: styles.weakCard, wrap: false },
               h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.csl}, ${pct}%`),
               topGap ? h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`) : null,
             );
