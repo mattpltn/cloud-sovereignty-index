@@ -49,6 +49,14 @@ async function verifyTurnstile(token: string, secret: string): Promise<boolean> 
   return data.success;
 }
 
+// ── Schema migration (idempotent, runs on each cold start) ───────────────────
+
+async function ensureSchema(db: D1Database): Promise<void> {
+  // ADD COLUMN fails if column already exists — catch and ignore
+  await db.prepare('ALTER TABLE assessments ADD COLUMN selected_frameworks TEXT DEFAULT \'["csi_composite"]\'').run().catch(() => {});
+  await db.prepare('ALTER TABLE assessments ADD COLUMN customer_selected_ac_ids TEXT DEFAULT \'[]\'').run().catch(() => {});
+}
+
 // ── POST /api/assessments ─────────────────────────────────────────────────────
 
 const CreateSchema = z.object({
@@ -226,4 +234,9 @@ app.get('/api/corpus', async (c) => {
   return c.json(rows.results ?? []);
 });
 
-export default app;
+export default {
+  fetch: async (request: Request, env: { DB: D1Database; TURNSTILE_SECRET?: string }, ctx: ExecutionContext) => {
+    await ensureSchema(env.DB);
+    return app.fetch(request, env, ctx);
+  },
+};
