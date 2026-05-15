@@ -10,13 +10,23 @@ function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string) {
   for (const obj of criteria.objectives) {
     const q = obj.questions.find((q: Question) => q.id === qid);
     if (!q) continue;
-    if (q.type === 'single') return { title: q.title, source: q.source?.clause ?? '', supplementary: q.supplementary_info ?? '' };
+    if (q.type === 'single') return {
+      title: q.title,
+      source: q.source?.clause ?? '',
+      text: q.text,
+      supplementary: q.supplementary_info ?? '',
+    };
     if (q.type === 'tiered') {
       const tierData = tier === 'national' ? q.tiers.national : q.tiers.bloc;
-      return { title: q.title, source: tierData?.source?.clause ?? '', supplementary: q.supplementary_info ?? '' };
+      return {
+        title: q.title,
+        source: tierData?.source?.clause ?? '',
+        text: tierData?.text ?? '',
+        supplementary: q.supplementary_info ?? '',
+      };
     }
   }
-  return { title: qid, source: '', supplementary: '' };
+  return { title: qid, source: '', text: '', supplementary: '' };
 }
 
 function getQuestionTitle(criteria: CriteriaFile, qid: string): string {
@@ -73,15 +83,17 @@ export async function buildReportPdf(
         : h(View, {},
             ...topGaps.map((gap, i) => {
               const meta = getQuestionMeta(criteria, gap.question_id, gap.tier);
-              return h(View, { key: i, style: styles.improvCard },
-                h(Text, { style: styles.cardTitle }, `#${i + 1}. ${meta.title} — ${gap.question_id} (${gap.tier})`),
-                meta.source ? h(Text, { style: { ...styles.cardBody, color: '#9ca3af', marginBottom: 3 } }, `Source: ${meta.source}`) : null,
-                h(Text, { style: styles.cardBody },
-                  meta.supplementary
-                    ? meta.supplementary.slice(0, 300) + (meta.supplementary.length > 300 ? '…' : '')
-                    : 'Address this criterion to improve your sovereignty score.'
-                ),
-              );
+              const children: unknown[] = [
+                h(Text, { style: styles.cardTitle }, `#${i + 1}. ${meta.title} — ${gap.question_id}`),
+              ];
+              if (meta.source) children.push(h(Text, { style: { ...styles.cardBody, color: '#9ca3af', marginBottom: 2 } }, `Ref: ${meta.source}`));
+              if (meta.text) children.push(h(Text, { style: { ...styles.cardBody, marginBottom: meta.supplementary ? 2 : 0 } },
+                meta.text.slice(0, 400) + (meta.text.length > 400 ? '…' : '')
+              ));
+              if (meta.supplementary) children.push(h(Text, { style: { ...styles.cardBody, color: '#6b7280' } },
+                meta.supplementary.slice(0, 200) + (meta.supplementary.length > 200 ? '…' : '')
+              ));
+              return h(View, { key: i, style: styles.improvCard }, ...children);
             }),
           ),
     ];

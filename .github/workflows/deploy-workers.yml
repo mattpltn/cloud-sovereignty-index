@@ -18,6 +18,12 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Apply D1 migrations
+        working-directory: workers
+        run: pnpm exec wrangler d1 migrations apply cloud-sovereignty-index-prod --remote
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 4ddcad5cc14108c6d18c116fe99f089f
       - name: Deploy to Cloudflare Workers
         working-directory: workers
         run: pnpm wrangler deploy
