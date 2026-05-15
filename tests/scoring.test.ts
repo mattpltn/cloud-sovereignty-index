@@ -9,12 +9,17 @@ const criteria: CriteriaFile = JSON.parse(
   readFileSync(resolve(__dirname, '../data/criteria.json'), 'utf-8')
 );
 
-const meta = {
+const metaComposite = {
   variant: 'EU-CSF' as const,
   scope_ids: ['IaaS'],
   role: 'customer',
-  instrument_version: '1.0',
+  instrument_version: '2.0',
+  selected_frameworks: ['csi_composite'],
 };
+
+const metaEuCsf = { ...metaComposite, selected_frameworks: ['eu_csf'] };
+const metaC3a = { ...metaComposite, selected_frameworks: ['c3a'] };
+const metaAll = { ...metaComposite, selected_frameworks: ['eu_csf', 'c3a', 'csi_composite'] };
 
 function allYesAnswers(tier: 'bloc' | 'national'): AnswerMap {
   const map: AnswerMap = {};
@@ -23,7 +28,6 @@ function allYesAnswers(tier: 'bloc' | 'national'): AnswerMap {
       if (q.type === 'single') {
         map[q.id] = { tier: 'single', value: 'yes' };
       } else {
-        // Use the tiered key format
         map[`${q.id}:${tier}`] = { tier, value: 'yes' };
       }
     }
@@ -46,25 +50,24 @@ function allNoAnswers(): AnswerMap {
   return map;
 }
 
-describe('scoreAssessment', () => {
+// ── CSI Composite mode (existing behavior preserved) ──────────────────────────
+
+describe('CSI Composite mode', () => {
   it('perfect assessment (national yes) → 100%', () => {
-    const answers = allYesAnswers('national');
-    const result = scoreAssessment(answers, criteria, 'test-1', meta);
-    expect(result.overall_score).toBeCloseTo(100, 1);
+    const result = scoreAssessment(allYesAnswers('national'), criteria, 'test-1', metaComposite);
+    expect(result.csi_composite!.global.pct).toBeCloseTo(100, 1);
   });
 
   it('perfect assessment (bloc yes) → 100%', () => {
-    const answers = allYesAnswers('bloc');
-    const result = scoreAssessment(answers, criteria, 'test-1b', meta);
-    expect(result.overall_score).toBeCloseTo(100, 1);
+    const result = scoreAssessment(allYesAnswers('bloc'), criteria, 'test-1b', metaComposite);
+    expect(result.csi_composite!.global.pct).toBeCloseTo(100, 1);
   });
 
-  it('zero assessment → 0%, SEAL = 0 for all objectives', () => {
-    const answers = allNoAnswers();
-    const result = scoreAssessment(answers, criteria, 'test-2', meta);
-    expect(result.overall_score).toBeCloseTo(0, 1);
-    for (const obj of result.objectives) {
-      expect(obj.seal_level).toBe(0);
+  it('zero assessment → 0%, CSL = 0 for all objectives', () => {
+    const result = scoreAssessment(allNoAnswers(), criteria, 'test-2', metaComposite);
+    expect(result.csi_composite!.global.pct).toBeCloseTo(0, 1);
+    for (const obj of Object.values(result.csi_composite!.per_objective)) {
+      expect(obj.csl).toBe(0);
     }
   });
 
@@ -78,46 +81,42 @@ describe('scoreAssessment', () => {
       'SOV-1-03:bloc': { tier: 'bloc', value: 'yes' },
       'SOV-1-04': { tier: 'single', value: 'yes' },
     };
-    const result = scoreAssessment(answers, criteria, 'test-3', meta);
-    const sov1 = result.objectives.find(o => o.objective_id === 'SOV-1')!;
+    const result = scoreAssessment(answers, criteria, 'test-3', metaComposite);
+    const sov1 = result.csi_composite!.per_objective['SOV-1'];
     expect(sov1.raw_score).toBeGreaterThan(0);
-    // bloc sc=1 for SOV-1-01/02, sc=3 for SOV-1-03, single sc=2 for SOV-1-04
-    // All bloc=yes, single=yes → SEAL=2 (sc<=2: bloc SOV-1-01 yes, SOV-1-02 yes, single yes; sc<=3: SOV-1-03 yes → SEAL 3)
-    expect(sov1.seal_level).toBeGreaterThanOrEqual(1);
+    expect(sov1.csl).toBeGreaterThanOrEqual(1);
   });
 
-  it('national yes → auto-satisfies bloc tier for SEAL', () => {
+  it('national yes → auto-satisfies bloc tier for CSL', () => {
     const answers: AnswerMap = {
       'SOV-1-01:national': { tier: 'national', value: 'yes' },
       'SOV-1-02:national': { tier: 'national', value: 'yes' },
       'SOV-1-03:national': { tier: 'national', value: 'yes' },
       'SOV-1-04': { tier: 'single', value: 'yes' },
     };
-    const result = scoreAssessment(answers, criteria, 'test-4', meta);
-    const sov1 = result.objectives.find(o => o.objective_id === 'SOV-1')!;
-    // national sc=2,2,4 + single sc=2 → all sc<=4 satisfied → SEAL 4
-    expect(sov1.seal_level).toBe(4);
+    const result = scoreAssessment(answers, criteria, 'test-4', metaComposite);
+    const sov1 = result.csi_composite!.per_objective['SOV-1'];
+    expect(sov1.csl).toBe(4);
   });
 
-  it('one failed SEAL-1 criterion drops objective SEAL to 0', () => {
+  it('one failed SEAL-1 criterion drops objective CSL to 0', () => {
     const answers = allYesAnswers('bloc');
-    // SOV-1-01 bloc has seal_contribution=1
     answers['SOV-1-01:bloc'] = { tier: 'bloc', value: 'no' };
     delete answers['SOV-1-01:national'];
-    const result = scoreAssessment(answers, criteria, 'test-5', meta);
-    const sov1 = result.objectives.find(o => o.objective_id === 'SOV-1')!;
-    expect(sov1.seal_level).toBe(0);
+    const result = scoreAssessment(answers, criteria, 'test-5', metaComposite);
+    const sov1 = result.csi_composite!.per_objective['SOV-1'];
+    expect(sov1.csl).toBe(0);
   });
 
   it('gap report is sorted by gap_score descending', () => {
-    const answers = allNoAnswers();
-    const result = scoreAssessment(answers, criteria, 'test-6', meta);
-    for (let i = 1; i < result.gap_report.length; i++) {
-      expect(result.gap_report[i - 1].gap_score).toBeGreaterThanOrEqual(result.gap_report[i].gap_score);
+    const result = scoreAssessment(allNoAnswers(), criteria, 'test-6', metaComposite);
+    const gaps = result.csi_composite!.gap_report;
+    for (let i = 1; i < gaps.length; i++) {
+      expect(gaps[i - 1].gap_score).toBeGreaterThanOrEqual(gaps[i].gap_score);
     }
   });
 
-  it('n/a answers excluded from score and SEAL', () => {
+  it('n/a answers excluded from score and CSL', () => {
     const map: AnswerMap = {};
     for (const obj of criteria.objectives) {
       for (const q of obj.questions) {
@@ -128,7 +127,113 @@ describe('scoreAssessment', () => {
         }
       }
     }
-    const result = scoreAssessment(map, criteria, 'test-7', meta);
-    expect(result.overall_score).toBe(0);
+    const result = scoreAssessment(map, criteria, 'test-7', metaComposite);
+    expect(result.csi_composite!.global.pct).toBe(0);
+  });
+});
+
+// ── EU-CSF mode ───────────────────────────────────────────────────────────────
+
+describe('EU-CSF mode', () => {
+  it('produces eu_csf result, no c3a or csi_composite', () => {
+    const result = scoreAssessment(allYesAnswers('bloc'), criteria, 'test-eu-1', metaEuCsf);
+    expect(result.eu_csf).toBeDefined();
+    expect(result.c3a).toBeUndefined();
+    expect(result.csi_composite).toBeUndefined();
+  });
+
+  it('perfect assessment → SEAL 4 globally', () => {
+    const answers = allYesAnswers('national');
+    const result = scoreAssessment(answers, criteria, 'test-eu-2', metaEuCsf);
+    expect(result.eu_csf!.global.seal).toBe(4);
+    expect(result.eu_csf!.global.pct).toBeCloseTo(100, 1);
+  });
+
+  it('partial counts as half points but not toward SEAL gate', () => {
+    const answers: AnswerMap = { 'SOV-1-04': { tier: 'single', value: 'partial' } };
+    const result = scoreAssessment(answers, criteria, 'test-eu-3', metaEuCsf);
+    const sov1 = result.eu_csf!.per_objective['SOV-1'];
+    const qr = sov1.questions.find(q => q.question_id === 'SOV-1-04');
+    expect(qr!.points_earned).toBeCloseTo(qr!.points_possible * 0.5, 5);
+    expect(qr!.counts_toward_seal).toBe(false);
+  });
+
+  it('SOV-7 and SOV-8 questions are included in EU-CSF mode', () => {
+    const result = scoreAssessment({}, criteria, 'test-eu-4', metaEuCsf);
+    expect(result.eu_csf!.per_objective['SOV-7']).toBeDefined();
+    expect(result.eu_csf!.per_objective['SOV-8']).toBeDefined();
+  });
+});
+
+// ── C3A mode ──────────────────────────────────────────────────────────────────
+
+describe('C3A mode', () => {
+  it('produces c3a result, no eu_csf or csi_composite', () => {
+    const result = scoreAssessment(allYesAnswers('bloc'), criteria, 'test-c3a-1', metaC3a);
+    expect(result.c3a).toBeDefined();
+    expect(result.eu_csf).toBeUndefined();
+    expect(result.csi_composite).toBeUndefined();
+  });
+
+  it('SOV-7 and SOV-8 objectives are NOT included in C3A mode', () => {
+    const result = scoreAssessment(allYesAnswers('bloc'), criteria, 'test-c3a-2', metaC3a);
+    expect(result.c3a!.criterion.per_objective['SOV-7']).toBeDefined();
+    // SOV-7 questions have applies_to_c3a = false so they should contribute 0 applicable
+    expect(result.c3a!.criterion.per_objective['SOV-7'].applicable).toBe(0);
+    expect(result.c3a!.criterion.per_objective['SOV-8']).toBeDefined();
+    expect(result.c3a!.criterion.per_objective['SOV-8'].applicable).toBe(0);
+  });
+
+  it('partial counts as not-met in C3A mode', () => {
+    const answers: AnswerMap = { 'SOV-1-04': { tier: 'single', value: 'partial' } };
+    const result = scoreAssessment(answers, criteria, 'test-c3a-3', metaC3a);
+    const sov1Criterion = result.c3a!.criterion.per_objective['SOV-1'];
+    // SOV-1-04 is a base criterion: partial = not-met → passed = 0
+    expect(sov1Criterion.passed).toBe(0);
+  });
+
+  it('AC criteria not in customer_selected_ac_ids are excluded from denominator', () => {
+    const answers = allYesAnswers('bloc');
+    // Don't select any ACs
+    const result = scoreAssessment(answers, criteria, 'test-c3a-4', { ...metaC3a, customer_selected_ac_ids: [] });
+    expect(result.c3a!.additional_criterion.global).toBeNull();
+  });
+
+  it('selected AC criteria appear in denominator', () => {
+    const answers = allYesAnswers('bloc');
+    answers['SOV-3-02-AC'] = { tier: 'single', value: 'yes' };
+    const result = scoreAssessment(answers, criteria, 'test-c3a-5', {
+      ...metaC3a,
+      customer_selected_ac_ids: ['SOV-3-02-AC'],
+    });
+    expect(result.c3a!.additional_criterion.global).not.toBeNull();
+    expect(result.c3a!.additional_criterion.global!.applicable).toBeGreaterThan(0);
+  });
+
+  it('all-yes assessment → 100% criterion', () => {
+    const answers = allYesAnswers('bloc');
+    const result = scoreAssessment(answers, criteria, 'test-c3a-6', metaC3a);
+    expect(result.c3a!.criterion.global.pct).toBe(100);
+  });
+});
+
+// ── Multi-mode: same answers → 3 independent outputs ─────────────────────────
+
+describe('Multi-mode scoring', () => {
+  it('three modes produce independent results from same answers', () => {
+    const answers = allYesAnswers('bloc');
+    const result = scoreAssessment(answers, criteria, 'test-multi-1', metaAll);
+    expect(result.eu_csf).toBeDefined();
+    expect(result.c3a).toBeDefined();
+    expect(result.csi_composite).toBeDefined();
+    expect(result.selected_frameworks).toEqual(['eu_csf', 'c3a', 'csi_composite']);
+  });
+
+  it('EU-CSF and CSI Composite both reach global SEAL/CSL 4 on perfect all-national answers', () => {
+    const answers = allYesAnswers('national');
+    const result = scoreAssessment(answers, criteria, 'test-multi-2', metaAll);
+    expect(result.eu_csf!.global.seal).toBe(4);
+    expect(result.csi_composite!.global.csl).toBe(4);
+    expect(result.c3a!.criterion.global.pct).toBe(100);
   });
 });

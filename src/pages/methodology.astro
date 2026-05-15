@@ -4,18 +4,12 @@ import criteriaJson from '../../data/criteria.json';
 import type { CriteriaFile } from '../../shared/src/schema';
 
 const criteria = criteriaJson as unknown as CriteriaFile;
-const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovereignty', 'Digital Resilience', 'Full Digital Sovereignty'];
 const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
   'EU-CSF': [
     { url: 'https://digital-strategy.ec.europa.eu/en/policies/cloud-sovereignty', label: 'Overview' },
   ],
   'C3A': [
     { url: 'https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/CloudComputing/C3A/BSI-C3A-v1.0.pdf', label: 'PDF' },
-  ],
-  'C5:2026': [
-    { url: 'https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Compliance-Controls-Catalogue-C5/compliance-controls-catalogue-c5.html', label: 'Overview' },
-    { url: 'https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/CloudComputing/ComplianceControlsCatalogue/2026/C5_2026_editable.xlsx?__blob=publicationFile&v=4', label: 'XLSX' },
-    { url: 'https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/CloudComputing/ComplianceControlsCatalogue/2026/C5_2026_changelog.xlsx?__blob=publicationFile&v=2', label: 'Changelog' },
   ],
 };
 ---
@@ -39,34 +33,62 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
 
     <section class="mb-10">
       <h2 class="text-xl font-semibold mb-3">1. Overview</h2>
-      <p class="text-sm text-gray-700 leading-relaxed">
-        The Cloud Sovereignty Index (CSI) is a structured self-assessment instrument for evaluating the
-        sovereignty posture of cloud services. It is based on the EU Cloud Sovereignty Framework (EU-CSF) v1.2.1
-        and BSI Criteria Enabling Cloud Computing Autonomy (C3A) v1.0.
-      </p>
+      <div class="text-sm text-gray-700 space-y-3 leading-relaxed">
+        <p>
+          The Cloud Sovereignty Index (CSI) is a structured self-assessment instrument for evaluating the
+          sovereignty posture of cloud services. It supports three distinct, source-faithful assessment modes:
+        </p>
+        <div class="space-y-3">
+          <div class="border border-blue-200 bg-blue-50 rounded-lg p-4">
+            <p class="font-semibold text-blue-900 mb-1">EU-CSF — EU Cloud Sovereignty Framework v1.2.1 <span class="text-xs font-normal text-blue-600">(European Commission)</span></p>
+            <p class="text-blue-800 text-xs">Output: SEAL 0–4 per objective and globally. Scoring follows EU-CSF §4 (weakest-link gate) and §5 (objective weights). For EU procurement compliance scenarios.</p>
+          </div>
+          <div class="border border-gray-200 bg-gray-50 rounded-lg p-4">
+            <p class="font-semibold text-gray-800 mb-1">C3A — BSI Criteria enabling Cloud Computing Autonomy v1.0 <span class="text-xs font-normal text-gray-500">(BSI)</span></p>
+            <p class="text-gray-700 text-xs">Output: % Criterion met + % Additional Criterion met (customer-selected). Binary pass/fail per criterion — no SEAL, no partial credit. Scope: SOV-1 through SOV-6 (C3A §1.2).</p>
+          </div>
+          <div class="border border-purple-100 bg-purple-50 rounded-lg p-4">
+            <p class="font-semibold text-purple-900 mb-1">CSI Composite <span class="text-xs font-normal text-purple-600">(CSI editorial framework)</span></p>
+            <p class="text-purple-800 text-xs">Output: CSL 0–4 (SEAL for EU/EEA). An editorial blend of EU-CSF and C3A with adaptations for global use. Not a source-standard certification.</p>
+          </div>
+        </div>
+        <p class="text-gray-500 text-xs border-l-2 border-amber-400 pl-3">
+          <strong>Scope: cloud sovereignty only.</strong> Security attestation (ISO 27001, SOC 2, BSI C5:2026) is assumed and not assessed by this instrument. C5 is presupposed, not a CSI source.
+        </p>
+        <p>
+          Users may select one, two, or all three modes for the same assessment. Results for each mode are
+          completely independent — there is no combined cross-mode score.
+        </p>
+      </div>
     </section>
 
     <section class="mb-10">
       <h2 class="text-xl font-semibold mb-3">2. Objectives & Weights</h2>
+      <p class="text-sm text-gray-600 mb-3">
+        Weights apply to EU-CSF and CSI Composite modes. C3A uses SOV-1 through SOV-6 only.
+      </p>
       <div class="space-y-2">
         {criteria.objectives.map(obj => (
           <div class="flex items-center gap-4 py-2 border-b border-gray-100">
             <div class="w-14 font-mono text-xs text-gray-400">{obj.id}</div>
             <div class="flex-1 text-sm font-medium">{obj.title}</div>
             <div class="text-sm text-gray-500">{Math.round(obj.weight * 100)}%</div>
+            <div class="text-xs text-gray-400">{obj.id <= 'SOV-6' ? 'EU-CSF · C3A · CSI' : 'EU-CSF · CSI'}</div>
           </div>
         ))}
       </div>
     </section>
 
     <section class="mb-10">
-      <h2 class="text-xl font-semibold mb-3">3. SEAL / CSL Levels</h2>
+      <h2 class="text-xl font-semibold mb-3">3. Output Formats by Mode</h2>
+
+      <h3 class="text-base font-semibold mb-2 mt-6">3.1 EU-CSF — SEAL Levels</h3>
       <p class="text-sm text-gray-600 mb-4">
-        For EU/EEA assessments the metric is the <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level), as defined in EU-CSF §3.
-        For non-EU (Generalized) assessments the equivalent metric is the <strong>CSL</strong> (Cloud Sovereignty Level).
-        Both use identical methodology and the same 0–4 scale — only the label differs to avoid implying EU procurement compliance for non-EU organisations.
+        The <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level) is defined in EU-CSF §3.
+        For EU/EEA assessments the metric is labeled SEAL. For non-EU (Generalized) the equivalent metric
+        is the <strong>CSL</strong> (Cloud Sovereignty Level). Both use identical methodology and the same 0–4 scale.
       </p>
-      <div class="space-y-3">
+      <div class="space-y-3 mb-6">
         {criteria.seal_levels.map(sl => (
           <div class="flex items-start gap-4">
             <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
@@ -87,47 +109,78 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           </div>
         ))}
       </div>
+
+      <h3 class="text-base font-semibold mb-2">3.2 C3A — Criterion & Additional Criterion %</h3>
+      <div class="text-sm text-gray-700 space-y-2 leading-relaxed mb-6">
+        <p>C3A produces two independent percentage scores per objective and globally:</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Criterion %</strong>: base criteria (c3a_tier = "base") — binary pass/fail, always in denominator.</li>
+          <li><strong>Additional Criterion %</strong>: AC criteria (c3a_tier = "additional") — only customer-selected ACs are in the denominator (C3A §1.4). If no ACs are selected, the AC result is null.</li>
+        </ul>
+        <p>
+          Partial answers count as not-met in C3A mode (the source is binary). The "Partial" answer option
+          is hidden in the questionnaire when C3A is the only selected mode.
+        </p>
+        <p>There is no SEAL or CSL in C3A mode.</p>
+      </div>
+
+      <h3 class="text-base font-semibold mb-2">3.3 CSI Composite — CSL / SEAL Levels</h3>
+      <p class="text-sm text-gray-700 leading-relaxed">
+        CSI Composite uses the same SEAL/CSL levels as EU-CSF (see §3.1). It covers all 8 objectives
+        and includes editorial adaptations for global organisations. It is labeled CSI Composite in all
+        outputs and should not be confused with either EU-CSF or C3A certification.
+      </p>
     </section>
 
     <section class="mb-10">
-      <h2 class="text-xl font-semibold mb-3">4. Scoring — Two Independent Tracks</h2>
-      <div class="text-sm text-gray-700 space-y-4 leading-relaxed">
-        <p>
-          The assessment produces two independent outputs from the same set of answers. The two tracks are completely separate: Track B results have zero influence on Track A.
-        </p>
+      <h2 class="text-xl font-semibold mb-3">4. Scoring</h2>
 
+      <h3 class="text-base font-semibold mb-2 mt-4">4.1 EU-CSF Scoring</h3>
+      <div class="text-sm text-gray-700 space-y-3 leading-relaxed mb-6">
         <div class="border border-blue-200 bg-blue-50 rounded-lg p-4 space-y-2">
-          <p class="font-semibold text-blue-900">Track A — Sovereignty Score (SEAL / CSL)</p>
-          <p class="text-blue-800">Sources: EU-CSF v1.2.1 and BSI C3A v1.0 — 44 questions.</p>
           <ul class="list-disc pl-5 space-y-1 text-blue-800">
-            <li><strong>Yes</strong>: full points, counts toward sovereignty level gate</li>
-            <li><strong>Partial</strong>: half points, does not satisfy the gate</li>
+            <li><strong>Yes</strong>: full points, counts toward SEAL gate</li>
+            <li><strong>Partial</strong>: half points, does not satisfy the gate (EU-CSF §4)</li>
             <li><strong>No</strong>: 0 points, does not satisfy the gate</li>
-            <li><strong>N/A</strong>: excluded from both numerator and denominator</li>
+            <li><strong>N/A</strong>: excluded from numerator and denominator</li>
           </ul>
           <p class="text-blue-800">
             Weighted score: <code class="bg-blue-100 px-1 rounded">Score = Σ (Score(SOVₙ) / MaxScore(SOVₙ)) × Weight(SOVₙ) × 100</code>
           </p>
           <p class="text-blue-800">
-            SEAL level per objective: highest level L such that ALL criteria with contribution ≤ L are answered Yes (weakest-link rule, EU-CSF §4). Overall SEAL = minimum across all objectives. Displayed as SEAL for EU/EEA assessments and CSL for Generalized assessments.
+            SEAL level per objective: highest level L such that ALL criteria with seal_contribution ≤ L are answered Yes.
+            Overall SEAL = minimum across all objectives (weakest-link rule, EU-CSF §4).
           </p>
-        </div>
-
-        <div class="border border-gray-200 bg-gray-50 rounded-lg p-4 space-y-2">
-          <p class="font-semibold text-gray-800">Track B — BSI C5:2026 Supplementary Indicators</p>
-          <p class="text-gray-700">Source: BSI C5:2026 — 5 questions covering OPS, BCM, and CRY domains.</p>
-          <p class="text-gray-700">
-            Output: met / partial / not-met count per C5 domain. Displayed as a supplementary panel on the result page.
-          </p>
-          <div class="border-l-2 border-amber-400 pl-3 mt-2">
-            <p class="font-semibold text-amber-800">Important: This is not a BSI C5:2026 compliance assessment.</p>
-            <p class="text-amber-700">BSI C5:2026 has 168 controls across 12+ domains. This tool covers 5 controls selected because they are adjacent to sovereignty concerns (multi-tenant data isolation, confidential computing, container security, business continuity, and post-quantum cryptography readiness). A provider scoring well here may still fail a full C5:2026 audit. A provider that holds a full C5:2026 Type II attestation will likely satisfy all 5 indicators, but the reverse is not true.</p>
-          </div>
-          <p class="text-gray-600 text-xs mt-2">
-            Selection rationale: the 5 controls were chosen because they extend the C3A data, operational, and supply chain sovereignty objectives into areas C5:2026 introduced as new domains in 2026 (OPS-30–35, BCM-01–04, CRY Additional Complement). They are documented in the <a href="/methodology/decisions" class="text-blue-600 underline">Decisions Register</a> (DR-E08, DR-E09, DR-E10, DR-D07).
+          <p class="text-blue-800 text-xs">
+            Weights (EU-CSF §5): SOV-1 15%, SOV-2 10%, SOV-3 10%, SOV-4 15%, SOV-5 20%, SOV-6 15%, SOV-7 10%, SOV-8 5%.
           </p>
         </div>
       </div>
+
+      <h3 class="text-base font-semibold mb-2">4.2 C3A Scoring</h3>
+      <div class="text-sm text-gray-700 space-y-2 leading-relaxed mb-6">
+        <div class="border border-gray-200 bg-gray-50 rounded-lg p-4 space-y-2">
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Yes</strong>: criterion met (passed = passed + 1)</li>
+            <li><strong>No / Partial</strong>: criterion not-met (partial counts as not-met — C3A is binary)</li>
+            <li><strong>N/A</strong>: excluded from denominator</li>
+          </ul>
+          <p>
+            Per objective: <code class="bg-gray-100 px-1 rounded">Criterion % = (passed / applicable) × 100</code>
+          </p>
+          <p>
+            AC criteria: only questions in the customer's selected AC list contribute to the denominator.
+            An assessment with no ACs selected reports <em>null</em> for the AC track.
+          </p>
+          <p>Scope: SOV-1 through SOV-6 (SOV-7 and SOV-8 have no C3A questions).</p>
+        </div>
+      </div>
+
+      <h3 class="text-base font-semibold mb-2">4.3 CSI Composite Scoring</h3>
+      <p class="text-sm text-gray-700 leading-relaxed">
+        CSI Composite uses identical scoring logic to EU-CSF (weakest-link gate, same weights, partial = half points).
+        It is an editorial framework; its results do not constitute EU-CSF or C3A compliance.
+      </p>
     </section>
 
     <section class="mb-10">
@@ -138,34 +191,32 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           (Germany in the source document)</strong>. The national tier is a strictly higher bar than the
           bloc tier — it applies to a specific member state rather than the EU as a whole.
         </p>
-
         <p><strong>Nesting rule:</strong> National tier ⊆ Bloc tier. A cloud provider that satisfies the
-          national-level requirement (e.g., "data stored in France") automatically satisfies the
-          bloc-level requirement ("data stored in the EU"). The reverse is not true.</p>
+          national-level requirement automatically satisfies the bloc-level requirement.
+          The reverse is not true.</p>
 
-        <p><strong>Questionnaire flow for EU/EEA assessments with a country selected:</strong></p>
+        <p><strong>Questionnaire flow for EU/EEA assessments with a country selected (EU-CSF and CSI Composite):</strong></p>
         <ol class="list-decimal pl-5 space-y-1">
-          <li>The national tier question is shown first (e.g., "…stored in France").</li>
-          <li>If the answer is <strong>Yes</strong> → the EU-level requirement is auto-satisfied. Only the national tier is scored; no further question is shown for that criterion.</li>
-          <li>If the answer is <strong>No, Partial, or N/A</strong> → the EU-level (bloc) fallback question is shown immediately below. The respondent can still satisfy the EU-level requirement independently. Both tiers are scored at their respective levels.</li>
+          <li>The national tier question is shown first.</li>
+          <li>If the answer is <strong>Yes</strong> → the EU-level requirement is auto-satisfied.</li>
+          <li>If the answer is <strong>No, Partial, or N/A</strong> → the EU-level (bloc) fallback question is shown.</li>
         </ol>
 
-        <p><strong>Scoring of tiered criteria:</strong></p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li><strong>National = Yes</strong> → national tier points and sovereignty contribution counted; bloc tier auto-credited at the lower contribution level (no double-counting of points).</li>
-          <li><strong>National = No/Partial, Bloc = Yes</strong> → bloc tier points and sovereignty contribution counted at the bloc level. National tier scored as answered (0 or half points).</li>
-          <li><strong>Both = No</strong> → 0 points for both tiers.</li>
-        </ul>
+        <p class="text-xs text-gray-500 border-l-2 border-gray-300 pl-3">
+          In C3A mode, each tier is an independent criterion — national and bloc tiers are scored separately
+          with no auto-satisfaction. This is faithful to the C3A source (which lists national and EU variants
+          as distinct requirements).
+        </p>
 
         <p><strong>Text substitution:</strong> Geographic placeholders are resolved at render time.
-          <code class="bg-gray-100 px-1 rounded">{"{{COUNTRY}}"}</code> → selected member state name (e.g., "France").
-          <code class="bg-gray-100 px-1 rounded">{"{{BLOC}}"}</code> → "EU" (EU-CSF variant) or the country name (Generalized variant).
+          <code class="bg-gray-100 px-1 rounded">{"{{COUNTRY}}"}</code> → selected member state name.
+          <code class="bg-gray-100 px-1 rounded">{"{{BLOC}}"}</code> → "EU" (EU-CSF) or country name (Generalized).
           <code class="bg-gray-100 px-1 rounded">{"{{NATIONAL_ADMIN}}"}</code> and
-          <code class="bg-gray-100 px-1 rounded">{"{{EMERGENCY_REGIME}}"}</code> → country-specific values from the methodology dataset.
+          <code class="bg-gray-100 px-1 rounded">{"{{EMERGENCY_REGIME}}"}</code> → country-specific values.
         </p>
 
         <p>
-          All adaptations and substitutions are documented in the{' '}
+          All adaptations are documented in the{' '}
           <a href="/methodology/decisions" class="text-blue-600 underline">Decisions Register</a>.
         </p>
       </div>
@@ -190,6 +241,9 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
             </div>
           );
         })}
+        <p class="text-xs text-gray-400 mt-2">
+          BSI C5:2026 is a security attestation framework. It is presupposed by this instrument but is not a source for CSI questions or scores.
+        </p>
       </div>
     </section>
 

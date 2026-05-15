@@ -1,48 +1,53 @@
 import type { CriteriaFile, Question } from './schema.js';
-import type { AssessmentResult, ObjectiveResult, QuestionResult, GapItem, AnswerMap, C5SupplementaryResult, C5DomainResult } from './types.js';
+import type {
+  AssessmentResult, EuCsfResult, EuCsfObjectiveResult,
+  C3aResult, C3aObjectiveTierResult,
+  CsiCompositeResult, CsiObjectiveResult,
+  QuestionResult, GapItem, AnswerMap, FrameworkMode,
+} from './types.js';
+
+// ── SEAL/CSL weakest-link gate ────────────────────────────────────────────────
 
 function computeSealLevel(results: QuestionResult[]): number {
   for (let level = 4; level >= 1; level--) {
-    const relevant = results.filter(r => r.seal_contribution <= level && r.seal_contribution > 0 && r.value !== 'n/a');
+    const relevant = results.filter(
+      r => r.seal_contribution <= level && r.seal_contribution > 0 && r.value !== 'n/a'
+    );
     if (relevant.length === 0) continue;
     if (relevant.every(r => r.value === 'yes')) return level;
   }
   return 0;
 }
 
+// ── Tiered question scorer (EU-CSF / CSI Composite modes) ────────────────────
+
 function scoreTieredQuestion(
   q: Extract<Question, { type: 'tiered' }>,
   answers: AnswerMap
 ): QuestionResult[] {
   const results: QuestionResult[] = [];
-
   const natAnswer = answers[`${q.id}:national`];
   const blocAnswer = answers[`${q.id}:bloc`] ?? answers[q.id];
-
   const hasNational = !!q.tiers.national;
 
   if (hasNational && natAnswer) {
     const { points, seal_contribution } = q.tiers.national!;
     const value = natAnswer.value;
-
     if (value === 'yes') {
-      // National satisfied → bloc is auto-satisfied at its own level
       results.push({
         question_id: q.id, tier: 'national', value,
         points_earned: points, points_possible: points,
         seal_contribution, counts_toward_seal: true, flagged_unsupported: false,
       });
-      // Auto-satisfy bloc (no extra points — same criterion at lower bar)
+      // National yes auto-satisfies bloc at bloc's seal level (no extra points)
       results.push({
         question_id: q.id, tier: 'bloc', value: 'yes',
-        points_earned: 0, points_possible: 0,  // points already counted via national
+        points_earned: 0, points_possible: 0,
         seal_contribution: q.tiers.bloc.seal_contribution,
         counts_toward_seal: true, flagged_unsupported: false,
       });
       return results;
     }
-
-    // National not satisfied — record it, then fall through to bloc
     const earned = value === 'n/a' ? 0 : value === 'partial' ? points * 0.5 : 0;
     results.push({
       question_id: q.id, tier: 'national', value,
@@ -52,11 +57,9 @@ function scoreTieredQuestion(
     });
   }
 
-  // Score bloc tier (either no country selected, or national failed/unanswered)
   if (blocAnswer) {
     const { points, seal_contribution } = q.tiers.bloc;
     const value = blocAnswer.value;
-
     if (value === 'n/a') {
       results.push({
         question_id: q.id, tier: 'bloc', value,
@@ -72,52 +75,37 @@ function scoreTieredQuestion(
       });
     }
   }
-
   return results;
 }
 
-function computeC5Supplementary(answers: AnswerMap, criteria: CriteriaFile): C5SupplementaryResult {
-  const details: C5SupplementaryResult['details'] = [];
-  const domainMap = new Map<string, C5DomainResult>();
+// ── Gap report builder (EU-CSF / CSI Composite modes) ────────────────────────
 
-  for (const obj of criteria.objectives) {
-    for (const q of obj.questions) {
-      if (q.type !== 'single') continue;
-      if (q.source.doc !== 'C5:2026') continue;
-      const stored = answers[q.id];
-      const value = stored?.value ?? 'n/a';
-      details.push({ question_id: q.id, title: q.title, value, source_clause: q.source.clause });
-
-      if (value === 'n/a') continue;
-      const domain = q.source.clause.split(/[\s,-]/)[0]; // "OPS", "BCM", "CRY"
-      if (!domainMap.has(domain)) domainMap.set(domain, { domain, met: 0, partial: 0, not_met: 0, applicable: 0 });
-      const d = domainMap.get(domain)!;
-      d.applicable++;
-      if (value === 'yes') d.met++;
-      else if (value === 'partial') d.partial++;
-      else d.not_met++;
+function buildGapReport(
+  objectiveResults: Array<{ objective_id: string; seal_level: number; weight: number; questions: QuestionResult[] }>
+): GapItem[] {
+  const gaps: GapItem[] = [];
+  for (const obj of objectiveResults) {
+    for (const qr of obj.questions) {
+      if (qr.value !== 'n/a' && qr.points_possible > 0 && qr.points_earned < qr.points_possible) {
+        const g = obj.weight * (1 - qr.points_earned / qr.points_possible) * Math.max(1, 4 - obj.seal_level);
+        gaps.push({ objective_id: obj.objective_id, question_id: qr.question_id, tier: qr.tier, gap_score: g, priority: 0 });
+      }
     }
   }
-
-  const by_domain = Array.from(domainMap.values());
-  const applicable = by_domain.reduce((s, d) => s + d.applicable, 0);
-  return {
-    applicable,
-    met: by_domain.reduce((s, d) => s + d.met, 0),
-    partial: by_domain.reduce((s, d) => s + d.partial, 0),
-    not_met: by_domain.reduce((s, d) => s + d.not_met, 0),
-    by_domain,
-    details,
-  };
+  gaps.sort((a, b) => b.gap_score - a.gap_score);
+  const seen = new Set<string>();
+  const deduped: GapItem[] = [];
+  for (const g of gaps) {
+    if (!seen.has(g.question_id)) { seen.add(g.question_id); deduped.push(g); }
+  }
+  deduped.forEach((g, i) => { g.priority = i + 1; });
+  return deduped;
 }
 
-export function scoreAssessment(
-  answers: AnswerMap,
-  criteria: CriteriaFile,
-  assessmentId: string,
-  meta: { variant: string; country_code?: string; scope_ids: string[]; role: string; instrument_version: string }
-): AssessmentResult {
-  const objectives: ObjectiveResult[] = [];
+// ── EU-CSF mode ───────────────────────────────────────────────────────────────
+
+function scoreEuCsf(answers: AnswerMap, criteria: CriteriaFile): EuCsfResult {
+  const perObjective: Record<string, EuCsfObjectiveResult> = {};
 
   for (const obj of criteria.objectives) {
     const questionResults: QuestionResult[] = [];
@@ -125,15 +113,12 @@ export function scoreAssessment(
     let max = 0;
 
     for (const q of obj.questions) {
-      // C5:2026 questions are scored separately — they do not contribute to SEAL or sovereignty score
-      if (q.type === 'single' && q.source.doc === 'C5:2026') continue;
+      if (!q.applies_to_eu_csf) continue;
 
       let results: QuestionResult[];
-
       if (q.type === 'tiered') {
         results = scoreTieredQuestion(q, answers);
       } else {
-        // single question
         const stored = answers[q.id];
         if (!stored) continue;
         const value = stored.value;
@@ -144,76 +129,235 @@ export function scoreAssessment(
           results = [{ question_id: q.id, tier: 'single', value, points_earned: earned, points_possible: q.points, seal_contribution: q.seal_contribution, counts_toward_seal: value === 'yes', flagged_unsupported: false }];
         }
       }
-
-      for (const r of results) {
-        raw += r.points_earned;
-        max += r.points_possible;
-        questionResults.push(r);
-      }
+      for (const r of results) { raw += r.points_earned; max += r.points_possible; questionResults.push(r); }
     }
 
     const seal = computeSealLevel(questionResults);
-    const gap = max > 0 ? obj.weight * (1 - raw / max) * Math.max(1, 4 - seal) : 0;
-
-    objectives.push({
-      objective_id: obj.id,
-      title: obj.title,
-      weight: obj.weight,
-      raw_score: raw,
-      max_score: max,
-      seal_level: seal,
-      gap,
-      questions: questionResults,
-    });
+    const pct = max > 0 ? Math.min(100, (raw / max) * 100) : 0;
+    perObjective[obj.id] = { objective_id: obj.id, title: obj.title, weight: obj.weight, seal, raw_score: raw, max_score: max, pct, questions: questionResults };
   }
 
-  let overall = 0;
-  for (const obj of objectives) {
-    if (obj.max_score > 0) {
-      overall += (obj.raw_score / obj.max_score) * obj.weight * 100;
+  const values = Object.values(perObjective);
+  const globalSeal = values.length > 0 ? Math.min(...values.map(o => o.seal)) : 0;
+
+  let overallNumerator = 0;
+  let weightSum = 0;
+  for (const o of values) {
+    if (o.max_score > 0) {
+      overallNumerator += (o.raw_score / o.max_score) * o.weight;
+      weightSum += o.weight;
     }
   }
-
-  const weightSum = objectives.filter(o => o.max_score > 0).reduce((s, o) => s + o.weight, 0);
-  if (weightSum > 0 && weightSum < 1) {
-    overall = overall / weightSum;
-  }
-
-  const gap_report: GapItem[] = [];
-  for (const obj of objectives) {
-    for (const qr of obj.questions) {
-      if (qr.value !== 'n/a' && qr.points_possible > 0 && qr.points_earned < qr.points_possible) {
-        const g = obj.weight * (1 - (qr.points_earned / qr.points_possible)) * Math.max(1, 4 - obj.seal_level);
-        gap_report.push({ objective_id: obj.objective_id, question_id: qr.question_id, tier: qr.tier, gap_score: g, priority: 0 });
-      }
-    }
-  }
-  gap_report.sort((a, b) => b.gap_score - a.gap_score);
-  // Deduplicate: keep only the highest-gap entry per question_id
-  const seen = new Set<string>();
-  const deduped: GapItem[] = [];
-  for (const g of gap_report) {
-    if (!seen.has(g.question_id)) { seen.add(g.question_id); deduped.push(g); }
-  }
-  gap_report.length = 0;
-  gap_report.push(...deduped);
-  gap_report.forEach((g, i) => { g.priority = i + 1; });
-
-  const overallSeal = Math.min(...objectives.map(o => o.seal_level));
-  const c5_supplementary = computeC5Supplementary(answers, criteria);
+  const globalPct = weightSum > 0 ? Math.min(100, (overallNumerator / weightSum) * 100) : 0;
 
   return {
+    per_objective: perObjective,
+    global: { seal: globalSeal, pct: globalPct },
+    gap_report: buildGapReport(values.map(o => ({ objective_id: o.objective_id, seal_level: o.seal, weight: o.weight, questions: o.questions }))),
+  };
+}
+
+// ── C3A mode ──────────────────────────────────────────────────────────────────
+
+function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAcIds: string[]): C3aResult {
+  const acIdSet = new Set(customerSelectedAcIds);
+
+  const criterionByObj: Record<string, C3aObjectiveTierResult> = {};
+  const acByObj: Record<string, C3aObjectiveTierResult | null> = {};
+  const failedCriteria: C3aResult['failed_criteria'] = [];
+
+  let globalCPassed = 0;
+  let globalCApplicable = 0;
+  let globalAcPassed = 0;
+  let globalAcApplicable = 0;
+  let anyAcSelected = false;
+
+  for (const obj of criteria.objectives) {
+    let cPassed = 0;
+    let cApplicable = 0;
+    let acPassed = 0;
+    let acApplicable = 0;
+    let objHasAc = false;
+
+    for (const q of obj.questions) {
+      if (!q.applies_to_c3a) continue;
+
+      const isAc = q.c3a_tier === 'additional';
+
+      if (isAc && !acIdSet.has(q.id)) continue; // AC not selected by customer
+
+      // For tiered questions, score each tier as an independent criterion
+      if (q.type === 'tiered') {
+        const tiers: Array<{ key: string; sc: number }> = [{ key: `${q.id}:bloc`, sc: q.tiers.bloc.seal_contribution }];
+        if (q.tiers.national) tiers.push({ key: `${q.id}:national`, sc: q.tiers.national.seal_contribution });
+
+        for (const t of tiers) {
+          const stored = answers[t.key] ?? answers[q.id];
+          if (!stored) continue;
+          const value = stored.value;
+          if (value === 'n/a') continue; // N/A excluded from C3A count
+          const passed = value === 'yes'; // partial = not-met in C3A
+          if (isAc) {
+            acApplicable++;
+            objHasAc = true;
+            anyAcSelected = true;
+            if (passed) acPassed++;
+            else failedCriteria.push({ question_id: q.id, title: q.title, objective_id: obj.id, tier: 'additional_criterion' });
+          } else {
+            cApplicable++;
+            if (passed) cPassed++;
+            else failedCriteria.push({ question_id: q.id, title: q.title, objective_id: obj.id, tier: 'criterion' });
+          }
+        }
+      } else {
+        // Single question
+        const stored = answers[q.id];
+        if (!stored) continue;
+        const value = stored.value;
+        if (value === 'n/a') continue;
+        const passed = value === 'yes';
+        if (isAc) {
+          acApplicable++;
+          objHasAc = true;
+          anyAcSelected = true;
+          if (passed) acPassed++;
+          else failedCriteria.push({ question_id: q.id, title: q.title, objective_id: obj.id, tier: 'additional_criterion' });
+        } else {
+          cApplicable++;
+          if (passed) cPassed++;
+          else failedCriteria.push({ question_id: q.id, title: q.title, objective_id: obj.id, tier: 'criterion' });
+        }
+      }
+    }
+
+    criterionByObj[obj.id] = {
+      passed: cPassed,
+      applicable: cApplicable,
+      pct: cApplicable > 0 ? Math.round((cPassed / cApplicable) * 100) : 0,
+    };
+    acByObj[obj.id] = objHasAc
+      ? { passed: acPassed, applicable: acApplicable, pct: acApplicable > 0 ? Math.round((acPassed / acApplicable) * 100) : 0 }
+      : null;
+
+    globalCPassed += cPassed;
+    globalCApplicable += cApplicable;
+    globalAcPassed += acPassed;
+    globalAcApplicable += acApplicable;
+  }
+
+  return {
+    criterion: {
+      per_objective: criterionByObj,
+      global: {
+        passed: globalCPassed,
+        applicable: globalCApplicable,
+        pct: globalCApplicable > 0 ? Math.round((globalCPassed / globalCApplicable) * 100) : 0,
+      },
+    },
+    additional_criterion: {
+      per_objective: acByObj,
+      global: anyAcSelected
+        ? { passed: globalAcPassed, applicable: globalAcApplicable, pct: globalAcApplicable > 0 ? Math.round((globalAcPassed / globalAcApplicable) * 100) : 0 }
+        : null,
+    },
+    failed_criteria: failedCriteria,
+  };
+}
+
+// ── CSI Composite mode ────────────────────────────────────────────────────────
+
+function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile): CsiCompositeResult {
+  const perObjective: Record<string, CsiObjectiveResult> = {};
+
+  for (const obj of criteria.objectives) {
+    const questionResults: QuestionResult[] = [];
+    let raw = 0;
+    let max = 0;
+
+    for (const q of obj.questions) {
+      if (!q.applies_to_csi_composite) continue;
+
+      let results: QuestionResult[];
+      if (q.type === 'tiered') {
+        results = scoreTieredQuestion(q, answers);
+      } else {
+        const stored = answers[q.id];
+        if (!stored) continue;
+        const value = stored.value;
+        if (value === 'n/a') {
+          results = [{ question_id: q.id, tier: 'single', value, points_earned: 0, points_possible: 0, seal_contribution: q.seal_contribution, counts_toward_seal: false, flagged_unsupported: false }];
+        } else {
+          const earned = value === 'yes' ? q.points : value === 'partial' ? q.points * 0.5 : 0;
+          results = [{ question_id: q.id, tier: 'single', value, points_earned: earned, points_possible: q.points, seal_contribution: q.seal_contribution, counts_toward_seal: value === 'yes', flagged_unsupported: false }];
+        }
+      }
+      for (const r of results) { raw += r.points_earned; max += r.points_possible; questionResults.push(r); }
+    }
+
+    const csl = computeSealLevel(questionResults);
+    const pct = max > 0 ? Math.min(100, (raw / max) * 100) : 0;
+    perObjective[obj.id] = { objective_id: obj.id, title: obj.title, weight: obj.weight, csl, raw_score: raw, max_score: max, pct, questions: questionResults };
+  }
+
+  const values = Object.values(perObjective);
+  const globalCsl = values.length > 0 ? Math.min(...values.map(o => o.csl)) : 0;
+
+  let overallNumerator = 0;
+  let weightSum = 0;
+  for (const o of values) {
+    if (o.max_score > 0) {
+      overallNumerator += (o.raw_score / o.max_score) * o.weight;
+      weightSum += o.weight;
+    }
+  }
+  const globalPct = weightSum > 0 ? Math.min(100, (overallNumerator / weightSum) * 100) : 0;
+
+  return {
+    per_objective: perObjective,
+    global: { csl: globalCsl, pct: globalPct },
+    gap_report: buildGapReport(values.map(o => ({ objective_id: o.objective_id, seal_level: o.csl, weight: o.weight, questions: o.questions }))),
+  };
+}
+
+// ── Main entry point ──────────────────────────────────────────────────────────
+
+export function scoreAssessment(
+  answers: AnswerMap,
+  criteria: CriteriaFile,
+  assessmentId: string,
+  meta: {
+    variant: string;
+    country_code?: string;
+    scope_ids: string[];
+    role: string;
+    instrument_version: string;
+    selected_frameworks?: string[];
+    customer_selected_ac_ids?: string[];
+  }
+): AssessmentResult {
+  const frameworks = (meta.selected_frameworks ?? ['csi_composite']) as FrameworkMode[];
+  const acIds = meta.customer_selected_ac_ids ?? [];
+
+  const result: AssessmentResult = {
     assessment_id: assessmentId,
+    instrument_version: meta.instrument_version,
+    selected_frameworks: frameworks,
     variant: meta.variant as any,
     country_code: meta.country_code,
     scope_ids: meta.scope_ids as any,
     role: meta.role as any,
-    overall_score: Math.min(100, Math.max(0, overall)),
-    seal_level: overallSeal,
-    objectives,
-    gap_report,
-    c5_supplementary,
-    instrument_version: meta.instrument_version,
     assessed_at: new Date().toISOString(),
   };
+
+  if (frameworks.includes('eu_csf')) {
+    result.eu_csf = scoreEuCsf(answers, criteria);
+  }
+  if (frameworks.includes('c3a')) {
+    result.c3a = scoreC3a(answers, criteria, acIds);
+  }
+  if (frameworks.includes('csi_composite')) {
+    result.csi_composite = scoreCsiComposite(answers, criteria);
+  }
+
+  return result;
 }

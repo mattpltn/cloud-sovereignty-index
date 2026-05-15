@@ -1,17 +1,8 @@
-import type { Variant, Scope, Role, AnswerValue, Country } from './schema.js';
+import type { Variant, Scope, Role, AnswerValue, Country, FrameworkMode } from './schema.js';
 
-export type { Variant, Scope, Role, AnswerValue, Country };
+export type { Variant, Scope, Role, AnswerValue, Country, FrameworkMode };
 
-export interface ObjectiveResult {
-  objective_id: string;
-  title: string;
-  weight: number;
-  raw_score: number;
-  max_score: number;
-  seal_level: number;
-  gap: number;
-  questions: QuestionResult[];
-}
+// ── Per-question result (shared across modes) ─────────────────────────────────
 
 export interface QuestionResult {
   question_id: string;
@@ -24,37 +15,120 @@ export interface QuestionResult {
   flagged_unsupported: boolean;
 }
 
-export interface C5DomainResult {
-  domain: string;
-  met: number;
-  partial: number;
-  not_met: number;
-  applicable: number;
+// ── EU-CSF mode results ───────────────────────────────────────────────────────
+
+export interface EuCsfObjectiveResult {
+  objective_id: string;
+  title: string;
+  weight: number;
+  seal: number;
+  raw_score: number;
+  max_score: number;
+  pct: number;
+  questions: QuestionResult[];
 }
 
-export interface C5SupplementaryResult {
-  applicable: number;
-  met: number;
-  partial: number;
-  not_met: number;
-  by_domain: C5DomainResult[];
-  details: Array<{ question_id: string; title: string; value: string; source_clause: string }>;
+export interface EuCsfResult {
+  per_objective: Record<string, EuCsfObjectiveResult>;
+  global: { seal: number; pct: number };
+  gap_report: GapItem[];
 }
+
+// ── C3A mode results ──────────────────────────────────────────────────────────
+
+export interface C3aObjectiveTierResult {
+  passed: number;
+  applicable: number;
+  pct: number;
+}
+
+export interface C3aObjectiveResult {
+  objective_id: string;
+  title: string;
+  criterion: C3aObjectiveTierResult;
+  additional_criterion: C3aObjectiveTierResult | null;
+}
+
+export interface C3aResult {
+  criterion: {
+    per_objective: Record<string, C3aObjectiveTierResult>;
+    global: { passed: number; applicable: number; pct: number };
+  };
+  additional_criterion: {
+    per_objective: Record<string, C3aObjectiveTierResult | null>;
+    global: { passed: number; applicable: number; pct: number } | null;
+  };
+  failed_criteria: Array<{
+    question_id: string;
+    title: string;
+    objective_id: string;
+    tier: 'criterion' | 'additional_criterion';
+  }>;
+}
+
+// ── CSI Composite mode results ────────────────────────────────────────────────
+
+export interface CsiObjectiveResult {
+  objective_id: string;
+  title: string;
+  weight: number;
+  csl: number;
+  raw_score: number;
+  max_score: number;
+  pct: number;
+  questions: QuestionResult[];
+}
+
+export interface CsiCompositeResult {
+  per_objective: Record<string, CsiObjectiveResult>;
+  global: { csl: number; pct: number };
+  gap_report: GapItem[];
+}
+
+// ── v2.0 AssessmentResult ─────────────────────────────────────────────────────
 
 export interface AssessmentResult {
   assessment_id: string;
+  instrument_version: string;
+  selected_frameworks: FrameworkMode[];
+  variant: Variant;
+  country_code?: string;
+  scope_ids: Scope[];
+  role: Role;
+  assessed_at: string;
+  eu_csf?: EuCsfResult;
+  c3a?: C3aResult;
+  csi_composite?: CsiCompositeResult;
+}
+
+// ── v1.x legacy result (stored in D1 for old assessments) ────────────────────
+
+export interface LegacyAssessmentResult {
+  assessment_id: string;
+  instrument_version: string;
   variant: Variant;
   country_code?: string;
   scope_ids: Scope[];
   role: Role;
   overall_score: number;
   seal_level: number;
-  objectives: ObjectiveResult[];
+  objectives: LegacyObjectiveResult[];
   gap_report: GapItem[];
-  c5_supplementary?: C5SupplementaryResult;
-  instrument_version: string;
   assessed_at: string;
 }
+
+export interface LegacyObjectiveResult {
+  objective_id: string;
+  title: string;
+  weight: number;
+  raw_score: number;
+  max_score: number;
+  seal_level: number;
+  gap: number;
+  questions: QuestionResult[];
+}
+
+// ── Shared ────────────────────────────────────────────────────────────────────
 
 export interface GapItem {
   objective_id: string;
@@ -70,8 +144,10 @@ export interface AssessmentRecord {
   country_code?: string;
   scope_ids: Scope[];
   role: Role;
+  selected_frameworks: FrameworkMode[];
+  customer_selected_ac_ids: string[];
   answers: AnswerMap;
-  result?: AssessmentResult;
+  result?: AssessmentResult | LegacyAssessmentResult;
   corpus_opt_in: boolean;
   created_at: string;
   updated_at: string;

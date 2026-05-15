@@ -17,6 +17,25 @@ const allCountries = [
   ...countriesJson.EEA_non_EU,
   ...countriesJson.non_EU,
 ].sort((a, b) => a.name.localeCompare(b.name));
+
+// Collect AC questions for the customer-selection panel
+const acQuestions: Array<{ id: string; title: string; objective_id: string; objective_title: string; text: string }> = [];
+for (const obj of criteria.objectives) {
+  for (const q of obj.questions) {
+    if (q.c3a_tier === 'additional' && q.type === 'single') {
+      acQuestions.push({ id: q.id, title: q.title, objective_id: obj.id, objective_title: obj.title, text: q.text });
+    }
+  }
+}
+
+// Group ACs by objective for display
+const acByObjective = new Map<string, { title: string; questions: typeof acQuestions }>();
+for (const ac of acQuestions) {
+  if (!acByObjective.has(ac.objective_id)) {
+    acByObjective.set(ac.objective_id, { title: ac.objective_title, questions: [] });
+  }
+  acByObjective.get(ac.objective_id)!.questions.push(ac);
+}
 ---
 <!doctype html>
 <html lang="en">
@@ -33,7 +52,7 @@ const allCountries = [
   <main class="max-w-xl mx-auto px-6 py-12">
     <h1 class="text-2xl font-bold mb-2">Configure your assessment</h1>
     <p class="text-gray-600 text-sm mb-8">
-      Select your country — the questionnaire and criteria wording will be adapted automatically.
+      Select your country and which framework(s) to assess against. Each selected framework is evaluated independently.
     </p>
 
     <form id="setup-form" class="space-y-6">
@@ -59,9 +78,73 @@ const allCountries = [
         <p class="text-xs text-gray-400 mt-1">Not indexed. Stored only in your assessment record.</p>
       </div>
 
+      <!-- Framework selection -->
+      <div>
+        <label class="block text-sm font-medium mb-3">Framework(s) to assess against</label>
+        <p class="text-xs text-gray-500 mb-3">Results for each selected framework are reported independently — no combined score.</p>
+        <div class="space-y-3">
+          <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-gray-400 transition">
+            <input type="checkbox" name="framework" value="eu_csf" id="fw-eu-csf"
+              class="mt-0.5 h-4 w-4 rounded border-gray-300" />
+            <div>
+              <span class="text-sm font-medium">EU Cloud Sovereignty Framework (EU-CSF)</span>
+              <p class="text-xs text-gray-500 mt-0.5">EU-CSF v1.2.1 — European Commission. Output: SEAL 0–4 per objective. For EU procurement compliance.</p>
+            </div>
+          </label>
+          <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:border-gray-400 transition">
+            <input type="checkbox" name="framework" value="c3a" id="fw-c3a"
+              class="mt-0.5 h-4 w-4 rounded border-gray-300" />
+            <div>
+              <span class="text-sm font-medium">C3A — BSI Criteria enabling Cloud Computing Autonomy</span>
+              <p class="text-xs text-gray-500 mt-0.5">C3A v1.0 — BSI. Output: pass/fail per criterion, % met. SOV-1 through SOV-6 only. Binary — no partial credit.</p>
+            </div>
+          </label>
+          <label class="flex items-start gap-3 p-3 border border-blue-200 bg-blue-50 rounded-lg cursor-pointer hover:border-blue-400 transition">
+            <input type="checkbox" name="framework" value="csi_composite" id="fw-csi" checked
+              class="mt-0.5 h-4 w-4 rounded border-gray-300" />
+            <div>
+              <span class="text-sm font-medium">CSI Composite <span class="text-xs text-blue-600 font-normal ml-1">Recommended for global users</span></span>
+              <p class="text-xs text-gray-500 mt-0.5">CSI editorial framework — blends EU-CSF and C3A with adaptations for global use. Output: CSL 0–4 (SEAL for EU/EEA).</p>
+            </div>
+          </label>
+        </div>
+        <p id="framework-error" class="text-red-600 text-xs mt-2 hidden">Select at least one framework.</p>
+      </div>
+
+      <!-- C3A Additional Criteria selection (shown only when C3A is ticked) -->
+      <div id="ac-panel" class="hidden">
+        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+          <h3 class="text-sm font-medium mb-1">C3A Additional Criteria (AC) — customer selection</h3>
+          <p class="text-xs text-gray-500 mb-4">
+            Per C3A §1.4, you choose which Additional Criteria apply to your assessment.
+            Selected ACs are included in the denominator of your AC % result.
+            Unselected ACs are not counted. Default: none selected.
+          </p>
+          <div class="space-y-4">
+            {[...acByObjective.entries()].map(([objId, group]) => (
+              <div>
+                <p class="text-xs font-semibold text-gray-600 mb-2">{objId} — {group.title}</p>
+                <div class="space-y-2">
+                  {group.questions.map(ac => (
+                    <label class="flex items-start gap-2 cursor-pointer">
+                      <input type="checkbox" name="ac_criterion" value={ac.id}
+                        class="mt-0.5 h-3.5 w-3.5 rounded border-gray-300" />
+                      <div>
+                        <span class="text-xs font-medium text-gray-800">{ac.id} — {ac.title}</span>
+                        <p class="text-xs text-gray-500 leading-snug mt-0.5">{ac.text.slice(0, 140)}{ac.text.length > 140 ? '…' : ''}</p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div class="cf-turnstile" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA'} data-theme="light" data-callback="onTurnstileSolved"></div>
 
-      <button type="submit"
+      <button type="submit" id="submit-btn"
         class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
         Start assessment
       </button>
@@ -87,7 +170,6 @@ const allCountries = [
 
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script>
-    // Store the solved token globally so ImportAssessment can read it
     window.__turnstileToken = '';
     function onTurnstileSolved(token) { window.__turnstileToken = token; }
   </script>
@@ -96,6 +178,9 @@ const allCountries = [
     const select = document.getElementById('country-select');
     const variantInput = document.getElementById('variant-input');
     const badge = document.getElementById('variant-badge');
+    const c3aCheckbox = document.getElementById('fw-c3a');
+    const acPanel = document.getElementById('ac-panel');
+    const frameworkError = document.getElementById('framework-error');
 
     select.addEventListener('change', () => {
       const code = select.value;
@@ -112,18 +197,32 @@ const allCountries = [
       badge.className = `text-xs mt-1.5 ${isEU ? 'text-blue-600' : 'text-green-700'}`;
     });
 
+    // Show/hide AC panel when C3A is ticked
+    c3aCheckbox.addEventListener('change', () => {
+      acPanel.classList.toggle('hidden', !c3aCheckbox.checked);
+    });
+
     const form = document.getElementById('setup-form');
     const errorMsg = document.getElementById('error-msg');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorMsg.classList.add('hidden');
+      frameworkError.classList.add('hidden');
 
       const fd = new FormData(form);
       const variant = fd.get('variant');
       const national_country = fd.get('national_country') || undefined;
       const company_name = fd.get('company_name') || undefined;
       const turnstile_token = fd.get('cf-turnstile-response') ?? 'test-token';
+
+      const selected_frameworks = fd.getAll('framework');
+      if (selected_frameworks.length === 0) {
+        frameworkError.classList.remove('hidden');
+        return;
+      }
+
+      const customer_selected_ac_ids = fd.getAll('ac_criterion');
 
       try {
         const res = await fetch('/api/assessments', {
@@ -133,6 +232,8 @@ const allCountries = [
             variant, national_country, company_name, turnstile_token,
             service_models: ['all'],
             user_role: 'customer',
+            selected_frameworks,
+            customer_selected_ac_ids,
           }),
         });
         if (!res.ok) {

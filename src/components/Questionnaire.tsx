@@ -11,6 +11,8 @@ interface Props {
   country?: Country;
   variant: 'EU-CSF' | 'Generalized';
   allObjectiveIds: string[];
+  selectedFrameworks?: string[];
+  customerSelectedAcIds?: string[];
 }
 
 type AnswerValue = 'yes' | 'no' | 'partial' | 'n/a';
@@ -24,14 +26,15 @@ const ANSWER_COLORS: Record<AnswerValue, string> = {
   'n/a': 'bg-gray-100 border-gray-400 text-gray-600',
 };
 
-function AnswerButtons({ questionKey, value, onAnswer }: {
+function AnswerButtons({ questionKey, value, onAnswer, answerValues }: {
   questionKey: string;
   value: AnswerValue | undefined;
   onAnswer: (key: string, v: AnswerValue) => void;
+  answerValues: AnswerValue[];
 }) {
   return (
     <div className="flex flex-wrap gap-2">
-      {(['yes', 'no', 'partial', 'n/a'] as AnswerValue[]).map(v => (
+      {answerValues.map(v => (
         <button
           key={v}
           onClick={() => onAnswer(questionKey, v)}
@@ -46,11 +49,31 @@ function AnswerButtons({ questionKey, value, onAnswer }: {
   );
 }
 
-export default function Questionnaire({ id, objectiveId, criteria, country, variant, allObjectiveIds }: Props) {
+export default function Questionnaire({ id, objectiveId, criteria, country, variant, allObjectiveIds, selectedFrameworks = ['csi_composite'], customerSelectedAcIds = [] }: Props) {
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const objective = criteria.objectives.find(o => o.id === objectiveId);
+
+  const fw = new Set(selectedFrameworks);
+  const c3aOnly = fw.has('c3a') && fw.size === 1;
+  const acIdSet = new Set(customerSelectedAcIds);
+
+  // Filter questions to those relevant to at least one selected framework
+  // AC questions also require customer selection
+  function isQuestionVisible(q: Question): boolean {
+    if (q.c3a_tier === 'additional') {
+      // Show AC only if C3A is selected AND customer selected this AC
+      return fw.has('c3a') && acIdSet.has(q.id);
+    }
+    return (fw.has('eu_csf') && q.applies_to_eu_csf) ||
+           (fw.has('c3a') && q.applies_to_c3a) ||
+           (fw.has('csi_composite') && q.applies_to_csi_composite);
+  }
+
+  const visibleAnswerValues: AnswerValue[] = c3aOnly
+    ? ['yes', 'no', 'n/a']
+    : ['yes', 'no', 'partial', 'n/a'];
 
   useEffect(() => {
     const cached = readCache(id);
@@ -92,13 +115,15 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
 
   if (!objective) return <div className="text-red-600">Objective {objectiveId} not found</div>;
 
+  const visibleQuestions = objective.questions.filter(isQuestionVisible);
+
   // Count answered: each tiered question needs at least the national (or bloc) answered
-  const answeredCount = objective.questions.filter(q => {
+  const answeredCount = visibleQuestions.filter(q => {
     if (q.type === 'single') return !!answers[q.id];
     if (country && q.tiers.national) return !!answers[`${q.id}:national`];
     return !!answers[`${q.id}:bloc`] || !!answers[q.id];
   }).length;
-  const totalCount = objective.questions.length;
+  const totalCount = visibleQuestions.length;
 
   return (
     <div className="space-y-6">
@@ -113,7 +138,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
         />
       </div>
 
-      {objective.questions.map(q => {
+      {visibleQuestions.map(q => {
         const isExpanded = expanded[q.id];
 
         if (q.type === 'single') {
@@ -130,10 +155,12 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               points={q.points}
               source={`${q.source.doc} ${q.source.clause}`}
               supplementaryInfo={q.supplementary_info}
+              isAdditionalCriterion={q.c3a_tier === 'additional'}
               value={val}
               onAnswer={v => handleAnswer(q.id, v)}
               isExpanded={isExpanded}
               onToggleExpand={() => setExpanded(prev => ({ ...prev, [q.id]: !isExpanded }))}
+              answerValues={visibleAnswerValues}
             />
           );
         }
@@ -170,7 +197,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
                   {resolvePlaceholders(q.tiers.national!.text, ctx)}
                 </p>
-                <AnswerButtons questionKey={natKey} value={natVal} onAnswer={handleAnswer} />
+                <AnswerButtons questionKey={natKey} value={natVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />
                 {natSatisfied && !isGeneralized && (
                   <p className="mt-3 text-xs text-green-600 bg-green-50 rounded-lg px-3 py-2">
                     ✓ {country!.name} tier satisfied — EU tier is automatically satisfied.
@@ -209,7 +236,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
                   {resolvePlaceholders(q.tiers.bloc.text, ctx)}
                 </p>
-                <AnswerButtons questionKey={blocKey} value={blocVal} onAnswer={handleAnswer} />
+                <AnswerButtons questionKey={blocKey} value={blocVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />
                 {q.supplementary_info && (
                   <div className="mt-3">
                     <button
@@ -247,10 +274,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   );
 }
 
-function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, value, onAnswer, isExpanded, onToggleExpand }: {
+function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, isExpanded, onToggleExpand, answerValues }: {
   id: string; title: string; text: string; sealContribution: number; points: number; source: string;
-  supplementaryInfo?: string; value: AnswerValue | undefined;
+  supplementaryInfo?: string; isAdditionalCriterion?: boolean; value: AnswerValue | undefined;
   onAnswer: (v: AnswerValue) => void; isExpanded: boolean; onToggleExpand: () => void;
+  answerValues: AnswerValue[];
 }) {
   return (
     <div className={`border rounded-xl p-5 transition ${value ? 'border-gray-200' : 'border-gray-300'}`}>
@@ -258,12 +286,15 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
         <div>
           <span className="text-xs font-mono text-gray-400 mr-2">{id}</span>
           <span className="text-sm font-medium">{title}</span>
+          {isAdditionalCriterion && (
+            <span className="ml-2 text-xs bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded">AC</span>
+          )}
         </div>
         <span className="text-xs text-gray-400 whitespace-nowrap">Level {sealContribution} · {points}pt</span>
       </div>
       <p className="text-sm text-gray-700 mb-4 leading-relaxed">{text}</p>
       <div className="flex flex-wrap gap-2 mb-3">
-        {(['yes', 'no', 'partial', 'n/a'] as AnswerValue[]).map(v => (
+        {answerValues.map(v => (
           <button key={v} onClick={() => onAnswer(v)}
             className={`px-3 py-1.5 text-sm rounded-lg border font-medium transition ${value === v ? ANSWER_COLORS[v] : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}>
             {ANSWER_LABELS[v]}

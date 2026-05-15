@@ -57,8 +57,9 @@ const CreateSchema = z.object({
   service_models: z.array(z.string()).min(1),
   user_role: z.enum(['customer', 'provider', 'auditor']),
   company_name: z.string().optional(),
-  c5_attestation: z.enum(['yes', 'no', 'unknown']).optional(),
   turnstile_token: z.string(),
+  selected_frameworks: z.array(z.enum(['eu_csf', 'c3a', 'csi_composite'])).min(1).default(['csi_composite']),
+  customer_selected_ac_ids: z.array(z.string()).default([]),
 });
 
 app.post('/api/assessments', async (c) => {
@@ -79,8 +80,8 @@ app.post('/api/assessments', async (c) => {
   const exp = expiresAt();
 
   await c.env.DB.prepare(
-    `INSERT INTO assessments (id,instrument_version,variant,anchor_bloc,national_country,service_models,user_role,company_name,c5_attestation,created_at,updated_at,expires_at)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`
+    `INSERT INTO assessments (id,instrument_version,variant,anchor_bloc,national_country,service_models,user_role,company_name,selected_frameworks,customer_selected_ac_ids,created_at,updated_at,expires_at)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`
   ).bind(
     id,
     criteria.instrument_version,
@@ -90,7 +91,8 @@ app.post('/api/assessments', async (c) => {
     JSON.stringify(data.service_models),
     data.user_role,
     data.company_name ?? null,
-    data.c5_attestation ?? 'unknown',
+    JSON.stringify(data.selected_frameworks),
+    JSON.stringify(data.customer_selected_ac_ids),
     ts, ts, exp
   ).run();
 
@@ -173,20 +175,29 @@ app.post('/api/assessments/:id/submit', async (c) => {
   // Allow re-submission (answers may have been updated)
 
   const answers = JSON.parse(row.answers as string ?? '{}');
+  const selectedFrameworks = JSON.parse((row.selected_frameworks as string | null) ?? '["csi_composite"]');
+  const customerSelectedAcIds = JSON.parse((row.customer_selected_ac_ids as string | null) ?? '[]');
+
   const result = scoreAssessment(answers, criteria, id, {
     variant: row.variant as string,
     country_code: row.national_country as string | undefined,
     scope_ids: JSON.parse(row.service_models as string),
     role: row.user_role as string,
     instrument_version: row.instrument_version as string,
+    selected_frameworks: selectedFrameworks,
+    customer_selected_ac_ids: customerSelectedAcIds,
   });
 
   const ts = now();
 
+  // Derive a headline SEAL/CSL for the history row (backward-compatible summary)
+  const historySeal = result.eu_csf?.global.seal ?? result.csi_composite?.global.csl ?? 0;
+  const historyScore = result.eu_csf?.global.pct ?? result.csi_composite?.global.pct ?? 0;
+
   await c.env.DB.prepare(
     `INSERT INTO assessment_history (assessment_id, submitted_at, seal_level, overall_score, answers_snapshot, computed_score)
      VALUES (?, ?, ?, ?, ?, ?)`
-  ).bind(id, ts, result.seal_level, result.overall_score, row.answers, JSON.stringify(result)).run();
+  ).bind(id, ts, historySeal, historyScore, row.answers, JSON.stringify(result)).run();
 
   await c.env.DB.prepare(
     `UPDATE assessments SET status='submitted', share_publicly=?, computed_score=?, finalized_at=?, updated_at=? WHERE id=?`

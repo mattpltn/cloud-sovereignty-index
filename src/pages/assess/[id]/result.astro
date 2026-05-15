@@ -7,6 +7,7 @@ import PdfExportButton from '../../../components/PdfExportButton';
 import criteriaJson from '../../../../data/criteria.json';
 import countriesJson from '../../../../data/countries.json';
 import type { CriteriaFile } from '../../../../shared/src/schema';
+import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult } from '../../../../shared/src/types';
 export const prerender = false;
 
 const criteria = criteriaJson as unknown as CriteriaFile;
@@ -14,7 +15,7 @@ const criteria = criteriaJson as unknown as CriteriaFile;
 const { id } = Astro.params;
 
 let record: Record<string, unknown> | null = null;
-let result: Record<string, unknown> | null = null;
+let result: AssessmentResult | null = null;
 
 const apiBase = new URL('/api', Astro.request.url).toString();
 try {
@@ -22,61 +23,98 @@ try {
   if (res.ok) {
     record = await res.json() as Record<string, unknown>;
     if (record.computed_score) {
-      result = typeof record.computed_score === 'string'
+      const raw = typeof record.computed_score === 'string'
         ? JSON.parse(record.computed_score as string)
-        : record.computed_score as Record<string, unknown>;
+        : record.computed_score;
+      // v2.0 results have selected_frameworks; treat older results as csi_composite
+      if (raw.selected_frameworks) {
+        result = raw as AssessmentResult;
+      } else if (raw.objectives) {
+        // Legacy v1.x result — wrap in csi_composite key
+        result = {
+          assessment_id: id!,
+          instrument_version: raw.instrument_version ?? '1.0',
+          selected_frameworks: ['csi_composite'],
+          variant: (record.variant as string) ?? 'EU-CSF',
+          scope_ids: [],
+          role: 'customer',
+          assessed_at: raw.finalized_at ?? '',
+          csi_composite: {
+            per_objective: Object.fromEntries(
+              (raw.objectives as Array<Record<string, unknown>>).map((o: Record<string, unknown>) => [
+                o.objective_id,
+                {
+                  objective_id: o.objective_id as string,
+                  title: o.title as string,
+                  weight: 0,
+                  csl: (o.seal_level as number) ?? 0,
+                  raw_score: o.raw_score as number,
+                  max_score: o.max_score as number,
+                  pct: (o.max_score as number) > 0 ? ((o.raw_score as number) / (o.max_score as number)) * 100 : 0,
+                  questions: o.questions as CsiObjectiveResult['questions'],
+                },
+              ])
+            ),
+            global: { csl: raw.seal_level as number ?? 0, pct: raw.overall_score as number ?? 0 },
+            gap_report: (raw.gap_report as AssessmentResult['csi_composite']['gap_report']) ?? [],
+          },
+        } as AssessmentResult;
+      }
     }
   }
 } catch {
   // Workers not available
 }
 
-const score = (result?.overall_score as number) ?? 0;
-const sealLevel = (result?.seal_level as number) ?? 0;
 const variant = (record?.variant as string) ?? 'EU-CSF';
-const instrumentVersion = (record?.instrument_version as string) ?? '1.0';
-const c5Supplementary = (result?.c5_supplementary as import('../../../../shared/src/types').C5SupplementaryResult | undefined);
-const objectives = (result?.objectives as Array<Record<string, unknown>>) ?? [];
-const gapReport = (result?.gap_report as Array<Record<string, unknown>>) ?? [];
+const instrumentVersion = (record?.instrument_version as string) ?? '2.0';
 const companyName = (record?.company_name as string | undefined) || undefined;
-
-interface HistoryEntry { id: number; submitted_at: string; seal_level: number; overall_score: number }
-const history = (record?.history as HistoryEntry[]) ?? [];
 const countryCode = (record?.national_country as string | undefined) || undefined;
+const levelPrefix = variant === 'Generalized' ? 'CSL' : 'SEAL';
 
-// Look up country object for placeholder resolution
 const allCountries = [...countriesJson.EU, ...countriesJson.EEA_non_EU, ...countriesJson.non_EU];
 const country = countryCode ? allCountries.find(c => c.code === countryCode) : undefined;
 
-// ── Analysis: SEAL explanation ───────────────────────────────────────────────
-const bottlenecks = sealLevel < 4
-  ? objectives.filter(o => (o.seal_level as number) === sealLevel)
-  : [];
+interface HistoryEntry { id: number; submitted_at: string; seal_level: number; overall_score: number }
+const history = (record?.history as HistoryEntry[]) ?? [];
 
-const strengths = objectives.filter(o => (o.seal_level as number) >= 3);
-const weaknesses = objectives.filter(o => (o.seal_level as number) <= 1 ||
-  ((o.seal_level as number) === sealLevel && sealLevel < 4));
-
-const SEAL_LABELS = ['No Sovereignty', 'Minimal Sovereignty', 'Partial Sovereignty', 'Substantial Sovereignty', 'Full Digital Sovereignty'];
 const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
-const levelPrefix = variant === 'Generalized' ? 'CSL' : 'SEAL';
 
-// Top 5 priority improvements — look up question title from criteria
-interface GapItem { objective_id: string; question_id: string; tier: string; priority: number }
-const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
-  let title = g.question_id;
-  let source = '';
+// ── EU-CSF analysis helpers ──────────────────────────────────────────────────
+const euCsfObjectives = result?.eu_csf
+  ? Object.values(result.eu_csf.per_objective)
+  : [];
+const euCsfSeal = result?.eu_csf?.global.seal ?? 0;
+const euCsfBottlenecks = euCsfSeal < 4
+  ? euCsfObjectives.filter(o => o.seal === euCsfSeal)
+  : [];
+const euCsfGaps = result?.eu_csf?.gap_report ?? [];
+
+// ── CSI Composite analysis helpers ──────────────────────────────────────────
+const csiObjectives = result?.csi_composite
+  ? Object.values(result.csi_composite.per_objective)
+  : [];
+const csiCsl = result?.csi_composite?.global.csl ?? 0;
+const csiBottlenecks = csiCsl < 4
+  ? csiObjectives.filter(o => o.csl === csiCsl)
+  : [];
+const csiGaps = result?.csi_composite?.gap_report ?? [];
+
+// ── C3A failed criteria ──────────────────────────────────────────────────────
+const c3aFailedCriteria = result?.c3a?.failed_criteria ?? [];
+
+// Top improvement for EU-CSF
+interface GapItem { objective_id: string; question_id: string; tier: string; gap_score: number }
+function resolveGapTitle(gap: GapItem): string {
   for (const obj of criteria.objectives) {
-    const q = obj.questions.find(q => q.id === g.question_id);
-    if (q) {
-      title = (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
-      if (q.type === 'single') source = q.source?.clause ?? '';
-      else if (q.type === 'tiered') source = (g.tier === 'national' ? q.tiers.national?.source?.clause : q.tiers.bloc?.source?.clause) ?? '';
-      break;
-    }
+    const q = obj.questions.find(q => q.id === gap.question_id);
+    if (q) return (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
   }
-  return { ...g, title, source };
-});
+  return gap.question_id;
+}
+
+const euCsfTopGaps = (euCsfGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: resolveGapTitle(g) }));
+const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: resolveGapTitle(g) }));
 ---
 <!doctype html>
 <html lang="en">
@@ -94,7 +132,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
       {result && (
         <PdfExportButton
           client:load
-          result={result}
+          result={result as Record<string, unknown>}
           criteria={criteria}
           companyName={companyName}
           country={country}
@@ -104,7 +142,7 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
         client:load
         assessmentId={id!}
         criteria={criteria}
-        result={result}
+        result={result as unknown as Record<string, unknown>}
       />
     </div>
   </header>
@@ -112,132 +150,194 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
   <main class="max-w-3xl mx-auto px-6 py-8">
     {result ? (
       <>
-        <ScoreHero
-          client:load
-          score={score}
-          sealLevel={sealLevel}
-          variant={variant}
-          instrumentVersion={instrumentVersion}
-          c5Supplementary={c5Supplementary}
-        />
+        <ScoreHero client:load result={result} />
 
-        {/* ── SEAL explanation ──────────────────────────────────────────────── */}
-        <div class="mt-6 p-4 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700">
-          {sealLevel === 4 ? (
-            <p><span class="font-semibold text-green-700">All objectives meet the highest sovereignty threshold.</span> Your score of {Math.round(score)}% reflects full compliance across all criteria.</p>
-          ) : (
-            <>
-              <p class="mb-2">
-                Your score of <strong>{Math.round(score)}%</strong> reflects points earned across all criteria.
-                Your {levelPrefix} level is capped at <strong style={`color: ${SEAL_COLORS[sealLevel]}`}>{levelPrefix} {sealLevel} — {SEAL_LABELS[sealLevel]}</strong> because
-                the following {bottlenecks.length === 1 ? 'objective has' : 'objectives have'} not yet reached the next threshold:
-                <strong> {bottlenecks.map(o => o.title as string).join(', ')}</strong>.
-              </p>
-              {topImprovements[0] && (
-                <p class="text-gray-600">
-                  Highest-priority action: answer <strong>{topImprovements[0].title}</strong> ({topImprovements[0].question_id}, {topImprovements[0].tier} tier).
+        {/* ── EU-CSF section ────────────────────────────────────────────────── */}
+        {result.eu_csf && (
+          <section class="mt-8">
+            <h2 class="font-semibold text-base mb-3 flex items-center gap-2">
+              EU Cloud Sovereignty Framework
+              <span class="text-xs font-normal text-gray-400">EU-CSF v1.2.1</span>
+            </h2>
+
+            {euCsfSeal < 4 && euCsfBottlenecks.length > 0 && (
+              <div class="mb-4 p-4 rounded-xl border border-amber-100 bg-amber-50 text-sm text-gray-700">
+                <p>
+                  {levelPrefix} {euCsfSeal} — bottleneck{euCsfBottlenecks.length > 1 ? 's' : ''}:
+                  <strong> {euCsfBottlenecks.map(o => o.title).join(', ')}</strong>.
                 </p>
-              )}
-            </>
-          )}
-        </div>
+                {euCsfTopGaps[0] && (
+                  <p class="text-xs text-gray-600 mt-1">
+                    Top priority: <strong>{euCsfTopGaps[0].title}</strong> ({euCsfTopGaps[0].question_id})
+                  </p>
+                )}
+              </div>
+            )}
 
-        {/* ── Strengths ─────────────────────────────────────────────────────── */}
-        {strengths.length > 0 && (
-          <div class="mt-8">
-            <h2 class="font-semibold text-base mb-3">Strengths</h2>
-            <div class="space-y-2">
-              {strengths.map(obj => {
-                const seal = obj.seal_level as number;
-                const pct = (obj.max_score as number) > 0 ? Math.round(((obj.raw_score as number) / (obj.max_score as number)) * 100) : 0;
-                const color = SEAL_COLORS[seal];
-                return (
-                  <div class="flex items-center gap-3 p-3 rounded-lg border border-green-100 bg-green-50">
-                    <div class="flex-1">
-                      <span class="font-medium text-sm">{obj.title as string}</span>
-                      <span class="text-xs text-gray-500 ml-2">{obj.objective_id as string}</span>
-                    </div>
-                    <span class="text-sm font-medium" style={`color: ${color}`}>{pct}%</span>
-                    <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style={`background-color: ${color}`}>{levelPrefix} {seal}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* ── Weaknesses ────────────────────────────────────────────────────── */}
-        {weaknesses.length > 0 && (
-          <div class="mt-8">
-            <h2 class="font-semibold text-base mb-3">Weaknesses &amp; Limiting Factors</h2>
-            <div class="space-y-2">
-              {weaknesses.map(obj => {
-                const seal = obj.seal_level as number;
-                const pct = (obj.max_score as number) > 0 ? Math.round(((obj.raw_score as number) / (obj.max_score as number)) * 100) : 0;
-                const color = SEAL_COLORS[seal];
-                const isBottleneck = bottlenecks.some(b => b.objective_id === obj.objective_id);
-                const topGap = gapReport.find(g => (g as GapItem).objective_id === obj.objective_id) as GapItem | undefined;
-                let topGapTitle = topGap?.question_id;
-                if (topGap) {
-                  for (const o of criteria.objectives) {
-                    const q = o.questions.find(q => q.id === topGap.question_id);
-                    if (q) { topGapTitle = (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title; break; }
-                  }
-                }
-                return (
-                  <div class="p-3 rounded-lg border border-red-100 bg-red-50">
-                    <div class="flex items-center gap-3 mb-1">
-                      <div class="flex-1">
-                        <span class="font-medium text-sm">{obj.title as string}</span>
-                        <span class="text-xs text-gray-500 ml-2">{obj.objective_id as string}</span>
-                        {isBottleneck && <span class="ml-2 text-xs bg-red-200 text-red-800 px-1.5 py-0.5 rounded font-medium">Limiting SEAL</span>}
+            {euCsfTopGaps.length > 0 && (
+              <div class="mb-4">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Priority improvements</h3>
+                <div class="space-y-1.5">
+                  {euCsfTopGaps.map((item, i) => (
+                    <div class="flex items-start gap-3 p-3 rounded-lg border border-amber-100 bg-amber-50">
+                      <div class="text-xs font-bold text-amber-600 mt-0.5 w-5 shrink-0">#{i + 1}</div>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium">{item.title}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{item.question_id} · {item.tier} tier</p>
                       </div>
-                      <span class="text-sm font-medium" style={`color: ${color}`}>{pct}%</span>
-                      <span class="text-xs px-2 py-0.5 rounded-full text-white font-medium" style={`background-color: ${color}`}>{levelPrefix} {seal}</span>
                     </div>
-                    {topGapTitle && (
-                      <p class="text-xs text-gray-600">Top gap: {topGapTitle} ({topGap?.question_id})</p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <ObjectiveAccordion
+              client:load
+              objectives={euCsfObjectives.map(o => ({
+                objective_id: o.objective_id,
+                title: o.title,
+                seal_level: o.seal,
+                raw_score: o.raw_score,
+                max_score: o.max_score,
+                questions: o.questions,
+              }))}
+              criteria={criteria}
+              country={country}
+              variant={variant as 'EU-CSF' | 'Generalized'}
+              overallSeal={euCsfSeal}
+            />
+          </section>
         )}
 
-        {/* ── Priority improvements ─────────────────────────────────────────── */}
-        {topImprovements.length > 0 && (
-          <div class="mt-8">
-            <h2 class="font-semibold text-base mb-3">Priority Improvement Areas</h2>
-            <div class="space-y-2">
-              {topImprovements.map((item, i) => (
-                <a href={`#obj-${item.objective_id}`} class="block p-3 rounded-lg border border-amber-100 bg-amber-50 hover:bg-amber-100 transition group">
-                  <div class="flex items-start gap-3">
-                    <div class="text-xs font-bold text-amber-600 mt-0.5 w-5 shrink-0">#{i + 1}</div>
-                    <div class="flex-1 min-w-0">
-                      <p class="text-sm font-medium group-hover:underline">{item.title}</p>
-                      <p class="text-xs text-gray-500 mt-0.5">{item.question_id} · {item.tier} tier{item.source ? ` · ${item.source}` : ''}</p>
-                    </div>
-                    <span class="text-xs text-amber-600 shrink-0 mt-0.5">↓ view details</span>
-                  </div>
-                </a>
-              ))}
+        {/* ── C3A section ───────────────────────────────────────────────────── */}
+        {result.c3a && (
+          <section class="mt-8">
+            <h2 class="font-semibold text-base mb-3 flex items-center gap-2">
+              BSI C3A — Criteria enabling Cloud Computing Autonomy
+              <span class="text-xs font-normal text-gray-400">C3A v1.0</span>
+            </h2>
+
+            <div class="border border-gray-200 rounded-xl overflow-hidden mb-4">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="bg-gray-50 text-left text-xs text-gray-500">
+                    <th class="px-4 py-2 font-medium">Objective</th>
+                    <th class="px-4 py-2 font-medium text-right">Criterion</th>
+                    <th class="px-4 py-2 font-medium text-right">AC</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(result.c3a.criterion.per_objective).map(([objId, crit]) => {
+                    const ac = result.c3a!.additional_criterion.per_objective[objId];
+                    const critColor = crit.applicable > 0 && crit.pct === 100 ? '#16a34a' : crit.pct >= 50 ? '#f97316' : '#dc2626';
+                    return (
+                      <tr class="border-t border-gray-100">
+                        <td class="px-4 py-2 font-mono text-xs text-gray-500">{objId}</td>
+                        <td class="px-4 py-2 text-right">
+                          {crit.applicable > 0 ? (
+                            <span class="font-medium" style={`color: ${critColor}`}>
+                              {crit.passed}/{crit.applicable} ({Math.round(crit.pct)}%)
+                            </span>
+                          ) : (
+                            <span class="text-gray-300">—</span>
+                          )}
+                        </td>
+                        <td class="px-4 py-2 text-right">
+                          {ac && ac.applicable > 0 ? (
+                            <span class="text-gray-600">{ac.passed}/{ac.applicable}</span>
+                          ) : (
+                            <span class="text-gray-300">—</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr class="border-t-2 border-gray-200 bg-gray-50 font-medium">
+                    <td class="px-4 py-2 text-xs text-gray-600">Total</td>
+                    <td class="px-4 py-2 text-right text-sm">
+                      {result.c3a.criterion.global.passed}/{result.c3a.criterion.global.applicable}
+                      ({Math.round(result.c3a.criterion.global.pct)}%)
+                    </td>
+                    <td class="px-4 py-2 text-right text-sm">
+                      {result.c3a.additional_criterion.global
+                        ? `${result.c3a.additional_criterion.global.passed}/${result.c3a.additional_criterion.global.applicable} (${Math.round(result.c3a.additional_criterion.global.pct)}%)`
+                        : '—'}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
-          </div>
+
+            {c3aFailedCriteria.length > 0 && (
+              <div>
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Failed criteria</h3>
+                <div class="space-y-1.5">
+                  {c3aFailedCriteria.map(fc => (
+                    <div class="flex items-center gap-3 p-3 rounded-lg border border-red-100 bg-red-50">
+                      <span class="text-xs font-mono text-gray-500 shrink-0">{fc.question_id}</span>
+                      <span class="text-sm text-gray-700 flex-1">{fc.title}</span>
+                      <span class="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">{fc.tier}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
         )}
 
-        {/* ── Results by objective (accordion) ─────────────────────────────── */}
-        <div class="mt-8">
-          <h2 class="font-semibold text-base mb-4">Results by objective</h2>
-          <ObjectiveAccordion
-            client:load
-            objectives={objectives as Parameters<typeof ObjectiveAccordion>[0]['objectives']}
-            criteria={criteria}
-            country={country}
-            variant={variant as 'EU-CSF' | 'Generalized'}
-            overallSeal={sealLevel}
-          />
-        </div>
+        {/* ── CSI Composite section ─────────────────────────────────────────── */}
+        {result.csi_composite && (
+          <section class="mt-8">
+            <h2 class="font-semibold text-base mb-3 flex items-center gap-2">
+              CSI Composite
+              <span class="text-xs font-normal text-gray-400 bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">editorial framework</span>
+            </h2>
+
+            {csiCsl < 4 && csiBottlenecks.length > 0 && (
+              <div class="mb-4 p-4 rounded-xl border border-amber-100 bg-amber-50 text-sm text-gray-700">
+                <p>
+                  {levelPrefix} {csiCsl} — bottleneck{csiBottlenecks.length > 1 ? 's' : ''}:
+                  <strong> {csiBottlenecks.map(o => o.title).join(', ')}</strong>.
+                </p>
+              </div>
+            )}
+
+            {csiTopGaps.length > 0 && (
+              <div class="mb-4">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Priority improvements</h3>
+                <div class="space-y-1.5">
+                  {csiTopGaps.map((item, i) => (
+                    <div class="flex items-start gap-3 p-3 rounded-lg border border-amber-100 bg-amber-50">
+                      <div class="text-xs font-bold text-amber-600 mt-0.5 w-5 shrink-0">#{i + 1}</div>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium">{item.title}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{item.question_id} · {item.tier} tier</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <ObjectiveAccordion
+              client:load
+              objectives={csiObjectives.map(o => ({
+                objective_id: o.objective_id,
+                title: o.title,
+                seal_level: o.csl,
+                raw_score: o.raw_score,
+                max_score: o.max_score,
+                questions: o.questions,
+              }))}
+              criteria={criteria}
+              country={country}
+              variant={variant as 'EU-CSF' | 'Generalized'}
+              overallSeal={csiCsl}
+            />
+          </section>
+        )}
 
         {/* ── Submission history ───────────────────────────────────────────── */}
         {history.length > 0 && (
@@ -286,8 +386,11 @@ const topImprovements = (gapReport as GapItem[]).slice(0, 5).map(g => {
         <div class="mt-8 p-4 bg-gray-50 rounded-xl text-sm text-gray-600">
           <p class="font-medium text-gray-900 mb-1">Methodological note</p>
           <p>
-            This is a self-assessment, not a certification. Results are indicative based on your responses.
-            All criteria sourced from BSI C5:2026 and EU Cloud Sovereignty Framework v1.2.1.
+            This is a self-assessment, not a certification. Scope: cloud sovereignty only.
+            Security attestation (e.g. C5:2026, ISO 27001) is assumed and not assessed here.
+            EU-CSF results follow EU Cloud Sovereignty Framework v1.2.1 (European Commission).
+            C3A results follow BSI Criteria enabling Cloud Computing Autonomy v1.0.
+            CSI Composite is an editorial framework and is not a source-standard certification.
           </p>
         </div>
       </>

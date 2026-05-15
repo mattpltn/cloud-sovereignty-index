@@ -1,69 +1,101 @@
-import type { C5SupplementaryResult } from '../../shared/src/types';
+import type { AssessmentResult, EuCsfResult, C3aResult, CsiCompositeResult } from '../../shared/src/types';
 
 interface Props {
-  score: number;
-  sealLevel: number;
-  variant: string;
-  instrumentVersion: string;
-  c5Supplementary?: C5SupplementaryResult;
+  result: AssessmentResult;
 }
 
 const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovereignty', 'Digital Resilience', 'Full Digital Sovereignty'];
 const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
 
-function C5Panel({ c5 }: { c5: C5SupplementaryResult }) {
-  if (c5.details.length === 0) return null;
+function EuCsfCard({ eu_csf, variant }: { eu_csf: EuCsfResult; variant: string }) {
+  const seal = eu_csf.global.seal;
+  const pct = eu_csf.global.pct;
+  const color = SEAL_COLORS[seal] ?? '#6b7280';
+  const label = SEAL_NAMES[seal] ?? `Level ${seal}`;
+  const levelPrefix = variant === 'Generalized' ? 'CSL' : 'SEAL';
+
   return (
-    <div className="mt-6 border border-gray-200 rounded-xl p-4 text-left bg-gray-50">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-semibold text-gray-700 uppercase tracking-wide">BSI C5:2026 Supplementary Indicators</span>
-        <span className="text-xs text-gray-400">5 of 168 controls</span>
+    <div className="border border-gray-200 rounded-xl p-6 flex-1 min-w-0">
+      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">EU Cloud Sovereignty Framework</div>
+      <div className="text-5xl font-bold tabular-nums mb-2" style={{ color }}>{Math.round(pct)}%</div>
+      <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium text-white mb-2"
+        style={{ backgroundColor: color }}>
+        {levelPrefix} {seal} — {label}
       </div>
-      <p className="text-xs text-gray-500 mb-3">
-        These indicators do not affect your SEAL level or sovereignty score. They are not a C5:2026 compliance assessment.
+      <p className="text-xs text-gray-500">
+        Weakest-link gate: all level ≤{seal} criteria must be met. EU-CSF v1.2.1.
       </p>
-      <div className="space-y-2">
-        {c5.by_domain.map(d => (
-          <div key={d.domain} className="flex items-center gap-3">
-            <span className="text-xs font-mono w-10 text-gray-500">{d.domain}</span>
-            <div className="flex gap-1">
-              {Array.from({ length: d.applicable }).map((_, i) => {
-                const filled = i < d.met ? 'bg-green-500' : i < d.met + d.partial ? 'bg-yellow-400' : 'bg-gray-300';
-                return <span key={i} className={`w-2.5 h-2.5 rounded-full ${filled}`} />;
-              })}
-            </div>
-            <span className="text-xs text-gray-500">{d.met}/{d.applicable} met</span>
-          </div>
-        ))}
-        {c5.by_domain.length === 0 && (
-          <p className="text-xs text-gray-400 italic">No C5:2026 questions answered yet.</p>
-        )}
-      </div>
     </div>
   );
 }
 
-export default function ScoreHero({ score, sealLevel, variant, instrumentVersion, c5Supplementary }: Props) {
-  const color = SEAL_COLORS[sealLevel] ?? '#6b7280';
-  const label = SEAL_NAMES[sealLevel] ?? `Level ${sealLevel}`;
+function C3aCard({ c3a }: { c3a: C3aResult }) {
+  const crit = c3a.criterion.global;
+  const ac = c3a.additional_criterion.global;
+
+  return (
+    <div className="border border-gray-200 rounded-xl p-6 flex-1 min-w-0">
+      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">BSI C3A — Cloud Computing Autonomy</div>
+      <div className="space-y-3">
+        <div>
+          <div className="text-3xl font-bold tabular-nums text-gray-900">{Math.round(crit.pct)}%</div>
+          <div className="text-xs text-gray-500 mt-0.5">
+            Criterion — {crit.passed}/{crit.applicable} met (binary pass/fail)
+          </div>
+        </div>
+        {ac ? (
+          <div>
+            <div className="text-3xl font-bold tabular-nums text-gray-900">{Math.round(ac.pct)}%</div>
+            <div className="text-xs text-gray-500 mt-0.5">
+              Additional Criterion — {ac.passed}/{ac.applicable} met (customer-selected)
+            </div>
+          </div>
+        ) : (
+          <div className="text-xs text-gray-400 italic">No Additional Criteria selected.</div>
+        )}
+      </div>
+      <p className="text-xs text-gray-400 mt-3">C3A v1.0. No SEAL — pass/fail per criterion only.</p>
+    </div>
+  );
+}
+
+function CsiCard({ csi, variant }: { csi: CsiCompositeResult; variant: string }) {
+  const csl = csi.global.csl;
+  const pct = csi.global.pct;
+  const color = SEAL_COLORS[csl] ?? '#6b7280';
+  const label = SEAL_NAMES[csl] ?? `Level ${csl}`;
   const levelPrefix = variant === 'Generalized' ? 'CSL' : 'SEAL';
 
   return (
-    <div className="text-center py-10">
-      <div className="text-7xl font-bold tabular-nums mb-2" style={{ color }}>
-        {Math.round(score)}%
-      </div>
-      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium text-white mb-1"
+    <div className="border border-blue-100 bg-blue-50 rounded-xl p-6 flex-1 min-w-0">
+      <div className="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-3">CSI Composite <span className="normal-case font-normal text-blue-400">(editorial)</span></div>
+      <div className="text-5xl font-bold tabular-nums mb-2" style={{ color }}>{Math.round(pct)}%</div>
+      <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium text-white mb-2"
         style={{ backgroundColor: color }}>
-        {levelPrefix} {sealLevel} — {label}
+        {levelPrefix} {csl} — {label}
       </div>
-      <p className="text-xs text-gray-500 mb-2">
-        The level uses a pass/fail gate per objective. Your % score reflects partial credit across all criteria.
+      <p className="text-xs text-gray-500">
+        CSI editorial blend of EU-CSF + C3A. Not a source-standard certification.
       </p>
-      <p className="text-xs text-gray-400">
-        {variant} · Instrument v{instrumentVersion}
+    </div>
+  );
+}
+
+export default function ScoreHero({ result }: Props) {
+  const { eu_csf, c3a, csi_composite, variant, instrument_version, selected_frameworks } = result;
+
+  return (
+    <div className="py-6">
+      <div className="flex flex-wrap gap-4">
+        {eu_csf && <EuCsfCard eu_csf={eu_csf} variant={variant} />}
+        {c3a && <C3aCard c3a={c3a} />}
+        {csi_composite && <CsiCard csi={csi_composite} variant={variant} />}
+      </div>
+      <p className="text-xs text-gray-400 mt-3 text-center">
+        {variant} · Instrument v{instrument_version} ·{' '}
+        {selected_frameworks.join(', ')} ·{' '}
+        Self-assessment only — not a certification
       </p>
-      {c5Supplementary && <C5Panel c5={c5Supplementary} />}
     </div>
   );
 }

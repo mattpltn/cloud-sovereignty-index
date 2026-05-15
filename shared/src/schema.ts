@@ -17,11 +17,19 @@ const TierSchema = z.object({
   decision_refs: z.array(z.string()).optional(),
 });
 
+const C3aTierSchema = z.enum(['base', 'additional', 'not_applicable']);
+
 const QuestionBaseSchema = z.object({
-  id: z.string().regex(/^SOV-\d+-\d+$/),
+  id: z.string().regex(/^SOV-\d+-\d+(-[A-Z]+\d*)?$/),
   title: z.string(),
   title_generalized: z.string().optional(),
   supplementary_info: z.string().optional(),
+  applies_to_eu_csf: z.boolean(),
+  applies_to_c3a: z.boolean(),
+  applies_to_csi_composite: z.boolean(),
+  c3a_tier: C3aTierSchema,
+  parent_criterion_id: z.string().optional(),
+  review_status: z.string().optional(),
 });
 
 const SingleQuestionSchema = QuestionBaseSchema.extend({
@@ -86,7 +94,7 @@ export const DecisionEntrySchema = z.object({
   rationale: z.string(),
   authority: z.string(),
   alternatives_considered: z.union([z.string(), z.array(z.string())]),
-  review_status: z.enum(['stable', 'under-review', 'deprecated', 'endorsed-by-source', 'pending-external-review']),
+  review_status: z.enum(['stable', 'under-review', 'deprecated', 'endorsed-by-source', 'pending-external-review', 'superseded']),
 }).passthrough();
 
 export const DecisionsRegisterFileSchema = z.object({
@@ -124,12 +132,16 @@ export const ScopeSchema = z.enum(['IaaS', 'PaaS', 'SaaS', 'FaaS', 'CaaS', 'STaa
 
 export const RoleSchema = z.enum(['customer', 'provider', 'auditor']);
 
+export const FrameworkModeSchema = z.enum(['eu_csf', 'c3a', 'csi_composite']);
+
 export const AssessmentSetupSchema = z.object({
   variant: VariantSchema,
   country_code: z.string().length(2).optional(),
   scope_ids: z.array(ScopeSchema).min(1),
   role: RoleSchema,
   turnstile_token: z.string(),
+  selected_frameworks: z.array(FrameworkModeSchema).min(1).optional(),
+  customer_selected_ac_ids: z.array(z.string()).optional(),
 });
 
 export const AnswerValueSchema = z.enum(['yes', 'no', 'partial', 'n/a']);
@@ -167,3 +179,5 @@ export type AnswerValue = z.infer<typeof AnswerValueSchema>;
 export type Answer = z.infer<typeof AnswerSchema>;
 export type AnswerPatch = z.infer<typeof AnswerPatchSchema>;
 export type SubmitBody = z.infer<typeof SubmitBodySchema>;
+export type FrameworkMode = z.infer<typeof FrameworkModeSchema>;
+export type C3aTier = z.infer<typeof C3aTierSchema>;

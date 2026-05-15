@@ -96,29 +96,37 @@ function cellStr(cell: ExcelJS.Cell): string {
 
 function addAssessmentSheet(
   wb: ExcelJS.Workbook,
-  sheetName: string,
   criteria: CriteriaFile,
-  euMode: boolean,
   country?: Country,
 ) {
-  const ws = wb.addWorksheet(sheetName);
+  const ws = wb.addWorksheet('Assessment');
 
-  // Columns: A–E locked, F locked (evidence_expected), G–H editable (CSP fills), I editable (answer)
+  // Columns: A=qid B=tier C=c3a_tier D=obj E=title F=text G=applies_to_eu_csf H=applies_to_c3a I=applies_to_csi J=ev_exp K=ev_prov L=ev_type M=ans
   ws.columns = [
-    { key: 'qid',       width: 14 },
-    { key: 'tier',      width: 10 },
-    { key: 'obj',       width: 14 },
-    { key: 'title',     width: 32 },
-    { key: 'text',      width: 64 },
-    { key: 'ev_exp',    width: 60 },
-    { key: 'ev_prov',   width: 50 },
-    { key: 'ev_type',   width: 25 },
-    { key: 'ans',       width: 12 },
+    { key: 'qid',       width: 16 },  // A
+    { key: 'tier',      width: 10 },  // B
+    { key: 'c3a_tier',  width: 14 },  // C — hidden
+    { key: 'obj',       width: 10 },  // D
+    { key: 'title',     width: 30 },  // E
+    { key: 'text',      width: 60 },  // F
+    { key: 'eu_csf',    width: 10 },  // G — hidden
+    { key: 'c3a',       width: 8  },  // H — hidden
+    { key: 'csi',       width: 8  },  // I — hidden
+    { key: 'ev_exp',    width: 60 },  // J
+    { key: 'ev_prov',   width: 50 },  // K
+    { key: 'ev_type',   width: 25 },  // L
+    { key: 'ans',       width: 12 },  // M
   ];
 
-  // Header row
+  // Hide metadata columns
+  ws.getColumn('C').hidden = true;
+  ws.getColumn('G').hidden = true;
+  ws.getColumn('H').hidden = true;
+  ws.getColumn('I').hidden = true;
+
   const header = ws.addRow([
-    'question_id', 'tier', 'objective', 'question_title', 'question_text',
+    'question_id', 'tier', 'c3a_tier', 'objective', 'question_title', 'question_text',
+    'applies_to_eu_csf', 'applies_to_c3a', 'applies_to_csi_composite',
     'evidence_expected', 'evidence_provided', 'evidence_type', 'answer',
   ]);
   header.font = { bold: true };
@@ -126,15 +134,14 @@ function addAssessmentSheet(
   header.height = 18;
   header.eachCell(cell => { cell.alignment = { vertical: 'middle' }; });
 
-  // Notes on CSP-filled columns
-  header.getCell(7).note = { texts: [{ text: 'Fill in: document name, URL, contract clause reference, attestation ID, page number, or "none available".' }] };
-  header.getCell(8).note = { texts: [{ text: 'Select the type of evidence provided.' }] };
-  header.getCell(9).note = {
+  header.getCell(11).note = { texts: [{ text: 'Fill in: document name, URL, contract clause reference, attestation ID, page number, or "none available".' }] };
+  header.getCell(12).note = { texts: [{ text: 'Select the type of evidence provided.' }] };
+  header.getCell(13).note = {
     texts: [
       { font: { bold: true }, text: 'Accepted values:\n' },
       { text: 'yes — fully compliant / implemented\n' },
       { text: 'no — not compliant / not implemented\n' },
-      { text: 'partial — partially compliant (half points, not counted for sovereignty level)\n' },
+      { text: 'partial — partially compliant (EU-CSF / CSI: half points; C3A: counts as not-met)\n' },
       { text: 'n/a — not applicable (excluded from score entirely)\n' },
       { text: '\nLeave blank to skip a question.' },
     ],
@@ -142,20 +149,21 @@ function addAssessmentSheet(
 
   ws.views = [{ state: 'frozen', ySplit: 1 }];
 
-  const ctx = euMode
-    ? { variant: 'EU-CSF' as const, country }
-    : { variant: 'Generalized' as const, country };
+  const ctx = { variant: 'EU-CSF' as const, country };
 
-  const blocBlocLabel = euMode ? 'EU' : 'your country';
-
-  function applyDataRow(row: ExcelJS.Row, qid: string, text: string, fill: ExcelJS.Fill) {
+  function applyDataRow(row: ExcelJS.Row, qid: string, text: string, fill: ExcelJS.Fill,
+    c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean) {
     row.fill = fill;
-    row.getCell(5).alignment = { wrapText: true, vertical: 'top' };
-    row.getCell(6).value = EVIDENCE_EXPECTED[qid] ?? '';
     row.getCell(6).alignment = { wrapText: true, vertical: 'top' };
-    row.getCell(7).alignment = { wrapText: true, vertical: 'top' };
-    row.getCell(8).dataValidation = EVIDENCE_TYPE_VALIDATION;
-    row.getCell(9).dataValidation = ANSWER_VALIDATION;
+    row.getCell(3).value = c3aTier;
+    row.getCell(7).value = applyEuCsf ? 'TRUE' : 'FALSE';
+    row.getCell(8).value = applyC3a ? 'TRUE' : 'FALSE';
+    row.getCell(9).value = applyCsi ? 'TRUE' : 'FALSE';
+    row.getCell(10).value = EVIDENCE_EXPECTED[qid] ?? '';
+    row.getCell(10).alignment = { wrapText: true, vertical: 'top' };
+    row.getCell(11).alignment = { wrapText: true, vertical: 'top' };
+    row.getCell(12).dataValidation = EVIDENCE_TYPE_VALIDATION;
+    row.getCell(13).dataValidation = ANSWER_VALIDATION;
     row.height = Math.min(60, Math.ceil(text.length / 80) * 15 + 15);
   }
 
@@ -165,28 +173,30 @@ function addAssessmentSheet(
     objIndex++;
 
     for (const q of obj.questions) {
-      const displayTitle = (!euMode && q.title_generalized) ? q.title_generalized : q.title;
-      if (q.type === 'single') {
-        const rawText = (!euMode && q.text_generalized) ? q.text_generalized : q.text;
-        const text = resolvePlaceholders(rawText, ctx);
-        const row = ws.addRow([q.id, 'single', obj.id, displayTitle, text, '', '', '', '']);
-        applyDataRow(row, q.id, text, fill);
-      } else {
-        const blocText = q.tiers.bloc.text.replace(/\{\{BLOC\}\}/g, blocBlocLabel);
-        const resolvedBloc = resolvePlaceholders(blocText, ctx);
-        const blocRow = ws.addRow([q.id, 'bloc', obj.id, displayTitle, resolvedBloc, '', '', '', '']);
-        applyDataRow(blocRow, q.id, resolvedBloc, fill);
+      const c3aTier = q.c3a_tier ?? 'not_applicable';
+      const applyEuCsf = q.applies_to_eu_csf ?? false;
+      const applyC3a = q.applies_to_c3a ?? false;
+      const applyCsi = q.applies_to_csi_composite ?? false;
 
-        if (euMode && q.tiers.national) {
-          const natText = q.tiers.national.text;
-          const natRow = ws.addRow([q.id, 'national', obj.id, displayTitle, natText, '', '', '', '']);
-          applyDataRow(natRow, q.id, natText, fill);
+      if (q.type === 'single') {
+        const text = resolvePlaceholders(q.text, ctx);
+        const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, text, '', '', '', '', '', '', '']);
+        applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+      } else {
+        const blocText = resolvePlaceholders(q.tiers.bloc.text.replace(/\{\{BLOC\}\}/g, 'EU'), ctx);
+        const blocRow = ws.addRow([q.id, 'bloc', c3aTier, obj.id, q.title, blocText, '', '', '', '', '', '', '']);
+        applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+
+        if (q.tiers.national) {
+          const natText = resolvePlaceholders(q.tiers.national.text, ctx);
+          const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
+          applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
         }
       }
     }
   }
 
-  // Sheet protection: lock everything, then unlock CSP-filled columns (G, H, I = 7, 8, 9)
+  // Sheet protection: unlock CSP-filled columns K, L, M (11, 12, 13)
   ws.protect('', {
     selectLockedCells: true,
     selectUnlockedCells: true,
@@ -196,9 +206,9 @@ function addAssessmentSheet(
   });
   ws.eachRow((row, rowNum) => {
     if (rowNum > 1) {
-      row.getCell(7).protection = { locked: false };
-      row.getCell(8).protection = { locked: false };
-      row.getCell(9).protection = { locked: false };
+      row.getCell(11).protection = { locked: false };
+      row.getCell(12).protection = { locked: false };
+      row.getCell(13).protection = { locked: false };
     }
   });
 }
@@ -275,26 +285,41 @@ export async function buildTemplateXlsx(
   };
 
   // Instructions
-  setup.getRow(7).height = 18;
-  setup.mergeCells('B7:C7');
-  const instrCell = setup.getCell('B7');
-  instrCell.value = '→ EU / EEA countries: fill in the "EU Assessment" sheet.';
+  // Framework selection
+  setup.getRow(7).height = 20;
+  setup.getCell('B7').value = 'Include EU-CSF?';
+  setup.getCell('B7').font = { bold: true };
+  setup.getCell('C7').value = 'yes';
+  setup.getCell('C7').fill = INPUT_FILL;
+  setup.getCell('C7').dataValidation = { type: 'list', allowBlank: false, formulae: ['"yes,no"'], showErrorMessage: true, errorStyle: 'stop', errorTitle: 'Invalid', error: 'yes or no' } as ExcelJS.DataValidation;
+
+  setup.getRow(8).height = 20;
+  setup.getCell('B8').value = 'Include C3A?';
+  setup.getCell('B8').font = { bold: true };
+  setup.getCell('C8').value = 'no';
+  setup.getCell('C8').fill = INPUT_FILL;
+  setup.getCell('C8').dataValidation = { type: 'list', allowBlank: false, formulae: ['"yes,no"'], showErrorMessage: true, errorStyle: 'stop', errorTitle: 'Invalid', error: 'yes or no' } as ExcelJS.DataValidation;
+
+  setup.getRow(9).height = 20;
+  setup.getCell('B9').value = 'Include CSI Composite?';
+  setup.getCell('B9').font = { bold: true };
+  setup.getCell('C9').value = 'yes';
+  setup.getCell('C9').fill = INPUT_FILL;
+  setup.getCell('C9').dataValidation = { type: 'list', allowBlank: false, formulae: ['"yes,no"'], showErrorMessage: true, errorStyle: 'stop', errorTitle: 'Invalid', error: 'yes or no' } as ExcelJS.DataValidation;
+
+  setup.getRow(11).height = 16;
+  setup.mergeCells('B11:C11');
+  const instrCell = setup.getCell('B11');
+  instrCell.value = '→ Fill in the "Assessment" sheet — national tier rows apply for EU/EEA countries only.';
   instrCell.font = { italic: true, color: { argb: 'FF1D4ED8' } };
 
-  setup.getRow(8).height = 18;
-  setup.mergeCells('B8:C8');
-  const instrCell2 = setup.getCell('B8');
-  instrCell2.value = '→ All other countries: fill in the "Global Assessment" sheet.';
-  instrCell2.font = { italic: true, color: { argb: 'FF1D4ED8' } };
+  setup.getRow(12).height = 16;
+  setup.mergeCells('B12:C12');
+  setup.getCell('B12').value = 'Once filled in, save this file and upload it at: cloudsovereigntyindex.org/assess/setup';
+  setup.getCell('B12').font = { color: { argb: 'FF6B7280' } };
 
-  setup.getRow(10).height = 16;
-  setup.mergeCells('B10:C10');
-  setup.getCell('B10').value = 'Once filled in, save this file and upload it at: cloudsovereigntyindex.org/assess/setup';
-  setup.getCell('B10').font = { color: { argb: 'FF6B7280' } };
-
-  // ── Sheets 2 & 3: Assessment questions ─────────────────────────────────────
-  addAssessmentSheet(wb, 'EU Assessment', criteria, true, selectedCountry);
-  addAssessmentSheet(wb, 'Global Assessment', criteria, false, selectedCountry);
+  // ── Sheet 2: Assessment questions (single merged sheet) ─────────────────────
+  addAssessmentSheet(wb, criteria, selectedCountry);
 
   // ── Sheet 4: Privacy ───────────────────────────────────────────────────────
   const privacy = wb.addWorksheet('Privacy');
@@ -346,6 +371,7 @@ export interface ParsedXlsx {
   company_name?: string;
   country_code?: string;
   variant?: 'EU-CSF' | 'Generalized';
+  selected_frameworks?: string[];
 }
 
 const VALID_ANSWERS = new Set(['yes', 'no', 'partial', 'n/a']);
@@ -359,6 +385,7 @@ export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
   let company_name: string | undefined;
   let country_code: string | undefined;
   let variant: 'EU-CSF' | 'Generalized' | undefined;
+  const selected_frameworks: string[] = [];
 
   // Read Setup sheet
   const setupSheet = wb.getWorksheet('Setup');
@@ -366,26 +393,39 @@ export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
     company_name = cellStr(setupSheet.getCell('C3')) || undefined;
     const countryVal = cellStr(setupSheet.getCell('C5'));
     if (countryVal) {
-      // Format is "FR — France" or just a code
       const match = countryVal.match(/^([A-Z]{2})\s*[—-]/);
       country_code = match ? match[1] : countryVal.trim().toUpperCase();
     }
+    // Framework selection (v2.0 template: C7 = eu_csf, C8 = c3a, C9 = csi_composite)
+    if (cellStr(setupSheet.getCell('C7')).toLowerCase() === 'yes') selected_frameworks.push('eu_csf');
+    if (cellStr(setupSheet.getCell('C8')).toLowerCase() === 'yes') selected_frameworks.push('c3a');
+    if (cellStr(setupSheet.getCell('C9')).toLowerCase() === 'yes') selected_frameworks.push('csi_composite');
   }
 
-  // Read both assessment sheets
-  const sheetDefs: Array<{ name: string; isEU: boolean }> = [
+  // Read the merged Assessment sheet (v2.0) or legacy EU/Global sheets (v1.x)
+  const assessmentSheet = wb.getWorksheet('Assessment');
+  const legacySheets: Array<{ name: string; isEU: boolean }> = [
     { name: 'EU Assessment', isEU: true },
     { name: 'Global Assessment', isEU: false },
   ];
 
-  for (const { name, isEU } of sheetDefs) {
-    const ws = wb.getWorksheet(name);
+  const sheetsToRead = assessmentSheet
+    ? [{ ws: assessmentSheet, isEU: true }]
+    : legacySheets.map(s => ({ ws: wb.getWorksheet(s.name), isEU: s.isEU })).filter(s => !!s.ws);
+
+  for (const { ws, isEU } of sheetsToRead) {
     if (!ws) continue;
 
-    // Detect column layout: new 9-col template has 'evidence_expected' in col 6 header
+    // Detect column layout: v2.0 has 13 columns (answer in col 13), v1.x had 9 or 6
     const headerRow = ws.getRow(1);
+    const col1Header = cellStr(headerRow.getCell(1)).toLowerCase();
+    if (col1Header !== 'question_id') continue;
     const col6Header = cellStr(headerRow.getCell(6)).toLowerCase();
-    const answerCol = col6Header === 'evidence_expected' ? 9 : 6;
+    const col13Header = cellStr(headerRow.getCell(13)).toLowerCase();
+    let answerCol: number;
+    if (col13Header === 'answer') answerCol = 13;           // v2.0
+    else if (col6Header === 'evidence_expected') answerCol = 9; // v1.x 9-col
+    else answerCol = 6;                                     // v1.x 6-col
 
     let hasAnswers = false;
     ws.eachRow((row, rowNum) => {
@@ -405,5 +445,11 @@ export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
     }
   }
 
-  return { answers, company_name, country_code, variant };
+  return {
+    answers,
+    company_name,
+    country_code,
+    variant,
+    selected_frameworks: selected_frameworks.length > 0 ? selected_frameworks : undefined,
+  };
 }
