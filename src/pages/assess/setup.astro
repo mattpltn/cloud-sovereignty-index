@@ -66,15 +66,15 @@ for (const ac of acQuestions) {
             <option value={c.code}>{c.name}</option>
           ))}
         </select>
+        <p id="country-error" class="text-red-600 text-xs mt-1 hidden">Select a country.</p>
         <p id="variant-badge" class="text-xs mt-1.5 text-gray-400 hidden"></p>
       </div>
 
       <div>
-        <label class="block text-sm font-medium mb-1">
-          Organisation name <span class="text-gray-400 font-normal">(optional)</span>
-        </label>
-        <input type="text" name="company_name" placeholder="Acme Corp"
+        <label class="block text-sm font-medium mb-1">Organisation name</label>
+        <input type="text" name="company_name" id="company-name" placeholder="Acme Corp"
           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        <p id="company-error" class="text-red-600 text-xs mt-1 hidden">Enter your organisation name.</p>
         <p class="text-xs text-gray-400 mt-1">Not indexed. Stored only in your assessment record.</p>
       </div>
 
@@ -211,23 +211,38 @@ for (const ac of acQuestions) {
 
     const form = document.getElementById('setup-form');
     const errorMsg = document.getElementById('error-msg');
+    const countryError = document.getElementById('country-error');
+    const companyError = document.getElementById('company-error');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorMsg.classList.add('hidden');
       frameworkError.classList.add('hidden');
+      countryError.classList.add('hidden');
+      companyError.classList.add('hidden');
 
       const fd = new FormData(form);
       const variant = fd.get('variant');
       const national_country = fd.get('national_country') || undefined;
-      const company_name = fd.get('company_name') || undefined;
+      const company_name = (fd.get('company_name') || '').trim() || undefined;
       const turnstile_token = fd.get('cf-turnstile-response') ?? 'test-token';
+
+      let hasError = false;
+      if (!national_country) {
+        countryError.classList.remove('hidden');
+        hasError = true;
+      }
+      if (!company_name) {
+        companyError.classList.remove('hidden');
+        hasError = true;
+      }
 
       const selected_frameworks = fd.getAll('framework');
       if (selected_frameworks.length === 0) {
         frameworkError.classList.remove('hidden');
-        return;
+        hasError = true;
       }
+      if (hasError) return;
 
       const customer_selected_ac_ids = fd.getAll('ac_criterion');
 
