@@ -23,71 +23,71 @@ function getQuestionTitle(criteria: CriteriaFile, qid: string): string {
   return getQuestionMeta(criteria, qid, 'bloc').title;
 }
 
-type H = (type: unknown, props: Record<string, unknown> | null, ...children: unknown[]) => unknown;
-
-function buildObjectiveScorecardSection(
-  h: H,
-  styles: Record<string, unknown>,
-  objectives: Array<EuCsfObjectiveResult | CsiObjectiveResult>,
-  levelKey: 'seal' | 'csl',
-  levelPrefix: string,
-) {
-  return [
-    h('View', { style: styles.tableHeader },
-      h('Text', { style: styles.colId }, 'ID'),
-      h('Text', { style: styles.colTitle }, 'Objective'),
-      h('Text', { style: styles.colPct }, 'Score'),
-      h('Text', { style: styles.colSeal }, levelPrefix),
-    ),
-    ...objectives.map((obj, i) => {
-      const level = (obj as Record<string, unknown>)[levelKey] as number;
-      const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
-      const color = SEAL_COLORS_HEX[level] ?? '#6b7280';
-      return h('View', { key: obj.objective_id, style: i % 2 === 0 ? styles.tableRow : styles.tableRowAlt },
-        h('Text', { style: { ...(styles.colId as object), color } }, obj.objective_id),
-        h('Text', { style: styles.colTitle }, obj.title),
-        h('Text', { style: { ...(styles.colPct as object), color } }, `${pct}%`),
-        h('Text', { style: { ...(styles.colSeal as object), color } }, `${levelPrefix} ${level}`),
-      );
-    }),
-  ];
-}
-
-function buildGapSection(
-  h: H,
-  styles: Record<string, unknown>,
-  gaps: Array<{ objective_id: string; question_id: string; tier: string; gap_score: number }>,
-  criteria: CriteriaFile,
-  sectionNum: number,
-) {
-  const topGaps = gaps.slice(0, 5);
-  return [
-    h('Text', { style: styles.sectionTitle }, `${sectionNum}. Priority Improvement Areas`),
-    topGaps.length === 0
-      ? h('Text', { style: styles.bodyText }, 'No improvement areas identified.')
-      : h('View', {},
-          ...topGaps.map((gap, i) => {
-            const meta = getQuestionMeta(criteria, gap.question_id, gap.tier);
-            return h('View', { key: i, style: styles.improvCard },
-              h('Text', { style: styles.cardTitle }, `#${i + 1}. ${meta.title} — ${gap.question_id} (${gap.tier})`),
-              meta.source && h('Text', { style: { ...(styles.cardBody as object), color: '#9ca3af', marginBottom: 3 } }, `Source: ${meta.source}`),
-              meta.supplementary
-                ? h('Text', { style: styles.cardBody }, meta.supplementary.slice(0, 300) + (meta.supplementary.length > 300 ? '…' : ''))
-                : h('Text', { style: styles.cardBody }, 'Address this criterion to improve your sovereignty score.'),
-            );
-          }),
-        ),
-  ];
-}
-
 export async function buildReportPdf(
   result: AssessmentResult,
   criteria: CriteriaFile,
   companyName?: string,
   country?: Country,
 ): Promise<Blob> {
+  // Import actual React PDF components — helpers must be defined AFTER this
   const { Document, Page, Text, View, StyleSheet, pdf } = await import('@react-pdf/renderer');
   const { createElement: h } = await import('react');
+
+  // ── Helpers that close over real PDF components ──────────────────────────────
+
+  function buildObjectiveScorecardSection(
+    objectives: Array<EuCsfObjectiveResult | CsiObjectiveResult>,
+    levelKey: 'seal' | 'csl',
+    levelPrefix: string,
+  ) {
+    return [
+      h(View, { style: styles.tableHeader },
+        h(Text, { style: styles.colId }, 'ID'),
+        h(Text, { style: styles.colTitle }, 'Objective'),
+        h(Text, { style: styles.colPct }, 'Score'),
+        h(Text, { style: styles.colSeal }, levelPrefix),
+      ),
+      ...objectives.map((obj, i) => {
+        const level = (obj as Record<string, unknown>)[levelKey] as number;
+        const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
+        const color = SEAL_COLORS_HEX[level] ?? '#6b7280';
+        return h(View, { key: obj.objective_id, style: i % 2 === 0 ? styles.tableRow : styles.tableRowAlt },
+          h(Text, { style: { ...styles.colId, color } }, obj.objective_id),
+          h(Text, { style: styles.colTitle }, obj.title),
+          h(Text, { style: { ...styles.colPct, color } }, `${pct}%`),
+          h(Text, { style: { ...styles.colSeal, color } }, `${levelPrefix} ${level}`),
+        );
+      }),
+    ];
+  }
+
+  function buildGapSection(
+    gaps: Array<{ objective_id: string; question_id: string; tier: string; gap_score: number }>,
+    sectionLabel: string,
+  ) {
+    const topGaps = gaps.slice(0, 5);
+    return [
+      h(Text, { style: styles.subSectionTitle }, `Priority Improvement Areas — ${sectionLabel}`),
+      topGaps.length === 0
+        ? h(Text, { style: styles.bodyText }, 'No improvement areas identified.')
+        : h(View, {},
+            ...topGaps.map((gap, i) => {
+              const meta = getQuestionMeta(criteria, gap.question_id, gap.tier);
+              return h(View, { key: i, style: styles.improvCard },
+                h(Text, { style: styles.cardTitle }, `#${i + 1}. ${meta.title} — ${gap.question_id} (${gap.tier})`),
+                meta.source ? h(Text, { style: { ...styles.cardBody, color: '#9ca3af', marginBottom: 3 } }, `Source: ${meta.source}`) : null,
+                h(Text, { style: styles.cardBody },
+                  meta.supplementary
+                    ? meta.supplementary.slice(0, 300) + (meta.supplementary.length > 300 ? '…' : '')
+                    : 'Address this criterion to improve your sovereignty score.'
+                ),
+              );
+            }),
+          ),
+    ];
+  }
+
+  // ── Styles ───────────────────────────────────────────────────────────────────
 
   const styles = StyleSheet.create({
     page: { fontFamily: 'Helvetica', fontSize: 10, color: '#111827', paddingHorizontal: 48, paddingVertical: 48 },
@@ -112,7 +112,6 @@ export async function buildReportPdf(
     strengthCard: { backgroundColor: '#f0fdf4', borderLeftWidth: 3, borderLeftColor: '#22c55e', padding: 10, marginBottom: 6, borderRadius: 4 },
     weakCard: { backgroundColor: '#fef2f2', borderLeftWidth: 3, borderLeftColor: '#dc2626', padding: 10, marginBottom: 6, borderRadius: 4 },
     improvCard: { backgroundColor: '#fffbeb', borderLeftWidth: 3, borderLeftColor: '#f97316', padding: 10, marginBottom: 6, borderRadius: 4 },
-    infoCard: { backgroundColor: '#f0f9ff', borderLeftWidth: 3, borderLeftColor: '#0ea5e9', padding: 10, marginBottom: 6, borderRadius: 4 },
     cardTitle: { fontSize: 10, fontFamily: 'Helvetica-Bold', marginBottom: 3, color: '#111827' },
     cardBody: { fontSize: 9, color: '#4b5563', lineHeight: 1.5 },
     noteBox: { backgroundColor: '#f9fafb', borderWidth: 1, borderColor: '#e5e7eb', padding: 12, borderRadius: 6, marginTop: 16 },
@@ -143,34 +142,28 @@ export async function buildReportPdf(
   const coverResults: unknown[] = [];
   if (result.eu_csf) {
     const { seal, pct } = result.eu_csf.global;
-    coverResults.push(
-      h(View, { style: styles.coverSealBox },
-        h(Text, { style: { ...styles.coverSealScore, color: SEAL_COLORS_HEX[seal] ?? '#6b7280' } }, `${Math.round(pct)}%`),
-        h(Text, { style: styles.coverSealLabel }, `EU-CSF ${levelPrefix} ${seal} — ${SEAL_LABELS[seal]}`),
-      )
-    );
+    coverResults.push(h(View, { style: styles.coverSealBox },
+      h(Text, { style: { ...styles.coverSealScore, color: SEAL_COLORS_HEX[seal] ?? '#6b7280' } }, `${Math.round(pct)}%`),
+      h(Text, { style: styles.coverSealLabel }, `EU-CSF ${levelPrefix} ${seal} — ${SEAL_LABELS[seal]}`),
+    ));
   }
   if (result.c3a) {
     const { passed, applicable, pct } = result.c3a.criterion.global;
     const ac = result.c3a.additional_criterion.global;
-    coverResults.push(
-      h(View, { style: styles.coverSealBox },
-        h(Text, { style: { ...styles.coverSealScore, color: '#374151' } }, `${Math.round(pct)}%`),
-        h(Text, { style: styles.coverSealLabel }, `C3A Criterion — ${passed}/${applicable} met${ac ? ` · AC ${ac.passed}/${ac.applicable}` : ''}`),
-      )
-    );
+    coverResults.push(h(View, { style: styles.coverSealBox },
+      h(Text, { style: { ...styles.coverSealScore, color: '#374151' } }, `${Math.round(pct)}%`),
+      h(Text, { style: styles.coverSealLabel }, `C3A Criterion — ${passed}/${applicable} met${ac ? ` · AC ${ac.passed}/${ac.applicable}` : ''}`),
+    ));
   }
   if (result.csi_composite) {
     const { csl, pct } = result.csi_composite.global;
-    coverResults.push(
-      h(View, { style: styles.coverSealBox },
-        h(Text, { style: { ...styles.coverSealScore, color: SEAL_COLORS_HEX[csl] ?? '#6b7280' } }, `${Math.round(pct)}%`),
-        h(Text, { style: styles.coverSealLabel }, `CSI Composite ${levelPrefix} ${csl} — ${SEAL_LABELS[csl]}`),
-      )
-    );
+    coverResults.push(h(View, { style: styles.coverSealBox },
+      h(Text, { style: { ...styles.coverSealScore, color: SEAL_COLORS_HEX[csl] ?? '#6b7280' } }, `${Math.round(pct)}%`),
+      h(Text, { style: styles.coverSealLabel }, `CSI Composite ${levelPrefix} ${csl} — ${SEAL_LABELS[csl]}`),
+    ));
   }
 
-  // ── EU-CSF detail page(s) ────────────────────────────────────────────────────
+  // ── EU-CSF detail pages ──────────────────────────────────────────────────────
   const euCsfPages: unknown[] = [];
   if (result.eu_csf) {
     const euObjectives = Object.values(result.eu_csf.per_objective);
@@ -178,53 +171,37 @@ export async function buildReportPdf(
     const strengths = euObjectives.filter(o => o.seal >= 3);
     const weaknesses = euObjectives.filter(o => o.seal <= 1 || (o.seal === euSeal && euSeal < 4));
 
-    euCsfPages.push(
-      h(Page, { size: 'A4', style: styles.page },
-        h(Text, { style: styles.sectionTitle }, 'EU Cloud Sovereignty Framework (EU-CSF v1.2.1)'),
-        h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
-          `Global result: ${levelPrefix} ${euSeal} — ${SEAL_LABELS[euSeal]} (${Math.round(result.eu_csf.global.pct)}%). ` +
-          `Source-faithful SEAL scoring per EU-CSF §4 (weakest-link gate) and §5 (weights 15/10/10/15/20/15/10/5).`
-        ),
-
-        h(Text, { style: styles.subSectionTitle }, 'Objective Scorecard'),
-        ...buildObjectiveScorecardSection(h as H, styles, euObjectives, 'seal', levelPrefix),
-
-        h(Text, { style: styles.subSectionTitle }, 'Strengths'),
-        strengths.length === 0
-          ? h(Text, { style: styles.bodyText }, `No objective has reached ${levelPrefix} 3 yet.`)
-          : h(View, {},
-              ...strengths.map(obj => {
-                const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
-                return h(View, { key: obj.objective_id, style: styles.strengthCard },
-                  h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.seal}, ${pct}%`),
-                );
-              }),
-            ),
-
-        h(Text, { style: styles.subSectionTitle }, 'Weaknesses'),
-        weaknesses.length === 0
-          ? h(Text, { style: styles.bodyText }, 'No significant weaknesses identified.')
-          : h(View, {},
-              ...weaknesses.map(obj => {
-                const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
-                const topGap = result.eu_csf!.gap_report.find(g => g.objective_id === obj.objective_id);
-                return h(View, { key: obj.objective_id, style: styles.weakCard },
-                  h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.seal}, ${pct}%`),
-                  topGap && h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`),
-                );
-              }),
-            ),
-
-        footer,
+    euCsfPages.push(h(Page, { size: 'A4', style: styles.page },
+      h(Text, { style: styles.sectionTitle }, 'EU Cloud Sovereignty Framework (EU-CSF v1.2.1)'),
+      h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
+        `Global result: ${levelPrefix} ${euSeal} — ${SEAL_LABELS[euSeal]} (${Math.round(result.eu_csf.global.pct)}%). ` +
+        `Weakest-link gate per EU-CSF §4. Weights per EU-CSF §5.`
       ),
-    );
-
-    euCsfPages.push(
-      h(Page, { size: 'A4', style: styles.page },
-        ...buildGapSection(h as H, styles, result.eu_csf.gap_report, criteria, 1),
-        footer,
-      )
-    );
+      h(Text, { style: styles.subSectionTitle }, 'Objective Scorecard'),
+      ...buildObjectiveScorecardSection(euObjectives, 'seal', levelPrefix),
+      h(Text, { style: styles.subSectionTitle }, 'Strengths'),
+      strengths.length === 0
+        ? h(Text, { style: styles.bodyText }, `No objective has reached ${levelPrefix} 3 yet.`)
+        : h(View, {}, ...strengths.map(obj => {
+            const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
+            return h(View, { key: obj.objective_id, style: styles.strengthCard },
+              h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.seal}, ${pct}%`),
+            );
+          })),
+      h(Text, { style: styles.subSectionTitle }, 'Weaknesses'),
+      weaknesses.length === 0
+        ? h(Text, { style: styles.bodyText }, 'No significant weaknesses identified.')
+        : h(View, {}, ...weaknesses.map(obj => {
+            const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
+            const topGap = result.eu_csf!.gap_report.find(g => g.objective_id === obj.objective_id);
+            return h(View, { key: obj.objective_id, style: styles.weakCard },
+              h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.seal}, ${pct}%`),
+              topGap ? h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`) : null,
+            );
+          })),
+      ...buildGapSection(result.eu_csf.gap_report, 'EU-CSF'),
+      footer,
+    ));
   }
 
   // ── C3A detail page ──────────────────────────────────────────────────────────
@@ -234,49 +211,44 @@ export async function buildReportPdf(
     const ac = result.c3a.additional_criterion.global;
     const failedCriteria = result.c3a.failed_criteria;
 
-    c3aPages.push(
-      h(Page, { size: 'A4', style: styles.page },
-        h(Text, { style: styles.sectionTitle }, 'BSI C3A — Criteria enabling Cloud Computing Autonomy (v1.0)'),
-        h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
-          `Criterion: ${crit.passed}/${crit.applicable} met (${Math.round(crit.pct)}%). ` +
-          (ac ? `Additional Criterion: ${ac.passed}/${ac.applicable} met (${Math.round(ac.pct)}%). ` : 'No Additional Criteria selected. ') +
-          'Binary pass/fail — no SEAL level, no partial credit.'
-        ),
-
-        h(Text, { style: styles.subSectionTitle }, 'Per-Objective Criterion Results'),
-        h(View, { style: styles.tableHeader },
-          h(Text, { style: styles.colId }, 'Objective'),
-          h(Text, { style: { ...styles.colPct, flex: 1 } }, 'Criterion'),
-          h(Text, { style: styles.colSeal }, 'AC'),
-        ),
-        ...Object.entries(result.c3a.criterion.per_objective).map(([objId, objCrit], i) => {
-          const objAc = result.c3a!.additional_criterion.per_objective[objId];
-          const color = objCrit.applicable > 0 && objCrit.pct === 100 ? '#16a34a' : objCrit.pct >= 50 ? '#f97316' : '#dc2626';
-          return h(View, { key: objId, style: i % 2 === 0 ? styles.tableRow : styles.tableRowAlt },
-            h(Text, { style: styles.colId }, objId),
-            h(Text, { style: { ...(styles.colTitle as object), color } },
-              objCrit.applicable > 0 ? `${objCrit.passed}/${objCrit.applicable} (${Math.round(objCrit.pct)}%)` : '—'
-            ),
-            h(Text, { style: styles.colSeal },
-              (objAc && objAc.applicable > 0) ? `${objAc.passed}/${objAc.applicable}` : '—'
-            ),
-          );
-        }),
-
-        failedCriteria.length > 0 && h(View, {},
-          h(Text, { style: styles.subSectionTitle }, 'Failed Criteria'),
-          ...failedCriteria.map(fc => h(View, { key: fc.question_id, style: styles.weakCard },
-            h(Text, { style: styles.cardTitle }, `${fc.question_id} — ${fc.title}`),
-            h(Text, { style: styles.cardBody }, `Tier: ${fc.tier}`),
-          )),
-        ),
-
-        footer,
-      )
-    );
+    c3aPages.push(h(Page, { size: 'A4', style: styles.page },
+      h(Text, { style: styles.sectionTitle }, 'BSI C3A — Criteria enabling Cloud Computing Autonomy (v1.0)'),
+      h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
+        `Criterion: ${crit.passed}/${crit.applicable} met (${Math.round(crit.pct)}%). ` +
+        (ac ? `Additional Criterion: ${ac.passed}/${ac.applicable} met (${Math.round(ac.pct)}%). ` : 'No Additional Criteria selected. ') +
+        'Binary pass/fail — no SEAL, no partial credit.'
+      ),
+      h(Text, { style: styles.subSectionTitle }, 'Per-Objective Results'),
+      h(View, { style: styles.tableHeader },
+        h(Text, { style: styles.colId }, 'Objective'),
+        h(Text, { style: { ...styles.colTitle } }, 'Criterion'),
+        h(Text, { style: styles.colSeal }, 'AC'),
+      ),
+      ...Object.entries(result.c3a.criterion.per_objective).map(([objId, objCrit], i) => {
+        const objAc = result.c3a!.additional_criterion.per_objective[objId];
+        const color = objCrit.applicable > 0 && objCrit.pct === 100 ? '#16a34a' : objCrit.pct >= 50 ? '#f97316' : '#dc2626';
+        return h(View, { key: objId, style: i % 2 === 0 ? styles.tableRow : styles.tableRowAlt },
+          h(Text, { style: styles.colId }, objId),
+          h(Text, { style: { ...styles.colTitle, color } },
+            objCrit.applicable > 0 ? `${objCrit.passed}/${objCrit.applicable} (${Math.round(objCrit.pct)}%)` : '—'
+          ),
+          h(Text, { style: styles.colSeal },
+            (objAc && objAc.applicable > 0) ? `${objAc.passed}/${objAc.applicable}` : '—'
+          ),
+        );
+      }),
+      failedCriteria.length > 0 ? h(View, {},
+        h(Text, { style: styles.subSectionTitle }, 'Failed Criteria'),
+        ...failedCriteria.map(fc => h(View, { key: fc.question_id, style: styles.weakCard },
+          h(Text, { style: styles.cardTitle }, `${fc.question_id} — ${fc.title}`),
+          h(Text, { style: styles.cardBody }, `Tier: ${fc.tier}`),
+        )),
+      ) : null,
+      footer,
+    ));
   }
 
-  // ── CSI Composite detail page(s) ─────────────────────────────────────────────
+  // ── CSI Composite detail pages ───────────────────────────────────────────────
   const csiPages: unknown[] = [];
   if (result.csi_composite) {
     const csiObjectives = Object.values(result.csi_composite.per_objective);
@@ -284,53 +256,37 @@ export async function buildReportPdf(
     const strengths = csiObjectives.filter(o => o.csl >= 3);
     const weaknesses = csiObjectives.filter(o => o.csl <= 1 || (o.csl === csiCsl && csiCsl < 4));
 
-    csiPages.push(
-      h(Page, { size: 'A4', style: styles.page },
-        h(Text, { style: styles.sectionTitle }, `CSI Composite (editorial framework)`),
-        h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
-          `Global result: ${levelPrefix} ${csiCsl} — ${SEAL_LABELS[csiCsl]} (${Math.round(result.csi_composite.global.pct)}%). ` +
-          `CSI editorial blend of EU-CSF and C3A. Not a source-standard certification.`
-        ),
-
-        h(Text, { style: styles.subSectionTitle }, 'Objective Scorecard'),
-        ...buildObjectiveScorecardSection(h as H, styles, csiObjectives, 'csl', levelPrefix),
-
-        h(Text, { style: styles.subSectionTitle }, 'Strengths'),
-        strengths.length === 0
-          ? h(Text, { style: styles.bodyText }, `No objective has reached ${levelPrefix} 3 yet.`)
-          : h(View, {},
-              ...strengths.map(obj => {
-                const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
-                return h(View, { key: obj.objective_id, style: styles.strengthCard },
-                  h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.csl}, ${pct}%`),
-                );
-              }),
-            ),
-
-        h(Text, { style: styles.subSectionTitle }, 'Weaknesses'),
-        weaknesses.length === 0
-          ? h(Text, { style: styles.bodyText }, 'No significant weaknesses identified.')
-          : h(View, {},
-              ...weaknesses.map(obj => {
-                const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
-                const topGap = result.csi_composite!.gap_report.find(g => g.objective_id === obj.objective_id);
-                return h(View, { key: obj.objective_id, style: styles.weakCard },
-                  h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.csl}, ${pct}%`),
-                  topGap && h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`),
-                );
-              }),
-            ),
-
-        footer,
+    csiPages.push(h(Page, { size: 'A4', style: styles.page },
+      h(Text, { style: styles.sectionTitle }, 'CSI Composite (editorial framework)'),
+      h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
+        `Global result: ${levelPrefix} ${csiCsl} — ${SEAL_LABELS[csiCsl]} (${Math.round(result.csi_composite.global.pct)}%). ` +
+        `Editorial blend of EU-CSF and C3A. Not a source-standard certification.`
       ),
-    );
-
-    csiPages.push(
-      h(Page, { size: 'A4', style: styles.page },
-        ...buildGapSection(h as H, styles, result.csi_composite.gap_report, criteria, 1),
-        footer,
-      )
-    );
+      h(Text, { style: styles.subSectionTitle }, 'Objective Scorecard'),
+      ...buildObjectiveScorecardSection(csiObjectives, 'csl', levelPrefix),
+      h(Text, { style: styles.subSectionTitle }, 'Strengths'),
+      strengths.length === 0
+        ? h(Text, { style: styles.bodyText }, `No objective has reached ${levelPrefix} 3 yet.`)
+        : h(View, {}, ...strengths.map(obj => {
+            const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
+            return h(View, { key: obj.objective_id, style: styles.strengthCard },
+              h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.csl}, ${pct}%`),
+            );
+          })),
+      h(Text, { style: styles.subSectionTitle }, 'Weaknesses'),
+      weaknesses.length === 0
+        ? h(Text, { style: styles.bodyText }, 'No significant weaknesses identified.')
+        : h(View, {}, ...weaknesses.map(obj => {
+            const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
+            const topGap = result.csi_composite!.gap_report.find(g => g.objective_id === obj.objective_id);
+            return h(View, { key: obj.objective_id, style: styles.weakCard },
+              h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.csl}, ${pct}%`),
+              topGap ? h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`) : null,
+            );
+          })),
+      ...buildGapSection(result.csi_composite.gap_report, 'CSI Composite'),
+      footer,
+    ));
   }
 
   const doc = h(Document, {},
@@ -341,7 +297,7 @@ export async function buildReportPdf(
         h(Text, { style: styles.coverSub }, companyName ?? 'Confidential Assessment'),
         h(Text, { style: styles.coverMeta }, `Date: ${dateStr}`),
         h(Text, { style: styles.coverMeta }, `Framework(s): ${frameworkNames.join(', ')}`),
-        country && h(Text, { style: styles.coverMeta }, `Country: ${country.name}`),
+        country ? h(Text, { style: styles.coverMeta }, `Country: ${country.name}`) : null,
         h(Text, { style: styles.coverMeta }, `Instrument: v${result.instrument_version}`),
         ...coverResults,
         h(Text, { style: styles.coverScopeNote },
@@ -350,36 +306,28 @@ export async function buildReportPdf(
       ),
       footer,
     ),
-
-    // Per-mode detail pages
     ...euCsfPages,
     ...c3aPages,
     ...csiPages,
-
-    // Methodology note page
+    // Methodology note
     h(Page, { size: 'A4', style: styles.page },
       h(Text, { style: styles.sectionTitle }, 'Methodology & Disclaimer'),
       h(View, { style: styles.noteBox },
         h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
           'This is a self-assessment, not a certification. Results are indicative and based solely on the responses provided.'
         ),
-        result.eu_csf && h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
+        result.eu_csf ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
           'EU-CSF results follow EU Cloud Sovereignty Framework v1.2.1 (European Commission). ' +
-          `${levelPrefix} levels use a weakest-link gate (highest level L where all criteria with contribution ≤ L are met). ` +
-          'Weights: SOV-1 15%, SOV-2 10%, SOV-3 10%, SOV-4 15%, SOV-5 20%, SOV-6 15%, SOV-7 10%, SOV-8 5%.'
-        ),
-        result.c3a && h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
-          'C3A results follow BSI Criteria enabling Cloud Computing Autonomy v1.0. ' +
-          'Scoring is binary (pass/fail). Partial answers count as not-met. ' +
-          'Additional Criteria are included only when customer-selected per C3A §1.4.'
-        ),
-        result.csi_composite && h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
-          'CSI Composite is an editorial framework blending EU-CSF and C3A criteria. ' +
-          'It is not a source-standard certification and is not affiliated with BSI or the European Commission.'
-        ),
+          `${levelPrefix} levels use a weakest-link gate. Weights: SOV-1 15%, SOV-2 10%, SOV-3 10%, SOV-4 15%, SOV-5 20%, SOV-6 15%, SOV-7 10%, SOV-8 5%.`
+        ) : null,
+        result.c3a ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
+          'C3A results follow BSI Criteria enabling Cloud Computing Autonomy v1.0. Binary pass/fail. Partial = not-met. ACs included only when customer-selected.'
+        ) : null,
+        result.csi_composite ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
+          'CSI Composite is an editorial framework blending EU-CSF and C3A. Not a source-standard certification.'
+        ) : null,
         h(Text, { style: styles.bodyText },
-          'This tool is not affiliated with or endorsed by BSI or the European Commission. ' +
-          'Published under the MIT license.'
+          'This tool is not affiliated with or endorsed by BSI or the European Commission. Published under the MIT license.'
         ),
       ),
       footer,

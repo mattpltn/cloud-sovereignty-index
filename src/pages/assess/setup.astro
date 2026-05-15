@@ -114,31 +114,22 @@ for (const ac of acQuestions) {
       <!-- C3A Additional Criteria selection (shown only when C3A is ticked) -->
       <div id="ac-panel" class="hidden">
         <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-          <h3 class="text-sm font-medium mb-1">C3A Additional Criteria (AC) — customer selection</h3>
-          <p class="text-xs text-gray-500 mb-4">
-            Per C3A §1.4, you choose which Additional Criteria apply to your assessment.
-            Selected ACs are included in the denominator of your AC % result.
-            Unselected ACs are not counted. Default: none selected.
+          <h3 class="text-sm font-medium mb-1">C3A Additional Criteria (AC)</h3>
+          <p class="text-xs text-gray-500 mb-3">
+            Per C3A §1.4, the customer selects which Additional Criteria apply. The AC % is calculated
+            only over the criteria you include here.
+            There are <strong>{acQuestions.length} Additional Criteria</strong> across {acByObjective.size} objectives
+            (vs {criteria.objectives.reduce((n, o) => n + o.questions.filter(q => q.c3a_tier === 'base' && q.applies_to_c3a).length, 0)} base criteria).
           </p>
-          <div class="space-y-4">
-            {[...acByObjective.entries()].map(([objId, group]) => (
-              <div>
-                <p class="text-xs font-semibold text-gray-600 mb-2">{objId} — {group.title}</p>
-                <div class="space-y-2">
-                  {group.questions.map(ac => (
-                    <label class="flex items-start gap-2 cursor-pointer">
-                      <input type="checkbox" name="ac_criterion" value={ac.id}
-                        class="mt-0.5 h-3.5 w-3.5 rounded border-gray-300" />
-                      <div>
-                        <span class="text-xs font-medium text-gray-800">{ac.id} — {ac.title}</span>
-                        <p class="text-xs text-gray-500 leading-snug mt-0.5">{ac.text.slice(0, 140)}{ac.text.length > 140 ? '…' : ''}</p>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" id="ac-select-all" class="h-4 w-4 rounded border-gray-300" />
+            <div>
+              <span class="text-sm font-medium text-gray-800">Include all {acQuestions.length} Additional Criteria</span>
+              <p class="text-xs text-gray-500 mt-0.5">Uncheck to exclude ACs from your result (AC % will not be reported).</p>
+            </div>
+          </label>
+          <!-- Hidden inputs populated by JS when checkbox is ticked -->
+          <div id="ac-hidden-inputs"></div>
         </div>
       </div>
 
@@ -173,13 +164,15 @@ for (const ac of acQuestions) {
     window.__turnstileToken = '';
     function onTurnstileSolved(token) { window.__turnstileToken = token; }
   </script>
-  <script define:vars={{ euCodes: [...euCodes] }}>
+  <script define:vars={{ euCodes: [...euCodes], allAcIds: acQuestions.map(q => q.id) }}>
     const euSet = new Set(euCodes);
     const select = document.getElementById('country-select');
     const variantInput = document.getElementById('variant-input');
     const badge = document.getElementById('variant-badge');
     const c3aCheckbox = document.getElementById('fw-c3a');
     const acPanel = document.getElementById('ac-panel');
+    const acSelectAll = document.getElementById('ac-select-all');
+    const acHiddenInputs = document.getElementById('ac-hidden-inputs');
     const frameworkError = document.getElementById('framework-error');
 
     select.addEventListener('change', () => {
@@ -200,6 +193,20 @@ for (const ac of acQuestions) {
     // Show/hide AC panel when C3A is ticked
     c3aCheckbox.addEventListener('change', () => {
       acPanel.classList.toggle('hidden', !c3aCheckbox.checked);
+    });
+
+    // "Include all ACs" checkbox: populate/clear hidden inputs
+    acSelectAll.addEventListener('change', () => {
+      acHiddenInputs.innerHTML = '';
+      if (acSelectAll.checked) {
+        allAcIds.forEach(id => {
+          const inp = document.createElement('input');
+          inp.type = 'hidden';
+          inp.name = 'ac_criterion';
+          inp.value = id;
+          acHiddenInputs.appendChild(inp);
+        });
+      }
     });
 
     const form = document.getElementById('setup-form');
