@@ -1,6 +1,6 @@
 # Cloud Sovereignty Index
 
-Assess your cloud provider's sovereignty posture against the **EU Cloud Sovereignty Framework v1.2.1**, powered by BSI C5:2026 criteria.
+Assess your cloud provider's sovereignty posture against **EU-CSF**, **BSI C3A**, or **CSI Composite** — three independent, source-faithful frameworks in one tool.
 
 **Live tool → [cloud-sovereignty-index.pages.dev](https://cloud-sovereignty-index.pages.dev)**
 
@@ -8,51 +8,77 @@ Assess your cloud provider's sovereignty posture against the **EU Cloud Sovereig
 
 ## What it does
 
-The Cloud Sovereignty Index guides you through a structured assessment of a cloud service across 8 sovereignty objectives:
+The Cloud Sovereignty Index guides you through a structured self-assessment of a cloud service across 8 sovereignty objectives:
 
 - Strategic · Legal · Data · Operational · Supply Chain · Technology · Security · Sustainability
 
-Each question maps to a BSI C5:2026 control. Answers produce a weighted **0–100% score** and a **sovereignty level** (0–4).
+You choose which framework(s) to assess against. Each produces a completely independent result — no combined cross-mode score.
 
-The level is displayed as **SEAL** (Sovereignty Evaluation and Assurance Level) for EU/EEA assessments and **CSL** (Cloud Sovereignty Level) for non-EU assessments. Both use identical methodology — only the label differs.
+| Framework | Source | Output | Scope |
+|-----------|--------|--------|-------|
+| **EU-CSF** | EU Cloud Sovereignty Framework v1.2.1 (European Commission) | SEAL 0–4 per objective | SOV-1 – SOV-8 |
+| **C3A** | BSI Criteria enabling Cloud Computing Autonomy v1.0 | % Criterion met + % AC met | SOV-1 – SOV-6 |
+| **CSI Composite** | CSI editorial framework | CSL 0–4 (SEAL for EU/EEA) | SOV-1 – SOV-8 |
+
+**Scope: cloud sovereignty only.** Security attestation (ISO 27001, SOC 2, BSI C5:2026) is assumed and not assessed. C5 is presupposed, not a CSI source.
+
+---
+
+## EU-CSF mode
+
+Source-faithful SEAL scoring per EU-CSF §4 (weakest-link gate) and §5 (objective weights). `partial` counts as half points but does not satisfy the SEAL gate.
 
 | Level | Label |
 |-------|-------|
 | 0 | No Sovereignty |
-| 1 | Minimal Sovereignty |
-| 2 | Partial Sovereignty |
-| 3 | Substantial Sovereignty |
+| 1 | Jurisdictional Sovereignty |
+| 2 | Data Sovereignty |
+| 3 | Digital Resilience |
 | 4 | Full Digital Sovereignty |
 
-The % score awards partial credit across all criteria. The SEAL/CSL level uses a stricter pass/fail gate per objective — a single unanswered foundational criterion caps the level regardless of overall score.
+The SEAL is the highest level L where **all** criteria with contribution ≤ L are answered Yes. Overall SEAL = minimum across objectives.
+
+---
+
+## C3A mode
+
+Binary pass/fail per criterion (C3A §1.3). `partial` counts as not-met. Two tiers:
+
+- **Criterion** — base criteria, always in scope
+- **Additional Criterion (AC)** — customer-selected before the assessment (C3A §1.4). Only selected ACs enter the denominator.
+
+No SEAL, no partial credit, no SOV-7/8.
+
+---
+
+## CSI Composite mode
+
+Editorial blend of EU-CSF and C3A. Same SEAL/CSL levels and scoring logic as EU-CSF, adapted for global organisations. Labeled **CSL** for non-EU assessments to avoid implying EU procurement compliance.
 
 ---
 
 ## Variants
 
-| Variant | Metric | Who it's for |
-|---------|--------|-------------|
-| **EU / EEA** | SEAL | Organisations in EU or EEA member states. Includes an optional national tier with country-specific criteria (e.g. ANSSI for France, BSI for Germany). |
-| **Global** | CSL | Any country outside the EU. Same criteria, with your country substituted for geographic references. No second (EU bloc) tier. |
-
-The framework was originally designed around Germany and the BSI. The EU and global variants are simulations of how the same principles apply elsewhere — not official certifications. "CSL" is used instead of "SEAL" for non-EU assessments to avoid implying EU procurement compliance.
+| Variant | Frameworks | Who it's for |
+|---------|-----------|-------------|
+| **EU / EEA** | EU-CSF · C3A · CSI Composite | EU/EEA organisations. Includes a national tier for country-specific criteria. |
+| **Global** | CSI Composite | Any country. Country substituted for geographic references. No second (EU bloc) tier. |
 
 ---
 
 ## Offline workflow
 
-Don't want to answer questions in the browser? Download a blank **XLSX template** at `/assess/template.xlsx`, fill it in (or send it to your cloud provider), then upload it on the setup page to generate your score. The template has:
+Download a blank **XLSX template** at `/assess/template.xlsx`, fill it in, then upload it on the setup page.
 
-- **Setup sheet** — country dropdown, optional company name
-- **EU Assessment sheet** — all questions with answer dropdowns
-- **Global Assessment sheet** — same, without national tier
+- **Setup sheet** — country, company name, framework checkboxes (EU-CSF / C3A / CSI Composite)
+- **Assessment sheet** — all questions with evidence and answer columns
 - **Privacy sheet** — what data is and isn't stored
 
 ---
 
-## Not affiliated with BSI
+## Not affiliated with BSI or the European Commission
 
-This tool is community-built and **not affiliated with or endorsed by the German Federal Office for Information Security (BSI)**. It is a recommendation tool, not a certification. Official C5 attestations require a licensed auditor.
+This tool is community-built and **not affiliated with or endorsed by the German Federal Office for Information Security (BSI) or the European Commission**. It is a self-assessment tool, not a certification. Official EU-CSF and C3A audits require licensed auditors.
 
 ---
 
@@ -62,8 +88,6 @@ This tool is community-built and **not affiliated with or endorsed by the German
 - Assessments stored under a random ID — the URL is the access control
 - Company name stored only if you provide it
 - Assessments inactive for 12 months are deleted
-
-Full policy: [cloud-sovereignty-index.pages.dev/privacy](https://cloud-sovereignty-index.pages.dev/privacy)
 
 ---
 
@@ -111,7 +135,7 @@ Open [localhost:4321](http://localhost:4321). The Vite dev server proxies `/api/
 pnpm test
 ```
 
-36 unit tests cover the scoring engine and tier resolution logic.
+48 unit tests cover the scoring engine (EU-CSF, C3A, CSI Composite, multi-mode), tier resolution, and schema validation.
 
 ---
 
@@ -132,5 +156,5 @@ Deployed automatically on push to `main`:
 
 ## Based on
 
-- [EU Cloud Sovereignty Framework v1.2.1](https://digitaleurope.org/resources/cloud-sovereignty/)
-- [BSI C5:2026](https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html)
+- [EU Cloud Sovereignty Framework v1.2.1](https://digital-strategy.ec.europa.eu/en/policies/cloud-sovereignty)
+- [BSI C3A — Criteria enabling Cloud Computing Autonomy v1.0](https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/CloudComputing/C3A/BSI-C3A-v1.0.pdf)
