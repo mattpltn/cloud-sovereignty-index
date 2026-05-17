@@ -157,14 +157,16 @@ export async function buildReportPdf(
 
   // Maturity progress bar (CSI Composite, non-EU)
   const CSI_TIER_LABELS = ['Foundational', 'Developing', 'Advanced', 'Pioneering'];
+  const CSI_TIER_RANGES = ['0–40%', '41–70%', '71–90%', '91–100%'];
   const CSI_TIER_COLORS = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];
-  const CSI_TIER_WIDTHS = [0.40, 0.30, 0.20, 0.10]; // proportional segment widths
+  const CSI_TIER_WIDTHS = [0.40, 0.30, 0.20, 0.10];
 
-  function buildMaturityBar(pct: number, csl: number) {
-    const BAR_W = 400;
-    const BAR_H = 20;
-    const LABEL_H = 14;
-    const TOTAL_H = BAR_H + LABEL_H + 20;
+  function buildMaturityBar(pct: number, csl: number, pctToNext: number | null) {
+    const BAR_W = 440;
+    const BAR_H = 22;
+    const MARKER_ABOVE = 16; // space for score label above bar
+    const LABEL_H = 24;     // space for two lines below (name + range)
+    const TOTAL_H = MARKER_ABOVE + BAR_H + LABEL_H;
 
     let offsetX = 0;
     const segments = CSI_TIER_WIDTHS.map((w, i) => {
@@ -174,39 +176,66 @@ export async function buildReportPdf(
       return { x, w: segW, i };
     });
 
-    const markerX = Math.round((pct / 100) * BAR_W);
+    const markerX = Math.min(Math.round((pct / 100) * BAR_W), BAR_W - 1);
+    const markerY0 = MARKER_ABOVE;
+    const markerY1 = MARKER_ABOVE + BAR_H;
 
-    return h(View, { style: { marginVertical: 8 } },
-      h(Text, { style: { fontSize: 9, color: '#374151', marginBottom: 4, fontFamily: 'Helvetica-Bold' } }, 'Progressive Sovereignty Maturity'),
+    return h(View, { style: { marginVertical: 10 } },
+      h(Text, { style: { fontSize: 9, color: '#374151', marginBottom: 6, fontFamily: 'Helvetica-Bold' } },
+        'Progressive Sovereignty Maturity'
+      ),
       h(Svg as any, { width: BAR_W, height: TOTAL_H },
-        // Segments
-        ...segments.map(seg =>
-          h(Rect as any, {
+        // Bar segments
+        ...segments.map(seg => {
+          const isActive = seg.i === csl;
+          const isPast   = seg.i < csl;
+          return h(Rect as any, {
             key: seg.i,
-            x: seg.x, y: 0, width: seg.w, height: BAR_H,
-            rx: seg.i === 0 ? 4 : (seg.i === 3 ? 4 : 0),
-            fill: seg.i === csl ? CSI_TIER_COLORS[csl] : '#e5e7eb',
-          })
-        ),
-        // Tier boundary lines
+            x: seg.x, y: markerY0, width: seg.w, height: BAR_H,
+            rx: seg.i === 0 ? 3 : (seg.i === 3 ? 3 : 0),
+            fill: isActive ? CSI_TIER_COLORS[csl] : isPast ? CSI_TIER_COLORS[seg.i] : '#e5e7eb',
+            opacity: isPast ? 0.35 : 1,
+          });
+        }),
+        // Divider lines between segments
         ...segments.slice(1).map(seg =>
-          h(Line as any, { key: seg.i, x1: seg.x, y1: 0, x2: seg.x, y2: BAR_H, stroke: '#ffffff', strokeWidth: 1.5 })
+          h(Line as any, { key: seg.i, x1: seg.x, y1: markerY0, x2: seg.x, y2: markerY1, stroke: '#fff', strokeWidth: 1.5 })
         ),
-        // Current score marker
-        h(Line as any, { x1: markerX, y1: -4, x2: markerX, y2: BAR_H + 4, stroke: '#111827', strokeWidth: 1.5 }),
-        // Score label above marker
-        h(Text as any, { x: markerX, y: -6, fontSize: 8, fill: '#111827', textAnchor: 'middle', fontWeight: 'bold' }, `${Math.round(pct)}%`),
-        // Segment labels below
+        // Score marker line
+        h(Line as any, { x1: markerX, y1: markerY0 - 2, x2: markerX, y2: markerY1 + 2, stroke: '#111827', strokeWidth: 2 }),
+        // Score label above marker (small triangle + number)
+        h(Text as any, {
+          x: markerX, y: markerY0 - 4,
+          fontSize: 8, fill: '#111827', textAnchor: 'middle', fontFamily: 'Helvetica-Bold',
+        }, `${Math.round(pct)}%`),
+        // Tier name labels below bar
+        ...segments.map(seg => {
+          const isActive = seg.i === csl;
+          return h(Text as any, {
+            key: `name-${seg.i}`,
+            x: seg.x + seg.w / 2, y: markerY1 + 10,
+            fontSize: isActive ? 7 : 6,
+            fill: isActive ? CSI_TIER_COLORS[csl] : '#9ca3af',
+            textAnchor: 'middle',
+            fontFamily: isActive ? 'Helvetica-Bold' : 'Helvetica',
+          }, CSI_TIER_LABELS[seg.i]);
+        }),
+        // Range labels below tier names
         ...segments.map(seg =>
           h(Text as any, {
-            key: seg.i,
-            x: seg.x + seg.w / 2, y: BAR_H + 10,
-            fontSize: 6,
-            fill: seg.i === csl ? CSI_TIER_COLORS[csl] : '#9ca3af',
-            textAnchor: 'middle',
-            fontWeight: seg.i === csl ? 'bold' : 'normal',
-          }, CSI_TIER_LABELS[seg.i])
+            key: `range-${seg.i}`,
+            x: seg.x + seg.w / 2, y: markerY1 + 20,
+            fontSize: 5.5, fill: '#c4c4c4', textAnchor: 'middle',
+          }, CSI_TIER_RANGES[seg.i])
         ),
+        // "→ next tier" arrow on the right edge of current segment if not pioneering
+        ...(pctToNext !== null && pctToNext > 0 && csl < 3 ? [
+          h(Text as any, {
+            x: segments[csl].x + segments[csl].w - 2,
+            y: markerY0 + BAR_H / 2 + 3,
+            fontSize: 8, fill: '#ffffff', textAnchor: 'end',
+          }, `+${pctToNext}% →`),
+        ] : []),
       ),
     );
   }
@@ -444,7 +473,7 @@ export async function buildReportPdf(
           : `Global result: ${levelPrefix} ${csiCsl} — ${csiTierLabel} (${Math.round(csiPct)}%). Editorial blend of EU-CSF and C3A. Not a source-standard certification.`
       ),
       // Maturity bar (non-EU only)
-      isGeneralized ? buildMaturityBar(csiPct, csiCsl) : null,
+      isGeneralized ? buildMaturityBar(csiPct, csiCsl, pctToNext) : null,
       buildRadarChart(csiObjectives, csiLevelColors, 'csl'),
       h(Text, { style: styles.subSectionTitle }, 'Objective Scorecard'),
       ...buildObjectiveScorecardSection(csiObjectives, 'csl', isGeneralized ? 'Tier' : levelPrefix),

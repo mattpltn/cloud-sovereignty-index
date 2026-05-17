@@ -62,6 +62,66 @@ function C3aCard({ c3a }: { c3a: C3aResult }) {
   );
 }
 
+// Tier definitions: label, color, min%, max%, segment width as % of bar
+const CSI_TIERS = [
+  { label: 'Foundational', color: '#dc2626', min: 0,  max: 40,  w: 40 },
+  { label: 'Developing',   color: '#f97316', min: 41, max: 70,  w: 30 },
+  { label: 'Advanced',     color: '#22c55e', min: 71, max: 90,  w: 20 },
+  { label: 'Pioneering',   color: '#16a34a', min: 91, max: 100, w: 10 },
+];
+
+function MaturityBar({ pct, csl }: { pct: number; csl: number }) {
+  const rounded = Math.round(pct);
+  return (
+    <div className="mt-4">
+      {/* Segmented bar */}
+      <div className="relative flex h-5 rounded-full overflow-hidden">
+        {CSI_TIERS.map((tier, i) => (
+          <div
+            key={i}
+            className="transition-all"
+            style={{
+              width: `${tier.w}%`,
+              backgroundColor: i === csl ? tier.color : '#e5e7eb',
+              opacity: i > csl ? 0.4 : 1,
+            }}
+          />
+        ))}
+        {/* Score marker */}
+        <div
+          className="absolute top-0 bottom-0 w-0.5 bg-gray-900"
+          style={{ left: `${Math.min(rounded, 99)}%` }}
+        />
+        {/* Score label on marker */}
+        <div
+          className="absolute -top-5 text-[10px] font-bold text-gray-800 -translate-x-1/2"
+          style={{ left: `${Math.min(rounded, 99)}%` }}
+        >
+          {rounded}%
+        </div>
+      </div>
+      {/* Tier labels below */}
+      <div className="flex mt-1">
+        {CSI_TIERS.map((tier, i) => (
+          <div
+            key={i}
+            className="flex flex-col items-center"
+            style={{ width: `${tier.w}%` }}
+          >
+            <span
+              className="text-[9px] font-semibold leading-tight truncate px-0.5"
+              style={{ color: i === csl ? tier.color : i < csl ? '#9ca3af' : '#d1d5db' }}
+            >
+              {tier.label}
+            </span>
+            <span className="text-[8px] text-gray-400 leading-tight">{tier.min}–{tier.max}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function CsiCard({ csi, variant }: { csi: CsiCompositeResult; variant: string }) {
   const isGeneralized = variant === 'Generalized';
   const csl = csi.global.csl;
@@ -70,26 +130,28 @@ function CsiCard({ csi, variant }: { csi: CsiCompositeResult; variant: string })
 
   const color = isGeneralized ? (CSI_MATURITY_COLORS[csl] ?? '#6b7280') : (SEAL_COLORS[csl] ?? '#6b7280');
   const label = isGeneralized ? (CSI_MATURITY_NAMES[csl] ?? `Tier ${csl}`) : (SEAL_NAMES[csl] ?? `Level ${csl}`);
-  const nextLabel = isGeneralized && pctToNext !== null ? CSI_MATURITY_NAMES[csl + 1] : null;
 
   return (
     <div className="border border-blue-100 bg-blue-50 rounded-xl p-6 flex-1 min-w-0">
       <div className="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-3">CSI Composite <span className="normal-case font-normal text-blue-400">(editorial)</span></div>
       <div className="text-5xl font-bold tabular-nums mb-2" style={{ color }}>{Math.round(pct)}%</div>
-      <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium text-white mb-2"
+      <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium text-white mb-3"
         style={{ backgroundColor: color }}>
         {isGeneralized ? label : `${variant === 'EU-CSF' ? 'SEAL' : 'CSL'} ${csl} — ${label}`}
       </div>
-      <p className="text-xs text-gray-500 mb-2">
+      {isGeneralized && <MaturityBar pct={pct} csl={csl} />}
+      <p className="text-xs text-gray-500 mt-3">
         CSI editorial blend of EU-CSF + C3A. Not a source-standard certification.
       </p>
-      {isGeneralized && nextLabel && pctToNext !== null && pctToNext > 0 && (
-        <div className="mt-3 pt-3 border-t border-blue-200">
-          <p className="text-xs font-medium text-blue-700">To reach {nextLabel}: {pctToNext}% more needed</p>
+      {isGeneralized && pctToNext !== null && pctToNext > 0 && (
+        <div className="mt-2 pt-2 border-t border-blue-200">
+          <p className="text-xs font-medium text-blue-700">
+            To reach {CSI_MATURITY_NAMES[csl + 1]}: {pctToNext}% more needed
+          </p>
         </div>
       )}
       {isGeneralized && pctToNext === null && (
-        <div className="mt-3 pt-3 border-t border-blue-200">
+        <div className="mt-2 pt-2 border-t border-blue-200">
           <p className="text-xs font-medium text-green-700">Pioneering tier achieved.</p>
         </div>
       )}
