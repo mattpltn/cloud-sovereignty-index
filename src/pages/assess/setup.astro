@@ -55,6 +55,8 @@ for (const ac of acQuestions) {
       Upload a filled template to get started instantly, or configure your assessment manually below.
     </p>
 
+    <div class="cf-turnstile mb-6" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA'} data-theme="light" data-callback="onTurnstileSolved"></div>
+
     <div id="import" class="mb-2">
       <p class="text-xs text-gray-500 mb-3">
         Country, company, and framework settings are read from your file automatically — no need to fill the form below.
@@ -151,8 +153,6 @@ for (const ac of acQuestions) {
         </div>
       </div>
 
-      <div class="cf-turnstile" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA'} data-theme="light" data-callback="onTurnstileSolved"></div>
-
       <button type="submit" id="submit-btn"
         class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
         Start assessment
@@ -229,7 +229,7 @@ for (const ac of acQuestions) {
       const variant = fd.get('variant');
       const national_country = fd.get('national_country') || undefined;
       const company_name = (fd.get('company_name') || '').trim() || undefined;
-      const turnstile_token = fd.get('cf-turnstile-response') ?? 'test-token';
+      const turnstile_token = (window.__turnstileToken) || 'test-token';
 
       let hasError = false;
       if (!national_country) {
