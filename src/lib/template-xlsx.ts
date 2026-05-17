@@ -185,9 +185,21 @@ function addAssessmentSheet(
       const applyCsi = q.applies_to_csi_composite ?? false;
 
       if (q.type === 'single') {
-        const text = resolvePlaceholders(q.text, ctx);
-        const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, text, '', '', '', '', '', '', '']);
-        applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+        if (q.text_generalized) {
+          // Emit EU-specific and generalized rows; conditional formatting greys the irrelevant one
+          const euText  = resolvePlaceholders(q.text, ctx);
+          const genText = resolvePlaceholders(q.text_generalized, ctx);
+          const euTitle  = q.title;
+          const genTitle = q.title_generalized ?? q.title;
+          const euRow  = ws.addRow([q.id, 'eu_csf',      c3aTier, obj.id, euTitle,  euText,  '', '', '', '', '', '', '']);
+          applyDataRow(euRow,  q.id, euText,  fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+          const genRow = ws.addRow([q.id, 'generalized', c3aTier, obj.id, genTitle, genText, '', '', '', '', '', '', '']);
+          applyDataRow(genRow, q.id, genText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+        } else {
+          const text = resolvePlaceholders(q.text, ctx);
+          const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, text, '', '', '', '', '', '', '']);
+          applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+        }
       } else {
         // Always emit both bloc and national rows.
         // Bloc rows are greyed out for non-EU countries via conditional formatting on the Setup country cell.
@@ -218,14 +230,27 @@ function addAssessmentSheet(
     }],
   });
 
-  // Rule 2: grey out bloc-tier rows when a non-EU/EEA country is selected in Setup!C5.
-  // LEN(...)>=2 ensures the rule only fires once a country is actually chosen.
+  // Rule 2: grey out EU-only rows (bloc, eu_csf) when a non-EU/EEA country is selected.
   ws.addConditionalFormatting({
     ref: 'A2:M500',
     rules: [{
       type: 'expression',
       priority: 2,
-      formulae: ['AND($B2="bloc",LEN(Setup!$C$5)>=2,NOT(ISNUMBER(MATCH(LEFT(Setup!$C$5,2),__eu_codes__!$A:$A,0))))'],
+      formulae: ['AND(OR($B2="bloc",$B2="eu_csf"),LEN(Setup!$C$5)>=2,NOT(ISNUMBER(MATCH(LEFT(Setup!$C$5,2),__eu_codes__!$A:$A,0))))'],
+      style: {
+        font: { color: { argb: 'FFB0B7C3' } },
+        fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FFF3F4F6' } },
+      },
+    }],
+  });
+
+  // Rule 3: grey out generalized rows when an EU/EEA country is selected.
+  ws.addConditionalFormatting({
+    ref: 'A2:M500',
+    rules: [{
+      type: 'expression',
+      priority: 3,
+      formulae: ['AND($B2="generalized",LEN(Setup!$C$5)>=2,ISNUMBER(MATCH(LEFT(Setup!$C$5,2),__eu_codes__!$A:$A,0)))'],
       style: {
         font: { color: { argb: 'FFB0B7C3' } },
         fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FFF3F4F6' } },
@@ -494,7 +519,8 @@ export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
       const rawAns = cellStr(row.getCell(answerCol)).toLowerCase().trim();
       if (!qid || !VALID_ANSWERS.has(rawAns)) return;
 
-      const key = tier === 'single' ? qid : `${qid}:${tier}`;
+      // eu_csf and generalized rows represent the same single question — store under plain qid
+      const key = (tier === 'single' || tier === 'eu_csf' || tier === 'generalized') ? qid : `${qid}:${tier}`;
       answers[key] = { tier, value: rawAns };
       hasAnswers = true;
     });
