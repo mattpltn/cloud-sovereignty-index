@@ -160,7 +160,7 @@ for (const ac of acQuestions) {
   </main>
 
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <script>
+  <script is:inline>
     window.__turnstileToken = '';
     function onTurnstileSolved(token) { window.__turnstileToken = token; }
   </script>

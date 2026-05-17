@@ -156,9 +156,9 @@ function addAssessmentSheet(
     row.fill = fill;
     row.getCell(6).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(3).value = c3aTier;
-    row.getCell(7).value = applyEuCsf ? 'TRUE' : 'FALSE';
-    row.getCell(8).value = applyC3a ? 'TRUE' : 'FALSE';
-    row.getCell(9).value = applyCsi ? 'TRUE' : 'FALSE';
+    row.getCell(7).value = applyEuCsf;
+    row.getCell(8).value = applyC3a;
+    row.getCell(9).value = applyCsi;
     row.getCell(10).value = EVIDENCE_EXPECTED[qid] ?? '';
     row.getCell(10).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(11).alignment = { wrapText: true, vertical: 'top' };
@@ -195,6 +195,22 @@ function addAssessmentSheet(
       }
     }
   }
+
+  // Grey out rows where none of the user's selected frameworks apply.
+  // Formula is anchored on columns G/H/I (framework flags) and cross-references Setup toggles.
+  // Applied as a "does not apply" rule: greys out when the row has no match.
+  ws.addConditionalFormatting({
+    ref: 'A2:M500',
+    rules: [{
+      type: 'expression',
+      priority: 1,
+      formulae: ['NOT(OR(AND(Setup!$C$7="yes",$G2),AND(Setup!$C$8="yes",$H2),AND(Setup!$C$9="yes",$I2)))'],
+      style: {
+        font: { color: { argb: 'FFB0B7C3' } },
+        fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FFF3F4F6' } },
+      },
+    }],
+  });
 
   // Sheet protection: unlock CSP-filled columns K, L, M (11, 12, 13)
   ws.protect('', {
@@ -310,7 +326,7 @@ export async function buildTemplateXlsx(
   setup.getRow(11).height = 16;
   setup.mergeCells('B11:C11');
   const instrCell = setup.getCell('B11');
-  instrCell.value = '→ Fill in the "Assessment" sheet — national tier rows apply for EU/EEA countries only.';
+  instrCell.value = '→ Fill in the "Assessment" sheet. Rows greyed out = not required for your selected framework(s).';
   instrCell.font = { italic: true, color: { argb: 'FF1D4ED8' } };
 
   setup.getRow(12).height = 16;
