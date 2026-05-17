@@ -122,6 +122,14 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
 
       const variant = detectedVariant ?? defaultVariant;
 
+      // Derive AC IDs from answered questions — any AC question with an answer was intentionally included
+      const acQuestionIds = new Set(
+        criteria.objectives.flatMap(obj =>
+          obj.questions.filter(q => q.c3a_tier === 'additional').map(q => q.id)
+        )
+      );
+      const customer_selected_ac_ids = Object.keys(answers!).filter(key => acQuestionIds.has(key));
+
       // Read Turnstile token stored by the callback on the page
       const turnstile_token = (window as Record<string, unknown>).__turnstileToken as string || 'test-token';
 
@@ -136,6 +144,7 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
           company_name: detectedCompany || undefined,
           turnstile_token,
           selected_frameworks: detectedFrameworks ?? ['csi_composite'],
+          customer_selected_ac_ids,
         }),
       });
 
