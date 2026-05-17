@@ -97,6 +97,7 @@ function cellStr(cell: ExcelJS.Cell): string {
 function addAssessmentSheet(
   wb: ExcelJS.Workbook,
   criteria: CriteriaFile,
+  variant: 'EU-CSF' | 'Generalized',
   country?: Country,
 ) {
   const ws = wb.addWorksheet('Assessment');
@@ -149,7 +150,7 @@ function addAssessmentSheet(
 
   ws.views = [{ state: 'frozen', ySplit: 1 }];
 
-  const ctx = { variant: 'EU-CSF' as const, country };
+  const ctx = { variant, country };
 
   function applyDataRow(row: ExcelJS.Row, qid: string, text: string, fill: ExcelJS.Fill,
     c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean) {
@@ -183,14 +184,25 @@ function addAssessmentSheet(
         const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, text, '', '', '', '', '', '', '']);
         applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
       } else {
-        const blocText = resolvePlaceholders(q.tiers.bloc.text.replace(/\{\{BLOC\}\}/g, 'EU'), ctx);
-        const blocRow = ws.addRow([q.id, 'bloc', c3aTier, obj.id, q.title, blocText, '', '', '', '', '', '', '']);
-        applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+        if (variant === 'Generalized') {
+          // Non-EU: no supranational bloc — emit national tier only (or bloc if no national tier)
+          const tierText = q.tiers.national
+            ? resolvePlaceholders(q.tiers.national.text, ctx)
+            : resolvePlaceholders(q.tiers.bloc.text, ctx);
+          const tierKey = q.tiers.national ? 'national' : 'bloc';
+          const row = ws.addRow([q.id, tierKey, c3aTier, obj.id, q.title, tierText, '', '', '', '', '', '', '']);
+          applyDataRow(row, q.id, tierText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+        } else {
+          // EU-CSF: emit both bloc and national rows
+          const blocText = resolvePlaceholders(q.tiers.bloc.text, ctx);
+          const blocRow = ws.addRow([q.id, 'bloc', c3aTier, obj.id, q.title, blocText, '', '', '', '', '', '', '']);
+          applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
 
-        if (q.tiers.national) {
-          const natText = resolvePlaceholders(q.tiers.national.text, ctx);
-          const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
-          applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+          if (q.tiers.national) {
+            const natText = resolvePlaceholders(q.tiers.national.text, ctx);
+            const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
+            applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+          }
         }
       }
     }
@@ -269,6 +281,7 @@ export async function buildTemplateXlsx(
   setup.getCell('B5').font = { bold: true };
   setup.getCell('C5').fill = INPUT_FILL;
   setup.getCell('C5').border = { bottom: { style: 'thin', color: { argb: 'FFCA8A04' } } };
+  if (selectedCountry) setup.getCell('C5').value = `${selectedCountry.code} — ${selectedCountry.name}`;
 
   // Build sorted country list
   const allCountries: Country[] = [
@@ -280,6 +293,11 @@ export async function buildTemplateXlsx(
   const selectedCountry = selectedCountryCode
     ? allCountries.find(c => c.code === selectedCountryCode)
     : undefined;
+
+  const euCodes = new Set([...countries.EU.map(c => c.code), ...countries.EEA_non_EU.map(c => c.code)]);
+  const variant: 'EU-CSF' | 'Generalized' = selectedCountry && !euCodes.has(selectedCountry.code)
+    ? 'Generalized'
+    : 'EU-CSF';
 
   // Write country list to a hidden helper column (Z) for data validation
   // ExcelJS list validation from a range is more reliable than a giant inline string
@@ -334,8 +352,13 @@ export async function buildTemplateXlsx(
   setup.getCell('B12').value = 'Once filled in, save this file and upload it at: cloudsovereigntyindex.org/assess/setup';
   setup.getCell('B12').font = { color: { argb: 'FF6B7280' } };
 
+  // Hidden row — stores variant so parseXlsx can read it back without re-deriving from country codes
+  setup.getRow(13).hidden = true;
+  setup.getCell('B13').value = 'variant';
+  setup.getCell('C13').value = variant;
+
   // ── Sheet 2: Assessment questions (single merged sheet) ─────────────────────
-  addAssessmentSheet(wb, criteria, selectedCountry);
+  addAssessmentSheet(wb, criteria, variant, selectedCountry);
 
   // ── Sheet 4: Privacy ───────────────────────────────────────────────────────
   const privacy = wb.addWorksheet('Privacy');
@@ -416,6 +439,9 @@ export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
     if (cellStr(setupSheet.getCell('C7')).toLowerCase() === 'yes') selected_frameworks.push('eu_csf');
     if (cellStr(setupSheet.getCell('C8')).toLowerCase() === 'yes') selected_frameworks.push('c3a');
     if (cellStr(setupSheet.getCell('C9')).toLowerCase() === 'yes') selected_frameworks.push('csi_composite');
+    // Variant stored in hidden row 13 (v2.1+ templates)
+    const variantCell = cellStr(setupSheet.getCell('C13')).trim();
+    if (variantCell === 'EU-CSF' || variantCell === 'Generalized') variant = variantCell;
   }
 
   // Read the merged Assessment sheet (v2.0) or legacy EU/Global sheets (v1.x)
@@ -425,8 +451,9 @@ export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
     { name: 'Global Assessment', isEU: false },
   ];
 
+  // For v2.1+ templates variant is already set from Setup!C13; for legacy sheets derive from sheet name
   const sheetsToRead = assessmentSheet
-    ? [{ ws: assessmentSheet, isEU: true }]
+    ? [{ ws: assessmentSheet, isEU: variant !== 'Generalized' }]
     : legacySheets.map(s => ({ ws: wb.getWorksheet(s.name), isEU: s.isEU })).filter(s => !!s.ws);
 
   for (const { ws, isEU } of sheetsToRead) {
