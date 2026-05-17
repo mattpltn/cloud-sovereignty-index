@@ -98,6 +98,7 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
       let detectedCountry: string | undefined;
       let detectedCompany: string | undefined;
       let detectedVariant: 'EU-CSF' | 'Generalized' | undefined;
+      let detectedFrameworks: string[] | undefined;
 
       if (file.name.endsWith('.xlsx')) {
         const buf = await file.arrayBuffer();
@@ -106,6 +107,7 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
         detectedCountry = parsed.country_code;
         detectedCompany = parsed.company_name;
         detectedVariant = parsed.variant;
+        detectedFrameworks = parsed.selected_frameworks;
       } else if (file.name.endsWith('.json')) {
         ({ answers, error: parseError } = parseJson(await file.text()));
       } else {
@@ -133,6 +135,7 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
           user_role: 'customer',
           company_name: detectedCompany || undefined,
           turnstile_token,
+          selected_frameworks: detectedFrameworks ?? ['csi_composite'],
         }),
       });
 

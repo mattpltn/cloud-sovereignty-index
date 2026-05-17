@@ -50,10 +50,28 @@ for (const ac of acQuestions) {
   </header>
 
   <main class="max-w-xl mx-auto px-6 py-12">
-    <h1 class="text-2xl font-bold mb-2">Configure your assessment</h1>
+    <h1 class="text-2xl font-bold mb-2">Set up your assessment</h1>
     <p class="text-gray-600 text-sm mb-8">
-      Select your country and which framework(s) to assess against. Each selected framework is evaluated independently.
+      Upload a filled template to get started instantly, or configure your assessment manually below.
     </p>
+
+    <div id="import" class="mb-2">
+      <p class="text-xs text-gray-500 mb-3">
+        Country, company, and framework settings are read from your file automatically — no need to fill the form below.
+      </p>
+      <ImportAssessment
+        client:load
+        criteria={criteria}
+        countries={countriesJson}
+        defaultVariant="EU-CSF"
+      />
+    </div>
+
+    <div class="relative flex items-center py-6">
+      <div class="flex-grow border-t border-gray-200"></div>
+      <span class="mx-4 text-xs text-gray-400">or start a new assessment manually</span>
+      <div class="flex-grow border-t border-gray-200"></div>
+    </div>
 
     <form id="setup-form" class="space-y-6">
       <input type="hidden" id="variant-input" name="variant" value="EU-CSF" />
@@ -143,20 +161,6 @@ for (const ac of acQuestions) {
       <p id="error-msg" class="text-red-600 text-sm hidden"></p>
     </form>
 
-    <div class="relative flex items-center py-6">
-      <div class="flex-grow border-t border-gray-200"></div>
-      <span class="mx-4 text-xs text-gray-400">or import existing answers</span>
-      <div class="flex-grow border-t border-gray-200"></div>
-    </div>
-
-    <div id="import">
-      <ImportAssessment
-        client:load
-        criteria={criteria}
-        countries={countriesJson}
-        defaultVariant="EU-CSF"
-      />
-    </div>
   </main>
 
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
