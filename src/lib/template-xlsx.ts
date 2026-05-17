@@ -5,6 +5,13 @@ import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
 interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
 interface CountriesFile { EU: Country[]; EEA_non_EU: Country[]; non_EU: Country[] }
 
+// EU + EEA country codes — used in both the __eu_codes__ hidden sheet and the parseXlsx fallback
+const EU_EEA_CODES = [
+  'AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT',
+  'LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE', // EU27
+  'IS','LI','NO', // EEA non-EU
+];
+
 // Evidence expected per question_id — same text for both EU and Global sheets
 const EVIDENCE_EXPECTED: Record<string, string> = {
   'SOV-1-01': 'Commercial registry extract (e.g. Handelsregisterauszug, Kbis, Companies House, equivalent national registry) showing the legal entity providing the service. Master service agreement clause naming the governing law and forum for disputes. URL or PDF acceptable.',
@@ -97,8 +104,6 @@ function cellStr(cell: ExcelJS.Cell): string {
 function addAssessmentSheet(
   wb: ExcelJS.Workbook,
   criteria: CriteriaFile,
-  variant: 'EU-CSF' | 'Generalized',
-  country?: Country,
 ) {
   const ws = wb.addWorksheet('Assessment');
 
@@ -150,7 +155,7 @@ function addAssessmentSheet(
 
   ws.views = [{ state: 'frozen', ySplit: 1 }];
 
-  const ctx = { variant, country };
+  const ctx = { variant: 'EU-CSF' as const, country: undefined };
 
   function applyDataRow(row: ExcelJS.Row, qid: string, text: string, fill: ExcelJS.Fill,
     c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean) {
@@ -184,39 +189,43 @@ function addAssessmentSheet(
         const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, text, '', '', '', '', '', '', '']);
         applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
       } else {
-        if (variant === 'Generalized') {
-          // Non-EU: no supranational bloc — emit national tier only (or bloc if no national tier)
-          const tierText = q.tiers.national
-            ? resolvePlaceholders(q.tiers.national.text, ctx)
-            : resolvePlaceholders(q.tiers.bloc.text, ctx);
-          const tierKey = q.tiers.national ? 'national' : 'bloc';
-          const row = ws.addRow([q.id, tierKey, c3aTier, obj.id, q.title, tierText, '', '', '', '', '', '', '']);
-          applyDataRow(row, q.id, tierText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
-        } else {
-          // EU-CSF: emit both bloc and national rows
-          const blocText = resolvePlaceholders(q.tiers.bloc.text, ctx);
-          const blocRow = ws.addRow([q.id, 'bloc', c3aTier, obj.id, q.title, blocText, '', '', '', '', '', '', '']);
-          applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+        // Always emit both bloc and national rows.
+        // Bloc rows are greyed out for non-EU countries via conditional formatting on the Setup country cell.
+        const blocText = resolvePlaceholders(q.tiers.bloc.text, ctx);
+        const blocRow = ws.addRow([q.id, 'bloc', c3aTier, obj.id, q.title, blocText, '', '', '', '', '', '', '']);
+        applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
 
-          if (q.tiers.national) {
-            const natText = resolvePlaceholders(q.tiers.national.text, ctx);
-            const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
-            applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
-          }
+        if (q.tiers.national) {
+          const natText = resolvePlaceholders(q.tiers.national.text, ctx);
+          const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
+          applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
         }
       }
     }
   }
 
-  // Grey out rows where none of the user's selected frameworks apply.
-  // Formula is anchored on columns G/H/I (framework flags) and cross-references Setup toggles.
-  // Applied as a "does not apply" rule: greys out when the row has no match.
+  // Rule 1: grey out rows where none of the user's selected frameworks apply.
   ws.addConditionalFormatting({
     ref: 'A2:M500',
     rules: [{
       type: 'expression',
       priority: 1,
       formulae: ['NOT(OR(AND(Setup!$C$7="yes",$G2),AND(Setup!$C$8="yes",$H2),AND(Setup!$C$9="yes",$I2)))'],
+      style: {
+        font: { color: { argb: 'FFB0B7C3' } },
+        fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FFF3F4F6' } },
+      },
+    }],
+  });
+
+  // Rule 2: grey out bloc-tier rows when a non-EU/EEA country is selected in Setup!C5.
+  // LEN(...)>=2 ensures the rule only fires once a country is actually chosen.
+  ws.addConditionalFormatting({
+    ref: 'A2:M500',
+    rules: [{
+      type: 'expression',
+      priority: 2,
+      formulae: ['AND($B2="bloc",LEN(Setup!$C$5)>=2,NOT(ISNUMBER(MATCH(LEFT(Setup!$C$5,2),__eu_codes__!$A:$A,0))))'],
       style: {
         font: { color: { argb: 'FFB0B7C3' } },
         fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FFF3F4F6' } },
@@ -244,7 +253,6 @@ function addAssessmentSheet(
 export async function buildTemplateXlsx(
   criteria: CriteriaFile,
   countries: CountriesFile,
-  selectedCountryCode?: string,
 ): Promise<Blob> {
   const ExcelJS = (await import('exceljs')).default;
   const wb = new ExcelJS.Workbook();
@@ -289,17 +297,6 @@ export async function buildTemplateXlsx(
     ...countries.non_EU,
   ].sort((a, b) => a.name.localeCompare(b.name));
 
-  const selectedCountry = selectedCountryCode
-    ? allCountries.find(c => c.code === selectedCountryCode)
-    : undefined;
-
-  const euCodes = new Set([...countries.EU.map(c => c.code), ...countries.EEA_non_EU.map(c => c.code)]);
-  const variant: 'EU-CSF' | 'Generalized' = selectedCountry && !euCodes.has(selectedCountry.code)
-    ? 'Generalized'
-    : 'EU-CSF';
-
-  if (selectedCountry) setup.getCell('C5').value = `${selectedCountry.code} — ${selectedCountry.name}`;
-
   // Write country list to a hidden helper column (Z) for data validation
   // ExcelJS list validation from a range is more reliable than a giant inline string
   const hiddenSheet = wb.addWorksheet('__countries__');
@@ -319,7 +316,21 @@ export async function buildTemplateXlsx(
     error: 'Please select a country from the dropdown list.',
   };
 
-  // Instructions
+  // Hidden sheet: EU/EEA country codes — referenced by conditional formatting and variant formula
+  const euCodesSheet = wb.addWorksheet('__eu_codes__');
+  euCodesSheet.state = 'veryHidden';
+  EU_EEA_CODES.forEach((code, i) => { euCodesSheet.getCell(i + 1, 1).value = code; });
+
+  // Row 6: computed variant — formula-driven, informational (read-only for user)
+  setup.getRow(6).height = 18;
+  setup.getCell('B6').value = 'Variant';
+  setup.getCell('B6').font = { italic: true, color: { argb: 'FF6B7280' } };
+  setup.getCell('C6').value = {
+    formula: 'IF(LEN(C5)<2,"— select country above",IF(ISNUMBER(MATCH(LEFT(C5,2),__eu_codes__!$A:$A,0)),"EU-CSF (EU/EEA — both bloc and national tiers apply)","Generalized (non-EU — bloc tier rows are greyed out)"))',
+    result: '— select country above',
+  };
+  setup.getCell('C6').font = { italic: true, color: { argb: 'FF6B7280' } };
+
   // Framework selection
   setup.getRow(7).height = 20;
   setup.getCell('B7').value = 'Include EU-CSF?';
@@ -353,13 +364,16 @@ export async function buildTemplateXlsx(
   setup.getCell('B12').value = 'Once filled in, save this file and upload it at: cloudsovereigntyindex.org/assess/setup';
   setup.getCell('B12').font = { color: { argb: 'FF6B7280' } };
 
-  // Hidden row — stores variant so parseXlsx can read it back without re-deriving from country codes
+  // Hidden row — formula-based variant for parseXlsx to read back
   setup.getRow(13).hidden = true;
   setup.getCell('B13').value = 'variant';
-  setup.getCell('C13').value = variant;
+  setup.getCell('C13').value = {
+    formula: 'IF(LEN(C5)<2,"EU-CSF",IF(ISNUMBER(MATCH(LEFT(C5,2),__eu_codes__!$A:$A,0)),"EU-CSF","Generalized"))',
+    result: 'EU-CSF',
+  };
 
   // ── Sheet 2: Assessment questions (single merged sheet) ─────────────────────
-  addAssessmentSheet(wb, criteria, variant, selectedCountry);
+  addAssessmentSheet(wb, criteria);
 
   // ── Sheet 4: Privacy ───────────────────────────────────────────────────────
   const privacy = wb.addWorksheet('Privacy');
@@ -440,9 +454,11 @@ export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
     if (cellStr(setupSheet.getCell('C7')).toLowerCase() === 'yes') selected_frameworks.push('eu_csf');
     if (cellStr(setupSheet.getCell('C8')).toLowerCase() === 'yes') selected_frameworks.push('c3a');
     if (cellStr(setupSheet.getCell('C9')).toLowerCase() === 'yes') selected_frameworks.push('csi_composite');
-    // Variant stored in hidden row 13 (v2.1+ templates)
-    const variantCell = cellStr(setupSheet.getCell('C13')).trim();
-    if (variantCell === 'EU-CSF' || variantCell === 'Generalized') variant = variantCell;
+  }
+
+  // Derive variant from country code using the same EU/EEA set embedded in the template
+  if (country_code) {
+    variant = EU_EEA_CODES.includes(country_code) ? 'EU-CSF' : 'Generalized';
   }
 
   // Read the merged Assessment sheet (v2.0) or legacy EU/Global sheets (v1.x)
@@ -452,7 +468,6 @@ export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
     { name: 'Global Assessment', isEU: false },
   ];
 
-  // For v2.1+ templates variant is already set from Setup!C13; for legacy sheets derive from sheet name
   const sheetsToRead = assessmentSheet
     ? [{ ws: assessmentSheet, isEU: variant !== 'Generalized' }]
     : legacySheets.map(s => ({ ws: wb.getWorksheet(s.name), isEU: s.isEU })).filter(s => !!s.ws);
