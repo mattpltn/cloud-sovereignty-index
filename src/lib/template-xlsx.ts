@@ -281,7 +281,6 @@ export async function buildTemplateXlsx(
   setup.getCell('B5').font = { bold: true };
   setup.getCell('C5').fill = INPUT_FILL;
   setup.getCell('C5').border = { bottom: { style: 'thin', color: { argb: 'FFCA8A04' } } };
-  if (selectedCountry) setup.getCell('C5').value = `${selectedCountry.code} — ${selectedCountry.name}`;
 
   // Build sorted country list
   const allCountries: Country[] = [
@@ -298,6 +297,8 @@ export async function buildTemplateXlsx(
   const variant: 'EU-CSF' | 'Generalized' = selectedCountry && !euCodes.has(selectedCountry.code)
     ? 'Generalized'
     : 'EU-CSF';
+
+  if (selectedCountry) setup.getCell('C5').value = `${selectedCountry.code} — ${selectedCountry.name}`;
 
   // Write country list to a hidden helper column (Z) for data validation
   // ExcelJS list validation from a range is more reliable than a giant inline string
