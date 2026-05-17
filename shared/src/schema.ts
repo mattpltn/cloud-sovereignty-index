@@ -144,7 +144,7 @@ export const AssessmentSetupSchema = z.object({
   customer_selected_ac_ids: z.array(z.string()).optional(),
 });
 
-export const AnswerValueSchema = z.enum(['yes', 'no', 'partial', 'n/a']);
+export const AnswerValueSchema = z.enum(['yes', 'no', 'partial', 'planned', 'n/a']);
 
 export const AnswerSchema = z.object({
   question_id: z.string(),

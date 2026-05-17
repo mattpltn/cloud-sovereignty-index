@@ -7,6 +7,9 @@ interface Props {
 const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovereignty', 'Digital Resilience', 'Full Digital Sovereignty'];
 const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
 
+const CSI_MATURITY_NAMES = ['Foundational', 'Developing', 'Advanced', 'Pioneering'];
+const CSI_MATURITY_COLORS = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];
+
 function EuCsfCard({ eu_csf, variant }: { eu_csf: EuCsfResult; variant: string }) {
   const seal = eu_csf.global.seal;
   const pct = eu_csf.global.pct;
@@ -60,11 +63,14 @@ function C3aCard({ c3a }: { c3a: C3aResult }) {
 }
 
 function CsiCard({ csi, variant }: { csi: CsiCompositeResult; variant: string }) {
+  const isGeneralized = variant === 'Generalized';
   const csl = csi.global.csl;
   const pct = csi.global.pct;
-  const color = SEAL_COLORS[csl] ?? '#6b7280';
-  const label = SEAL_NAMES[csl] ?? `Level ${csl}`;
-  const levelPrefix = variant === 'Generalized' ? 'CSL' : 'SEAL';
+  const pctToNext = csi.global.pct_to_next_tier;
+
+  const color = isGeneralized ? (CSI_MATURITY_COLORS[csl] ?? '#6b7280') : (SEAL_COLORS[csl] ?? '#6b7280');
+  const label = isGeneralized ? (CSI_MATURITY_NAMES[csl] ?? `Tier ${csl}`) : (SEAL_NAMES[csl] ?? `Level ${csl}`);
+  const nextLabel = isGeneralized && pctToNext !== null ? CSI_MATURITY_NAMES[csl + 1] : null;
 
   return (
     <div className="border border-blue-100 bg-blue-50 rounded-xl p-6 flex-1 min-w-0">
@@ -72,11 +78,21 @@ function CsiCard({ csi, variant }: { csi: CsiCompositeResult; variant: string })
       <div className="text-5xl font-bold tabular-nums mb-2" style={{ color }}>{Math.round(pct)}%</div>
       <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium text-white mb-2"
         style={{ backgroundColor: color }}>
-        {levelPrefix} {csl} — {label}
+        {isGeneralized ? label : `${variant === 'EU-CSF' ? 'SEAL' : 'CSL'} ${csl} — ${label}`}
       </div>
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-gray-500 mb-2">
         CSI editorial blend of EU-CSF + C3A. Not a source-standard certification.
       </p>
+      {isGeneralized && nextLabel && pctToNext !== null && pctToNext > 0 && (
+        <div className="mt-3 pt-3 border-t border-blue-200">
+          <p className="text-xs font-medium text-blue-700">To reach {nextLabel}: {pctToNext}% more needed</p>
+        </div>
+      )}
+      {isGeneralized && pctToNext === null && (
+        <div className="mt-3 pt-3 border-t border-blue-200">
+          <p className="text-xs font-medium text-green-700">Pioneering tier achieved.</p>
+        </div>
+      )}
     </div>
   );
 }

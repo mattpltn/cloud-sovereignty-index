@@ -81,7 +81,7 @@ export interface CsiObjectiveResult {
 
 export interface CsiCompositeResult {
   per_objective: Record<string, CsiObjectiveResult>;
-  global: { csl: number; pct: number };
+  global: { csl: number; pct: number; pct_to_next_tier: number | null };
   gap_report: GapItem[];
 }
 

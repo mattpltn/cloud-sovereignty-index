@@ -18,7 +18,8 @@ You choose which framework(s) to assess against. Each produces a completely inde
 |-----------|--------|--------|-------|
 | **EU-CSF** | EU Cloud Sovereignty Framework v1.2.1 (European Commission) | SEAL 0–4 per objective | SOV-1 – SOV-8 |
 | **C3A** | BSI Criteria enabling Cloud Computing Autonomy v1.0 | % Criterion met + % AC met | SOV-1 – SOV-6 |
-| **CSI Composite** | CSI editorial framework | CSL 0–4 (SEAL for EU/EEA) | SOV-1 – SOV-8 |
+| **CSI Composite (EU/EEA)** | CSI editorial framework | SEAL 0–4 (same as EU-CSF) | SOV-1 – SOV-8 |
+| **CSI Composite (non-EU)** | CSI editorial framework | Maturity tier: Foundational → Developing → Advanced → Pioneering | SOV-1 – SOV-8 |
 
 **Scope: cloud sovereignty only.** Security attestation (ISO 27001, SOC 2, BSI C5:2026) is assumed and not assessed. C5 is presupposed, not a CSI source.
 
@@ -53,7 +54,26 @@ No SEAL, no partial credit, no SOV-7/8.
 
 ## CSI Composite mode
 
-Editorial blend of EU-CSF and C3A. Same SEAL/CSL levels and scoring logic as EU-CSF, adapted for global organisations. Labeled **CSL** for non-EU assessments to avoid implying EU procurement compliance.
+Editorial blend of EU-CSF and C3A, adapted for global organisations.
+
+**EU/EEA variant:** Same SEAL 0–4 levels and weakest-link gate as EU-CSF. `partial` = half points, `planned` = 0 points.
+
+**Non-EU (Generalized) variant:** Progressive Sovereignty Maturity model — no weakest-link gate. Score is a weighted percentage mapped to four named tiers:
+
+| Tier | % Threshold | Meaning |
+|------|-------------|---------|
+| Foundational | 0–40% | Initial controls. Significant gaps. |
+| Developing | 41–70% | Core controls operational. |
+| Advanced | 71–90% | Comprehensive controls demonstrated. |
+| Pioneering | 91–100% | Full posture. Tested continuity. |
+
+Answer values in Generalized mode: `yes` = 100%, `partial` = 50%, `planned` = 25% (roadmap commitment with timeline), `no` = 0%, `n/a` = excluded.
+
+Two fallback questions provide partial credit for providers unable to meet strict EU criteria:
+- **SOV-4-01-FB** — security-cleared local residents as alternative to EU-citizen-only staffing
+- **SOV-4-09-FB** — documented disconnect plan with annual tabletop exercise
+
+The tool shows "To reach [next tier]: X% more needed" alongside the top gap questions on the results page and in the PDF report.
 
 ---
 

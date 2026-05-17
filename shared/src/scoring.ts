@@ -266,7 +266,18 @@ function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAc
 
 // ── CSI Composite mode ────────────────────────────────────────────────────────
 
-function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile): CsiCompositeResult {
+// Maturity tier thresholds for non-EU Generalized variant (0–1 scale)
+const CSI_TIER_THRESHOLDS = [0, 0.41, 0.71, 0.91] as const;
+
+function pctToMaturityLevel(pct: number): number {
+  if (pct >= CSI_TIER_THRESHOLDS[3]) return 3; // Pioneering
+  if (pct >= CSI_TIER_THRESHOLDS[2]) return 2; // Advanced
+  if (pct >= CSI_TIER_THRESHOLDS[1]) return 1; // Developing
+  return 0;                                     // Foundational
+}
+
+function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile, variant: string): CsiCompositeResult {
+  const isGeneralized = variant === 'Generalized';
   const perObjective: Record<string, CsiObjectiveResult> = {};
 
   for (const obj of criteria.objectives) {
@@ -280,6 +291,13 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile): CsiCompo
       let results: QuestionResult[];
       if (q.type === 'tiered') {
         results = scoreTieredQuestion(q, answers);
+        // For Generalized: treat 'planned' like 'no' in tiered questions (no partial points path)
+        if (isGeneralized) {
+          results = results.map(r => r.value === 'planned'
+            ? { ...r, points_earned: r.points_possible * 0.25, counts_toward_seal: false }
+            : r
+          );
+        }
       } else {
         const stored = answers[q.id];
         if (!stored) continue;
@@ -287,7 +305,10 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile): CsiCompo
         if (value === 'n/a') {
           results = [{ question_id: q.id, tier: 'single', value, points_earned: 0, points_possible: 0, seal_contribution: q.seal_contribution, counts_toward_seal: false, flagged_unsupported: false }];
         } else {
-          const earned = value === 'yes' ? q.points : value === 'partial' ? q.points * 0.5 : 0;
+          const earned = value === 'yes' ? q.points
+            : value === 'partial' ? q.points * 0.5
+            : value === 'planned' && isGeneralized ? q.points * 0.25
+            : 0;
           results = [{ question_id: q.id, tier: 'single', value, points_earned: earned, points_possible: q.points, seal_contribution: q.seal_contribution, counts_toward_seal: value === 'yes', flagged_unsupported: false }];
         }
       }
@@ -300,7 +321,6 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile): CsiCompo
   }
 
   const values = Object.values(perObjective);
-  const globalCsl = values.length > 0 ? Math.min(...values.map(o => o.csl)) : 0;
 
   let overallNumerator = 0;
   let weightSum = 0;
@@ -311,10 +331,22 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile): CsiCompo
     }
   }
   const globalPct = weightSum > 0 ? Math.min(100, (overallNumerator / weightSum) * 100) : 0;
+  const globalPctFraction = globalPct / 100;
+
+  let globalCsl: number;
+  let pct_to_next_tier: number | null;
+  if (isGeneralized) {
+    globalCsl = pctToMaturityLevel(globalPctFraction);
+    const nextThreshold = CSI_TIER_THRESHOLDS[globalCsl + 1] ?? null;
+    pct_to_next_tier = nextThreshold !== null ? Math.max(0, Math.round((nextThreshold - globalPctFraction) * 100)) : null;
+  } else {
+    globalCsl = values.length > 0 ? Math.min(...values.map(o => o.csl)) : 0;
+    pct_to_next_tier = null;
+  }
 
   return {
     per_objective: perObjective,
-    global: { csl: globalCsl, pct: globalPct },
+    global: { csl: globalCsl, pct: globalPct, pct_to_next_tier },
     gap_report: buildGapReport(values.map(o => ({ objective_id: o.objective_id, seal_level: o.csl, weight: o.weight, questions: o.questions }))),
   };
 }
@@ -356,7 +388,7 @@ export function scoreAssessment(
     result.c3a = scoreC3a(answers, criteria, acIds);
   }
   if (frameworks.includes('csi_composite')) {
-    result.csi_composite = scoreCsiComposite(answers, criteria);
+    result.csi_composite = scoreCsiComposite(answers, criteria, meta.variant);
   }
 
   return result;

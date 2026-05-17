@@ -49,7 +49,11 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           </div>
           <div class="border border-purple-100 bg-purple-50 rounded-lg p-4">
             <p class="font-semibold text-purple-900 mb-1">CSI Composite <span class="text-xs font-normal text-purple-600">(CSI editorial framework)</span></p>
-            <p class="text-purple-800 text-xs">Output: CSL 0–4 (SEAL for EU/EEA). An editorial blend of EU-CSF and C3A with adaptations for global use. Not a source-standard certification.</p>
+            <p class="text-purple-800 text-xs">
+              Output depends on variant:<br/>
+              <span class="font-medium">EU/EEA:</span> SEAL 0–4 per objective and globally (same weakest-link gate as EU-CSF).<br/>
+              <span class="font-medium">Non-EU (Generalized):</span> Progressive Sovereignty Maturity tier — Foundational, Developing, Advanced, or Pioneering — based on percentage score. No weakest-link gate. "planned" answers earn 25% of question points.
+            </p>
           </div>
         </div>
         <p class="text-gray-500 text-xs border-l-2 border-amber-400 pl-3">
@@ -124,12 +128,36 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
         <p>There is no SEAL or CSL in C3A mode.</p>
       </div>
 
-      <h3 class="text-base font-semibold mb-2">3.3 CSI Composite — CSL / SEAL Levels</h3>
-      <p class="text-sm text-gray-700 leading-relaxed">
-        CSI Composite uses the same SEAL/CSL levels as EU-CSF (see §3.1). It covers all 8 objectives
-        and includes editorial adaptations for global organisations. It is labeled CSI Composite in all
-        outputs and should not be confused with either EU-CSF or C3A certification.
-      </p>
+      <h3 class="text-base font-semibold mb-2">3.3 CSI Composite — Levels by Variant</h3>
+      <div class="text-sm text-gray-700 space-y-3 leading-relaxed">
+        <p>
+          For <strong>EU/EEA assessments</strong>, CSI Composite uses the same SEAL 0–4 scale and weakest-link gate as EU-CSF (see §3.1).
+        </p>
+        <p>
+          For <strong>non-EU (Generalized) assessments</strong>, CSI Composite uses the <strong>Progressive Sovereignty Maturity</strong> model:
+        </p>
+        <div class="border border-purple-100 bg-purple-50 rounded-lg overflow-hidden">
+          <table class="w-full text-xs text-purple-900">
+            <thead class="bg-purple-100">
+              <tr>
+                <th class="px-4 py-2 text-left font-semibold">Tier</th>
+                <th class="px-4 py-2 text-left font-semibold">% Threshold</th>
+                <th class="px-4 py-2 text-left font-semibold">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#dc2626">Foundational</td><td class="px-4 py-2">0–40%</td><td class="px-4 py-2 text-gray-600">Initial controls. Significant jurisdictional and resilience gaps remain.</td></tr>
+              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#f97316">Developing</td><td class="px-4 py-2">41–70%</td><td class="px-4 py-2 text-gray-600">Core controls operational. Data localisation and access controls meet baseline.</td></tr>
+              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#22c55e">Advanced</td><td class="px-4 py-2">71–90%</td><td class="px-4 py-2 text-gray-600">Comprehensive controls active. Auditability, key management, and independence demonstrated.</td></tr>
+              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#16a34a">Pioneering</td><td class="px-4 py-2">91–100%</td><td class="px-4 py-2 text-gray-600">Full posture. All critical controls met, tested continuity, minimal external dependencies.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-gray-500 text-xs border-l-2 border-purple-300 pl-3">
+          No weakest-link gate applies in Generalized mode. A single "no" on a strict EU criterion does not collapse the score.
+          Fallback questions SOV-4-01-FB (personnel residency) and SOV-4-09-FB (disconnect plan) provide alternative routes to partial credit.
+        </p>
+      </div>
     </section>
 
     <section class="mb-10">
@@ -177,10 +205,27 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
       </div>
 
       <h3 class="text-base font-semibold mb-2">4.3 CSI Composite Scoring</h3>
-      <p class="text-sm text-gray-700 leading-relaxed">
-        CSI Composite uses identical scoring logic to EU-CSF (weakest-link gate, same weights, partial = half points).
-        It is an editorial framework; its results do not constitute EU-CSF or C3A compliance.
-      </p>
+      <div class="text-sm text-gray-700 space-y-3 leading-relaxed mb-4">
+        <p><strong>EU/EEA:</strong> Identical to EU-CSF (weakest-link gate, same weights, partial = half points, planned = 0 points).</p>
+        <div class="border border-purple-100 bg-purple-50 rounded-lg p-4 space-y-2">
+          <p class="font-medium text-purple-900">Non-EU (Generalized) — Progressive Sovereignty Maturity</p>
+          <ul class="list-disc pl-5 space-y-1 text-purple-800">
+            <li><strong>Yes</strong>: full points</li>
+            <li><strong>Partial</strong>: 50% of question points</li>
+            <li><strong>Planned</strong>: 25% of question points — roadmap commitment with a documented timeline</li>
+            <li><strong>No</strong>: 0 points</li>
+            <li><strong>N/A</strong>: excluded from denominator</li>
+          </ul>
+          <p class="text-purple-800">
+            No weakest-link gate. Global tier derived from weighted percentage:
+            <code class="bg-purple-100 px-1 rounded">Score% = Σ (raw/max × weight) / Σ weight × 100</code><br/>
+            Tier = Foundational if &lt;41%, Developing if 41–70%, Advanced if 71–90%, Pioneering if ≥91%.
+          </p>
+        </div>
+        <p class="text-gray-500 text-xs border-l-2 border-purple-300 pl-3">
+          CSI Composite is an editorial framework. Its results do not constitute EU-CSF or C3A certification.
+        </p>
+      </div>
     </section>
 
     <section class="mb-10">

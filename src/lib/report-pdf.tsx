@@ -41,7 +41,7 @@ export async function buildReportPdf(
   country?: Country,
 ): Promise<Blob> {
   // Import actual React PDF components — helpers must be defined AFTER this
-  const { Document, Page, Text, View, StyleSheet, pdf } = await import('@react-pdf/renderer');
+  const { Document, Page, Text, View, StyleSheet, pdf, Svg, Line, Polygon, Rect } = await import('@react-pdf/renderer');
   const { createElement: h } = await import('react');
 
   // ── Helpers that close over real PDF components ──────────────────────────────
@@ -51,25 +51,164 @@ export async function buildReportPdf(
     levelKey: 'seal' | 'csl',
     levelPrefix: string,
   ) {
+    const BAR_WIDTH = 72;
     return [
       h(View, { style: styles.tableHeader },
         h(Text, { style: styles.colId }, 'ID'),
         h(Text, { style: styles.colTitle }, 'Objective'),
-        h(Text, { style: styles.colPct }, 'Score'),
+        h(Text, { style: { ...styles.colPct, width: BAR_WIDTH + 4 } }, 'Score'),
         h(Text, { style: styles.colSeal }, levelPrefix),
       ),
       ...objectives.map((obj, i) => {
         const level = (obj as Record<string, unknown>)[levelKey] as number;
         const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
         const color = SEAL_COLORS_HEX[level] ?? '#6b7280';
+        const fillW = Math.round((pct / 100) * BAR_WIDTH);
         return h(View, { key: obj.objective_id, style: i % 2 === 0 ? styles.tableRow : styles.tableRowAlt },
           h(Text, { style: { ...styles.colId, color } }, obj.objective_id),
           h(Text, { style: styles.colTitle }, obj.title),
-          h(Text, { style: { ...styles.colPct, color } }, `${pct}%`),
+          // Mini score bar
+          h(View, { style: { width: BAR_WIDTH + 4, justifyContent: 'center' } },
+            h(Svg as any, { width: BAR_WIDTH, height: 12 },
+              h(Rect as any, { x: 0, y: 2, width: BAR_WIDTH, height: 8, rx: 3, fill: '#e5e7eb' }),
+              fillW > 0 ? h(Rect as any, { x: 0, y: 2, width: fillW, height: 8, rx: 3, fill: color }) : null,
+            ),
+            h(Text, { style: { fontSize: 8, color, textAlign: 'center' } }, `${pct}%`),
+          ),
           h(Text, { style: { ...styles.colSeal, color } }, `${levelPrefix} ${level}`),
         );
       }),
     ];
+  }
+
+  // Radar chart for per-objective scores
+  function buildRadarChart(
+    objectives: Array<EuCsfObjectiveResult | CsiObjectiveResult>,
+    levelColors: string[],
+    levelKey: 'seal' | 'csl',
+  ) {
+    const SIZE = 220;
+    const CX = SIZE / 2;
+    const CY = SIZE / 2;
+    const R = 80;
+    const N = objectives.length;
+    if (N === 0) return null;
+
+    function toPoint(angle: number, radius: number) {
+      return { x: CX + radius * Math.cos(angle), y: CY + radius * Math.sin(angle) };
+    }
+
+    const angles = objectives.map((_, i) => -Math.PI / 2 + (2 * Math.PI * i) / N);
+
+    // Grid polygons at 25%, 50%, 75%, 100%
+    const gridLevels = [0.25, 0.5, 0.75, 1.0];
+    const gridPolygons = gridLevels.map(frac => {
+      const pts = angles.map(a => toPoint(a, R * frac));
+      return pts.map(p => `${p.x},${p.y}`).join(' ');
+    });
+
+    // Score polygon
+    const scorePolygon = objectives.map((obj, i) => {
+      const pct = obj.max_score > 0 ? (obj.raw_score / obj.max_score) : 0;
+      const pt = toPoint(angles[i], R * Math.min(pct, 1));
+      return `${pt.x},${pt.y}`;
+    }).join(' ');
+
+    // Axis lines
+    const axisLines = angles.map((a, i) => {
+      const end = toPoint(a, R);
+      return h(Line as any, { key: i, x1: CX, y1: CY, x2: end.x, y2: end.y, stroke: '#d1d5db', strokeWidth: 0.5 });
+    });
+
+    // Labels
+    const labels = objectives.map((obj, i) => {
+      const labelR = R + 14;
+      const pt = toPoint(angles[i], labelR);
+      const level = (obj as Record<string, unknown>)[levelKey] as number;
+      const color = levelColors[level] ?? '#6b7280';
+      return h(Text as any, { key: i, x: pt.x, y: pt.y, fontSize: 6, fill: color, textAnchor: 'middle', dominantBaseline: 'middle' }, obj.objective_id);
+    });
+
+    return h(View, { style: { alignItems: 'center', marginVertical: 8 } },
+      h(Svg as any, { width: SIZE, height: SIZE, viewBox: `0 0 ${SIZE} ${SIZE}` },
+        // Grid rings
+        ...gridPolygons.map((pts, i) =>
+          h(Polygon as any, { key: i, points: pts, fill: 'none', stroke: '#e5e7eb', strokeWidth: 0.5 })
+        ),
+        // Grid % labels on the top axis
+        ...[0.25, 0.5, 0.75, 1.0].map((frac, i) => {
+          const y = CY - R * frac - 2;
+          return h(Text as any, { key: i, x: CX + 2, y, fontSize: 5, fill: '#9ca3af' }, `${frac * 100}%`);
+        }),
+        // Axes
+        ...axisLines,
+        // Score polygon (filled)
+        h(Polygon as any, {
+          points: scorePolygon,
+          fill: 'rgba(59,130,246,0.15)',
+          stroke: '#3b82f6',
+          strokeWidth: 1.5,
+        }),
+        // Objective labels
+        ...labels,
+      )
+    );
+  }
+
+  // Maturity progress bar (CSI Composite, non-EU)
+  const CSI_TIER_LABELS = ['Foundational', 'Developing', 'Advanced', 'Pioneering'];
+  const CSI_TIER_COLORS = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];
+  const CSI_TIER_WIDTHS = [0.40, 0.30, 0.20, 0.10]; // proportional segment widths
+
+  function buildMaturityBar(pct: number, csl: number) {
+    const BAR_W = 400;
+    const BAR_H = 20;
+    const LABEL_H = 14;
+    const TOTAL_H = BAR_H + LABEL_H + 20;
+
+    let offsetX = 0;
+    const segments = CSI_TIER_WIDTHS.map((w, i) => {
+      const segW = Math.round(BAR_W * w);
+      const x = offsetX;
+      offsetX += segW;
+      return { x, w: segW, i };
+    });
+
+    const markerX = Math.round((pct / 100) * BAR_W);
+
+    return h(View, { style: { marginVertical: 8 } },
+      h(Text, { style: { fontSize: 9, color: '#374151', marginBottom: 4, fontFamily: 'Helvetica-Bold' } }, 'Progressive Sovereignty Maturity'),
+      h(Svg as any, { width: BAR_W, height: TOTAL_H },
+        // Segments
+        ...segments.map(seg =>
+          h(Rect as any, {
+            key: seg.i,
+            x: seg.x, y: 0, width: seg.w, height: BAR_H,
+            rx: seg.i === 0 ? 4 : (seg.i === 3 ? 4 : 0),
+            fill: seg.i === csl ? CSI_TIER_COLORS[csl] : '#e5e7eb',
+          })
+        ),
+        // Tier boundary lines
+        ...segments.slice(1).map(seg =>
+          h(Line as any, { key: seg.i, x1: seg.x, y1: 0, x2: seg.x, y2: BAR_H, stroke: '#ffffff', strokeWidth: 1.5 })
+        ),
+        // Current score marker
+        h(Line as any, { x1: markerX, y1: -4, x2: markerX, y2: BAR_H + 4, stroke: '#111827', strokeWidth: 1.5 }),
+        // Score label above marker
+        h(Text as any, { x: markerX, y: -6, fontSize: 8, fill: '#111827', textAnchor: 'middle', fontWeight: 'bold' }, `${Math.round(pct)}%`),
+        // Segment labels below
+        ...segments.map(seg =>
+          h(Text as any, {
+            key: seg.i,
+            x: seg.x + seg.w / 2, y: BAR_H + 10,
+            fontSize: 6,
+            fill: seg.i === csl ? CSI_TIER_COLORS[csl] : '#9ca3af',
+            textAnchor: 'middle',
+            fontWeight: seg.i === csl ? 'bold' : 'normal',
+          }, CSI_TIER_LABELS[seg.i])
+        ),
+      ),
+    );
   }
 
   const tierCtx = { variant: result.variant, country: country as Parameters<typeof resolvePlaceholders>[1]['country'] };
@@ -139,6 +278,9 @@ export async function buildReportPdf(
   const isGeneralized = result.variant === 'Generalized';
   const levelPrefix = isGeneralized ? 'CSL' : 'SEAL';
 
+  const CSI_MATURITY_LABELS = ['Foundational', 'Developing', 'Advanced', 'Pioneering'];
+  const CSI_MATURITY_HEX = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];
+
   const selectedFrameworks = result.selected_frameworks ?? ['csi_composite'];
   const frameworkNames = selectedFrameworks.map(f => {
     if (f === 'eu_csf') return 'EU-CSF v1.2.1';
@@ -160,24 +302,30 @@ export async function buildReportPdf(
   const coverResults: unknown[] = [];
   if (result.eu_csf) {
     const { seal, pct } = result.eu_csf.global;
-    coverResults.push(h(View, { style: styles.coverSealBox },
-      h(Text, { style: { ...styles.coverSealScore, color: SEAL_COLORS_HEX[seal] ?? '#6b7280' } }, `${Math.round(pct)}%`),
-      h(Text, { style: styles.coverSealLabel }, `EU-CSF ${levelPrefix} ${seal} — ${SEAL_LABELS[seal]}`),
+    const color = SEAL_COLORS_HEX[seal] ?? '#6b7280';
+    coverResults.push(h(View, { style: { ...styles.coverSealBox, borderLeftWidth: 4, borderLeftColor: color, flex: 1 } },
+      h(Text, { style: { ...styles.coverSealScore, color } }, `${Math.round(pct)}%`),
+      h(Text, { style: styles.coverSealLabel }, `EU-CSF ${levelPrefix} ${seal}`),
+      h(Text, { style: { ...styles.coverSealLabel, fontSize: 9, color: '#9ca3af' } }, SEAL_LABELS[seal]),
     ));
   }
   if (result.c3a) {
     const { passed, applicable, pct } = result.c3a.criterion.global;
     const ac = result.c3a.additional_criterion.global;
-    coverResults.push(h(View, { style: styles.coverSealBox },
+    coverResults.push(h(View, { style: { ...styles.coverSealBox, borderLeftWidth: 4, borderLeftColor: '#374151', flex: 1 } },
       h(Text, { style: { ...styles.coverSealScore, color: '#374151' } }, `${Math.round(pct)}%`),
-      h(Text, { style: styles.coverSealLabel }, `C3A Criterion — ${passed}/${applicable} met${ac ? ` · AC ${ac.passed}/${ac.applicable}` : ''}`),
+      h(Text, { style: styles.coverSealLabel }, `C3A — ${passed}/${applicable} met`),
+      ac ? h(Text, { style: { ...styles.coverSealLabel, fontSize: 9, color: '#9ca3af' } }, `AC: ${ac.passed}/${ac.applicable}`) : null,
     ));
   }
   if (result.csi_composite) {
     const { csl, pct } = result.csi_composite.global;
-    coverResults.push(h(View, { style: styles.coverSealBox },
-      h(Text, { style: { ...styles.coverSealScore, color: SEAL_COLORS_HEX[csl] ?? '#6b7280' } }, `${Math.round(pct)}%`),
-      h(Text, { style: styles.coverSealLabel }, `CSI Composite ${levelPrefix} ${csl} — ${SEAL_LABELS[csl]}`),
+    const color = isGeneralized ? (CSI_MATURITY_HEX[csl] ?? '#6b7280') : (SEAL_COLORS_HEX[csl] ?? '#6b7280');
+    const csiLabel = isGeneralized ? (CSI_MATURITY_LABELS[csl] ?? `Tier ${csl}`) : `${levelPrefix} ${csl} — ${SEAL_LABELS[csl]}`;
+    coverResults.push(h(View, { style: { ...styles.coverSealBox, borderLeftWidth: 4, borderLeftColor: color, flex: 1 } },
+      h(Text, { style: { ...styles.coverSealScore, color } }, `${Math.round(pct)}%`),
+      h(Text, { style: styles.coverSealLabel }, 'CSI Composite'),
+      h(Text, { style: { ...styles.coverSealLabel, fontSize: 9, color: '#9ca3af' } }, csiLabel),
     ));
   }
 
@@ -195,6 +343,7 @@ export async function buildReportPdf(
         `Global result: ${levelPrefix} ${euSeal} — ${SEAL_LABELS[euSeal]} (${Math.round(result.eu_csf.global.pct)}%). ` +
         `Weakest-link gate per EU-CSF §4. Weights per EU-CSF §5.`
       ),
+      buildRadarChart(euObjectives, SEAL_COLORS_HEX, 'seal'),
       h(Text, { style: styles.subSectionTitle }, 'Objective Scorecard'),
       ...buildObjectiveScorecardSection(euObjectives, 'seal', levelPrefix),
       h(Text, { style: styles.subSectionTitle }, 'Strengths'),
@@ -271,24 +420,42 @@ export async function buildReportPdf(
   if (result.csi_composite) {
     const csiObjectives = Object.values(result.csi_composite.per_objective);
     const csiCsl = result.csi_composite.global.csl;
-    const strengths = csiObjectives.filter(o => o.csl >= 3);
-    const weaknesses = csiObjectives.filter(o => o.csl <= 1 || (o.csl === csiCsl && csiCsl < 4));
+    const csiPct = result.csi_composite.global.pct;
+    const pctToNext = result.csi_composite.global.pct_to_next_tier;
+
+    const csiLevelColors = isGeneralized ? CSI_MATURITY_HEX : SEAL_COLORS_HEX;
+    const csiTierLabel = isGeneralized
+      ? (CSI_MATURITY_LABELS[csiCsl] ?? `Tier ${csiCsl}`)
+      : (SEAL_LABELS[csiCsl] ?? `Level ${csiCsl}`);
+    const csiLevelPrefix = isGeneralized ? '' : levelPrefix + ' ';
+
+    const strengths = isGeneralized
+      ? csiObjectives.filter(o => o.csl >= 2)
+      : csiObjectives.filter(o => o.csl >= 3);
+    const weaknesses = isGeneralized
+      ? csiObjectives.filter(o => o.csl <= 0)
+      : csiObjectives.filter(o => o.csl <= 1 || (o.csl === csiCsl && csiCsl < 4));
 
     csiPages.push(h(Page, { size: 'A4', style: styles.page },
       h(Text, { style: styles.sectionTitle }, 'CSI Composite (editorial framework)'),
       h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
-        `Global result: ${levelPrefix} ${csiCsl} — ${SEAL_LABELS[csiCsl]} (${Math.round(result.csi_composite.global.pct)}%). ` +
-        `Editorial blend of EU-CSF and C3A. Not a source-standard certification.`
+        isGeneralized
+          ? `Global result: ${csiTierLabel} — ${Math.round(csiPct)}%. Progressive Sovereignty Maturity model. Not a source-standard certification.`
+          : `Global result: ${levelPrefix} ${csiCsl} — ${csiTierLabel} (${Math.round(csiPct)}%). Editorial blend of EU-CSF and C3A. Not a source-standard certification.`
       ),
+      // Maturity bar (non-EU only)
+      isGeneralized ? buildMaturityBar(csiPct, csiCsl) : null,
+      buildRadarChart(csiObjectives, csiLevelColors, 'csl'),
       h(Text, { style: styles.subSectionTitle }, 'Objective Scorecard'),
-      ...buildObjectiveScorecardSection(csiObjectives, 'csl', levelPrefix),
+      ...buildObjectiveScorecardSection(csiObjectives, 'csl', isGeneralized ? 'Tier' : levelPrefix),
       h(Text, { style: styles.subSectionTitle }, 'Strengths'),
       strengths.length === 0
-        ? h(Text, { style: styles.bodyText }, `No objective has reached ${levelPrefix} 3 yet.`)
+        ? h(Text, { style: styles.bodyText }, `No objective has reached ${isGeneralized ? 'Advanced' : levelPrefix + ' 3'} yet.`)
         : h(View, {}, ...strengths.map(obj => {
             const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
+            const lbl = isGeneralized ? (CSI_MATURITY_LABELS[obj.csl] ?? `Tier ${obj.csl}`) : `${levelPrefix} ${obj.csl}`;
             return h(View, { key: obj.objective_id, style: styles.strengthCard, wrap: false },
-              h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.csl}, ${pct}%`),
+              h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${lbl}, ${pct}%`),
             );
           })),
       h(Text, { style: styles.subSectionTitle }, 'Weaknesses'),
@@ -297,12 +464,38 @@ export async function buildReportPdf(
         : h(View, {}, ...weaknesses.map(obj => {
             const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
             const topGap = result.csi_composite!.gap_report.find(g => g.objective_id === obj.objective_id);
+            const lbl = isGeneralized ? (CSI_MATURITY_LABELS[obj.csl] ?? `Tier ${obj.csl}`) : `${levelPrefix} ${obj.csl}`;
             return h(View, { key: obj.objective_id, style: styles.weakCard, wrap: false },
-              h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${levelPrefix} ${obj.csl}, ${pct}%`),
+              h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${lbl}, ${pct}%`),
               topGap ? h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`) : null,
             );
           })),
       ...buildGapSection(result.csi_composite.gap_report, 'CSI Composite'),
+      // Roadmap to next tier (non-EU only)
+      isGeneralized ? h(View, { style: { marginTop: 12 } },
+        h(Text, { style: styles.subSectionTitle },
+          pctToNext !== null && pctToNext > 0
+            ? `Roadmap to ${CSI_MATURITY_LABELS[csiCsl + 1]}`
+            : 'Pioneering Tier Achieved'
+        ),
+        pctToNext !== null && pctToNext > 0
+          ? h(View, {},
+              h(Text, { style: styles.bodyText },
+                `To advance from ${csiTierLabel} to ${CSI_MATURITY_LABELS[csiCsl + 1]}, an additional ${pctToNext}% of weighted points is needed.`
+              ),
+              h(Text, { style: { ...styles.bodyText, fontFamily: 'Helvetica-Bold' } }, 'Top actions to close the gap:'),
+              ...result.csi_composite!.gap_report.slice(0, 3).map((gap, i) => {
+                const meta = getQuestionMeta(criteria, gap.question_id, gap.tier);
+                return h(View, { key: i, style: { ...styles.improvCard, marginBottom: 4 }, wrap: false },
+                  h(Text, { style: styles.cardTitle }, `${i + 1}. ${meta.title} (${gap.question_id})`),
+                  meta.source ? h(Text, { style: { ...styles.cardBody, color: '#9ca3af' } }, `Ref: ${meta.source}`) : null,
+                );
+              }),
+            )
+          : h(Text, { style: styles.bodyText },
+              'This assessment has achieved the Pioneering tier — the highest maturity level in the CSI Progressive Sovereignty Maturity model.'
+            ),
+      ) : null,
       footer,
     ));
   }
@@ -313,12 +506,18 @@ export async function buildReportPdf(
       h(View, {},
         h(Text, { style: styles.coverTitle }, 'Cloud Sovereignty\nAssessment Report'),
         h(Text, { style: styles.coverSub }, companyName ?? 'Confidential Assessment'),
-        h(Text, { style: styles.coverMeta }, `Date: ${dateStr}`),
-        h(Text, { style: styles.coverMeta }, `Framework(s): ${frameworkNames.join(', ')}`),
-        country ? h(Text, { style: styles.coverMeta }, `Country: ${country.name}`) : null,
-        h(Text, { style: styles.coverMeta }, `Instrument: v${result.instrument_version}`),
-        ...coverResults,
+        // Meta strip
+        h(View, { style: { flexDirection: 'row', gap: 16, marginBottom: 24 } },
+          h(Text, { style: styles.coverMeta }, `${dateStr}`),
+          country ? h(Text, { style: styles.coverMeta }, `· ${country.name}`) : null,
+          h(Text, { style: styles.coverMeta }, `· Instrument v${result.instrument_version}`),
+        ),
+        // Score boxes in a row
+        h(View, { style: { flexDirection: 'row', gap: 12, marginTop: 8 } },
+          ...coverResults,
+        ),
         h(Text, { style: styles.coverScopeNote },
+          `Framework(s): ${frameworkNames.join(', ')}\n` +
           'Scope: cloud sovereignty only. Security attestation (e.g. ISO 27001, SOC 2, BSI C5) is assumed and not assessed in this report.'
         ),
       ),
@@ -342,7 +541,9 @@ export async function buildReportPdf(
           'C3A results follow BSI Criteria enabling Cloud Computing Autonomy v1.0. Binary pass/fail. Partial = not-met. ACs included only when customer-selected.'
         ) : null,
         result.csi_composite ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
-          'CSI Composite is an editorial framework blending EU-CSF and C3A. Not a source-standard certification.'
+          isGeneralized
+            ? 'CSI Composite (non-EU): Progressive Sovereignty Maturity model. No weakest-link gate. Tiers: Foundational (0–40%), Developing (41–70%), Advanced (71–90%), Pioneering (91–100%). "planned" answers earn 25% of question points. Fallback questions SOV-4-01-FB and SOV-4-09-FB available for providers unable to meet strict EU criteria.'
+            : 'CSI Composite (EU/EEA): editorial blend of EU-CSF and C3A with the same SEAL 0–4 weakest-link gate. Not a source-standard certification.'
         ) : null,
         h(Text, { style: styles.bodyText },
           'This tool is not affiliated with or endorsed by BSI or the European Commission. Published under the MIT license.'

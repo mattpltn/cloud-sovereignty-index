@@ -578,6 +578,24 @@
           "review_status": "pending-external-review"
         },
         {
+          "id": "SOV-4-01-FB",
+          "title": "Operating Personnel — Security-Cleared Local Residents",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "parent_criterion_id": "SOV-4-01",
+          "text": "Where full EU/EEA citizen-only staffing is not yet achieved, does the provider ensure that all personnel with privileged access to the service are security-cleared local residents bound by confidentiality obligations under the applicable national law?",
+          "seal_contribution": 1,
+          "points": 3,
+          "source": {
+            "doc": "CSI Editorial",
+            "clause": "SOV-4 fallback"
+          },
+          "supplementary_info": "This fallback question provides partial credit for providers that cannot yet meet the strict EU/EEA citizenship requirement of SOV-4-01 but maintain equivalent controls through national security clearance and residency requirements."
+        },
+        {
           "id": "SOV-4-02",
           "title": "Remote Work",
           "type": "tiered",
@@ -842,6 +860,24 @@
           },
           "supplementary_info": "In the context of the disconnect requirement, network connections between the cloud service provider and cloud service customers are excluded from the scope of the disconnection capability.",
           "review_status": "pending-external-review"
+        },
+        {
+          "id": "SOV-4-09-FB",
+          "title": "Disconnect / Reconnect — Documented Plan & Annual Exercise",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "parent_criterion_id": "SOV-4-09",
+          "text": "Does the provider maintain a documented disconnect and reconnect procedure, with evidence of at least one annual tabletop exercise validating the plan?",
+          "seal_contribution": 1,
+          "points": 3,
+          "source": {
+            "doc": "CSI Editorial",
+            "clause": "SOV-4 fallback"
+          },
+          "supplementary_info": "This fallback question provides partial credit for providers that cannot yet demonstrate a fully operational disconnect/reconnect capability but have documented procedures and evidence of tabletop testing."
         },
         {
           "id": "SOV-4-10",

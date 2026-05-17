@@ -1269,6 +1269,24 @@
       "review_status": "endorsed-by-source",
       "created": "2026-05-16",
       "instrument_version": "2.0"
+    },
+    {
+      "id": "DR-E16",
+      "category": "extension",
+      "scope": "global",
+      "applies_to": "csi_composite",
+      "affected_element": { "type": "scoring-model", "ids": [] },
+      "source": { "doc": "CSI Editorial", "clauses": [] },
+      "description": "For non-EU/EEA assessments (variant=Generalized), CSI Composite uses a Progressive Sovereignty Maturity model instead of the EU-CSF weakest-link SEAL gate. Percentage thresholds map to four named tiers: Foundational (0–40%), Developing (41–70%), Advanced (71–90%), Pioneering (91–100%). A 'planned' answer (roadmap commitment with timeline) earns 25% of question points. Two fallback questions (SOV-4-01-FB, SOV-4-09-FB) provide partial credit when strict EU criteria cannot yet be met. EU/EEA assessments retain the standard SEAL 0–4 weakest-link gate unchanged.",
+      "rationale": "The SEAL weakest-link gate is calibrated for EU procurement compliance. For global organisations it creates a cliff effect — a single 'no' on an EU-specific criterion collapses the whole score, obscuring genuine progress. The maturity model reflects incremental sovereignty improvements while preserving the strict EU-CSF and C3A frameworks unchanged. Developed markets (e.g. Japan, South Korea) with mature controls will naturally score Advanced or Pioneering without any special-casing.",
+      "alternatives_considered": [
+        "Apply maturity model globally including EU — rejected because EU users may use CSI Composite for procurement, requiring the strict SEAL gate",
+        "Country-specific handicaps for developing markets — rejected; natural scoring reflects actual control quality without artificial adjustments"
+      ],
+      "authority": "CSI Editorial Board",
+      "review_status": "stable",
+      "created": "2026-05-17",
+      "instrument_version": "2.0"
     }
   ]
 }

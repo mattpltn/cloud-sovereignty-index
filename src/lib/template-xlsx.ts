@@ -70,11 +70,11 @@ const EVIDENCE_TYPE_VALIDATION: ExcelJS.DataValidation = {
 const ANSWER_VALIDATION = {
   type: 'list',
   allowBlank: true,
-  formulae: ['"yes,no,partial,n/a"'],
+  formulae: ['"yes,no,partial,planned,n/a"'],
   showErrorMessage: true,
   errorStyle: 'stop',
   errorTitle: 'Invalid answer',
-  error: 'Please select: yes, no, partial, or n/a',
+  error: 'Please select: yes, no, partial, planned, or n/a',
 } as ExcelJS.DataValidation;
 
 const HEADER_FILL = {
