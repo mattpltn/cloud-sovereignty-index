@@ -77,20 +77,22 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
             <div class="w-14 font-mono text-xs text-gray-400">{obj.id}</div>
             <div class="flex-1 text-sm font-medium">{obj.title}</div>
             <div class="text-sm text-gray-500">{Math.round(obj.weight * 100)}%</div>
-            <div class="text-xs text-gray-400">{obj.id <= 'SOV-6' ? 'EU-CSF · C3A · CSI' : 'EU-CSF · CSI'}</div>
+            <div class="text-xs text-gray-400">{obj.id <= 'SOV-6' ? 'EU-CSF · C3A* · CSI' : 'EU-CSF · CSI'}</div>
           </div>
         ))}
       </div>
+      <p class="text-xs text-gray-400 mt-1">* C3A covers SOV-1 through SOV-6 but uses binary pass/fail — the % weight column does not apply in C3A mode.</p>
     </section>
 
     <section class="mb-10">
       <h2 class="text-xl font-semibold mb-3">3. Output Formats by Mode</h2>
 
-      <h3 class="text-base font-semibold mb-2 mt-6">3.1 EU-CSF — SEAL Levels</h3>
+      <h3 class="text-base font-semibold mb-2 mt-6">3.1 SEAL and CSL Levels</h3>
       <p class="text-sm text-gray-600 mb-4">
         The <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level) is defined in EU-CSF §3.
-        For EU/EEA assessments the metric is labeled SEAL. For non-EU (Generalized) the equivalent metric
-        is the <strong>CSL</strong> (Cloud Sovereignty Level). Both use identical methodology and the same 0–4 scale.
+        For EU/EEA assessments (EU-CSF mode and CSI Composite EU/EEA variant) the output metric is labeled SEAL.
+        For non-EU entities assessed under <strong>EU-CSF mode</strong>, the equivalent metric is the <strong>CSL</strong> (Cloud Sovereignty Level) — same 0–4 scale and weakest-link methodology, relabeled to reflect that the EU regulatory context does not directly apply.
+        <strong>CSI Composite non-EU (Generalized) assessments do not produce a CSL number</strong> — their output is a Progressive Sovereignty Maturity tier (Foundational, Developing, Advanced, Pioneering); see §3.3.
       </p>
       <div class="space-y-3 mb-6">
         {criteria.seal_levels.map(sl => (
@@ -330,7 +332,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           );
         })}
         <p class="text-xs text-gray-400 mt-2">
-          BSI C5:2026 (Cloud Computing Compliance Criteria Catalogue) is a cloud security standard published by the German Federal Office for Information Security (BSI). It is presupposed by this instrument but is not a source for CSI questions or scores. In Generalized (non-EU) assessments, questions that reference C5:2026 controls display simplified plain-language text; the original C5 clause reference is available in the question guidance. See: <a href="https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html" target="_blank" rel="noopener" class="text-blue-600 underline">BSI C5 Catalogue</a>.
+          BSI C5:2026 (Cloud Computing Compliance Criteria Catalogue) is a cloud security standard published by the German Federal Office for Information Security (BSI). It is presupposed by this instrument but is not a source for CSI questions or scores. In Generalized (non-EU) assessments, questions that reference C5:2026 controls display simplified plain-language text; the original C5 clause reference is available in the question guidance. These are sovereignty criteria that cite C5 clauses for traceability — they are not security questions imported from C5. C5 is the provenance reference for those clause numbers, not an additional scoring dimension. See: <a href="https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html" target="_blank" rel="noopener" class="text-blue-600 underline">BSI C5 Catalogue</a>.
         </p>
       </div>
     </section>
@@ -344,7 +346,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           and honesty of responses. No liability is accepted for decisions made based on assessment results.
         </p>
         <ul class="list-disc pl-5 space-y-1 text-gray-600 text-xs">
-          <li><strong>Fallback question scoring:</strong> Fallback questions (SOV-4-01-FB, SOV-4-09-FB) are hidden in the web questionnaire unless the parent criterion is answered No. If an XLSX import includes answers to fallback questions when the parent is already answered Yes, both are scored — this is intentional (a provider meeting the strict criterion inherently satisfies the fallback) and cannot unfairly inflate scores.</li>
+          <li><strong>Fallback question scoring:</strong> Fallback questions (SOV-4-01-FB, SOV-4-09-FB) are hidden in the web questionnaire unless the parent criterion is answered No. If an XLSX import includes answers to fallback questions when the parent is already answered Yes, both are scored — this is intentional (a provider meeting the strict criterion inherently satisfies the fallback) and cannot unfairly inflate scores. Mechanically: unanswered questions are excluded from both numerator and denominator entirely (the scoring engine skips them). When parent=Yes and the FB question also has an answer, both contribute points — but the denominator increases by the same max_score, so the percentage ratio is unchanged. The FB question also carries a lower seal_contribution than its parent, so parent=Yes already satisfies the FB SEAL gate — no gate inflation is possible.</li>
           <li><strong>"Planned" answer:</strong> 25% credit is available only in CSI Composite Generalized mode. It must be backed by a documented artefact. In EU-CSF and C3A modes, "Planned" scores as 0. Roadmap commitments do not satisfy compliance certification requirements.</li>
           <li><strong>UK and post-Brexit jurisdictions:</strong> UK assessments use the Generalized variant. UK-equivalent standards (UK-GDPR, NCSC) are not automatically mapped to EU-CSF criteria.</li>
           <li><strong>Per-objective progression:</strong> The "points to next tier" indicator is global only. Per-objective progression guidance is not yet available.</li>
