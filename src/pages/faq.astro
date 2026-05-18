@@ -27,9 +27,9 @@ import '../styles/global.css';
 
     <div class="space-y-10">
 
-      <!-- ── Purpose ──────────────────────────────────────────────────────── -->
+      <!-- ── Quick orientation ──────────────────────────────────────────────── -->
       <section>
-        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Purpose & context</h2>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Quick orientation</h2>
 
         <div class="space-y-6">
           <div>
@@ -51,68 +51,6 @@ import '../styles/global.css';
               sound but require significant expertise to apply. This tool makes those criteria
               accessible as an interactive questionnaire with plain-language questions and immediate
               scoring.
-            </p>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">Does this tool assess security?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              No. This scope boundary is defined by the source frameworks themselves, not by this tool. BSI's <em>Criteria Enabling Cloud Computing Autonomy</em> (C3A, §1.2) states:
-            </p>
-            <blockquote class="border-l-4 border-gray-300 pl-4 my-3 text-sm text-gray-600 italic leading-relaxed">
-              "C3A presupposes that the cloud service provider meets the C5 criteria, as they reflect the security aspect of the sovereignty definition."
-            </blockquote>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              The same document explains why Security &amp; Compliance Sovereignty (SOV-7) is intentionally kept separate (C3A §1.2):
-            </p>
-            <blockquote class="border-l-4 border-gray-300 pl-4 my-3 text-sm text-gray-600 italic leading-relaxed">
-              "Two areas of the EU CSF are intentionally not covered by the C3A: SOV-7 Security &amp; Compliance Sovereignty is already covered by established BSI publications like C5:2026, IT-Grundschutz or the HA Benchmark compact."
-            </blockquote>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              In other words, <strong>security and sovereignty are treated as two complementary but distinct dimensions by the frameworks themselves.</strong> This tool inherits that design: it presupposes that the cloud provider meets a recognised security baseline (BSI C5:2026, ISO 27001, SOC 2 Type II, or an equivalent) and does not reassess encryption, access controls, or vulnerability management — those are addressed by security attestations.
-            </p>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              What this tool assesses is <strong>digital sovereignty</strong>: the degree to which an organisation retains meaningful, independent control over its data, infrastructure, and services. The two dimensions are distinct:
-            </p>
-            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-1">
-              <li><strong>Security</strong> asks: "Is the data protected against unauthorised access?" Addressed by C5:2026, ISO 27001, SOC 2 Type II.</li>
-              <li><strong>Digital sovereignty</strong> asks: "Does the organisation retain independent control over its data and services, including the ability to operate, audit, and if necessary migrate or disconnect, regardless of external dependencies?" Addressed by EU-CSF, C3A, and this tool.</li>
-            </ul>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              A provider can hold strong security certifications and still have structural dependencies — in jurisdiction, ownership, supply chain, or operational staffing — that constrain a customer's independent governance of their own data. Sovereignty addresses those structural properties.
-            </p>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              <strong>Use this tool alongside security attestations, not instead of them.</strong> A thorough cloud due-diligence review covers both dimensions: proven security controls (verified by C5, ISO 27001, or equivalent) and a clear sovereignty posture (assessed here).
-            </p>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">Does this tool assess whether I can exit my cloud provider?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              Partially. Reversibility has two distinct dimensions, and the framework covers them differently.
-            </p>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              <strong>Provider-side operational independence — well covered.</strong> The framework directly assesses whether a provider can keep operating if external connections or vendor relationships are severed. Key criteria:
-            </p>
-            <ul class="text-sm text-gray-700 space-y-1.5 list-disc pl-5 leading-relaxed mt-1">
-              <li><strong>SOV-4-09 / SOV-4-10</strong> (Disconnect/Reconnect): documented and annually tested ability to sever all non-EU network dependencies without service impairment — SEAL 3.</li>
-              <li><strong>SOV-6-01</strong> (Source Code Availability): source code and build toolchain held locally at all times; the provider can operate indefinitely without any external dependency — SEAL 4 (the highest single contribution in the framework).</li>
-              <li><strong>SOV-6-02 / AC</strong> (Continuous Service Delivery): documented contingency strategies and internal engineering capability if a third-party vendor is lost.</li>
-            </ul>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              <strong>Customer-side exit portability — partially covered.</strong> The framework also assesses whether the customer retains the technical means to take their data and identities elsewhere:
-            </p>
-            <ul class="text-sm text-gray-700 space-y-1.5 list-disc pl-5 leading-relaxed mt-1">
-              <li><strong>SOV-3-04</strong> (External Key Management): customer holds encryption keys outside the provider — exits with keys intact.</li>
-              <li><strong>SOV-3-07</strong> (Client-Side Encryption): only the customer can decrypt; maximum data independence (SEAL 4).</li>
-              <li><strong>SOV-3-05 + AC1/2/3</strong> (External Identity Provider): identity lives outside the provider via open standards; stateless auth prevents account lock-in.</li>
-              <li><strong>SOV-5-01/02/03-AC</strong> (Supply chain substitutability): documented architectural flexibility to substitute software, hardware, and services.</li>
-            </ul>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              <strong>What this tool does not assess:</strong> data export SLAs (format and timeline for retrieving your data after contract termination), API portability standards, termination clauses, data deletion obligations, exit fees, or notice periods. Those are procurement and legal concerns that fall outside the scope of a sovereignty assessment.
-            </p>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              The design follows C3A §1.2: the framework measures <em>structural sovereignty</em> — whether the provider has built the controls that make exit technically possible — not <em>contractual portability</em>, which depends on the terms the customer has negotiated. Both matter; only the technical half is assessed here. See the <a href="/methodology#reversibility" class="text-blue-600 underline">Methodology page</a> for the full criteria mapping.
             </p>
           </div>
 
@@ -142,43 +80,259 @@ import '../styles/global.css';
         </div>
       </section>
 
-      <!-- ── C5:2026 ────────────────────────────────────────────────────── -->
+      <!-- ── Getting started ────────────────────────────────────────────────── -->
       <section>
-        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">BSI C5 and C5:2026</h2>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Getting started</h2>
 
         <div class="space-y-6">
           <div>
-            <h3 class="text-sm font-semibold mb-1">What is the difference between BSI C5:2020 and BSI C5:2026?</h3>
+            <h3 class="text-sm font-semibold mb-1">Who is this tool designed for?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              BSI C5:2026 (Cloud Computing Compliance Criteria Catalogue, published March 2026, mandatory from June 2027) expands substantially on C5:2020. The main differences relevant to this assessment are:
+              The instrument is designed to be used by anyone who needs to evaluate a cloud
+              service's sovereignty posture:
             </p>
-            <ul class="text-sm text-gray-700 leading-relaxed mt-2 space-y-2 list-disc pl-5">
-              <li><strong>47 new controls</strong>, bringing the total from 121 to 168. C5:2026 also introduces 462 sub-criteria with two new sub-types: "Additional Sharpen" (narrowing existing requirements) and "Additional Complement" (extending requirements with supplementary obligations).</li>
-              <li><strong>Multi-tenancy isolation (OPS-30/31)</strong>: C5:2026 adds explicit mandatory controls requiring documented logical and cryptographic separation of customer data between tenants, including detection procedures and annual risk-assessment reviews. C5:2020 addressed isolation only implicitly.</li>
-              <li><strong>Confidential Computing / TEE (OPS-32/33)</strong>: C5:2026 introduces Additional Complement controls for Trusted Execution Environments (TEEs), requiring hardware-level memory encryption (e.g. Intel TDX, AMD SEV-SNP), remote attestation procedures, and customer-facing verification interfaces — or explicit disclosure if the capability is not offered.</li>
-              <li><strong>Container Security (OPS-34/35)</strong>: C5:2026 mandates documented lifecycle policies for containers in production (image signing, runtime monitoring, decommissioning), conditional on the provider using container technologies. C5:2020 had no dedicated container controls.</li>
-              <li><strong>Business Continuity Management domain (BCM-01–04)</strong>: C5:2026 introduces a standalone BCM domain requiring a formal BCM system with BIA, BCP, documented RTO/RPO, and annual testing. This was not a separate domain in C5:2020.</li>
-              <li><strong>Post-Quantum Cryptography (CRY Additional Complement)</strong>: C5:2026 requires a documented cryptographic inventory and a PQC migration roadmap identifying quantum-vulnerable algorithms and defining timelines for migration to NIST FIPS 203/204/205 or BSI TR-02102 equivalents.</li>
-              <li><strong>Capacity Management (OPS-01/02/03)</strong>: C5:2026 splits the former OPS-04 capacity management control into three dedicated controls — OPS-01 (Planning), OPS-02 (Monitoring), OPS-03 (Controlling of Resources). References to "C5 OPS-04" in older documents should be read as OPS-01/02/03 in C5:2026.</li>
+            <ul class="text-sm text-gray-700 mt-2 space-y-1 list-disc pl-5 leading-relaxed">
+              <li><strong>Cloud customers</strong> (public administrations, enterprises, NGOs) assessing a provider or a planned procurement.</li>
+              <li><strong>Cloud providers</strong> doing a self-assessment of their own offering before a customer engagement.</li>
+              <li><strong>Auditors and consultants</strong> producing a third-party assessment of a deployment on behalf of a client.</li>
+              <li><strong>Researchers and policymakers</strong> comparing sovereignty postures across providers or jurisdictions using the <a href="/corpus" class="text-blue-600 underline">public corpus</a>.</li>
             </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Does the service model (IaaS, PaaS, SaaS…) change anything in the assessment?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              From a sovereignty <em>scoring</em> perspective: no. The same set of criteria and the
+              same scoring logic applies regardless of whether you are assessing an IaaS, PaaS, or
+              SaaS service. The BSI C3A and EU-CSF criteria were written to be applicable across
+              service models — sovereignty properties such as jurisdiction of data storage, legal
+              access by third parties, or portability are relevant for all of them.
+            </p>
             <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              This assessment (v1.1) incorporates these C5:2026 additions as criteria SOV-3-08, SOV-3-09, SOV-4-11, SOV-4-12, and SOV-5-06. See the
-              <a href="/methodology/decisions" class="text-blue-600 underline">Decisions Register</a> entries DR-E08, DR-E09, DR-E10 for the full rationale.
+              In practice, different service models place different responsibilities on the customer
+              vs. the provider. An IaaS customer controls the software stack; a SaaS customer does
+              not. Some questions may therefore be more or less applicable in practice — use
+              <strong>N/A</strong> where a criterion genuinely does not apply to the deployment you
+              are assessing.
             </p>
           </div>
 
           <div>
-            <h3 class="text-sm font-semibold mb-1">Does a BSI C5:2026 attestation automatically satisfy the relevant criteria in this assessment?</h3>
+            <h3 class="text-sm font-semibold mb-1">Can I fill in the questionnaire offline or share it with my cloud provider?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              A current C5:2026 attestation is strong evidence for the C5-sourced criteria (SOV-5-03 through SOV-5-05, SOV-3-08, SOV-3-09, SOV-4-11, SOV-4-12, SOV-5-06), but it does not automatically satisfy C3A-sourced criteria such as jurisdictional data residency, operating personnel location, or source code availability — those go beyond C5's scope. If a provider holds a valid C5:2026 Type II attestation and the attestation scope covers the service being assessed, you can answer "Yes" to matching criteria and cite the attestation as evidence. The assessment still requires you to verify that the attestation scope matches the service and that the attestation is current.
+              Yes. <a href="/assess/template.xlsx" class="text-blue-600 underline">Download the blank Excel template (.xlsx)</a> and send it to your cloud service provider (CSP). The CSP fills in their answers and returns the file; you upload it on the <a href="/assess/setup#import" class="text-blue-600 underline">setup page</a> to generate a scored result instantly. Nothing is submitted until you review and confirm.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What does the template contain?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed mb-2">
+              The template has four sheets:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-1 list-disc pl-5 leading-relaxed">
+              <li><strong>Setup</strong> — country selection and optional company name.</li>
+              <li><strong>EU Assessment</strong> — all criteria for EU/EEA organisations, including national-tier questions.</li>
+              <li><strong>Global Assessment</strong> — same criteria adapted for non-EU countries.</li>
+              <li><strong>Privacy</strong> — what data is and is not collected by this tool.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              Each assessment sheet has nine columns. The first five are pre-filled and locked by CSI (question ID, tier, objective, title, question text). The last four are for the CSP to complete:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-1 list-disc pl-5 leading-relaxed mt-2">
+              <li><strong>evidence_expected</strong> — locked, pre-filled by CSI. Describes exactly what evidence should be provided for each criterion: the document type, required fields, and where to find it.</li>
+              <li><strong>evidence_provided</strong> — free text, filled by the CSP. The CSP enters a document name, URL, contract clause reference, attestation ID, or page number. If no evidence is available, "none available" is an acceptable entry.</li>
+              <li><strong>evidence_type</strong> — dropdown, filled by the CSP. Classifies the type of evidence: <em>Audit report / certification</em>, <em>Contract clause</em>, <em>Public documentation</em>, <em>Provider statement</em>, or <em>Verbal / none</em>.</li>
+              <li><strong>answer</strong> — dropdown (yes / no / partial / planned / n/a), filled by the CSP. See "What do the answer options mean?" below.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Why does the template ask for evidence references, not just answers?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              A "Yes" answer with no supporting reference is a claim, not evidence. The evidence columns turn the template into an audit-ready document that records <em>what</em> was claimed and <em>where</em> it can be verified. This matters in three scenarios:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-2">
+              <li><strong>Procurement due diligence.</strong> If a procurement decision is challenged, the completed template shows not only the score but the specific documents that supported each answer. Reviewers can verify references without re-running the assessment.</li>
+              <li><strong>Audit support.</strong> Internal or external auditors can spot-check answers against cited evidence (certificates, DPA clauses, SOC 2 sections) without needing to interview the provider again. BSI C3A §1.1 requires that criteria be verifiable — the evidence column is the mechanism that makes this possible in practice.</li>
+              <li><strong>Provider accountability.</strong> A CSP that provides document references is making a traceable commitment. If a cited certificate expires or a contract clause is later amended, the discrepancy becomes visible. This creates a higher bar than an uncorroborated self-declaration.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              The evidence columns do <strong>not</strong> affect the score — a "Yes" backed only by a provider statement scores the same as a "Yes" backed by a BSI C5 attestation. The scoring engine deliberately does not penalise evidence quality, leaving that judgment to the assessor. What the columns provide is a paper trail that makes the assessment defensible.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Why would I send this to my CSP rather than filling it in myself?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Many criteria ask about internal provider controls that you as a customer cannot verify directly: personnel jurisdiction policies, disconnect test results, SBOM availability, source code backup frequency. The CSP is the only party who can accurately answer these — and who can attach the document references that make those answers credible. Sending the template to the provider's compliance or pre-sales team and asking them to complete it with evidence references is the most defensible approach, and creates a natural checkpoint in your procurement or vendor review process.
             </p>
           </div>
         </div>
       </section>
 
-      <!-- ── Germany / source framework ─────────────────────────────────── -->
+      <!-- ── Understanding results ──────────────────────────────────────────── -->
       <section>
-        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Germany, the EU, and other countries</h2>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Understanding your results</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What do the answer options mean?</h3>
+            <ul class="text-sm text-gray-700 space-y-2 leading-relaxed list-none">
+              <li><strong>Yes</strong> — the criterion is fully met. Full points, counts toward the sovereignty level.</li>
+              <li><strong>No</strong> — the criterion is not met. Zero points, does not count toward the sovereignty level.</li>
+              <li><strong>Partial</strong> — the criterion is partially met. Half points, but does <em>not</em> count toward the EU-CSF / C3A sovereignty level (weakest-link rule). In CSI Composite Generalized mode, partial = 50% of question points with no gate.</li>
+              <li><strong>Planned</strong> — available in CSI Composite Generalized mode only. Earns 25% of question points. Represents a roadmap commitment with a documented timeline. <strong>Requires evidence:</strong> a board-approved roadmap, signed project plan, approved budget with target date, or vendor contract with delivery milestone. A "Planned" answer without a verifiable artefact should be treated as No in any external review. In EU-CSF and C3A, "Planned" scores as 0.</li>
+              <li><strong>N/A</strong> — the criterion does not apply to this deployment. Excluded from both numerator and denominator, so it does not penalise the score.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the SEAL / CSL level?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              For EU/EEA assessments the metric is the <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level, as defined in EU-CSF §3).
+              For non-EU (Generalized) assessments the equivalent metric is the <strong>CSL</strong> (Cloud Sovereignty Level).
+              Both use identical methodology — only the label differs to avoid implying EU procurement compliance for non-EU organisations.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              The scale is 0–4: 0 = No Sovereignty, 1 = Jurisdictional Sovereignty, 2 = Data Sovereignty,
+              3 = Digital Resilience, 4 = Full Digital Sovereignty. Each criterion carries a contribution level (1–4).
+              The level for an objective is the highest level L such that every criterion with contribution ≤ L
+              is answered Yes — a single failed criterion at level 1 drops the objective to 0.
+              The overall level is the lowest across all objectives (weakest link).
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Why is my overall score high but my sovereignty level low?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              The percentage score and the sovereignty level measure different things. The score is a
+              weighted average of how many points you earned across all questions — partial answers
+              count toward it. The sovereignty level is a strict threshold: a single No or Partial on a
+              foundational criterion (contribution level 1) drops the objective to level 0,
+              regardless of how well you scored on everything else. This is intentional — the level
+              is designed to identify the most critical sovereignty gaps, not be averaged away.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Scope ───────────────────────────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Scope — what this tool measures</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Does this tool assess security?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              No. <strong>Security and sovereignty are complementary but distinct dimensions.</strong>
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-2">
+              <li><strong>Security</strong> asks: "Is the data protected against unauthorised access?" This is addressed by certifications like ISO 27001, SOC 2 Type II, and BSI C5:2026. The Cloud Sovereignty Index presupposes that the cloud provider already meets a recognised security baseline and does not reassess encryption, access controls, or vulnerability management.</li>
+              <li><strong>Digital sovereignty</strong> asks: "Does the organisation retain independent control over its data and services, including the ability to operate, audit, and if necessary migrate or disconnect, regardless of external dependencies?" A provider can hold strong security certifications while having structural dependencies — in jurisdiction, ownership, supply chain, or staffing — that limit the customer's independent governance. Sovereignty addresses those structural properties.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              This scope boundary comes from the frameworks themselves. BSI C3A §1.2 states: <em>"C3A presupposes that the cloud service provider meets the C5 criteria, as they reflect the security aspect of the sovereignty definition."</em> The same document explains: <em>"SOV-7 Security &amp; Compliance Sovereignty is already covered by established BSI publications like C5:2026, IT-Grundschutz or the HA Benchmark compact."</em>
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              <strong>Note on security attestations:</strong> A current BSI C5:2026 attestation is useful evidence for several CSI criteria (secure configuration, multi-tenancy isolation, supply-chain monitoring). But C5 does not cover sovereignty criteria such as data jurisdiction, staffing location, or disconnect capability — those require separate assessment here.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              <strong>Use this tool alongside security attestations, not instead of them.</strong>
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Does this tool assess whether I can exit my cloud provider?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Partially. Reversibility has two dimensions the framework handles differently.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              <strong>Provider-side operational independence — well covered.</strong> The framework assesses whether the provider can keep operating if external connections or vendors are severed: SOV-4-09/10 (Disconnect/Reconnect, SEAL 3), SOV-6-01 (source code and build toolchain held locally, SEAL 4 — the highest single contribution in the framework), and SOV-6-02/03 (contingency strategies and internal engineering capability).
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              <strong>Customer-side exit portability — partially covered.</strong> The framework assesses whether the customer retains the technical means to leave with data intact: SOV-3-04 (customer holds encryption keys outside the provider), SOV-3-07 (client-side encryption, SEAL 4), and SOV-3-05 + AC1/2/3 (identity via open standards, stateless auth, no account lock-in).
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              <strong>What is not assessed:</strong> data export SLAs, API portability standards, termination clauses, data deletion obligations, exit fees, and notice periods. Those are procurement and legal concerns. The framework measures <em>structural sovereignty</em> — whether the provider has built the controls that make exit technically possible — not <em>contractual portability</em>, which depends on the terms the customer has negotiated. Both matter; only the technical half is assessed here.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              See the <a href="/methodology" class="text-blue-600 underline">Methodology page</a> for the full criteria mapping and procurement complement checklist.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Frameworks ─────────────────────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Frameworks — EU-CSF, C3A, and CSI Composite</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the difference between EU-CSF, C3A, and CSI Composite?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed mb-2">Three independent frameworks are available. Each produces a completely separate result — no combined cross-framework score is calculated.</p>
+            <ul class="text-sm text-gray-700 space-y-3 list-none leading-relaxed">
+              <li>
+                <strong>EU Cloud Sovereignty Framework (EU-CSF) v1.2.1</strong> — Published by the European Commission. Covers all 8 sovereignty objectives (SOV-1 through SOV-8). Output is a SEAL level (0–4) using a strict weakest-link gate: a single unanswered foundational criterion collapses the objective to level 0. Designed for EU cloud procurement compliance. <em>Partial</em> answers earn half points but do not satisfy the gate.
+              </li>
+              <li>
+                <strong>BSI C3A v1.0</strong> — Published by Germany's Federal Office for Information Security. Covers SOV-1 through SOV-6 only (no security or sustainability objectives). Output is a binary pass/fail percentage — no SEAL or maturity tier. Criteria are strict: <em>Partial</em> counts as not-met. Some criteria are "Additional Criteria" that customers select before the assessment. Designed for EU government procurement, particularly for sovereign cloud in Germany and EU public administration.
+              </li>
+              <li>
+                <strong>CSI Composite (editorial framework)</strong> — An editorial blend of EU-CSF and C3A adapted for global use. See the next two questions for detail.
+              </li>
+            </ul>
+            <p class="text-sm text-gray-500 text-xs mt-3">
+              For scoring formulas, SEAL/CSL level definitions, and objective weights, see the <a href="/methodology" class="text-blue-600 underline">Methodology page</a>.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the CSI Composite and why does it exist?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              EU-CSF and C3A were designed for EU procurement. Applied to non-EU cloud providers, their strict weakest-link gate creates a cliff effect: a single "No" on an EU-specific criterion (e.g. "all staff must be EU citizens") collapses the entire score to level 0 — even if the provider has strong controls everywhere else. For a Korean, Singaporean, or Ugandan CSP, this produces a misleadingly low score that obscures real progress.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              CSI Composite solves this with two variants:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-1">
+              <li><strong>EU/EEA variant:</strong> Identical to EU-CSF — same SEAL 0–4 levels, same weakest-link gate. Suitable for EU procurement comparison.</li>
+              <li><strong>Generalized (non-EU) variant:</strong> Replaces the weakest-link gate with a <em>Progressive Sovereignty Maturity</em> model. Score is a weighted percentage mapped to four tiers: Foundational (0–40%), Developing (41–70%), Advanced (71–90%), Pioneering (91–100%). This rewards genuine progress without penalising providers for failing EU-specific staffing or legal requirements that don't apply in their jurisdiction.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              CSI Composite is an editorial framework — it is not published by BSI or the European Commission and does not constitute EU-CSF or C3A certification.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Which framework should I use?</h3>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed">
+              <li><strong>EU/EEA public procurement:</strong> EU-CSF (for regulatory language) + C3A (for technical depth). Both are source-faithful to their published standards.</li>
+              <li><strong>Global vendor comparison or progress tracking:</strong> CSI Composite (Generalized). Shows where a non-EU provider stands against EU sovereignty expectations without the cliff-effect penalty.</li>
+              <li><strong>German federal procurement specifically:</strong> C3A is the authoritative standard. Add EU-CSF for broader context.</li>
+              <li><strong>UK providers targeting EU contracts:</strong> Run EU-CSF explicitly. UK assessments default to CSI Composite Generalized since UK law is not EU law.</li>
+              <li><strong>All three together:</strong> Fully supported. Each framework result is reported independently.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What are fallback questions and when do they appear?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Two CSI Composite-only fallback questions exist for criteria that are structurally impossible to satisfy in a non-EU context:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-1">
+              <li><strong>SOV-4-01-FB</strong> — "Operating Personnel — Security-Cleared Local Residents." Appears only if SOV-4-01 (EU/EEA citizen staffing) is answered No. Provides partial credit when the provider ensures staff hold national security clearances and are bound by local confidentiality law instead.</li>
+              <li><strong>SOV-4-09-FB</strong> — "Disconnect / Reconnect — Documented Plan and Annual Exercise." Appears only if SOV-4-09 (proven disconnect capability) is answered No. Provides partial credit when the provider has a documented procedure with evidence of at least one annual tabletop exercise.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              Fallback questions are hidden in the questionnaire unless the parent criterion is answered No. They do not appear for EU/EEA assessments or in EU-CSF / C3A frameworks.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Germany / source framework ─────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Countries and geography</h2>
 
         <div class="space-y-6">
           <div>
@@ -248,157 +402,7 @@ import '../styles/global.css';
         </div>
       </section>
 
-      <!-- ── Frameworks ─────────────────────────────────────────────────── -->
-      <section>
-        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Frameworks — EU-CSF, C3A, and CSI Composite</h2>
-
-        <div class="space-y-6">
-          <div>
-            <h3 class="text-sm font-semibold mb-1">What is the difference between EU-CSF, C3A, and CSI Composite?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed mb-2">Three independent frameworks are available. Each produces a completely separate result — no combined cross-framework score is calculated.</p>
-            <ul class="text-sm text-gray-700 space-y-3 list-none leading-relaxed">
-              <li>
-                <strong>EU Cloud Sovereignty Framework (EU-CSF) v1.2.1</strong> — Published by the European Commission. Covers all 8 sovereignty objectives (SOV-1 through SOV-8). Output is a SEAL level (0–4) using a strict weakest-link gate: a single unanswered foundational criterion collapses the objective to level 0. Designed for EU cloud procurement compliance. <em>Partial</em> answers earn half points but do not satisfy the gate.
-              </li>
-              <li>
-                <strong>BSI C3A v1.0</strong> — Published by Germany's Federal Office for Information Security. Covers SOV-1 through SOV-6 only (no security or sustainability objectives). Output is a binary pass/fail percentage — no SEAL or maturity tier. Criteria are strict: <em>Partial</em> counts as not-met. Some criteria are "Additional Criteria" that customers select before the assessment. Designed for EU government procurement, particularly for sovereign cloud in Germany and EU public administration.
-              </li>
-              <li>
-                <strong>CSI Composite (editorial framework)</strong> — An editorial blend of EU-CSF and C3A adapted for global use. See the next two questions for detail.
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">What is the CSI Composite and why does it exist?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              EU-CSF and C3A were designed for EU procurement. Applied to non-EU cloud providers, their strict weakest-link gate creates a cliff effect: a single "No" on an EU-specific criterion (e.g. "all staff must be EU citizens") collapses the entire score to level 0 — even if the provider has strong controls everywhere else. For a Korean, Singaporean, or Ugandan CSP, this produces a misleadingly low score that obscures real progress.
-            </p>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              CSI Composite solves this with two variants:
-            </p>
-            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-1">
-              <li><strong>EU/EEA variant:</strong> Identical to EU-CSF — same SEAL 0–4 levels, same weakest-link gate. Suitable for EU procurement comparison.</li>
-              <li><strong>Generalized (non-EU) variant:</strong> Replaces the weakest-link gate with a <em>Progressive Sovereignty Maturity</em> model. Score is a weighted percentage mapped to four tiers: Foundational (0–40%), Developing (41–70%), Advanced (71–90%), Pioneering (91–100%). This rewards genuine progress without penalising providers for failing EU-specific staffing or legal requirements that don't apply in their jurisdiction.</li>
-            </ul>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              CSI Composite is an editorial framework — it is not published by BSI or the European Commission and does not constitute EU-CSF or C3A certification.
-            </p>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">Which framework should I use?</h3>
-            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed">
-              <li><strong>EU/EEA public procurement:</strong> EU-CSF (for regulatory language) + C3A (for technical depth). Both are source-faithful to their published standards.</li>
-              <li><strong>Global vendor comparison or progress tracking:</strong> CSI Composite (Generalized). Shows where a non-EU provider stands against EU sovereignty expectations without the cliff-effect penalty.</li>
-              <li><strong>German federal procurement specifically:</strong> C3A is the authoritative standard. Add EU-CSF for broader context.</li>
-              <li><strong>UK providers targeting EU contracts:</strong> Run EU-CSF explicitly. UK assessments default to CSI Composite Generalized since UK law is not EU law.</li>
-              <li><strong>All three together:</strong> Fully supported. Each framework result is reported independently.</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">What are fallback questions and when do they appear?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              Two CSI Composite-only fallback questions exist for criteria that are structurally impossible to satisfy in a non-EU context:
-            </p>
-            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-1">
-              <li><strong>SOV-4-01-FB</strong> — "Operating Personnel — Security-Cleared Local Residents." Appears only if SOV-4-01 (EU/EEA citizen staffing) is answered No. Provides partial credit when the provider ensures staff hold national security clearances and are bound by local confidentiality law instead.</li>
-              <li><strong>SOV-4-09-FB</strong> — "Disconnect / Reconnect — Documented Plan and Annual Exercise." Appears only if SOV-4-09 (proven disconnect capability) is answered No. Provides partial credit when the provider has a documented procedure with evidence of at least one annual tabletop exercise.</li>
-            </ul>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              Fallback questions are hidden in the questionnaire unless the parent criterion is answered No. They do not appear for EU/EEA assessments or in EU-CSF / C3A frameworks.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── Scoring ──────────────────────────────────────────────────────── -->
-      <section>
-        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Scoring & sovereignty levels</h2>
-
-        <div class="space-y-6">
-          <div>
-            <h3 class="text-sm font-semibold mb-1">What do the answer options mean?</h3>
-            <ul class="text-sm text-gray-700 space-y-2 leading-relaxed list-none">
-              <li><strong>Yes</strong> — the criterion is fully met. Full points, counts toward the sovereignty level.</li>
-              <li><strong>No</strong> — the criterion is not met. Zero points, does not count toward the sovereignty level.</li>
-              <li><strong>Partial</strong> — the criterion is partially met. Half points, but does <em>not</em> count toward the EU-CSF / C3A sovereignty level (weakest-link rule). In CSI Composite Generalized mode, partial = 50% of question points with no gate.</li>
-              <li><strong>Planned</strong> — available in CSI Composite Generalized mode only. Earns 25% of question points. Represents a roadmap commitment with a documented timeline. <strong>Requires evidence:</strong> a board-approved roadmap, signed project plan, approved budget with target date, or vendor contract with delivery milestone. A "Planned" answer without a verifiable artefact should be treated as No in any external review. In EU-CSF and C3A, "Planned" scores as 0.</li>
-              <li><strong>N/A</strong> — the criterion does not apply to this deployment. Excluded from both numerator and denominator, so it does not penalise the score.</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">What is the SEAL / CSL level?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              For EU/EEA assessments the metric is the <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level, as defined in EU-CSF §3).
-              For non-EU (Generalized) assessments the equivalent metric is the <strong>CSL</strong> (Cloud Sovereignty Level).
-              Both use identical methodology — only the label differs to avoid implying EU procurement compliance for non-EU organisations.
-            </p>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              The scale is 0–4: 0 = No Sovereignty, 1 = Jurisdictional Sovereignty, 2 = Data Sovereignty,
-              3 = Digital Resilience, 4 = Full Digital Sovereignty. Each criterion carries a contribution level (1–4).
-              The level for an objective is the highest level L such that every criterion with contribution ≤ L
-              is answered Yes — a single failed criterion at level 1 drops the objective to 0.
-              The overall level is the lowest across all objectives (weakest link).
-            </p>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">Why is my overall score high but my sovereignty level low?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              The percentage score and the sovereignty level measure different things. The score is a
-              weighted average of how many points you earned across all questions — partial answers
-              count toward it. The sovereignty level is a strict threshold: a single No or Partial on a
-              foundational criterion (contribution level 1) drops the objective to level 0,
-              regardless of how well you scored on everything else. This is intentional — the level
-              is designed to identify the most critical sovereignty gaps, not be averaged away.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── Who can use it ──────────────────────────────────────────────── -->
-      <section>
-        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Who can use this tool</h2>
-
-        <div class="space-y-6">
-          <div>
-            <h3 class="text-sm font-semibold mb-1">Who is this tool designed for?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              The instrument is designed to be used by anyone who needs to evaluate a cloud
-              service's sovereignty posture:
-            </p>
-            <ul class="text-sm text-gray-700 mt-2 space-y-1 list-disc pl-5 leading-relaxed">
-              <li><strong>Cloud customers</strong> (public administrations, enterprises, NGOs) assessing a provider or a planned procurement.</li>
-              <li><strong>Cloud providers</strong> doing a self-assessment of their own offering before a customer engagement.</li>
-              <li><strong>Auditors and consultants</strong> producing a third-party assessment of a deployment on behalf of a client.</li>
-              <li><strong>Researchers and policymakers</strong> comparing sovereignty postures across providers or jurisdictions using the <a href="/corpus" class="text-blue-600 underline">public corpus</a>.</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">Does the service model (IaaS, PaaS, SaaS…) change anything in the assessment?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              From a sovereignty <em>scoring</em> perspective: no. The same set of criteria and the
-              same scoring logic applies regardless of whether you are assessing an IaaS, PaaS, or
-              SaaS service. The BSI C3A and EU-CSF criteria were written to be applicable across
-              service models — sovereignty properties such as jurisdiction of data storage, legal
-              access by third parties, or portability are relevant for all of them.
-            </p>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              In practice, different service models place different responsibilities on the customer
-              vs. the provider. An IaaS customer controls the software stack; a SaaS customer does
-              not. Some questions may therefore be more or less applicable in practice — use
-              <strong>N/A</strong> where a criterion genuinely does not apply to the deployment you
-              are assessing.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── Data & Privacy ─────────────────────────────────────────────── -->
+      <!-- ── Data & Privacy ──────────────────────────────────────────────────── -->
       <section>
         <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Data & privacy</h2>
 
@@ -450,69 +454,11 @@ import '../styles/global.css';
         </div>
       </section>
 
-      <!-- ── Offline template ─────────────────────────────────────────────── -->
-      <section>
-        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Offline template & CSP evidence</h2>
-
-        <div class="space-y-6">
-          <div>
-            <h3 class="text-sm font-semibold mb-1">Can I fill in the questionnaire offline or share it with my cloud provider?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              Yes. <a href="/assess/template.xlsx" class="text-blue-600 underline">Download the blank Excel template (.xlsx)</a> and send it to your cloud service provider (CSP). The CSP fills in their answers and returns the file; you upload it on the <a href="/assess/setup#import" class="text-blue-600 underline">setup page</a> to generate a scored result instantly. Nothing is submitted until you review and confirm.
-            </p>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">What does the template contain?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed mb-2">
-              The template has four sheets:
-            </p>
-            <ul class="text-sm text-gray-700 space-y-1 list-disc pl-5 leading-relaxed">
-              <li><strong>Setup</strong> — country selection and optional company name.</li>
-              <li><strong>EU Assessment</strong> — all criteria for EU/EEA organisations, including national-tier questions.</li>
-              <li><strong>Global Assessment</strong> — same criteria adapted for non-EU countries.</li>
-              <li><strong>Privacy</strong> — what data is and is not collected by this tool.</li>
-            </ul>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              Each assessment sheet has nine columns. The first five are pre-filled and locked by CSI (question ID, tier, objective, title, question text). The last four are for the CSP to complete:
-            </p>
-            <ul class="text-sm text-gray-700 space-y-1 list-disc pl-5 leading-relaxed mt-2">
-              <li><strong>evidence_expected</strong> — locked, pre-filled by CSI. Describes exactly what evidence should be provided for each criterion: the document type, required fields, and where to find it (e.g. "Current ISO 27001 certificate with explicit scope statement covering the assessed services, plus issue/expiry dates").</li>
-              <li><strong>evidence_provided</strong> — free text, filled by the CSP. The CSP enters a document name, URL, contract clause reference, attestation ID, or page number. If no evidence is available, "none available" is an acceptable entry.</li>
-              <li><strong>evidence_type</strong> — dropdown, filled by the CSP. Classifies the type of evidence: <em>Audit report / certification</em>, <em>Contract clause</em>, <em>Public documentation</em>, <em>Provider statement</em>, or <em>Verbal / none</em>.</li>
-              <li><strong>answer</strong> — dropdown (yes / no / partial / n/a), filled by the CSP.</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">Why does the template ask for evidence references, not just answers?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              A "Yes" answer with no supporting reference is a claim, not evidence. The evidence columns turn the template into an audit-ready document that records <em>what</em> was claimed and <em>where</em> it can be verified. This matters in three scenarios:
-            </p>
-            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-2">
-              <li><strong>Procurement due diligence.</strong> If a procurement decision is challenged, the completed template shows not only the score but the specific documents that supported each answer. Reviewers can verify references without re-running the assessment.</li>
-              <li><strong>Audit support.</strong> Internal or external auditors can spot-check answers against cited evidence (certificates, DPA clauses, SOC 2 sections) without needing to interview the provider again. BSI C3A §1.1 requires that criteria be verifiable — the evidence column is the mechanism that makes this possible in practice.</li>
-              <li><strong>Provider accountability.</strong> A CSP that provides document references is making a traceable commitment. If a cited certificate expires or a contract clause is later amended, the discrepancy becomes visible. This creates a higher bar than an uncorroborated self-declaration.</li>
-            </ul>
-            <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              The evidence columns do <strong>not</strong> affect the score — a "Yes" backed only by a provider statement scores the same as a "Yes" backed by a BSI C5 attestation. The scoring engine deliberately does not penalise evidence quality, leaving that judgment to the assessor. What the columns provide is a paper trail that makes the assessment defensible.
-            </p>
-          </div>
-
-          <div>
-            <h3 class="text-sm font-semibold mb-1">Why would I send this to my CSP rather than filling it in myself?</h3>
-            <p class="text-sm text-gray-700 leading-relaxed">
-              Many criteria ask about internal provider controls that you as a customer cannot verify directly: personnel jurisdiction policies, disconnect test results, SBOM availability, source code backup frequency. The CSP is the only party who can accurately answer these — and who can attach the document references that make those answers credible. Sending the template to the provider's compliance or pre-sales team and asking them to complete it with evidence references is the most defensible approach, and creates a natural checkpoint in your procurement or vendor review process.
-            </p>
-          </div>
-        </div>
-      </section>
-
     </div>
   </main>
 
   <footer class="border-t border-gray-100 px-6 py-6 text-center text-xs text-gray-400">
-    Cloud Sovereignty Index v1.0 · Not affiliated with BSI, the European Commission, or any standards body ·
+    Cloud Sovereignty Index · Not affiliated with BSI, the European Commission, or any standards body ·
     <a href="/methodology" class="underline">Methodology</a> ·
     <a href="/privacy" class="underline">Privacy</a> ·
     <a href="https://github.com/mattpltn/cloud-sovereignty-index" class="underline" target="_blank" rel="noopener">GitHub</a> ·
