@@ -87,12 +87,11 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
     <section class="mb-10">
       <h2 class="text-xl font-semibold mb-3">3. Output Formats by Mode</h2>
 
-      <h3 class="text-base font-semibold mb-2 mt-6">3.1 SEAL and CSL Levels</h3>
+      <h3 class="text-base font-semibold mb-2 mt-6">3.1 SEAL Levels</h3>
       <p class="text-sm text-gray-600 mb-4">
         The <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level) is defined in EU-CSF §3.
-        For EU/EEA assessments (EU-CSF mode and CSI Composite EU/EEA variant) the output metric is labeled SEAL.
-        For non-EU entities assessed under <strong>EU-CSF mode</strong>, the equivalent metric is the <strong>CSL</strong> (Cloud Sovereignty Level) — same 0–4 scale and weakest-link methodology, relabeled to reflect that the EU regulatory context does not directly apply.
-        <strong>CSI Composite non-EU (Generalized) assessments do not produce a CSL number</strong> — their output is a Progressive Sovereignty Maturity tier (Foundational, Developing, Advanced, Pioneering); see §3.3.
+        SEAL applies to EU-CSF mode and to CSI Composite EU/EEA variant assessments.
+        Non-EU assessments using CSI Composite (Generalized) produce a <strong>Progressive Sovereignty Maturity tier</strong> instead — see §3.3.
       </p>
       <div class="space-y-3 mb-6">
         {criteria.seal_levels.map(sl => (
@@ -104,13 +103,8 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
             <div class="flex-1">
               <div class="text-sm font-medium mb-0.5">{sl.name}</div>
               <div class="text-xs text-gray-500 leading-relaxed">
-                <span class="font-medium text-gray-400 uppercase tracking-wide text-[10px]">SEAL (EU/EEA): </span>{sl.description}
+                {sl.description}
               </div>
-              {sl.description_generalized && (
-                <div class="text-xs text-gray-500 leading-relaxed mt-0.5">
-                  <span class="font-medium text-gray-400 uppercase tracking-wide text-[10px]">CSL (non-EU): </span>{sl.description_generalized}
-                </div>
-              )}
             </div>
           </div>
         ))}
