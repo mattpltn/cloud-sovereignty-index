@@ -107,7 +107,7 @@ function addAssessmentSheet(
 ) {
   const ws = wb.addWorksheet('Assessment');
 
-  // Columns: A=qid B=tier C=c3a_tier D=obj E=title F=text G=applies_to_eu_csf H=applies_to_c3a I=applies_to_csi J=ev_exp K=ev_prov L=ev_type M=ans
+  // Columns: A=qid B=tier C=c3a_tier D=obj E=title F=text G=applies_to_eu_csf H=applies_to_c3a I=applies_to_csi J=ev_exp K=ev_prov L=ev_type M=ans N=guidance
   ws.columns = [
     { key: 'qid',       width: 16 },  // A
     { key: 'tier',      width: 10 },  // B
@@ -122,6 +122,7 @@ function addAssessmentSheet(
     { key: 'ev_prov',   width: 50 },  // K
     { key: 'ev_type',   width: 25 },  // L
     { key: 'ans',       width: 12 },  // M
+    { key: 'guidance',  width: 60 },  // N — read-only contextual guidance
   ];
 
   // Hide metadata columns
@@ -133,7 +134,7 @@ function addAssessmentSheet(
   const header = ws.addRow([
     'question_id', 'tier', 'c3a_tier', 'objective', 'question_title', 'question_text',
     'applies_to_eu_csf', 'applies_to_c3a', 'applies_to_csi_composite',
-    'evidence_expected', 'evidence_provided', 'evidence_type', 'answer',
+    'evidence_expected', 'evidence_provided', 'evidence_type', 'answer', 'guidance',
   ]);
   header.font = { bold: true };
   header.fill = HEADER_FILL;
@@ -158,7 +159,7 @@ function addAssessmentSheet(
   const ctx = { variant: 'EU-CSF' as const, country: undefined };
 
   function applyDataRow(row: ExcelJS.Row, qid: string, text: string, fill: ExcelJS.Fill,
-    c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean) {
+    c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean, guidance = '') {
     row.fill = fill;
     row.getCell(6).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(3).value = c3aTier;
@@ -170,6 +171,9 @@ function addAssessmentSheet(
     row.getCell(11).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(12).dataValidation = EVIDENCE_TYPE_VALIDATION;
     row.getCell(13).dataValidation = ANSWER_VALIDATION;
+    row.getCell(14).value = guidance;
+    row.getCell(14).alignment = { wrapText: true, vertical: 'top' };
+    row.getCell(14).font = { italic: true, color: { argb: 'FF6B7280' } };
     row.height = Math.min(60, Math.ceil(text.length / 80) * 15 + 15);
   }
 
@@ -192,25 +196,25 @@ function addAssessmentSheet(
           const euTitle  = q.title;
           const genTitle = q.title_generalized ?? q.title;
           const euRow  = ws.addRow([q.id, 'eu_csf',      c3aTier, obj.id, euTitle,  euText,  '', '', '', '', '', '', '']);
-          applyDataRow(euRow,  q.id, euText,  fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+          applyDataRow(euRow,  q.id, euText,  fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
           const genRow = ws.addRow([q.id, 'generalized', c3aTier, obj.id, genTitle, genText, '', '', '', '', '', '', '']);
-          applyDataRow(genRow, q.id, genText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+          applyDataRow(genRow, q.id, genText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
         } else {
           const text = resolvePlaceholders(q.text, ctx);
           const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, text, '', '', '', '', '', '', '']);
-          applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+          applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
         }
       } else {
         // Always emit both bloc and national rows.
         // Bloc rows are greyed out for non-EU countries via conditional formatting on the Setup country cell.
         const blocText = resolvePlaceholders(q.tiers.bloc.text, ctx);
         const blocRow = ws.addRow([q.id, 'bloc', c3aTier, obj.id, q.title, blocText, '', '', '', '', '', '', '']);
-        applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+        applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
 
         if (q.tiers.national) {
           const natText = resolvePlaceholders(q.tiers.national.text, ctx);
           const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
-          applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi);
+          applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
         }
       }
     }
@@ -218,7 +222,7 @@ function addAssessmentSheet(
 
   // Rule 1: grey out rows where none of the user's selected frameworks apply.
   ws.addConditionalFormatting({
-    ref: 'A2:M500',
+    ref: 'A2:N500',
     rules: [{
       type: 'expression',
       priority: 1,
@@ -232,7 +236,7 @@ function addAssessmentSheet(
 
   // Rule 2: grey out EU-only rows (bloc, eu_csf) when a non-EU/EEA country is selected.
   ws.addConditionalFormatting({
-    ref: 'A2:M500',
+    ref: 'A2:N500',
     rules: [{
       type: 'expression',
       priority: 2,
@@ -246,7 +250,7 @@ function addAssessmentSheet(
 
   // Rule 3: grey out generalized rows when an EU/EEA country is selected.
   ws.addConditionalFormatting({
-    ref: 'A2:M500',
+    ref: 'A2:N500',
     rules: [{
       type: 'expression',
       priority: 3,

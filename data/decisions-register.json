@@ -1287,6 +1287,25 @@
       "review_status": "stable",
       "created": "2026-05-17",
       "instrument_version": "2.0"
+    },
+    {
+      "id": "DR-E17",
+      "category": "extension",
+      "scope": "global",
+      "applies_to": "csi_composite",
+      "affected_element": { "type": "ui-behaviour", "ids": ["SOV-4-01-FB", "SOV-4-09-FB"] },
+      "source": { "doc": "CSI Editorial", "clauses": [] },
+      "description": "Fallback questions (identified by parent_criterion_id) are shown in the questionnaire only when the parent criterion is answered No. In Generalized (non-EU) mode, tiered questions with a text_generalized field on the tier display that text instead of the source-verbatim text containing framework-specific references (e.g. C5:2026). The original source text remains in the data for EU/EEA assessments.",
+      "rationale": "Showing fallback questions unconditionally adds noise for providers that meet the primary criterion. Conditional display reflects their intent: they are alternatives of last resort. text_generalized avoids surfacing German-standard references (C5:2026) to non-EU users for whom the standard is irrelevant, while keeping source fidelity for EU/EEA assessments.",
+      "alternatives_considered": [
+        "Always show fallback questions — rejected because it creates confusion for providers that already satisfy the primary criterion",
+        "Remove fallback questions entirely — rejected because they provide genuine partial credit pathways for non-EU providers with equivalent controls",
+        "Use a separate fallback sheet in the XLSX template — rejected as unnecessary complexity; a single Assessment sheet with conditional display is sufficient"
+      ],
+      "authority": "CSI Editorial Board",
+      "review_status": "stable",
+      "created": "2026-05-18",
+      "instrument_version": "2.0"
     }
   ]
 }

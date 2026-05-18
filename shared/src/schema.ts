@@ -11,6 +11,7 @@ export const SourceRefSchema = z.object({
 
 const TierSchema = z.object({
   text: z.string(),
+  text_generalized: z.string().optional(),
   seal_contribution: z.number().int().min(0).max(4),
   points: z.number().positive(),
   source: SourceRefSchema,

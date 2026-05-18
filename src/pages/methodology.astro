@@ -155,7 +155,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
         </div>
         <p class="text-gray-500 text-xs border-l-2 border-purple-300 pl-3">
           No weakest-link gate applies in Generalized mode. A single "no" on a strict EU criterion does not collapse the score.
-          Fallback questions SOV-4-01-FB (personnel residency) and SOV-4-09-FB (disconnect plan) provide alternative routes to partial credit.
+          Fallback questions <strong>SOV-4-01-FB</strong> (personnel residency) and <strong>SOV-4-09-FB</strong> (disconnect plan) provide alternative routes to partial credit. These questions are CSI Composite-only and appear in the questionnaire <em>only when the parent criterion is answered No</em> — they are hidden otherwise.
         </p>
       </div>
     </section>
@@ -287,7 +287,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           );
         })}
         <p class="text-xs text-gray-400 mt-2">
-          BSI C5:2026 is a security attestation framework. It is presupposed by this instrument but is not a source for CSI questions or scores.
+          BSI C5:2026 (Cloud Computing Compliance Criteria Catalogue) is a cloud security standard published by the German Federal Office for Information Security (BSI). It is presupposed by this instrument but is not a source for CSI questions or scores. In Generalized (non-EU) assessments, questions that reference C5:2026 controls display simplified plain-language text; the original C5 clause reference is available in the question guidance. See: <a href="https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html" target="_blank" rel="noopener" class="text-blue-600 underline">BSI C5 Catalogue</a>.
         </p>
       </div>
     </section>

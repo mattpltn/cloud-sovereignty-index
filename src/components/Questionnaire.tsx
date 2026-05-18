@@ -66,9 +66,21 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
       // Show AC only if C3A is selected AND customer selected this AC
       return fw.has('c3a') && acIdSet.has(q.id);
     }
-    return (fw.has('eu_csf') && q.applies_to_eu_csf) ||
+    const frameworkCheck = (fw.has('eu_csf') && q.applies_to_eu_csf) ||
            (fw.has('c3a') && q.applies_to_c3a) ||
            (fw.has('csi_composite') && q.applies_to_csi_composite);
+    if (!frameworkCheck) return false;
+    // Fallback questions (parent_criterion_id set) only appear when parent is answered 'no'
+    if (q.parent_criterion_id) {
+      const parentId = q.parent_criterion_id;
+      const parentQ = criteria.objectives.flatMap(o => o.questions).find(p => p.id === parentId);
+      if (!parentQ) return false;
+      const parentAnswer = parentQ.type === 'tiered'
+        ? (answers[`${parentId}:national`]?.value ?? answers[`${parentId}:bloc`]?.value)
+        : answers[parentId]?.value;
+      return parentAnswer === 'no';
+    }
+    return true;
   }
 
   const visibleAnswerValues: AnswerValue[] = c3aOnly
@@ -195,7 +207,10 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                   </span>
                 </div>
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
-                  {resolvePlaceholders(q.tiers.national!.text, ctx)}
+                  {resolvePlaceholders(
+                    (isGeneralized && q.tiers.national!.text_generalized) ? q.tiers.national!.text_generalized : q.tiers.national!.text,
+                    ctx
+                  )}
                 </p>
                 <AnswerButtons questionKey={natKey} value={natVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />
                 {natSatisfied && !isGeneralized && (
@@ -234,7 +249,10 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                   </p>
                 )}
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
-                  {resolvePlaceholders(q.tiers.bloc.text, ctx)}
+                  {resolvePlaceholders(
+                    (isGeneralized && q.tiers.bloc.text_generalized) ? q.tiers.bloc.text_generalized : q.tiers.bloc.text,
+                    ctx
+                  )}
                 </p>
                 <AnswerButtons questionKey={blocKey} value={blocVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />
                 {q.supplementary_info && (

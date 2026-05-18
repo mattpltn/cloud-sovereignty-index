@@ -69,9 +69,11 @@ Editorial blend of EU-CSF and C3A, adapted for global organisations.
 
 Answer values in Generalized mode: `yes` = 100%, `partial` = 50%, `planned` = 25% (roadmap commitment with timeline), `no` = 0%, `n/a` = excluded.
 
-Two fallback questions provide partial credit for providers unable to meet strict EU criteria:
+Two fallback questions provide partial credit for providers unable to meet strict EU criteria. They are **only shown when the parent criterion is answered No** — they remain hidden otherwise:
 - **SOV-4-01-FB** — security-cleared local residents as alternative to EU-citizen-only staffing
 - **SOV-4-09-FB** — documented disconnect plan with annual tabletop exercise
+
+Each question in the web questionnaire includes a **"Show guidance"** toggle that explains the question context, relevant standards (e.g. BSI C5:2026), and what good evidence looks like.
 
 The tool shows "To reach [next tier]: X% more needed" alongside the top gap questions on the results page and in the PDF report.
 

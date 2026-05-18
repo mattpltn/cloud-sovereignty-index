@@ -169,7 +169,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.1.4 SOV-1-04-C"
-          }
+          },
+          "supplementary_info": "\"C3A controls\" refers to the cloud autonomy requirements assessed in this tool — specifically the criteria covering strategic control (SOV-1), legal obligations (SOV-2), data sovereignty (SOV-3), operational independence (SOV-4), supply chain controls (SOV-5), and technology independence (SOV-6). A 90-day advance notice of ownership or governance changes gives customers time to act before sovereignty is undermined."
         }
       ]
     },
@@ -586,14 +587,14 @@
           "applies_to_csi_composite": true,
           "c3a_tier": "not_applicable",
           "parent_criterion_id": "SOV-4-01",
-          "text": "Where full EU/EEA citizen-only staffing is not yet achieved, does the provider ensure that all personnel with privileged access to the service are security-cleared local residents bound by confidentiality obligations under the applicable national law?",
+          "text": "Does the provider ensure that all personnel with privileged access to the service are security-cleared residents of {{COUNTRY}}, bound by confidentiality obligations under applicable national law?",
           "seal_contribution": 1,
           "points": 3,
           "source": {
             "doc": "CSI Editorial",
             "clause": "SOV-4 fallback"
           },
-          "supplementary_info": "This fallback question provides partial credit for providers that cannot yet meet the strict EU/EEA citizenship requirement of SOV-4-01 but maintain equivalent controls through national security clearance and residency requirements."
+          "supplementary_info": "This fallback question applies when the parent criterion (SOV-4-01) cannot be met. It provides partial credit for providers that maintain equivalent controls through national security clearance and residency requirements binding operating personnel to confidentiality under local law."
         },
         {
           "id": "SOV-4-02",
@@ -1036,6 +1037,7 @@
           "applies_to_c3a": true,
           "applies_to_csi_composite": true,
           "c3a_tier": "base",
+          "supplementary_info": "C5:2026 (Cloud Computing Compliance Criteria Catalogue) is a cloud security standard published by the German Federal Office for Information Security (BSI). OPS-01/02/03 cover capacity management: planning for future demand (OPS-01), monitoring current usage (OPS-02), and controlling resource allocation (OPS-03). See: https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html",
           "tiers": {
             "bloc": {
               "text": "Capacity management MUST be performed in {{BLOC}} in accordance with C5:2026 (OPS-01 Capacity Management – Planning, OPS-02 – Monitoring, OPS-03 – Controlling of Resources).",
@@ -1051,6 +1053,7 @@
             },
             "national": {
               "text": "Capacity management MUST be performed in {{COUNTRY}} in accordance with C5:2026 (OPS-01 Capacity Management – Planning, OPS-02 – Monitoring, OPS-03 – Controlling of Resources).",
+              "text_generalized": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{COUNTRY}}.",
               "seal_contribution": 3,
               "points": 5,
               "source": {
