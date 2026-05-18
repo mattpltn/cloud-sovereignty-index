@@ -186,6 +186,71 @@ import '../styles/global.css';
         </div>
       </section>
 
+      <!-- ── Frameworks ─────────────────────────────────────────────────── -->
+      <section>
+        <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Frameworks — EU-CSF, C3A, and CSI Composite</h2>
+
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the difference between EU-CSF, C3A, and CSI Composite?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed mb-2">Three independent frameworks are available. Each produces a completely separate result — no combined cross-framework score is calculated.</p>
+            <ul class="text-sm text-gray-700 space-y-3 list-none leading-relaxed">
+              <li>
+                <strong>EU Cloud Sovereignty Framework (EU-CSF) v1.2.1</strong> — Published by the European Commission. Covers all 8 sovereignty objectives (SOV-1 through SOV-8). Output is a SEAL level (0–4) using a strict weakest-link gate: a single unanswered foundational criterion collapses the objective to level 0. Designed for EU cloud procurement compliance. <em>Partial</em> answers earn half points but do not satisfy the gate.
+              </li>
+              <li>
+                <strong>BSI C3A v1.0</strong> — Published by Germany's Federal Office for Information Security. Covers SOV-1 through SOV-6 only (no security or sustainability objectives). Output is a binary pass/fail percentage — no SEAL or maturity tier. Criteria are strict: <em>Partial</em> counts as not-met. Some criteria are "Additional Criteria" that customers select before the assessment. Designed for EU government procurement, particularly for sovereign cloud in Germany and EU public administration.
+              </li>
+              <li>
+                <strong>CSI Composite (editorial framework)</strong> — An editorial blend of EU-CSF and C3A adapted for global use. See the next two questions for detail.
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What is the CSI Composite and why does it exist?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              EU-CSF and C3A were designed for EU procurement. Applied to non-EU cloud providers, their strict weakest-link gate creates a cliff effect: a single "No" on an EU-specific criterion (e.g. "all staff must be EU citizens") collapses the entire score to level 0 — even if the provider has strong controls everywhere else. For a Korean, Singaporean, or Ugandan CSP, this produces a misleadingly low score that obscures real progress.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              CSI Composite solves this with two variants:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-1">
+              <li><strong>EU/EEA variant:</strong> Identical to EU-CSF — same SEAL 0–4 levels, same weakest-link gate. Suitable for EU procurement comparison.</li>
+              <li><strong>Generalized (non-EU) variant:</strong> Replaces the weakest-link gate with a <em>Progressive Sovereignty Maturity</em> model. Score is a weighted percentage mapped to four tiers: Foundational (0–40%), Developing (41–70%), Advanced (71–90%), Pioneering (91–100%). This rewards genuine progress without penalising providers for failing EU-specific staffing or legal requirements that don't apply in their jurisdiction.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              CSI Composite is an editorial framework — it is not published by BSI or the European Commission and does not constitute EU-CSF or C3A certification.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">Which framework should I use?</h3>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed">
+              <li><strong>EU/EEA public procurement:</strong> EU-CSF (for regulatory language) + C3A (for technical depth). Both are source-faithful to their published standards.</li>
+              <li><strong>Global vendor comparison or progress tracking:</strong> CSI Composite (Generalized). Shows where a non-EU provider stands against EU sovereignty expectations without the cliff-effect penalty.</li>
+              <li><strong>German federal procurement specifically:</strong> C3A is the authoritative standard. Add EU-CSF for broader context.</li>
+              <li><strong>UK providers targeting EU contracts:</strong> Run EU-CSF explicitly. UK assessments default to CSI Composite Generalized since UK law is not EU law.</li>
+              <li><strong>All three together:</strong> Fully supported. Each framework result is reported independently.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-semibold mb-1">What are fallback questions and when do they appear?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Two CSI Composite-only fallback questions exist for criteria that are structurally impossible to satisfy in a non-EU context:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-1">
+              <li><strong>SOV-4-01-FB</strong> — "Operating Personnel — Security-Cleared Local Residents." Appears only if SOV-4-01 (EU/EEA citizen staffing) is answered No. Provides partial credit when the provider ensures staff hold national security clearances and are bound by local confidentiality law instead.</li>
+              <li><strong>SOV-4-09-FB</strong> — "Disconnect / Reconnect — Documented Plan and Annual Exercise." Appears only if SOV-4-09 (proven disconnect capability) is answered No. Provides partial credit when the provider has a documented procedure with evidence of at least one annual tabletop exercise.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              Fallback questions are hidden in the questionnaire unless the parent criterion is answered No. They do not appear for EU/EEA assessments or in EU-CSF / C3A frameworks.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <!-- ── Scoring ──────────────────────────────────────────────────────── -->
       <section>
         <h2 class="text-lg font-semibold border-b border-gray-100 pb-2 mb-4">Scoring & sovereignty levels</h2>
@@ -193,10 +258,11 @@ import '../styles/global.css';
         <div class="space-y-6">
           <div>
             <h3 class="text-sm font-semibold mb-1">What do the answer options mean?</h3>
-            <ul class="text-sm text-gray-700 space-y-1 leading-relaxed list-none">
+            <ul class="text-sm text-gray-700 space-y-2 leading-relaxed list-none">
               <li><strong>Yes</strong> — the criterion is fully met. Full points, counts toward the sovereignty level.</li>
               <li><strong>No</strong> — the criterion is not met. Zero points, does not count toward the sovereignty level.</li>
-              <li><strong>Partial</strong> — the criterion is partially met. Half points, but does <em>not</em> count toward the sovereignty level (it uses a weakest-link rule).</li>
+              <li><strong>Partial</strong> — the criterion is partially met. Half points, but does <em>not</em> count toward the EU-CSF / C3A sovereignty level (weakest-link rule). In CSI Composite Generalized mode, partial = 50% of question points with no gate.</li>
+              <li><strong>Planned</strong> — available in CSI Composite Generalized mode only. Earns 25% of question points. Represents a roadmap commitment with a documented timeline. <strong>Requires evidence:</strong> a board-approved roadmap, signed project plan, approved budget with target date, or vendor contract with delivery milestone. A "Planned" answer without a verifiable artefact should be treated as No in any external review. In EU-CSF and C3A, "Planned" scores as 0.</li>
               <li><strong>N/A</strong> — the criterion does not apply to this deployment. Excluded from both numerator and denominator, so it does not penalise the score.</li>
             </ul>
           </div>

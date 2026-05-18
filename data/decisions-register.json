@@ -1306,6 +1306,24 @@
       "review_status": "stable",
       "created": "2026-05-18",
       "instrument_version": "2.0"
+    },
+    {
+      "id": "DR-E18",
+      "category": "exclusion",
+      "scope": "global",
+      "applies_to": "csi_composite",
+      "affected_element": { "type": "question", "ids": ["SOV-4-01-C3"] },
+      "source": { "doc": "C3A", "clauses": ["§2.4.1 SOV-4-01-C3"] },
+      "description": "SOV-4-01-C3 ('Operating Personnel — Standalone European Organisation') is set applies_to_csi_composite: false. This question asks whether the CSP is a standalone European-headquartered entity — a concept that has no equivalent meaning for non-EU cloud providers. It remains applies_to_c3a: true so it can still be assessed in C3A mode for EU-scoped procurements.",
+      "rationale": "Including a question referencing 'standalone European organisation' in a non-EU CSI Composite assessment would confuse and mislead non-EU clients. The question provides no scoring signal for a CSP headquartered outside Europe. C3A is the appropriate scope for this criterion.",
+      "alternatives_considered": [
+        "Add text_generalized ('Is the CSP an independent locally-domiciled legal entity?') — rejected because the question's intent is specifically about EU corporate independence from foreign parent companies, not just local incorporation",
+        "Leave applies_to_csi_composite: true — rejected because it creates a credibility issue for non-EU enterprise clients and adds noise to non-EU assessments"
+      ],
+      "authority": "CSI Editorial Board",
+      "review_status": "stable",
+      "created": "2026-05-18",
+      "instrument_version": "2.0"
     }
   ]
 }

@@ -225,6 +225,9 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
         <p class="text-gray-500 text-xs border-l-2 border-purple-300 pl-3">
           CSI Composite is an editorial framework. Its results do not constitute EU-CSF or C3A certification.
         </p>
+        <p class="text-gray-500 text-xs border-l-2 border-yellow-300 pl-3">
+          <strong>Evidence requirement for "Planned" answers:</strong> A "Planned" answer earns 25% of question points only when backed by a verifiable artefact — a board-approved roadmap document with a named milestone and target date, a signed project plan, an approved budget line, or a vendor contract with delivery date. "Planned" without a traceable artefact should be treated as "No" in any external review.
+        </p>
       </div>
     </section>
 
@@ -264,6 +267,13 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           All adaptations are documented in the{' '}
           <a href="/methodology/decisions" class="text-blue-600 underline">Decisions Register</a>.
         </p>
+
+        <div class="border border-amber-100 bg-amber-50 rounded-lg p-4 text-xs text-amber-900 space-y-2">
+          <p class="font-semibold">Variant Assignment — Known Boundary Cases</p>
+          <p><strong>UK (post-Brexit):</strong> The United Kingdom is not an EU member state and is placed in the non-EU group, receiving the Generalized variant (maturity tiers) rather than the EU-CSF SEAL gate. UK-GDPR and NCSC frameworks are substantively equivalent to their EU counterparts, but UK law is not EU law. If a UK cloud provider is targeting EU procurement, they should run the EU-CSF framework explicitly — the tool supports framework selection independently of country.</p>
+          <p><strong>Non-EU clients running C3A:</strong> BSI C3A (v1.0) is a German/EU standard designed for EU cloud procurement. Non-EU organisations may use it as an aspirational benchmark, but the output (binary pass/fail, no maturity tier) should be interpreted as "compliance with EU cloud autonomy requirements" — not a local certification. C3A covers only SOV-1 through SOV-6.</p>
+          <p><strong>Score interpretation for non-EU assessments:</strong> CSI Composite scoring weights and questions were designed with EU cloud sovereignty regulations as the reference point. A non-EU provider's score measures alignment with EU sovereignty expectations — not their compliance with their own national framework. A Developing tier score does not imply insecurity; it means certain controls required by EU regulators have not yet been implemented.</p>
+        </div>
       </div>
     </section>
 
@@ -294,11 +304,19 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
 
     <section>
       <h2 class="text-xl font-semibold mb-3">7. Limitations</h2>
-      <p class="text-sm text-gray-700 leading-relaxed">
-        This is a self-assessment instrument, not a certification. Per C3A §1.1: "The C3A Framework
-        is not binding in itself." The score is an indicative measure. Results depend on the accuracy
-        and honesty of responses. No liability is accepted for decisions made based on assessment results.
-      </p>
+      <div class="text-sm text-gray-700 space-y-3 leading-relaxed">
+        <p>
+          This is a self-assessment instrument, not a certification. Per C3A §1.1: "The C3A Framework
+          is not binding in itself." The score is an indicative measure. Results depend on the accuracy
+          and honesty of responses. No liability is accepted for decisions made based on assessment results.
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-gray-600 text-xs">
+          <li><strong>Fallback question scoring:</strong> Fallback questions (SOV-4-01-FB, SOV-4-09-FB) are hidden in the web questionnaire unless the parent criterion is answered No. If an XLSX import includes answers to fallback questions when the parent is already answered Yes, both are scored — this is intentional (a provider meeting the strict criterion inherently satisfies the fallback) and cannot unfairly inflate scores.</li>
+          <li><strong>"Planned" answer:</strong> 25% credit is available only in CSI Composite Generalized mode. It must be backed by a documented artefact. In EU-CSF and C3A modes, "Planned" scores as 0. Roadmap commitments do not satisfy compliance certification requirements.</li>
+          <li><strong>UK and post-Brexit jurisdictions:</strong> UK assessments use the Generalized variant. UK-equivalent standards (UK-GDPR, NCSC) are not automatically mapped to EU-CSF criteria.</li>
+          <li><strong>Per-objective progression:</strong> The "points to next tier" indicator is global only. Per-objective progression guidance is not yet available.</li>
+        </ul>
+      </div>
     </section>
   </main>
 </body>

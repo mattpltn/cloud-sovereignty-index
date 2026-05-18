@@ -15,14 +15,15 @@ interface Props {
   customerSelectedAcIds?: string[];
 }
 
-type AnswerValue = 'yes' | 'no' | 'partial' | 'n/a';
+type AnswerValue = 'yes' | 'no' | 'partial' | 'planned' | 'n/a';
 
-const ANSWER_LABELS: Record<AnswerValue, string> = { yes: 'Yes', no: 'No', partial: 'Partial', 'n/a': 'N/A' };
+const ANSWER_LABELS: Record<AnswerValue, string> = { yes: 'Yes', no: 'No', partial: 'Partial', planned: 'Planned', 'n/a': 'N/A' };
 
 const ANSWER_COLORS: Record<AnswerValue, string> = {
   yes: 'bg-green-100 border-green-400 text-green-800',
   no: 'bg-red-100 border-red-400 text-red-800',
   partial: 'bg-yellow-100 border-yellow-400 text-yellow-800',
+  planned: 'bg-blue-100 border-blue-400 text-blue-800',
   'n/a': 'bg-gray-100 border-gray-400 text-gray-600',
 };
 
@@ -83,8 +84,12 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
     return true;
   }
 
+  // 'planned' (25% credit) is only available in CSI Composite Generalized mode
+  const isGeneralizedCsi = variant === 'Generalized' && fw.has('csi_composite');
   const visibleAnswerValues: AnswerValue[] = c3aOnly
     ? ['yes', 'no', 'n/a']
+    : isGeneralizedCsi
+    ? ['yes', 'no', 'partial', 'planned', 'n/a']
     : ['yes', 'no', 'partial', 'n/a'];
 
   useEffect(() => {

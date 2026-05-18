@@ -141,7 +141,13 @@ function addAssessmentSheet(
   header.height = 18;
   header.eachCell(cell => { cell.alignment = { vertical: 'middle' }; });
 
-  header.getCell(11).note = { texts: [{ text: 'Fill in: document name, URL, contract clause reference, attestation ID, page number, or "none available".' }] };
+  header.getCell(11).note = { texts: [
+    { font: { bold: true }, text: 'Evidence reference:\n' },
+    { text: 'Fill in: document name, URL, contract clause reference, attestation ID, or page number.\n\n' },
+    { font: { bold: true }, text: 'For "planned" answers, evidence is mandatory:\n' },
+    { text: 'Acceptable evidence: board-approved roadmap document with named milestone and target date; signed project plan; approved budget line; vendor contract with delivery date; or a formal programme record traceable to a decision-making authority.\n' },
+    { text: '"Planned" without a verifiable artefact will be treated as No during any external review.' },
+  ] };
   header.getCell(12).note = { texts: [{ text: 'Select the type of evidence provided.' }] };
   header.getCell(13).note = {
     texts: [
@@ -149,6 +155,7 @@ function addAssessmentSheet(
       { text: 'yes — fully compliant / implemented\n' },
       { text: 'no — not compliant / not implemented\n' },
       { text: 'partial — partially compliant (EU-CSF / CSI: half points; C3A: counts as not-met)\n' },
+      { text: 'planned — roadmap commitment with documented timeline (CSI Composite Generalized only: 25% of points; EU-CSF and C3A treat this as 0). REQUIRES evidence in column K: board-approved roadmap, signed project plan, or approved budget with target date.\n' },
       { text: 'n/a — not applicable (excluded from score entirely)\n' },
       { text: '\nLeave blank to skip a question.' },
     ],

@@ -353,8 +353,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.3.2 SOV-3-02-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-3-02-AC",
@@ -389,8 +388,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-3-03-AC1",
@@ -460,8 +458,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.3.4 SOV-3-04-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-3-04-AC1",
@@ -513,8 +510,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.3.5 SOV-3-05-C"
-          },
-          "supplementary_info": ""
+          }
         }
       ]
     },
@@ -557,8 +553,7 @@
                 "DR-S01"
               ]
             }
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-4-01-C3",
@@ -566,7 +561,7 @@
           "type": "single",
           "applies_to_eu_csf": false,
           "applies_to_c3a": true,
-          "applies_to_csi_composite": true,
+          "applies_to_csi_composite": false,
           "c3a_tier": "additional",
           "parent_criterion_id": "SOV-4-01",
           "text": "The operating personnel is part of an organization that MUST be a standalone European organization.",
@@ -629,8 +624,7 @@
                 "DR-S01"
               ]
             }
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-4-03",
@@ -646,8 +640,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.3 SOV-4-03-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-4-03-AC",
@@ -700,8 +693,7 @@
                 "DR-S01"
               ]
             }
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-4-05",
@@ -717,8 +709,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.5 SOV-4-05-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-4-05-AC1",
@@ -771,8 +762,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.6 SOV-4-06-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-4-07",
@@ -788,8 +778,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.7 SOV-4-07-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-4-08",
@@ -805,8 +794,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.8 SOV-4-08-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-4-08-AC",
@@ -840,8 +828,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.9 SOV-4-09-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-4-09-AC",
@@ -894,8 +881,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.10 SOV-4-10-C"
-          },
-          "supplementary_info": ""
+          }
         }
       ]
     },
@@ -919,8 +905,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.5.1 SOV-5-01-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-5-01-AC",
@@ -955,8 +940,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.5.2 SOV-5-02-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-5-02-AC",
@@ -990,8 +974,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.5.3 SOV-5-03-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-5-03-AC",
@@ -1026,8 +1009,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.5.4 SOV-5-04-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-5-05",
@@ -1088,8 +1070,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.6.1 SOV-6-01-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-6-02",
@@ -1105,8 +1086,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.6.2 SOV-6-02-C"
-          },
-          "supplementary_info": ""
+          }
         },
         {
           "id": "SOV-6-02-AC",
@@ -1140,8 +1120,7 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.6.3 SOV-6-03-C"
-          },
-          "supplementary_info": ""
+          }
         }
       ]
     },
