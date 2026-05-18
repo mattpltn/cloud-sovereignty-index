@@ -55,6 +55,26 @@ import '../styles/global.css';
           </div>
 
           <div>
+            <h3 class="text-sm font-semibold mb-1">Does this tool assess security?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              No. <strong>Security is assumed, not assessed.</strong> The Cloud Sovereignty Index presupposes that the cloud provider already meets a recognised security baseline — BSI C5:2026, ISO 27001, SOC 2 Type II, or equivalent. It does not re-examine whether data is encrypted, whether access controls are adequate, or whether incident response procedures exist. Those are security questions answered by security attestations.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              What this tool assesses is <strong>sovereignty</strong>: the degree to which your organisation retains meaningful control over its data and operations under geopolitical risk. This is a different, complementary question:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-1">
+              <li><strong>Security</strong> asks: "Is the data protected from unauthorised access?" A technically excellent provider with no sovereignty controls can score full marks on security certifications.</li>
+              <li><strong>Sovereignty</strong> asks: "Who ultimately controls the data, and can that control be exercised against your interests?" A provider that encrypts data perfectly but is subject to a foreign government's lawful access orders — or whose staff are all citizens of a state with geopolitical tensions with yours — may score low on sovereignty regardless of its security posture.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              The sovereign resilience lens specifically addresses geopolitical risk: what happens if ownership of the provider changes through a foreign acquisition, if a government compels data access under extra-territorial law, if political tensions force a sudden disconnection of foreign infrastructure, or if a provider's operating personnel lose their neutral status? These risks are not captured by ISO 27001 or SOC 2.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              <strong>Use this tool alongside security attestations, not instead of them.</strong> A cloud deployment needs both: proven security controls (verified by C5, ISO 27001, or equivalent) and a clear understanding of the sovereignty posture (assessed here).
+            </p>
+          </div>
+
+          <div>
             <h3 class="text-sm font-semibold mb-1">Is this a certification or a legal opinion?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
               No. This is a self-assessment instrument, not a certification. Per the BSI C3A §1.1:
