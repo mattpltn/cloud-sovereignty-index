@@ -87,6 +87,36 @@ import '../styles/global.css';
           </div>
 
           <div>
+            <h3 class="text-sm font-semibold mb-1">Does this tool assess whether I can exit my cloud provider?</h3>
+            <p class="text-sm text-gray-700 leading-relaxed">
+              Partially. Reversibility has two distinct dimensions, and the framework covers them differently.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              <strong>Provider-side operational independence — well covered.</strong> The framework directly assesses whether a provider can keep operating if external connections or vendor relationships are severed. Key criteria:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-1.5 list-disc pl-5 leading-relaxed mt-1">
+              <li><strong>SOV-4-09 / SOV-4-10</strong> (Disconnect/Reconnect): documented and annually tested ability to sever all non-EU network dependencies without service impairment — SEAL 3.</li>
+              <li><strong>SOV-6-01</strong> (Source Code Availability): source code and build toolchain held locally at all times; the provider can operate indefinitely without any external dependency — SEAL 4 (the highest single contribution in the framework).</li>
+              <li><strong>SOV-6-02 / AC</strong> (Continuous Service Delivery): documented contingency strategies and internal engineering capability if a third-party vendor is lost.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              <strong>Customer-side exit portability — partially covered.</strong> The framework also assesses whether the customer retains the technical means to take their data and identities elsewhere:
+            </p>
+            <ul class="text-sm text-gray-700 space-y-1.5 list-disc pl-5 leading-relaxed mt-1">
+              <li><strong>SOV-3-04</strong> (External Key Management): customer holds encryption keys outside the provider — exits with keys intact.</li>
+              <li><strong>SOV-3-07</strong> (Client-Side Encryption): only the customer can decrypt; maximum data independence (SEAL 4).</li>
+              <li><strong>SOV-3-05 + AC1/2/3</strong> (External Identity Provider): identity lives outside the provider via open standards; stateless auth prevents account lock-in.</li>
+              <li><strong>SOV-5-01/02/03-AC</strong> (Supply chain substitutability): documented architectural flexibility to substitute software, hardware, and services.</li>
+            </ul>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              <strong>What this tool does not assess:</strong> data export SLAs (format and timeline for retrieving your data after contract termination), API portability standards, termination clauses, data deletion obligations, exit fees, or notice periods. Those are procurement and legal concerns that fall outside the scope of a sovereignty assessment.
+            </p>
+            <p class="text-sm text-gray-700 leading-relaxed mt-2">
+              The design follows C3A §1.2: the framework measures <em>structural sovereignty</em> — whether the provider has built the controls that make exit technically possible — not <em>contractual portability</em>, which depends on the terms the customer has negotiated. Both matter; only the technical half is assessed here. See the <a href="/methodology#reversibility" class="text-blue-600 underline">Methodology page</a> for the full criteria mapping.
+            </p>
+          </div>
+
+          <div>
             <h3 class="text-sm font-semibold mb-1">Is this a certification or a legal opinion?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
               No. This is a self-assessment instrument, not a certification. Per the BSI C3A §1.1:

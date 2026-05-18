@@ -274,6 +274,39 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           <p><strong>Non-EU clients running C3A:</strong> BSI C3A (v1.0) is a German/EU standard designed for EU cloud procurement. Non-EU organisations may use it as an aspirational benchmark, but the output (binary pass/fail, no maturity tier) should be interpreted as "compliance with EU cloud autonomy requirements" — not a local certification. C3A covers only SOV-1 through SOV-6.</p>
           <p><strong>Score interpretation for non-EU assessments:</strong> CSI Composite scoring weights and questions were designed with EU cloud sovereignty regulations as the reference point. A non-EU provider's score measures alignment with EU sovereignty expectations — not their compliance with their own national framework. A Developing tier score does not imply insecurity; it means certain controls required by EU regulators have not yet been implemented.</p>
         </div>
+
+        <div class="border border-slate-200 bg-slate-50 rounded-lg p-4 text-xs text-slate-800 space-y-3 mt-4">
+          <p class="font-semibold text-slate-900">Reversibility and Exit Readiness</p>
+          <p>
+            Cloud sovereignty is closely linked to <strong>reversibility</strong> — the degree to which a customer can exit a provider without being technically or operationally stranded. The framework addresses this across two distinct dimensions.
+          </p>
+          <p class="font-medium">Dimension 1 — Provider-side operational independence <span class="font-normal text-slate-500">(well-covered by SOV-4 and SOV-6)</span></p>
+          <p>Can the provider keep operating if external connections or vendors are severed? These criteria verify there are no hidden dependencies that would force discontinuation:</p>
+          <table class="w-full text-xs border-collapse mt-1">
+            <tbody>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium w-48">SOV-4-09 / SOV-4-10</td><td class="py-1 text-slate-600">Can sever all non-EU network connections without service impairment; process documented and tested annually (SEAL 3)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-6-01</td><td class="py-1 text-slate-600">Source code + build toolchain held locally (max 24 h old); can operate without any external dependency (SEAL 4 — highest contribution)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-6-02 / AC</td><td class="py-1 text-slate-600">Documented contingency strategies if a third-party software vendor is lost; internal engineering capability to patch independently (SEAL 3–4)</td></tr>
+              <tr><td class="py-1 pr-3 font-medium">SOV-6-03</td><td class="py-1 text-slate-600">Internal tooling and talent to maintain and update the platform without vendor dependency (SEAL 3)</td></tr>
+            </tbody>
+          </table>
+          <p class="font-medium mt-2">Dimension 2 — Customer-side exit portability <span class="font-normal text-slate-500">(partially covered by SOV-3 and SOV-5)</span></p>
+          <p>Can the customer take their data and identities elsewhere? These criteria ensure the customer retains the technical means to leave with data intact:</p>
+          <table class="w-full text-xs border-collapse mt-1">
+            <tbody>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium w-48">SOV-3-04</td><td class="py-1 text-slate-600">Customer holds encryption keys <em>outside</em> the provider — can exit with all keys intact (SEAL 3)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-07</td><td class="py-1 text-slate-600">Client-side encryption: only the customer can decrypt; maximum data independence (SEAL 4)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-05 + AC1/2/3</td><td class="py-1 text-slate-600">Identity lives outside the provider via open standards; stateless auth prevents account lock-in (SEAL 2–3)</td></tr>
+              <tr><td class="py-1 pr-3 font-medium">SOV-5-01/02/03-AC</td><td class="py-1 text-slate-600">Documented architectural flexibility to substitute software, hardware, and services (SEAL 3 — Additional Criteria)</td></tr>
+            </tbody>
+          </table>
+          <p class="font-medium mt-2 text-slate-700">What this framework does not assess</p>
+          <p>These are out of scope by design: <strong>data export SLAs</strong> (format and timeline for data return on contract termination); <strong>API portability standards</strong> (CNCF, OCI, TOSCA); <strong>contractual exit rights</strong> (termination clauses, data deletion obligations, exit fees, notice periods). Those are procurement and legal concerns.</p>
+          <p>
+            This position is consistent with C3A §1.2: the framework measures <em>structural sovereignty</em> — whether the provider has built the controls that make exit technically possible — not <em>contractual portability</em>, which depends on the customer's negotiated terms. Both are necessary for genuine reversibility; this tool addresses the technical half.
+          </p>
+          <p class="text-slate-500 italic">Recommended procurement complement: documented data return SLA (format, timeline, cost); termination assistance period; data deletion certification after exit; API compatibility commitments.</p>
+        </div>
       </div>
     </section>
 
@@ -315,6 +348,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           <li><strong>"Planned" answer:</strong> 25% credit is available only in CSI Composite Generalized mode. It must be backed by a documented artefact. In EU-CSF and C3A modes, "Planned" scores as 0. Roadmap commitments do not satisfy compliance certification requirements.</li>
           <li><strong>UK and post-Brexit jurisdictions:</strong> UK assessments use the Generalized variant. UK-equivalent standards (UK-GDPR, NCSC) are not automatically mapped to EU-CSF criteria.</li>
           <li><strong>Per-objective progression:</strong> The "points to next tier" indicator is global only. Per-objective progression guidance is not yet available.</li>
+          <li><strong>Data export and contractual portability:</strong> The tool measures whether the technical sovereignty controls enabling exit are in place (encryption key ownership, source code backup, architectural substitutability), but does not assess contractual terms governing data return format, timelines, exit fees, or switching costs. Procurement due diligence should cover both dimensions. See the Reversibility and Exit Readiness callout in §5 for the full mapping.</li>
         </ul>
       </div>
     </section>
