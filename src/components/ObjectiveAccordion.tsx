@@ -68,10 +68,11 @@ function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string, ctx:
   return null;
 }
 
-function questionStatus(q: QuestionResult, overallSeal: number): 'blocking' | 'gap' | 'partial' | 'ok' | 'na' {
+function questionStatus(q: QuestionResult, overallSeal: number): 'blocking' | 'gap' | 'partial' | 'planned' | 'ok' | 'na' {
   if (q.value === 'n/a') return 'na';
   if (q.value === 'yes') return 'ok';
   if (q.value === 'partial') return 'partial';
+  if (q.value === 'planned') return 'planned';
   // no
   if (q.seal_contribution > overallSeal) return 'blocking';
   return 'gap';
@@ -81,6 +82,7 @@ const STATUS_CONFIG = {
   blocking: { label: 'Blocking', bg: 'bg-red-50', border: 'border-red-200', badge: 'bg-red-100 text-red-700', dot: '●' },
   gap:      { label: 'Gap',      bg: 'bg-amber-50', border: 'border-amber-200', badge: 'bg-amber-100 text-amber-700', dot: '●' },
   partial:  { label: 'Partial',  bg: 'bg-amber-50', border: 'border-amber-200', badge: 'bg-amber-100 text-amber-700', dot: '◐' },
+  planned:  { label: 'Planned',  bg: 'bg-blue-50',  border: 'border-blue-200',  badge: 'bg-blue-100 text-blue-700',  dot: '→' },
   ok:       { label: 'OK',       bg: '',            border: 'border-transparent', badge: 'bg-green-100 text-green-700', dot: '✓' },
   na:       { label: 'N/A',      bg: 'bg-gray-50',  border: 'border-transparent', badge: 'bg-gray-100 text-gray-500', dot: '–' },
 };
@@ -175,7 +177,7 @@ export default function ObjectiveAccordion({ objectives, criteria, country, vari
                             {meta?.source && <span className="text-gray-400 block mt-0.5">{meta.source}</span>}
                           </td>
                           <td className="px-3 py-2 font-medium whitespace-nowrap">
-                            {q.value === 'yes' ? '✅ yes' : q.value === 'no' ? '❌ no' : q.value === 'partial' ? '◐ partial' : '– n/a'}
+                            {q.value === 'yes' ? '✅ yes' : q.value === 'no' ? '❌ no' : q.value === 'partial' ? '◐ partial' : q.value === 'planned' ? '→ planned' : '– n/a'}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
                             {q.points_possible > 0 ? `${q.points_earned}/${q.points_possible}` : '—'}

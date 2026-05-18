@@ -464,7 +464,7 @@ export interface ParsedXlsx {
   selected_frameworks?: string[];
 }
 
-const VALID_ANSWERS = new Set(['yes', 'no', 'partial', 'n/a']);
+const VALID_ANSWERS = new Set(['yes', 'no', 'partial', 'planned', 'n/a']);
 
 export async function parseXlsx(buffer: ArrayBuffer): Promise<ParsedXlsx> {
   const ExcelJS = (await import('exceljs')).default;

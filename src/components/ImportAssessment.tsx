@@ -9,7 +9,7 @@ interface Props {
   defaultVariant: 'EU-CSF' | 'Generalized';
 }
 
-type AnswerValue = 'yes' | 'no' | 'partial' | 'n/a';
+type AnswerValue = 'yes' | 'no' | 'partial' | 'planned' | 'n/a';
 const VALID_ANSWERS = new Set<string>(['yes', 'no', 'partial', 'planned', 'n/a']);
 
 function parseJson(text: string): { answers: AnswerMap; error?: string } {
