@@ -305,7 +305,7 @@ export async function buildReportPdf(
   });
 
   const isGeneralized = result.variant === 'Generalized';
-  const levelPrefix = isGeneralized ? 'CSL' : 'SEAL';
+  const levelPrefix = 'SEAL';
 
   const CSI_MATURITY_LABELS = ['Foundational', 'Developing', 'Advanced', 'Pioneering'];
   const CSI_MATURITY_HEX = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];

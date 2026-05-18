@@ -140,7 +140,7 @@ export default function ObjectiveAccordion({ objectives, criteria, country, vari
               </div>
               <div className="text-sm font-medium shrink-0" style={{ color }}>{pct}%</div>
               <div className="text-xs px-2 py-0.5 rounded-full text-white font-medium shrink-0" style={{ backgroundColor: color }}>
-                {variant === 'Generalized' ? 'CSL' : 'SEAL'} {seal}
+                {variant === 'Generalized' ? 'Level' : 'SEAL'} {seal}
               </div>
               <div className="text-gray-400 text-xs shrink-0">{isOpen ? '▲' : '▼'}</div>
             </button>

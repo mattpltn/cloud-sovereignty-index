@@ -70,7 +70,7 @@ const variant = (record?.variant as string) ?? 'EU-CSF';
 const instrumentVersion = (record?.instrument_version as string) ?? '2.0';
 const companyName = (record?.company_name as string | undefined) || undefined;
 const countryCode = (record?.national_country as string | undefined) || undefined;
-const levelPrefix = variant === 'Generalized' ? 'CSL' : 'SEAL';
+const levelPrefix = 'SEAL';
 
 const rawDate = (record?.finalized_at as string | null) ?? result?.assessed_at ?? null;
 const assessedAt = rawDate

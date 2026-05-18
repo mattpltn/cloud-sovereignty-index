@@ -15,7 +15,7 @@ function EuCsfCard({ eu_csf, variant }: { eu_csf: EuCsfResult; variant: string }
   const pct = eu_csf.global.pct;
   const color = SEAL_COLORS[seal] ?? '#6b7280';
   const label = SEAL_NAMES[seal] ?? `Level ${seal}`;
-  const levelPrefix = variant === 'Generalized' ? 'CSL' : 'SEAL';
+  const levelPrefix = 'SEAL';
 
   return (
     <div className="border border-gray-200 rounded-xl p-6 flex-1 min-w-0">
@@ -137,7 +137,7 @@ function CsiCard({ csi, variant }: { csi: CsiCompositeResult; variant: string })
       <div className="text-5xl font-bold tabular-nums mb-2" style={{ color }}>{Math.round(pct)}%</div>
       <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium text-white mb-3"
         style={{ backgroundColor: color }}>
-        {isGeneralized ? label : `${variant === 'EU-CSF' ? 'SEAL' : 'CSL'} ${csl} — ${label}`}
+        {isGeneralized ? label : `SEAL ${csl} — ${label}`}
       </div>
       {isGeneralized && <MaturityBar pct={pct} csl={csl} />}
       <p className="text-xs text-gray-500 mt-3">
