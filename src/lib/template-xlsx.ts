@@ -58,6 +58,26 @@ const EVIDENCE_EXPECTED: Record<string, string> = {
   'SOV-8-03': 'Hardware end-of-life policy: secure data destruction procedure (e.g. NIST SP 800-88 reference), refurbishment / recycling partners, percentages refurbished vs disposed. Independent attestation preferred.',
   'SOV-8-04': 'Most recent annual sustainability report covering carbon emissions (Scope 1, 2, 3), water usage, energy consumption — scoped to the cloud service. CDP submission reference if applicable. URL acceptable.',
   'SOV-8-05': 'Published time-bound improvement targets for environmental sustainability metrics: target year, baseline year, magnitude. Most recent progress report. Distinguish science-based targets (e.g. SBTi-validated) from internal commitments.',
+
+  // Additional Criteria (AC) and Fallback (FB) questions
+  'SOV-3-02-AC': 'List of SaaS services in scope; for each: confirmation of external KMS support, supported protocols (KMIP, PKCS#11, REST/JWK), and tested HSM/KMS vendors. Where only a subset of SaaS supports external KMS, provide that list explicitly per the criterion text. Customer reference or integration test result preferred over self-declaration.',
+  'SOV-3-03-AC1': 'Technical documentation confirming external IdP integration uses open, non-proprietary standards: SAML 2.0, OIDC/OAuth2, SCIM. Confirm no proprietary extension is required for core authentication flows. Link to public documentation or integration guide.',
+  'SOV-3-03-AC2': 'Architecture documentation or technical specification confirming stateless authentication: no shadow account or directory mirror is created in the provider\'s directory when a customer uses their own IdP. Identify any administrative actions that require provider-side accounts (break-glass, support access) and document their scope.',
+  'SOV-3-03-AC3': 'Technical documentation showing support for claim-based and attribute-based access control driven by the customer\'s IdP (e.g. ABAC via JWT/SAML attributes). Examples of supported claim types and how they map to access decisions. API reference or integration guide.',
+  'SOV-3-04-AC1': 'Logging API documentation: endpoint reference, supported protocols (REST, gRPC, OpenSearch, etc.), real-time delivery latency guarantee, and confirmation that the API uses open or open-source protocols. Sample API call, SDK code example, or Postman collection preferred.',
+  'SOV-3-04-AC2': 'Documentation of log filtering capabilities: supported filter parameters (time range, resource type, event type, severity, user identity, correlation ID), applying to both management-plane and data-plane logs. API reference section or dashboard screenshot demonstrating filter configuration.',
+  'SOV-4-01-C3': 'Commercial registry documentation confirming the entity providing operating personnel is a standalone European legal entity with no non-EU controlling shareholder or parent. Ownership structure showing ultimate beneficial owners and jurisdictions. Board composition and governance charter confirming independence from non-EU direction.',
+  'SOV-4-01-FB': 'Written policy confirming all privileged-access personnel are residents of the assessed country. Evidence of national security clearance (or equivalent national vetting scheme) applied to those roles, including re-screening frequency. Contract clauses or employee agreements binding personnel to confidentiality under applicable national law.',
+  'SOV-4-03-AC': 'Corporate ownership documentation for at least one connectivity provider demonstrating it is not owned by or affiliated with the cloud service provider. Commercial registry extract or company structure diagram. Network redundancy architecture diagram showing the independent provider.',
+  'SOV-4-05-AC1': 'Architecture documentation confirming the secure network area (DMZ / ingress control zone) is implemented on dedicated physical devices, not virtualised shared infrastructure. Data centre audit report section or formal attestation from a qualified auditor covering network segmentation. NDA-restricted disclosure acceptable.',
+  'SOV-4-05-AC2': 'Existence of a documented authority disclosure procedure: procedure document (redacted acceptable), identification of the responsible cybersecurity authority for the data centre location, and the secure submission mechanism. Prior disclosure events or test-disclosure exercise records are acceptable supporting evidence.',
+  'SOV-4-08-AC': 'Confirmation that the DFD required under SOV-4-08 can be submitted to the responsible cybersecurity authority on request. Authority disclosure procedure documentation, identification of the responsible authority, and secure disclosure mechanism. Evidence of any prior formal or test disclosure preferred.',
+  'SOV-4-09-AC': 'Confirmation that the disconnect process documentation and test reports required under SOV-4-09 can be provided to the responsible cybersecurity authority on request. Authority disclosure procedure, identification of the responsible authority, and secure disclosure mechanism. Prior formal or test disclosure record preferred.',
+  'SOV-4-09-FB': 'Documented disconnect and reconnect procedure (redacted acceptable). Evidence of at least one tabletop exercise in the past 12 months: date, scope, participants, and outcome summary. A facilitated tabletop with written sign-off is sufficient — a live operational disconnect test is not required for this fallback.',
+  'SOV-5-01-AC': 'Software dependency risk management process document: methodology for identifying critical dependencies, risk scoring, and mitigation strategies (dual-source, internal fork, open-source fallback). For critical dependencies where substitution is not feasible: the disclosure provided to customers. Date of most recent risk assessment.',
+  'SOV-5-02-AC': 'Hardware dependency risk management process document: methodology for identifying critical hardware dependencies, risk scoring, and mitigation strategies (multi-vendor sourcing, strategic inventory, architectural substitution). For critical dependencies where substitution is not feasible: the disclosure provided to customers. Date of most recent risk assessment.',
+  'SOV-5-03-AC': 'External service dependency management process document: inventory of external services (name, provider, jurisdiction), criticality classification, and mitigation strategies. For dependencies where substitution is not feasible: the disclosure provided to customers. Date of most recent review.',
+  'SOV-6-02-AC': 'Description of internal engineering capability to maintain and patch the platform without third-party vendor involvement: team composition and skills, internal build environments, toolchain independence. Evidence of at least one instance of independent vulnerability remediation or emergency patch deployment (incident report, internal audit extract, or attestation). Independent third-party attestation preferred.',
 };
 
 const EVIDENCE_TYPE_VALIDATION: ExcelJS.DataValidation = {
@@ -176,8 +196,6 @@ function addAssessmentSheet(
     row.getCell(10).value = EVIDENCE_EXPECTED[qid] ?? '';
     row.getCell(10).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(11).alignment = { wrapText: true, vertical: 'top' };
-    row.getCell(12).dataValidation = EVIDENCE_TYPE_VALIDATION;
-    row.getCell(13).dataValidation = ANSWER_VALIDATION;
     row.getCell(14).value = guidance;
     row.getCell(14).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(14).font = { italic: true, color: { argb: 'FF6B7280' } };
@@ -226,6 +244,10 @@ function addAssessmentSheet(
       }
     }
   }
+
+  // Apply DV as single ranges to avoid overlapping ranges from per-cell assignment
+  ws.addDataValidation({ sqref: 'L2:L500', ...EVIDENCE_TYPE_VALIDATION });
+  ws.addDataValidation({ sqref: 'M2:M500', ...ANSWER_VALIDATION });
 
   // Rule 1: grey out rows where none of the user's selected frameworks apply.
   ws.addConditionalFormatting({
