@@ -163,14 +163,14 @@
           "applies_to_c3a": true,
           "applies_to_csi_composite": true,
           "c3a_tier": "base",
-          "text": "Does the cloud service provider commit to inform customers 90 days in advance of any actual changes affecting control that could undermine the C3A controls (e.g., changes to ownership, shareholding, or governance)?",
+          "text": "Does the cloud service provider commit to inform customers 90 days in advance of any actual changes affecting control that could undermine the sovereignty controls assessed in this tool (e.g., changes to ownership, shareholding, or governance)?",
           "seal_contribution": 2,
           "points": 4,
           "source": {
             "doc": "C3A",
             "clause": "§2.1.4 SOV-1-04-C"
           },
-          "supplementary_info": "\"C3A controls\" refers to the cloud autonomy requirements assessed in this tool — specifically the criteria covering strategic control (SOV-1), legal obligations (SOV-2), data sovereignty (SOV-3), operational independence (SOV-4), supply chain controls (SOV-5), and technology independence (SOV-6). A 90-day advance notice of ownership or governance changes gives customers time to act before sovereignty is undermined."
+          "supplementary_info": "\"Sovereignty controls\" refers to the cloud autonomy requirements assessed in this tool — specifically the criteria covering strategic control (SOV-1), legal obligations (SOV-2), data sovereignty (SOV-3), operational independence (SOV-4), supply chain controls (SOV-5), and technology independence (SOV-6). A 90-day advance notice of ownership or governance changes gives customers time to act before sovereignty is undermined."
         }
       ]
     },
@@ -206,7 +206,7 @@
           "c3a_tier": "base",
           "tiers": {
             "bloc": {
-              "text": "Does the cloud service provider document procedures that allow the relevant federal or national cybersecurity authority (in the country where the data center is located) to verify compliance with C3A criteria by audit?",
+              "text": "Does the cloud service provider document procedures that allow the relevant federal or national cybersecurity authority (in the country where the data center is located) to verify compliance with sovereignty criteria by audit?",
               "seal_contribution": 2,
               "points": 5,
               "source": {
@@ -215,7 +215,7 @@
               }
             },
             "national": {
-              "text": "Does the cloud service provider document procedures that allow {{NATIONAL_ADMIN}} to verify compliance with C3A criteria by audit?",
+              "text": "Does the cloud service provider document procedures that allow {{NATIONAL_ADMIN}} to verify compliance with sovereignty criteria by audit?",
               "seal_contribution": 3,
               "points": 5,
               "source": {
