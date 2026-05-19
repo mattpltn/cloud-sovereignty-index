@@ -50,6 +50,21 @@ function AnswerButtons({ questionKey, value, onAnswer, answerValues }: {
   );
 }
 
+function activeFrameworkTags(q: Question, fw: Set<string>): string {
+  const tags: string[] = [];
+  if ((q.applies_to_eu_csf ?? false) && fw.has('eu_csf')) tags.push('EU-CSF');
+  if ((q.applies_to_c3a ?? false) && fw.has('c3a')) tags.push('C3A');
+  if ((q.applies_to_csi_composite ?? false) && fw.has('csi_composite')) tags.push('CSI');
+  return tags.join(' · ');
+}
+
+function sourceLabel(q: Question, fw: Set<string>, clauseDoc: string, clauseRef: string): string {
+  const fwTag = activeFrameworkTags(q, fw);
+  const clause = `${clauseDoc} ${clauseRef}`.trim();
+  if (fwTag && clause) return `${fwTag} — ${clause}`;
+  return fwTag || clause;
+}
+
 export default function Questionnaire({ id, objectiveId, criteria, country, variant, allObjectiveIds, selectedFrameworks = ['csi_composite'], customerSelectedAcIds = [] }: Props) {
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
@@ -170,7 +185,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               text={resolvePlaceholders(qText, ctx)}
               sealContribution={q.seal_contribution}
               points={q.points}
-              source={`${q.source.doc} ${q.source.clause}`}
+              source={sourceLabel(q, fw, q.source.doc, q.source.clause)}
               supplementaryInfo={q.supplementary_info}
               isAdditionalCriterion={q.c3a_tier === 'additional'}
               value={val}
@@ -224,7 +239,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                   </p>
                 )}
                 <div className="mt-2 text-xs text-gray-400">
-                  Source: {q.tiers.national!.source.doc} {q.tiers.national!.source.clause}
+                  {sourceLabel(q, fw, q.tiers.national!.source.doc, q.tiers.national!.source.clause)}
                 </div>
               </div>
             )}
@@ -276,7 +291,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                   </div>
                 )}
                 <div className="mt-2 text-xs text-gray-400">
-                  Source: {q.tiers.bloc.source.doc} {q.tiers.bloc.source.clause}
+                  {sourceLabel(q, fw, q.tiers.bloc.source.doc, q.tiers.bloc.source.clause)}
                 </div>
               </div>
             )}

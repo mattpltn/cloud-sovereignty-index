@@ -934,9 +934,11 @@
       "rationale": "SEAL is a term coined by the EU Cloud Sovereignty Framework and is associated with EU procurement criteria (EU-CSF §1: 'public procurement tenders'). Applying the SEAL label to a non-EU assessment implies alignment with EU procurement requirements that may not be relevant to the assessed organisation's jurisdiction. CSL (Cloud Sovereignty Level) uses identical methodology and the same 0–4 scale but avoids the EU-anchored branding. This distinction is important for organisations in countries such as Algeria, Laos, or Brazil where EU procurement rules do not apply.",
       "authority": "Editorial. Scope: display only. No change to scoring engine, weights, or data schema.",
       "alternatives_considered": "Keep SEAL for all variants — rejected because it misleads non-EU users into believing their result has EU procurement significance. Use a fully different scale name and mapping — rejected as unnecessary complexity when the methodology is identical.",
-      "review_status": "pending-external-review",
+      "review_status": "superseded",
       "created": "2026-05-13",
-      "instrument_version": "1.0"
+      "instrument_version": "2.0",
+      "superseded_by": "DR-E16",
+      "superseded_note": "CSL (Cloud Sovereignty Level) was retired in v2.0. Non-EU assessments using CSI Composite now display a Progressive Sovereignty Maturity tier (Foundational/Developing/Advanced/Pioneering) rather than a CSL 0–4 label. See DR-E16 for the maturity tier design."
     },
     {
       "id": "DR-E07",
@@ -946,8 +948,7 @@
       "affected_element": {
         "type": "export",
         "ids": [
-          "EU Assessment sheet",
-          "Global Assessment sheet"
+          "Assessment sheet"
         ]
       },
       "source": {
@@ -957,14 +958,14 @@
       },
       "adaptation": {
         "summary": "Three columns added to the XLSX assessment template between question_text and answer: evidence_expected (pre-filled per criterion, locked), evidence_provided (free text, CSP fills), evidence_type (dropdown: Audit report / certification, Contract clause, Public documentation, Provider statement, Verbal / none).",
-        "adapted_text": "Column layout (A–I): question_id | tier | objective | question_title | question_text | evidence_expected | evidence_provided | evidence_type | answer. Columns G, H, I are editable by the CSP; A–F are locked. evidence_type values are descriptive and are not scoring inputs — the tool surfaces evidence distribution in reports but does not auto-degrade Yes answers based on evidence weakness, preserving customer judgment."
+        "adapted_text": "Column layout (A–N, 4 hidden): question_id | tier | c3a_tier* | objective | question_title | question_text | applies_to_eu_csf* | applies_to_c3a* | applies_to_csi_composite* | evidence_expected | evidence_provided | evidence_type | answer | guidance. Columns marked * are hidden metadata used by the import parser. Columns K, L, M (evidence_provided, evidence_type, answer) are unlocked for CSP completion; all others are locked. evidence_type dropdown: Audit report / certification, Contract clause, Public documentation, Provider statement, Verbal / none. A–F and J are pre-filled and locked by CSI. Column N (guidance) is read-only contextual notes, provided selectively. v2.0 merged the former EU Assessment and Global Assessment sheets into a single Assessment sheet; the tier column (eu_csf, generalized, bloc, national, single) identifies applicable context."
       },
       "rationale": "A Yes answer with no supporting evidence reference has limited value in a customer–provider dialogue. The evidence columns operationalise C3A §1.1's 'verifiable criteria' framing and EU-CSF §1's 'supporting evidence' framing. The evidence_type dropdown enables downstream analysis of evidence quality distribution across providers without requiring scoring engine changes.",
       "authority": "Editorial. Scope: XLS export and future report display only. No change to scoring engine, weights, methodology, or data schema in the stored assessment.",
       "alternatives_considered": "Weight Yes answers by evidence type in the scoring engine — rejected as it introduces subjectivity into what should be a factual self-assessment. Require evidence before accepting Yes — rejected as too prescriptive for a self-assessment instrument.",
       "review_status": "pending-external-review",
       "created": "2026-05-13",
-      "instrument_version": "1.0"
+      "instrument_version": "2.0"
     },
     {
       "id": "DR-E08",
@@ -994,9 +995,11 @@
       "rationale": "C5:2026 introduces OPS-30/31 as mandatory controls and OPS-32/33 as Additional Complement (strongly recommended). Multi-tenancy isolation and confidential computing are directly relevant to data sovereignty: both determine whether a customer's data can be isolated from provider access and from co-tenant exposure. Omitting these from the sovereignty assessment while citing C5:2026 would create a false signal of C5:2026 coverage.",
       "authority": "Faithful operationalization of C5:2026. SEAL contributions: SOV-3-08 gates SEAL-2 (data sovereignty baseline); SOV-3-09 gates SEAL-3 (only applies when TEE capability is claimed).",
       "alternatives_considered": "Reference C5:2026 compliance as a whole without specific criteria — rejected as it hides the specific gaps from assessors and CSPs. Include SOV-3-09 only as informative — rejected as C5:2026 positions OPS-32/33 as strongly recommended Additional Complement, not informative only.",
-      "review_status": "pending-external-review",
+      "review_status": "superseded",
       "created": "2026-05-14",
-      "instrument_version": "1.1"
+      "instrument_version": "2.0",
+      "superseded_by": "DR-X04",
+      "superseded_note": "The C5:2026 questions added by this decision were removed in v2.0 per DR-X04. C5 is now presupposed (DR-E11); sovereignty questions that cited C5 clauses for provenance remain in the instrument but are not C5 compliance questions."
     },
     {
       "id": "DR-E09",
@@ -1028,9 +1031,11 @@
       "rationale": "C5:2026 introduces a new BCM domain (BCM-01–04) absent from C5:2020 and makes container security explicit via OPS-34/35. Both are directly relevant to operational sovereignty: BCM ensures a provider can maintain service under disruption, while container security governs a dominant runtime environment in modern cloud operations. Without these criteria, the assessment understates operational risk for container-heavy providers.",
       "authority": "Faithful operationalization of C5:2026. SEAL contributions: SOV-4-11 gates SEAL-2 (conditional on container use); SOV-4-12 gates SEAL-2 (unconditional BCM baseline).",
       "alternatives_considered": "Treat BCM as covered by existing SOV-4-09/10 — rejected as those criteria address only network disconnect/reconnect, not organisational continuity planning. Make container security informative — rejected because C5:2026 OPS-34/35 are mandatory controls, not Advisory.",
-      "review_status": "pending-external-review",
+      "review_status": "superseded",
       "created": "2026-05-14",
-      "instrument_version": "1.1"
+      "instrument_version": "2.0",
+      "superseded_by": "DR-X04",
+      "superseded_note": "The C5:2026 questions added by this decision were removed in v2.0 per DR-X04. C5 is now presupposed (DR-E11); sovereignty questions that cited C5 clauses for provenance remain in the instrument but are not C5 compliance questions."
     },
     {
       "id": "DR-E10",
@@ -1056,9 +1061,11 @@
       "rationale": "C5:2026 introduces PQC strategy documentation as an Additional Complement (strongly recommended) in the CRY domain, reflecting BSI's position that quantum computing represents a near-term threat to current asymmetric cryptography. PQC readiness is a supply chain concern because cryptographic dependencies span software libraries, hardware security modules, and third-party services — all supply chain components inventoried in SOV-5-01 and SOV-5-02. A provider without a PQC roadmap has an undisclosed supply chain risk.",
       "authority": "Faithful operationalization of C5:2026 CRY domain. SEAL contribution: SOV-5-06 gates SEAL-3 for SOV-5 (digital resilience).",
       "alternatives_considered": "Add PQC as supplementary_info on existing cryptography criteria — rejected as C5:2026 treats it as a distinct inventorying and planning obligation, not an extension of existing controls. Make it informative only — rejected as BSI's Additional Complement classification signals strong expectation of compliance by mandatory adoption date (2027-06-01).",
-      "review_status": "pending-external-review",
+      "review_status": "superseded",
       "created": "2026-05-14",
-      "instrument_version": "1.1"
+      "instrument_version": "2.0",
+      "superseded_by": "DR-X04",
+      "superseded_note": "The C5:2026 questions added by this decision were removed in v2.0 per DR-X04. C5 is now presupposed (DR-E11); sovereignty questions that cited C5 clauses for provenance remain in the instrument but are not C5 compliance questions."
     },
     {
       "id": "DR-D07",
@@ -1096,9 +1103,11 @@
       "rationale": "SEAL levels are defined by EU-CSF §3 and operationalised by BSI C3A. Neither framework references C5:2026 controls. Assigning seal_contribution values to C5:2026 security controls and including them in SEAL gate computation would produce a false SEAL signal: a provider could be capped at SEAL-1 because of a Container Security gap that has no bearing on jurisdictional data sovereignty. The two-track design preserves the integrity of the SEAL metric while still surfacing C5:2026 compliance signals as genuinely useful supplementary information.",
       "authority": "Derivation. No published document establishes a mapping from BSI C5:2026 controls to SEAL levels. This design decision is editorial and is documented here for full transparency.",
       "alternatives_considered": "Remove C5:2026 controls entirely — rejected because the 5 controls provide useful operational and supply-chain intelligence that complements C3A. Keep C5 controls in SEAL gate with seal_contribution — rejected because it produces a misleading SEAL level. Mark C5 controls as informative in the questionnaire without any scoring — rejected because a met/partial/not_met count per domain gives actionable information without corrupting the sovereignty metric.",
-      "review_status": "pending-external-review",
+      "review_status": "superseded",
       "created": "2026-05-14",
-      "instrument_version": "1.1"
+      "instrument_version": "2.0",
+      "superseded_by": "DR-X04",
+      "superseded_note": "Track B (C5:2026 supplementary scoring) was removed in v2.0. There is no longer a two-track design; all scored criteria are sovereignty criteria sourced from EU-CSF or C3A. C5 is now stated as presupposed (DR-E11) rather than partially operationalized."
     },
     {
       "id": "DR-E11",
@@ -1275,8 +1284,14 @@
       "category": "extension",
       "scope": "global",
       "applies_to": "csi_composite",
-      "affected_element": { "type": "scoring-model", "ids": [] },
-      "source": { "doc": "CSI Editorial", "clauses": [] },
+      "affected_element": {
+        "type": "scoring-model",
+        "ids": []
+      },
+      "source": {
+        "doc": "CSI Editorial",
+        "clauses": []
+      },
       "description": "For non-EU/EEA assessments (variant=Generalized), CSI Composite uses a Progressive Sovereignty Maturity model instead of the EU-CSF weakest-link SEAL gate. Percentage thresholds map to four named tiers: Foundational (0–40%), Developing (41–70%), Advanced (71–90%), Pioneering (91–100%). A 'planned' answer (roadmap commitment with timeline) earns 25% of question points. Two fallback questions (SOV-4-01-FB, SOV-4-09-FB) provide partial credit when strict EU criteria cannot yet be met. EU/EEA assessments retain the standard SEAL 0–4 weakest-link gate unchanged.",
       "rationale": "The SEAL weakest-link gate is calibrated for EU procurement compliance. For global organisations it creates a cliff effect — a single 'no' on an EU-specific criterion collapses the whole score, obscuring genuine progress. The maturity model reflects incremental sovereignty improvements while preserving the strict EU-CSF and C3A frameworks unchanged. Developed markets (e.g. Japan, South Korea) with mature controls will naturally score Advanced or Pioneering without any special-casing.",
       "alternatives_considered": [
@@ -1293,8 +1308,17 @@
       "category": "extension",
       "scope": "global",
       "applies_to": "csi_composite",
-      "affected_element": { "type": "ui-behaviour", "ids": ["SOV-4-01-FB", "SOV-4-09-FB"] },
-      "source": { "doc": "CSI Editorial", "clauses": [] },
+      "affected_element": {
+        "type": "ui-behaviour",
+        "ids": [
+          "SOV-4-01-FB",
+          "SOV-4-09-FB"
+        ]
+      },
+      "source": {
+        "doc": "CSI Editorial",
+        "clauses": []
+      },
       "description": "Fallback questions (identified by parent_criterion_id) are shown in the questionnaire only when the parent criterion is answered No. In Generalized (non-EU) mode, tiered questions with a text_generalized field on the tier display that text instead of the source-verbatim text containing framework-specific references (e.g. C5:2026). The original source text remains in the data for EU/EEA assessments.",
       "rationale": "Showing fallback questions unconditionally adds noise for providers that meet the primary criterion. Conditional display reflects their intent: they are alternatives of last resort. text_generalized avoids surfacing German-standard references (C5:2026) to non-EU users for whom the standard is irrelevant, while keeping source fidelity for EU/EEA assessments.",
       "alternatives_considered": [
@@ -1312,8 +1336,18 @@
       "category": "exclusion",
       "scope": "global",
       "applies_to": "csi_composite",
-      "affected_element": { "type": "question", "ids": ["SOV-4-01-C3"] },
-      "source": { "doc": "C3A", "clauses": ["§2.4.1 SOV-4-01-C3"] },
+      "affected_element": {
+        "type": "question",
+        "ids": [
+          "SOV-4-01-C3"
+        ]
+      },
+      "source": {
+        "doc": "C3A",
+        "clauses": [
+          "§2.4.1 SOV-4-01-C3"
+        ]
+      },
       "description": "SOV-4-01-C3 ('Operating Personnel — Standalone European Organisation') is set applies_to_csi_composite: false. This question asks whether the CSP is a standalone European-headquartered entity — a concept that has no equivalent meaning for non-EU cloud providers. It remains applies_to_c3a: true so it can still be assessed in C3A mode for EU-scoped procurements.",
       "rationale": "Including a question referencing 'standalone European organisation' in a non-EU CSI Composite assessment would confuse and mislead non-EU clients. The question provides no scoring signal for a CSP headquartered outside Europe. C3A is the appropriate scope for this criterion.",
       "alternatives_considered": [
