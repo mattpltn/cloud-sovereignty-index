@@ -94,7 +94,9 @@
             }
           },
           "supplementary_info": "If restrictions are imposed by cloud service customers for the chosen country, they should be justified, and it should be ensured that their implementation, for example in procurement procedures, is legally permissible on the basis of reasons such as public safety.",
-          "c3a_source_id": "SOV-1-01-C1"
+          "c3a_source_id": "SOV-1-01-C1",
+          "seal_contribution_eu_csf": 1,
+          "seal_contribution_csi": 1
         },
         {
           "id": "SOV-1-02",
@@ -125,7 +127,9 @@
             }
           },
           "supplementary_info": "If the cloud service provider uses a subcontractor for the provision of services, such as operations, that subcontractor MUST also meet the criteria.",
-          "c3a_source_id": "SOV-1-02-C1"
+          "c3a_source_id": "SOV-1-02-C1",
+          "seal_contribution_eu_csf": 1,
+          "seal_contribution_csi": 1
         },
         {
           "id": "SOV-1-03",
@@ -156,7 +160,9 @@
             }
           },
           "supplementary_info": "Effective control means the possibility to exert direct or indirect influence, or determine the key strategic, financial, or operational decisions from non-{{BLOC}} undertakings.",
-          "c3a_source_id": "SOV-1-03-C1"
+          "c3a_source_id": "SOV-1-03-C1",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-1-04",
@@ -175,7 +181,9 @@
           },
           "supplementary_info": "A 90-day advance notice gives customers time to assess and act before sovereignty is undermined. When assessing under C3A, “C3A controls” refers to the criteria in C3A §2 (SOV-1 through SOV-6).",
           "text_c3a": "The cloud service provider MUST inform cloud service customers 90 days in advance of any actual changes affecting the cloud service provider’s control that could undermine or affect the C3A controls associated with the cloud service, including significant changes to ownership, shareholding, or governance relationships of the cloud service provider.",
-          "c3a_source_id": "SOV-1-04-C"
+          "c3a_source_id": "SOV-1-04-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         }
       ]
     },
@@ -200,7 +208,9 @@
             "doc": "C3A",
             "clause": "§2.2.1 SOV-2-01-C"
           },
-          "c3a_source_id": "SOV-2-01-C"
+          "c3a_source_id": "SOV-2-01-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-2-02",
@@ -233,7 +243,9 @@
             }
           },
           "supplementary_info": "Audit rights may be derived from contract or law. Authorities try to rely on existing audits (e.g., BSI C5, SOC 2 Type 2) before conducting their own. Fees shall not be so high as to effectively deny this right.",
-          "c3a_source_id": "SOV-2-02-C1"
+          "c3a_source_id": "SOV-2-02-C1",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-2-03",
@@ -264,7 +276,9 @@
             }
           },
           "supplementary_info": "This usually means that documentation, source code, and administration tools are held in a portable format so that the competent national authority can use them.",
-          "c3a_source_id": "SOV-2-03-C1"
+          "c3a_source_id": "SOV-2-03-C1",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-2-03-CSI",
@@ -282,7 +296,8 @@
             "clause": "SOV-2 / takeover readiness under emergency regime"
           },
           "supplementary_info": "This is the CSI-Composite-Generalized equivalent of C3A SOV-2-03 (\"state of defense\"), which is bound to specific EU constitutional concepts. Many LMIC constitutions provide for declared states of emergency, exception, or public calamity rather than \"state of defense.\" This question generalizes the underlying control objective — sovereign takeover readiness — to those analogous regimes. Activated only in non-EU (Generalized) variant.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "seal_contribution_csi": 3
         }
       ]
     },
@@ -293,7 +308,7 @@
       "weight": 0.1,
       "questions": [
         {
-          "id": "SOV-3-01-C3",
+          "id": "SOV-3-01",
           "title": "Data Residence — Customer Data",
           "type": "tiered",
           "applies_to_eu_csf": true,
@@ -327,7 +342,8 @@
             }
           },
           "supplementary_info": "Data residence options must be contractually guaranteed and verifiable by the customer.",
-          "c3a_source_id": "SOV-3-01-C3"
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-3-01-C1",
@@ -347,7 +363,9 @@
           "decision_refs": [
             "DR-S02"
           ],
-          "c3a_source_id": "SOV-3-01-C1"
+          "c3a_source_id": "SOV-3-01-C1",
+          "seal_contribution_eu_csf": 1,
+          "seal_contribution_csi": 1
         },
         {
           "id": "SOV-3-01-C2",
@@ -368,7 +386,9 @@
           "decision_refs": [
             "DR-S02"
           ],
-          "c3a_source_id": "SOV-3-01-C2"
+          "c3a_source_id": "SOV-3-01-C2",
+          "seal_contribution_eu_csf": 1,
+          "seal_contribution_csi": 1
         },
         {
           "id": "SOV-3-01-C5",
@@ -406,7 +426,9 @@
             "doc": "C3A",
             "clause": "§2.3.2 SOV-3-02-C"
           },
-          "c3a_source_id": "SOV-3-02-C"
+          "c3a_source_id": "SOV-3-02-C",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-3-02-AC",
@@ -426,7 +448,8 @@
           },
           "supplementary_info": "The integration of external key management systems for IaaS and PaaS is widely implemented and commonly standardized. For SaaS solutions, external encryption key management systems are less common; therefore, cloud service providers should support external encryption key management capabilities for SaaS where technically feasible and appropriate to the service architecture. If this criterion is only fulfilled for some SaaS, the cloud service provider MUST provide a list of these services to the cloud services customer.",
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-3-02-AC"
+          "c3a_source_id": "SOV-3-02-AC",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-3-03-C",
@@ -443,7 +466,9 @@
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-C"
           },
-          "c3a_source_id": "SOV-3-03-C"
+          "c3a_source_id": "SOV-3-03-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-3-03-AC1",
@@ -462,7 +487,8 @@
             "clause": "§2.3.3 SOV-3-03-AC1"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-3-03-AC1"
+          "c3a_source_id": "SOV-3-03-AC1",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-3-03-AC2",
@@ -481,7 +507,8 @@
             "clause": "§2.3.3 SOV-3-03-AC2"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-3-03-AC2"
+          "c3a_source_id": "SOV-3-03-AC2",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-3-03-AC3",
@@ -500,7 +527,8 @@
             "clause": "§2.3.3 SOV-3-03-AC3"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-3-03-AC3"
+          "c3a_source_id": "SOV-3-03-AC3",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-3-04-C",
@@ -517,7 +545,9 @@
             "doc": "C3A",
             "clause": "§2.3.4 SOV-3-04-C"
           },
-          "c3a_source_id": "SOV-3-04-C"
+          "c3a_source_id": "SOV-3-04-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-3-04-AC1",
@@ -536,7 +566,8 @@
             "clause": "§2.3.4 SOV-3-04-AC1"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-3-04-AC1"
+          "c3a_source_id": "SOV-3-04-AC1",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-3-04-AC2",
@@ -555,7 +586,8 @@
             "clause": "§2.3.4 SOV-3-04-AC2"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-3-04-AC2"
+          "c3a_source_id": "SOV-3-04-AC2",
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-3-05-C",
@@ -572,7 +604,9 @@
             "doc": "C3A",
             "clause": "§2.3.5 SOV-3-05-C"
           },
-          "c3a_source_id": "SOV-3-05-C"
+          "c3a_source_id": "SOV-3-05-C",
+          "seal_contribution_eu_csf": 4,
+          "seal_contribution_csi": 4
         },
         {
           "id": "SOV-3-AI-01-AC",
@@ -700,7 +734,9 @@
               ]
             }
           },
-          "c3a_source_id": "SOV-4-01-C1"
+          "c3a_source_id": "SOV-4-01-C1",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-4-01-C3",
@@ -773,7 +809,9 @@
               ]
             }
           },
-          "c3a_source_id": "SOV-4-02-C1"
+          "c3a_source_id": "SOV-4-02-C1",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-4-03",
@@ -790,7 +828,9 @@
             "doc": "C3A",
             "clause": "§2.4.3 SOV-4-03-C"
           },
-          "c3a_source_id": "SOV-4-03-C"
+          "c3a_source_id": "SOV-4-03-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-4-03-AC",
@@ -809,7 +849,8 @@
             "clause": "§2.4.3 SOV-4-03-AC"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-4-03-AC"
+          "c3a_source_id": "SOV-4-03-AC",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-4-03-FB",
@@ -864,7 +905,9 @@
               ]
             }
           },
-          "c3a_source_id": "SOV-4-04-C1"
+          "c3a_source_id": "SOV-4-04-C1",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-4-05",
@@ -881,7 +924,9 @@
             "doc": "C3A",
             "clause": "§2.4.5 SOV-4-05-C"
           },
-          "c3a_source_id": "SOV-4-05-C"
+          "c3a_source_id": "SOV-4-05-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-4-05-AC1",
@@ -900,7 +945,8 @@
             "clause": "§2.4.5 SOV-4-05-AC1"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-4-05-AC1"
+          "c3a_source_id": "SOV-4-05-AC1",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-4-05-AC2",
@@ -920,7 +966,8 @@
           },
           "supplementary_info": "A vulnerability is regarded as known, when it is listed in the European Union Vulnerability Database (EUVD) or in the Common Vulnerabilities and Exposures (CVE) Program from the National Institute of Standards and Technology (NIST).",
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-4-05-AC2"
+          "c3a_source_id": "SOV-4-05-AC2",
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-4-06",
@@ -937,7 +984,9 @@
             "doc": "C3A",
             "clause": "§2.4.6 SOV-4-06-C"
           },
-          "c3a_source_id": "SOV-4-06-C"
+          "c3a_source_id": "SOV-4-06-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-4-07",
@@ -954,7 +1003,9 @@
             "doc": "C3A",
             "clause": "§2.4.7 SOV-4-07-C"
           },
-          "c3a_source_id": "SOV-4-07-C"
+          "c3a_source_id": "SOV-4-07-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-4-08",
@@ -971,7 +1022,9 @@
             "doc": "C3A",
             "clause": "§2.4.8 SOV-4-08-C"
           },
-          "c3a_source_id": "SOV-4-08-C"
+          "c3a_source_id": "SOV-4-08-C",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-4-08-AC",
@@ -990,7 +1043,8 @@
             "clause": "§2.4.8 SOV-4-08-AC"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-4-08-AC"
+          "c3a_source_id": "SOV-4-08-AC",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-4-09",
@@ -1007,7 +1061,9 @@
             "doc": "C3A",
             "clause": "§2.4.9 SOV-4-09-C"
           },
-          "c3a_source_id": "SOV-4-09-C"
+          "c3a_source_id": "SOV-4-09-C",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-4-09-AC",
@@ -1027,7 +1083,8 @@
           },
           "supplementary_info": "In the context of the disconnect requirement, network connections between the cloud service provider and cloud service customers are excluded from the scope of the disconnection capability.",
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-4-09-AC"
+          "c3a_source_id": "SOV-4-09-AC",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-4-09-FB",
@@ -1062,7 +1119,9 @@
             "doc": "C3A",
             "clause": "§2.4.10 SOV-4-10-C"
           },
-          "c3a_source_id": "SOV-4-10-C"
+          "c3a_source_id": "SOV-4-10-C",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         }
       ]
     },
@@ -1087,7 +1146,9 @@
             "doc": "C3A",
             "clause": "§2.5.1 SOV-5-01-C"
           },
-          "c3a_source_id": "SOV-5-01-C"
+          "c3a_source_id": "SOV-5-01-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-5-01-AC",
@@ -1107,7 +1168,8 @@
           },
           "supplementary_info": "The terms software components and software suppliers refer exclusively to software used by the cloud service provider to deliver the cloud service. Software deployed by customers or marketplace providers is excluded. Software components under widely used open-source licenses may be excluded from origin reporting where license terms restrict redistribution of such information.",
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-5-01-AC"
+          "c3a_source_id": "SOV-5-01-AC",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-5-02",
@@ -1124,7 +1186,9 @@
             "doc": "C3A",
             "clause": "§2.5.2 SOV-5-02-C"
           },
-          "c3a_source_id": "SOV-5-02-C"
+          "c3a_source_id": "SOV-5-02-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-5-02-AC",
@@ -1143,7 +1207,8 @@
             "clause": "§2.5.2 SOV-5-02-AC"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-5-02-AC"
+          "c3a_source_id": "SOV-5-02-AC",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-5-03",
@@ -1160,7 +1225,9 @@
             "doc": "C3A",
             "clause": "§2.5.3 SOV-5-03-C"
           },
-          "c3a_source_id": "SOV-5-03-C"
+          "c3a_source_id": "SOV-5-03-C",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-5-03-AC",
@@ -1180,7 +1247,8 @@
           },
           "supplementary_info": "External services refer exclusively to services that are functionally required for the provision of the cloud service itself. External cloud services refer to services provided by third-party cloud providers that are integrated into the delivery of the primary cloud service but are operated and maintained by separate providers.",
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-5-03-AC"
+          "c3a_source_id": "SOV-5-03-AC",
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-5-04",
@@ -1197,7 +1265,9 @@
             "doc": "C3A",
             "clause": "§2.5.4 SOV-5-04-C"
           },
-          "c3a_source_id": "SOV-5-04-C"
+          "c3a_source_id": "SOV-5-04-C",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-5-05",
@@ -1235,7 +1305,9 @@
               ]
             }
           },
-          "c3a_source_id": "SOV-5-05-C1"
+          "c3a_source_id": "SOV-5-05-C1",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         }
       ]
     },
@@ -1260,7 +1332,9 @@
             "doc": "C3A",
             "clause": "§2.6.1 SOV-6-01-C"
           },
-          "c3a_source_id": "SOV-6-01-C"
+          "c3a_source_id": "SOV-6-01-C",
+          "seal_contribution_eu_csf": 4,
+          "seal_contribution_csi": 4
         },
         {
           "id": "SOV-6-01-FB1",
@@ -1315,7 +1389,9 @@
             "doc": "C3A",
             "clause": "§2.6.2 SOV-6-02-C"
           },
-          "c3a_source_id": "SOV-6-02-C"
+          "c3a_source_id": "SOV-6-02-C",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-6-02-AC",
@@ -1334,7 +1410,8 @@
             "clause": "§2.6.2 SOV-6-02-AC"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-6-02-AC"
+          "c3a_source_id": "SOV-6-02-AC",
+          "seal_contribution_csi": 4
         },
         {
           "id": "SOV-6-03",
@@ -1351,7 +1428,9 @@
             "doc": "C3A",
             "clause": "§2.6.3 SOV-6-03-C"
           },
-          "c3a_source_id": "SOV-6-03-C"
+          "c3a_source_id": "SOV-6-03-C",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         }
       ]
     },
@@ -1379,7 +1458,9 @@
           },
           "decision_refs": [
             "DR-X02"
-          ]
+          ],
+          "seal_contribution_eu_csf": 1,
+          "seal_contribution_csi": 1
         },
         {
           "id": "SOV-7-02",
@@ -1400,7 +1481,9 @@
           },
           "decision_refs": [
             "DR-X02"
-          ]
+          ],
+          "seal_contribution_eu_csf": 1,
+          "seal_contribution_csi": 1
         },
         {
           "id": "SOV-7-03",
@@ -1422,7 +1505,9 @@
           "supplementary_info": "Select N/A if no equivalent national cybersecurity obligation applies. NIS2 applies to entities operating in the EU; other jurisdictions may have equivalent frameworks.",
           "decision_refs": [
             "DR-X02"
-          ]
+          ],
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-7-04",
@@ -1444,7 +1529,9 @@
           "supplementary_info": "Select N/A if no equivalent financial sector ICT resilience obligation applies. DORA applies to financial entities operating in the EU; other jurisdictions may have equivalent national frameworks.",
           "decision_refs": [
             "DR-X02"
-          ]
+          ],
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-7-05",
@@ -1463,7 +1550,9 @@
           },
           "decision_refs": [
             "DR-X02"
-          ]
+          ],
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-7-06",
@@ -1482,7 +1571,9 @@
           },
           "decision_refs": [
             "DR-X02"
-          ]
+          ],
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         },
         {
           "id": "SOV-7-07",
@@ -1502,7 +1593,9 @@
           },
           "decision_refs": [
             "DR-X02"
-          ]
+          ],
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         }
       ]
     },
@@ -1529,7 +1622,9 @@
           },
           "decision_refs": [
             "DR-X03"
-          ]
+          ],
+          "seal_contribution_eu_csf": 1,
+          "seal_contribution_csi": 1
         },
         {
           "id": "SOV-8-02",
@@ -1548,7 +1643,9 @@
           },
           "decision_refs": [
             "DR-X03"
-          ]
+          ],
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-8-03",
@@ -1567,7 +1664,9 @@
           },
           "decision_refs": [
             "DR-X03"
-          ]
+          ],
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-8-04",
@@ -1586,7 +1685,9 @@
           },
           "decision_refs": [
             "DR-X03"
-          ]
+          ],
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2
         },
         {
           "id": "SOV-8-05",
@@ -1605,7 +1706,9 @@
           },
           "decision_refs": [
             "DR-X03"
-          ]
+          ],
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3
         }
       ]
     }
