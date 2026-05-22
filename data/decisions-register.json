@@ -1335,6 +1335,18 @@
       "review_status": "pending-external-review",
       "created": "2026-05-22",
       "instrument_version": "2.1"
+    },
+    {
+      "id": "DR-E25",
+      "category": "derivation",
+      "title": "SEAL gate applicability: C3A Additional Criteria excluded from seal_contribution_eu_csf",
+      "rationale": "C3A Additional Criteria (c3a_tier='additional') rows carry applies_to_eu_csf=false because they are C3A-specific extensions with no equivalent EU-CSF contributing factor. Consequently seal_contribution_eu_csf is absent for these rows. The absence is intentional, not an omission: these criteria do not participate in the EU-CSF SEAL weakest-link gate. They do participate in the CSI Composite SEAL gate (seal_contribution_csi is populated) when selected as part of a C3A or CSI Composite assessment. AI Additional Criteria (SOV-3-AI-xx-AC) are the counter-example: they apply_to_eu_csf=true and therefore carry both seal_contribution_eu_csf and seal_contribution_csi.",
+      "authority": "CSI methodology",
+      "alternatives_considered": [
+        "Populate seal_contribution_eu_csf=4 for all AC rows regardless of EU-CSF applicability flag — rejected because it would misrepresent the EU-CSF gate structure and inflate apparent SEAL coverage for criteria the EU-CSF does not assess.",
+        "Leave documentation implicit — rejected because the reviewer correctly identified this as an ambiguous design decision requiring an explicit record."
+      ],
+      "review_status": "stable"
     }
   ]
 }

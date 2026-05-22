@@ -1,6 +1,5 @@
 import type ExcelJS from 'exceljs';
 import type { CriteriaFile } from '../../shared/src/schema.js';
-import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
 
 interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
 interface CountriesFile { EU: Country[]; EEA_non_EU: Country[]; non_EU: Country[] }
@@ -199,8 +198,6 @@ function addAssessmentSheet(
 
   ws.views = [{ state: 'frozen', ySplit: 1 }];
 
-  const ctx = { variant: 'EU-CSF' as const, country: undefined };
-
   function applyDataRow(row: ExcelJS.Row, qid: string, text: string, fill: ExcelJS.Fill,
     c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean,
     guidance = '', c3aSourceId = '', euCsfFactor = '', sealEuCsf?: number, sealCsi?: number) {
@@ -241,29 +238,26 @@ function addAssessmentSheet(
       if (q.type === 'single') {
         if (q.text_generalized) {
           // Emit EU-specific and generalized rows; conditional formatting greys the irrelevant one
-          const euText  = resolvePlaceholders(q.text, ctx);
-          const genText = resolvePlaceholders(q.text_generalized, ctx);
           const euTitle  = q.title;
           const genTitle = q.title_generalized ?? q.title;
-          const euRow  = ws.addRow([q.id, 'eu_csf',      c3aTier, obj.id, euTitle,  euText,  '', '', '', '', '', '', '']);
-          applyDataRow(euRow,  q.id, euText,  fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
-          const genRow = ws.addRow([q.id, 'generalized', c3aTier, obj.id, genTitle, genText, '', '', '', '', '', '', '']);
-          applyDataRow(genRow, q.id, genText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+          const euRow  = ws.addRow([q.id, 'eu_csf',      c3aTier, obj.id, euTitle,  q.text,             '', '', '', '', '', '', '']);
+          applyDataRow(euRow,  q.id, q.text,             fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+          const genRow = ws.addRow([q.id, 'generalized', c3aTier, obj.id, genTitle, q.text_generalized, '', '', '', '', '', '', '']);
+          applyDataRow(genRow, q.id, q.text_generalized, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
         } else {
-          const text = resolvePlaceholders(q.text, ctx);
-          const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, text, '', '', '', '', '', '', '']);
-          applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+          const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, q.text, '', '', '', '', '', '', '']);
+          applyDataRow(row, q.id, q.text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
         }
       } else {
         // Always emit both bloc and national rows.
         // Bloc rows are greyed out for non-EU countries via conditional formatting on the Setup country cell.
-        const blocText = resolvePlaceholders(q.tiers.bloc.text, ctx);
+        const blocText = q.tiers.bloc.text;
         const blocC3aSrc = applyC3a ? (q.tiers.bloc.source.clause.split(' ').pop() ?? '') : '';
         const blocRow = ws.addRow([q.id, 'bloc', c3aTier, obj.id, q.title, blocText, '', '', '', '', '', '', '']);
         applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', blocC3aSrc, euFactor, sealEu, sealCsi);
 
         if (q.tiers.national) {
-          const natText = resolvePlaceholders(q.tiers.national.text, ctx);
+          const natText = q.tiers.national.text;
           const natC3aSrc = applyC3a ? (q.tiers.national.source.clause.split(' ').pop() ?? '') : '';
           const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
           applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', natC3aSrc, euFactor, sealEu, sealCsi);
