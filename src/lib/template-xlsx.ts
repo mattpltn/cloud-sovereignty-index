@@ -246,8 +246,8 @@ function addAssessmentSheet(
   }
 
   // Apply DV as single ranges to avoid overlapping ranges from per-cell assignment
-  ws.addDataValidation({ sqref: 'L2:L500', ...EVIDENCE_TYPE_VALIDATION });
-  ws.addDataValidation({ sqref: 'M2:M500', ...ANSWER_VALIDATION });
+  ws.dataValidations.add('L2:L500', EVIDENCE_TYPE_VALIDATION);
+  ws.dataValidations.add('M2:M500', ANSWER_VALIDATION);
 
   // Rule 1: grey out rows where none of the user's selected frameworks apply.
   ws.addConditionalFormatting({
@@ -419,7 +419,7 @@ export async function buildTemplateXlsx(
 
   setup.getRow(12).height = 16;
   setup.mergeCells('B12:C12');
-  setup.getCell('B12').value = 'Once filled in, save this file and upload it at: cloudsovereigntyindex.org/assess/setup';
+  setup.getCell('B12').value = 'Once filled in, save this file and upload it at: cloud-sovereignty-index.pages.dev/assess/setup';
   setup.getCell('B12').font = { color: { argb: 'FF6B7280' } };
 
   // Hidden row — formula-based variant for parseXlsx to read back
