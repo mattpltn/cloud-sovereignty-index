@@ -744,7 +744,7 @@
           "type": "single",
           "applies_to_eu_csf": false,
           "applies_to_c3a": true,
-          "applies_to_csi_composite": false,
+          "applies_to_csi_composite": true,
           "c3a_tier": "additional",
           "parent_criterion_id": "SOV-4-01",
           "text": "The operating personnel is part of an organization that MUST be a standalone European organization.",
@@ -755,7 +755,8 @@
             "clause": "§2.4.1 SOV-4-01-C3"
           },
           "review_status": "pending-external-review",
-          "c3a_source_id": "SOV-4-01-C3"
+          "c3a_source_id": "SOV-4-01-C3",
+          "seal_contribution_csi": 4
         },
         {
           "id": "SOV-4-01-FB",
