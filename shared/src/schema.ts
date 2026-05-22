@@ -11,6 +11,7 @@ export const SourceRefSchema = z.object({
 
 const TierSchema = z.object({
   text: z.string(),
+  text_c3a: z.string().optional(),
   text_generalized: z.string().optional(),
   seal_contribution: z.number().int().min(0).max(4),
   points: z.number().positive(),
@@ -21,7 +22,7 @@ const TierSchema = z.object({
 const C3aTierSchema = z.enum(['base', 'additional', 'not_applicable']);
 
 const QuestionBaseSchema = z.object({
-  id: z.string().regex(/^SOV-\d+-\d+(-[A-Z]+\d*)?$/),
+  id: z.string().regex(/^SOV-\d+(-[A-Z\d]+)+$/),
   title: z.string(),
   title_generalized: z.string().optional(),
   supplementary_info: z.string().optional(),
@@ -31,11 +32,16 @@ const QuestionBaseSchema = z.object({
   c3a_tier: C3aTierSchema,
   parent_criterion_id: z.string().optional(),
   review_status: z.string().optional(),
+  c3a_source_id: z.string().optional(),
+  eu_csf_source_factor: z.string().optional(),
+  seal_contribution_eu_csf: z.number().int().min(0).max(4).optional(),
+  seal_contribution_csi: z.number().int().min(0).max(4).optional(),
 });
 
 const SingleQuestionSchema = QuestionBaseSchema.extend({
   type: z.literal('single'),
   text: z.string(),
+  text_c3a: z.string().optional(),
   text_generalized: z.string().optional(),
   seal_contribution: z.number().int().min(0).max(4),
   points: z.number().positive(),

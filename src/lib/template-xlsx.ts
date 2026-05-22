@@ -22,12 +22,13 @@ const EVIDENCE_EXPECTED: Record<string, string> = {
   'SOV-2-02': 'Contract clause or formal procedure document granting the competent national cybersecurity authority audit rights against the C3A criteria. Specify notice period, cost-allocation rules, and confidentiality protections. Reference to existing C5 / SOC 2 Type II audits that the authority may accept in lieu of a bespoke audit.',
   'SOV-2-03': 'Documented procedure describing how the national administration can assume operational control of the service in a state of emergency or defense. Must include availability of source code, configuration data, administration credentials, and operational documentation in portable form. Reference the applicable national emergency regime (e.g. Verteidigungsfall, état d\'urgence, equivalent).',
   'SOV-3-01': 'Service documentation listing data centre locations for customer data, with the contractual SLA clause that binds these locations. Public URL to the service description AND the relevant DPA/contract clause. Identify any conditions under which data may be processed outside the named locations (support tickets, backup, disaster recovery).',
-  'SOV-3-02': 'Customer-accessible tool, dashboard, or report that lets the customer verify in real time where their customer data, derived data, and account data are stored and processed. Screenshot or sample report acceptable. Identify how often the data is refreshed.',
-  'SOV-3-03': 'Same evidence as SOV-3-01 but specifically for derived data (logs, telemetry, usage records) and account data (billing, contact, support metadata). Many providers store these in different regions than customer data — disclose the actual locations.',
-  'SOV-3-04': 'Reference architecture document showing supported external KMS / HSM integrations: vendors, protocols (KMIP, PKCS#11), service tiers covered (IaaS / PaaS / SaaS). At least one named production customer reference using external keys for the assessed service. Disclose which services do NOT support external KMS.',
-  'SOV-3-05': 'Reference architecture for external IdP integration: supported protocols (SAML 2.0, OIDC, SCIM), federation patterns, and whether the customer\'s IdP can authorise without account mirroring in the provider\'s directory. Disclose any administrative actions that bypass the external IdP (break-glass accounts, support-side access).',
-  'SOV-3-06': 'Description of logging capability: log types (management plane, data plane), retention period, export formats, and customer access mechanism. Sample log record showing the schema. Confirm whether the provider can access these logs and whether customer access is independent of provider involvement.',
-  'SOV-3-07': 'Reference architecture for client-side encryption: which services support it, the key custody model, and confirmation that the provider cannot access the plaintext under any operational scenario. Independent attestation (e.g. third-party security review, formal verification document) strongly preferred.',
+  'SOV-3-01-C1': 'Customer-accessible tool, dashboard, or report that lets the customer verify in real time where their customer data, derived data, and account data are stored and processed. Screenshot or sample report acceptable. Identify how often the data is refreshed.',
+  'SOV-3-01-C2': 'Same evidence as SOV-3-01-C3 but specifically for derived data (logs, telemetry, usage records) and account data (billing, contact, support metadata). Many providers store these in different regions than customer data — disclose the actual locations.',
+  'SOV-3-01-C5': 'Service documentation listing data centre locations used to store cloud service provider data (configuration, system telemetry, resource allocation logs). Many providers process provider data in different regions than customer data — disclose actual locations. Contractual SLA clause binding these locations.',
+  'SOV-3-02-C': 'Reference architecture document showing supported external KMS / HSM integrations: vendors, protocols (KMIP, PKCS#11), service tiers covered (IaaS / PaaS / SaaS). At least one named production customer reference using external keys for the assessed service. Disclose which services do NOT support external KMS.',
+  'SOV-3-03-C': 'Reference architecture for external IdP integration: supported protocols (SAML 2.0, OIDC, SCIM), federation patterns, and whether the customer\'s IdP can authorise without account mirroring in the provider\'s directory. Disclose any administrative actions that bypass the external IdP (break-glass accounts, support-side access).',
+  'SOV-3-04-C': 'Description of logging capability: log types (management plane, data plane), retention period, export formats, and customer access mechanism. Sample log record showing the schema. Confirm whether the provider can access these logs and whether customer access is independent of provider involvement.',
+  'SOV-3-05-C': 'Reference architecture for client-side encryption: which services support it, the key custody model, and confirmation that the provider cannot access the plaintext under any operational scenario. Independent attestation (e.g. third-party security review, formal verification document) strongly preferred.',
   'SOV-4-01': 'Written policy on personnel jurisdiction for privileged-access roles: citizenship requirements, residency requirements, screening procedures, and frequency of re-screening. Reference to the relevant control in BSI C5, SOC 2, or ISO 27001 attestation describing personnel security. Identify any subcontractors with access and their personnel policies.',
   'SOV-4-02': 'Technical description of administrative access controls: network segmentation, bastion hosts, geo-fencing, MFA. Confirmation that administrative access from outside the trusted jurisdiction is blocked or requires explicit exception. Sample exception log or audit-trail screenshot acceptable.',
   'SOV-4-03': 'List of network connectivity providers used for the service, with their jurisdictions and ownership. Network diagram showing redundancy. At least one provider must be based in the trusted jurisdiction. Disclose any single-supplier dependencies (e.g. subsea cable consortium membership).',
@@ -78,6 +79,16 @@ const EVIDENCE_EXPECTED: Record<string, string> = {
   'SOV-5-02-AC': 'Hardware dependency risk management process document: methodology for identifying critical hardware dependencies, risk scoring, and mitigation strategies (multi-vendor sourcing, strategic inventory, architectural substitution). For critical dependencies where substitution is not feasible: the disclosure provided to customers. Date of most recent risk assessment.',
   'SOV-5-03-AC': 'External service dependency management process document: inventory of external services (name, provider, jurisdiction), criticality classification, and mitigation strategies. For dependencies where substitution is not feasible: the disclosure provided to customers. Date of most recent review.',
   'SOV-6-02-AC': 'Description of internal engineering capability to maintain and patch the platform without third-party vendor involvement: team composition and skills, internal build environments, toolchain independence. Evidence of at least one instance of independent vulnerability remediation or emergency patch deployment (incident report, internal audit extract, or attestation). Independent third-party attestation preferred.',
+
+  // v2.1 additions
+  'SOV-2-03-CSI': 'Documented takeover-readiness procedure. Inventory of portable artefacts (source code escrow with national-jurisdiction trustee, exported admin tools, redacted runbooks). Evidence of at least one tabletop exercise. Contractual clause obligating the provider to cooperate under declared national emergency.',
+  'SOV-3-AI-01-AC': 'Documented training data provenance for each AI/ML model integrated into the cloud service. Disclosure of jurisdictions, dataset origins, and any contractual terms with upstream model providers. Independent third-party attestation where feasible.',
+  'SOV-3-AI-02-AC': 'Inference architecture documentation showing the model serving endpoints and their geographic locations. Contractual clause guaranteeing no fallback to non-{{BLOC}} inference regions during peak load or regional outage. Logs demonstrating no cross-border inference traffic.',
+  'SOV-3-AI-03-AC': 'Contractual clause confirming customer data is not used for model training without explicit opt-in. Technical control documentation (e.g. data isolation, no-train flags propagated through the inference pipeline). Audit log capability allowing the customer to verify no training-data extraction occurred.',
+  'SOV-3-AI-04-AC': 'Inventory of all AI/ML models in the service, each with: model name, model provider name, jurisdiction of incorporation, parent/ultimate-beneficial-owner disclosure, model weight hosting location, and model update/governance regime. Equivalent to a Software Bill of Materials but for models (an AI-BOM).',
+  'SOV-4-03-FB': 'Network architecture diagram showing BGP peering with at least two distinct upstream ASNs. Evidence of recent failover test (within 12 months): date, scope, outcome, RPO/RTO observed. Where only one carrier is commercially available, evidence of physically diverse paths to that carrier (separate fibre routes, separate cable landings).',
+  'SOV-6-01-FB1': 'Description of the local build environment: hosts, toolchains, registry mirrors, CI pipelines. Evidence of a recent build performed entirely in country (within 12 months). Headcount and skills inventory of in-country engineering staff with the capability to maintain the build pipeline. Documented contingency procedure covering loss of access to the upstream source code repository.',
+  'SOV-6-01-FB2': 'Documented exit and portability plan covering: data export format, export timeline, support obligations during exit, fees (if any), and post-exit data deletion certification. Evidence of at least one tested export performed within 12 months — exit drill report or customer-supplied attestation.',
 };
 
 const EVIDENCE_TYPE_VALIDATION: ExcelJS.DataValidation = {
@@ -127,22 +138,26 @@ function addAssessmentSheet(
 ) {
   const ws = wb.addWorksheet('Assessment');
 
-  // Columns: A=qid B=tier C=c3a_tier D=obj E=title F=text G=applies_to_eu_csf H=applies_to_c3a I=applies_to_csi J=ev_exp K=ev_prov L=ev_type M=ans N=guidance
+  // Columns: A=qid B=tier C=c3a_tier D=obj E=title F=text G=applies_to_eu_csf H=applies_to_c3a I=applies_to_csi J=ev_exp K=ev_prov L=ev_type M=ans N=guidance O=c3a_source_id P=eu_csf_source_factor Q=seal_contribution_eu_csf R=seal_contribution_csi
   ws.columns = [
-    { key: 'qid',       width: 16 },  // A
-    { key: 'tier',      width: 10 },  // B
-    { key: 'c3a_tier',  width: 14 },  // C — hidden
-    { key: 'obj',       width: 10 },  // D
-    { key: 'title',     width: 30 },  // E
-    { key: 'text',      width: 60 },  // F
-    { key: 'eu_csf',    width: 10 },  // G — hidden
-    { key: 'c3a',       width: 8  },  // H — hidden
-    { key: 'csi',       width: 8  },  // I — hidden
-    { key: 'ev_exp',    width: 60 },  // J
-    { key: 'ev_prov',   width: 50 },  // K
-    { key: 'ev_type',   width: 25 },  // L
-    { key: 'ans',       width: 12 },  // M
-    { key: 'guidance',  width: 60 },  // N — read-only contextual guidance
+    { key: 'qid',                    width: 16 },  // A
+    { key: 'tier',                   width: 10 },  // B
+    { key: 'c3a_tier',               width: 14 },  // C — hidden
+    { key: 'obj',                    width: 10 },  // D
+    { key: 'title',                  width: 30 },  // E
+    { key: 'text',                   width: 60 },  // F
+    { key: 'eu_csf',                 width: 10 },  // G — hidden
+    { key: 'c3a',                    width: 8  },  // H — hidden
+    { key: 'csi',                    width: 8  },  // I — hidden
+    { key: 'ev_exp',                 width: 60 },  // J
+    { key: 'ev_prov',                width: 50 },  // K
+    { key: 'ev_type',                width: 25 },  // L
+    { key: 'ans',                    width: 12 },  // M
+    { key: 'guidance',               width: 60 },  // N — read-only contextual guidance
+    { key: 'c3a_source_id',          width: 20 },  // O — auditor traceability
+    { key: 'eu_csf_source_factor',   width: 40 },  // P
+    { key: 'seal_contribution_eu_csf', width: 22 }, // Q
+    { key: 'seal_contribution_csi',  width: 20 },  // R
   ];
 
   // Hide metadata columns
@@ -155,6 +170,7 @@ function addAssessmentSheet(
     'question_id', 'tier', 'c3a_tier', 'objective', 'question_title', 'question_text',
     'applies_to_eu_csf', 'applies_to_c3a', 'applies_to_csi_composite',
     'evidence_expected', 'evidence_provided', 'evidence_type', 'answer', 'guidance',
+    'c3a_source_id', 'eu_csf_source_factor', 'seal_contribution_eu_csf', 'seal_contribution_csi',
   ]);
   header.font = { bold: true };
   header.fill = HEADER_FILL;
@@ -186,7 +202,8 @@ function addAssessmentSheet(
   const ctx = { variant: 'EU-CSF' as const, country: undefined };
 
   function applyDataRow(row: ExcelJS.Row, qid: string, text: string, fill: ExcelJS.Fill,
-    c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean, guidance = '') {
+    c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean,
+    guidance = '', c3aSourceId = '', euCsfFactor = '', sealEuCsf?: number, sealCsi?: number) {
     row.fill = fill;
     row.getCell(6).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(3).value = c3aTier;
@@ -199,6 +216,10 @@ function addAssessmentSheet(
     row.getCell(14).value = guidance;
     row.getCell(14).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(14).font = { italic: true, color: { argb: 'FF6B7280' } };
+    if (c3aSourceId) row.getCell(15).value = c3aSourceId;
+    if (euCsfFactor) row.getCell(16).value = euCsfFactor;
+    if (sealEuCsf !== undefined) row.getCell(17).value = sealEuCsf;
+    if (sealCsi !== undefined) row.getCell(18).value = sealCsi;
     row.height = Math.min(60, Math.ceil(text.length / 80) * 15 + 15);
   }
 
@@ -212,6 +233,10 @@ function addAssessmentSheet(
       const applyEuCsf = q.applies_to_eu_csf ?? false;
       const applyC3a = q.applies_to_c3a ?? false;
       const applyCsi = q.applies_to_csi_composite ?? false;
+      const c3aSrc = (q as Record<string, unknown>).c3a_source_id as string ?? '';
+      const euFactor = (q as Record<string, unknown>).eu_csf_source_factor as string ?? '';
+      const sealEu = (q as Record<string, unknown>).seal_contribution_eu_csf as number | undefined;
+      const sealCsi = (q as Record<string, unknown>).seal_contribution_csi as number | undefined;
 
       if (q.type === 'single') {
         if (q.text_generalized) {
@@ -221,25 +246,27 @@ function addAssessmentSheet(
           const euTitle  = q.title;
           const genTitle = q.title_generalized ?? q.title;
           const euRow  = ws.addRow([q.id, 'eu_csf',      c3aTier, obj.id, euTitle,  euText,  '', '', '', '', '', '', '']);
-          applyDataRow(euRow,  q.id, euText,  fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
+          applyDataRow(euRow,  q.id, euText,  fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
           const genRow = ws.addRow([q.id, 'generalized', c3aTier, obj.id, genTitle, genText, '', '', '', '', '', '', '']);
-          applyDataRow(genRow, q.id, genText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
+          applyDataRow(genRow, q.id, genText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
         } else {
           const text = resolvePlaceholders(q.text, ctx);
           const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, text, '', '', '', '', '', '', '']);
-          applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
+          applyDataRow(row, q.id, text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
         }
       } else {
         // Always emit both bloc and national rows.
         // Bloc rows are greyed out for non-EU countries via conditional formatting on the Setup country cell.
         const blocText = resolvePlaceholders(q.tiers.bloc.text, ctx);
+        const blocC3aSrc = applyC3a ? (q.tiers.bloc.source.clause.split(' ').pop() ?? '') : '';
         const blocRow = ws.addRow([q.id, 'bloc', c3aTier, obj.id, q.title, blocText, '', '', '', '', '', '', '']);
-        applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
+        applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', blocC3aSrc, euFactor, sealEu, sealCsi);
 
         if (q.tiers.national) {
           const natText = resolvePlaceholders(q.tiers.national.text, ctx);
+          const natC3aSrc = applyC3a ? (q.tiers.national.source.clause.split(' ').pop() ?? '') : '';
           const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
-          applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '');
+          applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', natC3aSrc, euFactor, sealEu, sealCsi);
         }
       }
     }
@@ -251,7 +278,7 @@ function addAssessmentSheet(
 
   // Rule 1: grey out rows where none of the user's selected frameworks apply.
   ws.addConditionalFormatting({
-    ref: 'A2:N500',
+    ref: 'A2:R500',
     rules: [{
       type: 'expression',
       priority: 1,
@@ -265,7 +292,7 @@ function addAssessmentSheet(
 
   // Rule 2: grey out EU-only rows (bloc, eu_csf) when a non-EU/EEA country is selected.
   ws.addConditionalFormatting({
-    ref: 'A2:N500',
+    ref: 'A2:R500',
     rules: [{
       type: 'expression',
       priority: 2,
@@ -279,7 +306,7 @@ function addAssessmentSheet(
 
   // Rule 3: grey out generalized rows when an EU/EEA country is selected.
   ws.addConditionalFormatting({
-    ref: 'A2:N500',
+    ref: 'A2:R500',
     rules: [{
       type: 'expression',
       priority: 3,

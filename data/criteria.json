@@ -1,5 +1,5 @@
 {
-  "instrument_version": "2.0",
+  "instrument_version": "2.1",
   "source_documents": [
     {
       "id": "EU-CSF",
@@ -93,7 +93,8 @@
               }
             }
           },
-          "supplementary_info": "If restrictions are imposed by cloud service customers for the chosen country, they should be justified, and it should be ensured that their implementation, for example in procurement procedures, is legally permissible on the basis of reasons such as public safety."
+          "supplementary_info": "If restrictions are imposed by cloud service customers for the chosen country, they should be justified, and it should be ensured that their implementation, for example in procurement procedures, is legally permissible on the basis of reasons such as public safety.",
+          "c3a_source_id": "SOV-1-01-C1"
         },
         {
           "id": "SOV-1-02",
@@ -123,7 +124,8 @@
               }
             }
           },
-          "supplementary_info": "If the cloud service provider uses a subcontractor for the provision of services, such as operations, that subcontractor MUST also meet the criteria."
+          "supplementary_info": "If the cloud service provider uses a subcontractor for the provision of services, such as operations, that subcontractor MUST also meet the criteria.",
+          "c3a_source_id": "SOV-1-02-C1"
         },
         {
           "id": "SOV-1-03",
@@ -153,7 +155,8 @@
               }
             }
           },
-          "supplementary_info": "Effective control means the possibility to exert direct or indirect influence, or determine the key strategic, financial, or operational decisions from non-{{BLOC}} undertakings."
+          "supplementary_info": "Effective control means the possibility to exert direct or indirect influence, or determine the key strategic, financial, or operational decisions from non-{{BLOC}} undertakings.",
+          "c3a_source_id": "SOV-1-03-C1"
         },
         {
           "id": "SOV-1-04",
@@ -170,7 +173,9 @@
             "doc": "C3A",
             "clause": "§2.1.4 SOV-1-04-C"
           },
-          "supplementary_info": "\"Sovereignty controls\" refers to the cloud autonomy requirements assessed in this tool — specifically the criteria covering strategic control (SOV-1), legal obligations (SOV-2), data sovereignty (SOV-3), operational independence (SOV-4), supply chain controls (SOV-5), and technology independence (SOV-6). A 90-day advance notice of ownership or governance changes gives customers time to act before sovereignty is undermined."
+          "supplementary_info": "A 90-day advance notice gives customers time to assess and act before sovereignty is undermined. When assessing under C3A, “C3A controls” refers to the criteria in C3A §2 (SOV-1 through SOV-6).",
+          "text_c3a": "The cloud service provider MUST inform cloud service customers 90 days in advance of any actual changes affecting the cloud service provider’s control that could undermine or affect the C3A controls associated with the cloud service, including significant changes to ownership, shareholding, or governance relationships of the cloud service provider.",
+          "c3a_source_id": "SOV-1-04-C"
         }
       ]
     },
@@ -194,7 +199,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.2.1 SOV-2-01-C"
-          }
+          },
+          "c3a_source_id": "SOV-2-01-C"
         },
         {
           "id": "SOV-2-02",
@@ -212,7 +218,8 @@
               "source": {
                 "doc": "C3A",
                 "clause": "§2.2.2 SOV-2-02-C1"
-              }
+              },
+              "text_c3a": "The cloud service provider MUST document procedures that allow the relevant federal or national cybersecurity authority to verify compliance with the C3A criteria by an audit. The responsible authority is the one in the country where the data center is located."
             },
             "national": {
               "text": "Does the cloud service provider document procedures that allow {{NATIONAL_ADMIN}} to verify compliance with sovereignty criteria by audit?",
@@ -221,10 +228,12 @@
               "source": {
                 "doc": "C3A",
                 "clause": "§2.2.2 SOV-2-02-C2"
-              }
+              },
+              "text_c3a": "The cloud service provider MUST document procedures that allow {{NATIONAL_ADMIN}} to verify compliance with the C3A criteria by an audit."
             }
           },
-          "supplementary_info": "Audit rights may be derived from contract or law. Authorities try to rely on existing audits (e.g., BSI C5, SOC 2 Type 2) before conducting their own. Fees shall not be so high as to effectively deny this right."
+          "supplementary_info": "Audit rights may be derived from contract or law. Authorities try to rely on existing audits (e.g., BSI C5, SOC 2 Type 2) before conducting their own. Fees shall not be so high as to effectively deny this right.",
+          "c3a_source_id": "SOV-2-02-C1"
         },
         {
           "id": "SOV-2-03",
@@ -254,7 +263,26 @@
               }
             }
           },
-          "supplementary_info": "This usually means that documentation, source code, and administration tools are held in a portable format so that the competent national authority can use them."
+          "supplementary_info": "This usually means that documentation, source code, and administration tools are held in a portable format so that the competent national authority can use them.",
+          "c3a_source_id": "SOV-2-03-C1"
+        },
+        {
+          "id": "SOV-2-03-CSI",
+          "title": "Emergency Takeover — National Constitutional Regime",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "If {{COUNTRY}} declares a constitutional state of emergency under {{EMERGENCY_REGIME}}, can the cloud service provider enable the competent national authority to take over the capabilities required to operate the cloud (including material assets, source code, administration tools, and personnel) within the framework of legal possibilities?",
+          "seal_contribution": 3,
+          "points": 5,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "SOV-2 / takeover readiness under emergency regime"
+          },
+          "supplementary_info": "This is the CSI-Composite-Generalized equivalent of C3A SOV-2-03 (\"state of defense\"), which is bound to specific EU constitutional concepts. Many LMIC constitutions provide for declared states of emergency, exception, or public calamity rather than \"state of defense.\" This question generalizes the underlying control objective — sovereign takeover readiness — to those analogous regimes. Activated only in non-EU (Generalized) variant.",
+          "review_status": "pending-external-review"
         }
       ]
     },
@@ -265,7 +293,7 @@
       "weight": 0.1,
       "questions": [
         {
-          "id": "SOV-3-01",
+          "id": "SOV-3-01-C3",
           "title": "Data Residence — Customer Data",
           "type": "tiered",
           "applies_to_eu_csf": true,
@@ -298,10 +326,11 @@
               ]
             }
           },
-          "supplementary_info": "Data residence options must be contractually guaranteed and verifiable by the customer."
+          "supplementary_info": "Data residence options must be contractually guaranteed and verifiable by the customer.",
+          "c3a_source_id": "SOV-3-01-C3"
         },
         {
-          "id": "SOV-3-02",
+          "id": "SOV-3-01-C1",
           "title": "Data Residence — Transparency",
           "type": "single",
           "applies_to_eu_csf": true,
@@ -317,10 +346,11 @@
           },
           "decision_refs": [
             "DR-S02"
-          ]
+          ],
+          "c3a_source_id": "SOV-3-01-C1"
         },
         {
-          "id": "SOV-3-03",
+          "id": "SOV-3-01-C2",
           "title": "Data Residence — Derived & Account Data in EU",
           "title_generalized": "Data Residence — Derived & Account Data",
           "type": "single",
@@ -337,10 +367,32 @@
           },
           "decision_refs": [
             "DR-S02"
-          ]
+          ],
+          "c3a_source_id": "SOV-3-01-C2"
         },
         {
-          "id": "SOV-3-04",
+          "id": "SOV-3-01-C5",
+          "title": "Data Residence — Provider Data",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": true,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "base",
+          "c3a_source_id": "SOV-3-01-C5",
+          "eu_csf_source_factor": "SOV-3 / Strict confinement of storage and processing to European jurisdictions",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2,
+          "text": "The cloud service provider MUST provide a service option where cloud service provider data is exclusively stored and processed in {{BLOC}}.",
+          "seal_contribution": 2,
+          "points": 5,
+          "source": {
+            "doc": "C3A",
+            "clause": "§2.3.1 SOV-3-01-C5"
+          },
+          "supplementary_info": "Cloud service provider data covers configuration and utilization information of system components, storage and network resource allocations, physical and virtual resource failure rates, operational costs, etc. (C3A §1.5). It is under the control of the cloud service provider, distinct from customer data and derived data. Often overlooked because it is operational metadata, but its location can be a sovereignty exposure."
+        },
+        {
+          "id": "SOV-3-02-C",
           "title": "External Key Management",
           "type": "single",
           "applies_to_eu_csf": true,
@@ -353,7 +405,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.3.2 SOV-3-02-C"
-          }
+          },
+          "c3a_source_id": "SOV-3-02-C"
         },
         {
           "id": "SOV-3-02-AC",
@@ -363,7 +416,7 @@
           "applies_to_c3a": true,
           "applies_to_csi_composite": true,
           "c3a_tier": "additional",
-          "parent_criterion_id": "SOV-3-04",
+          "parent_criterion_id": "SOV-3-02-C",
           "text": "The cloud service provider MUST allow the integration of external key management systems for creating, managing and storing keys outside of the cloud environment also for SaaS, or provide functionally equivalent mechanisms that ensure the customer can only create, manage and store the encryption keys outside of the cloud service provider environment.",
           "seal_contribution": 3,
           "points": 5,
@@ -372,10 +425,11 @@
             "clause": "§2.3.2 SOV-3-02-AC"
           },
           "supplementary_info": "The integration of external key management systems for IaaS and PaaS is widely implemented and commonly standardized. For SaaS solutions, external encryption key management systems are less common; therefore, cloud service providers should support external encryption key management capabilities for SaaS where technically feasible and appropriate to the service architecture. If this criterion is only fulfilled for some SaaS, the cloud service provider MUST provide a list of these services to the cloud services customer.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-3-02-AC"
         },
         {
-          "id": "SOV-3-05",
+          "id": "SOV-3-03-C",
           "title": "External Identity Provider",
           "type": "single",
           "applies_to_eu_csf": true,
@@ -388,7 +442,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-C"
-          }
+          },
+          "c3a_source_id": "SOV-3-03-C"
         },
         {
           "id": "SOV-3-03-AC1",
@@ -398,7 +453,7 @@
           "applies_to_c3a": true,
           "applies_to_csi_composite": true,
           "c3a_tier": "additional",
-          "parent_criterion_id": "SOV-3-05",
+          "parent_criterion_id": "SOV-3-03-C",
           "text": "The integration of an external Identity Provider MUST be implemented via open, non-proprietary standards.",
           "seal_contribution": 3,
           "points": 5,
@@ -406,7 +461,8 @@
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-AC1"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-3-03-AC1"
         },
         {
           "id": "SOV-3-03-AC2",
@@ -416,7 +472,7 @@
           "applies_to_c3a": true,
           "applies_to_csi_composite": true,
           "c3a_tier": "additional",
-          "parent_criterion_id": "SOV-3-05",
+          "parent_criterion_id": "SOV-3-03-C",
           "text": "The provider MUST support a stateless authentication model that does not mandate the creation and copies of accounts within the provider's directory.",
           "seal_contribution": 3,
           "points": 5,
@@ -424,7 +480,8 @@
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-AC2"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-3-03-AC2"
         },
         {
           "id": "SOV-3-03-AC3",
@@ -434,7 +491,7 @@
           "applies_to_c3a": true,
           "applies_to_csi_composite": true,
           "c3a_tier": "additional",
-          "parent_criterion_id": "SOV-3-05",
+          "parent_criterion_id": "SOV-3-03-C",
           "text": "Authorization MUST be controllable via dynamic claims and attributes issued directly by the customer's external identity provider.",
           "seal_contribution": 3,
           "points": 5,
@@ -442,10 +499,11 @@
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-AC3"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-3-03-AC3"
         },
         {
-          "id": "SOV-3-06",
+          "id": "SOV-3-04-C",
           "title": "Logging and Monitoring",
           "type": "single",
           "applies_to_eu_csf": true,
@@ -458,7 +516,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.3.4 SOV-3-04-C"
-          }
+          },
+          "c3a_source_id": "SOV-3-04-C"
         },
         {
           "id": "SOV-3-04-AC1",
@@ -468,7 +527,7 @@
           "applies_to_c3a": true,
           "applies_to_csi_composite": true,
           "c3a_tier": "additional",
-          "parent_criterion_id": "SOV-3-06",
+          "parent_criterion_id": "SOV-3-04-C",
           "text": "The logging service MUST ensure full data flow transparency by providing real-time access via standardized open-source APIs.",
           "seal_contribution": 3,
           "points": 4,
@@ -476,7 +535,8 @@
             "doc": "C3A",
             "clause": "§2.3.4 SOV-3-04-AC1"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-3-04-AC1"
         },
         {
           "id": "SOV-3-04-AC2",
@@ -486,7 +546,7 @@
           "applies_to_c3a": true,
           "applies_to_csi_composite": true,
           "c3a_tier": "additional",
-          "parent_criterion_id": "SOV-3-06",
+          "parent_criterion_id": "SOV-3-04-C",
           "text": "The service MUST support granular filtering.",
           "seal_contribution": 2,
           "points": 3,
@@ -494,10 +554,11 @@
             "doc": "C3A",
             "clause": "§2.3.4 SOV-3-04-AC2"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-3-04-AC2"
         },
         {
-          "id": "SOV-3-07",
+          "id": "SOV-3-05-C",
           "title": "Client-Side Encryption",
           "type": "single",
           "applies_to_eu_csf": true,
@@ -510,7 +571,92 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.3.5 SOV-3-05-C"
-          }
+          },
+          "c3a_source_id": "SOV-3-05-C"
+        },
+        {
+          "id": "SOV-3-AI-01-AC",
+          "title": "AI — Training Data Jurisdiction",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "eu_csf_source_factor": "SOV-3 / AI models and data pipelines developed, trained, hosted under EU control",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3,
+          "text": "For any AI or ML model used to deliver the cloud service, the cloud service provider MUST disclose the jurisdictions in which the model's training data was collected, stored, and processed. Where training data is sourced from {{BLOC}}, the provider MUST be able to demonstrate it.",
+          "seal_contribution": 3,
+          "points": 5,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "SOV-3 / AI pipeline location"
+          },
+          "supplementary_info": "EU CSF v1.2.1 SOV-3 explicitly includes \"extent to which AI models and data pipelines are developed, trained, hosted, and governed under EU control\". Training data jurisdiction is the upstream determinant of model behaviour and legal exposure. Applies to all generative AI features, ML-based recommendations, and embedded model inference within the service.",
+          "review_status": "pending-external-review"
+        },
+        {
+          "id": "SOV-3-AI-02-AC",
+          "title": "AI — Inference Location",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "eu_csf_source_factor": "SOV-3 / where data is processed",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2,
+          "text": "For any AI or ML model used to deliver the cloud service, the cloud service provider MUST ensure that inference (the processing of customer data through the model) occurs exclusively within {{BLOC}}. The provider MUST contractually guarantee no cross-border inference fallback.",
+          "seal_contribution": 2,
+          "points": 4,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "SOV-3 / where data is processed"
+          },
+          "supplementary_info": "Where customer data hits the model matters distinctly from where the model was trained. Inference can be the moment of exposure for sensitive prompts, customer documents, or PII. EU CSF SOV-3 covers this under \"where data is processed\". This is the AI-specific complement to SOV-3-01 data residency.",
+          "review_status": "pending-external-review"
+        },
+        {
+          "id": "SOV-3-AI-03-AC",
+          "title": "AI — Right to Opt Out of Training",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "eu_csf_source_factor": "SOV-3 / customer retains autonomy over AI capabilities",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3,
+          "text": "The cloud service provider MUST offer a contractual and technical opt-out from any use of customer data (cloud service customer data, cloud service derived data, account data, or prompts) for training, fine-tuning, or evaluating AI/ML models. Opt-out MUST be the default for sovereign tier customers.",
+          "seal_contribution": 3,
+          "points": 5,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "SOV-3 / customer retains autonomy over AI capabilities"
+          },
+          "supplementary_info": "This is the LMIC-relevant analogue of the EU AI Act's training-data provisions. In sovereign procurement, the risk is that customer data — even derived telemetry — becomes part of a global model, exporting national knowledge into a foreign-jurisdiction artefact.",
+          "review_status": "pending-external-review"
+        },
+        {
+          "id": "SOV-3-AI-04-AC",
+          "title": "AI — Model Provider Control Chain",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "eu_csf_source_factor": "SOV-3 + SOV-5 / dependency on non-EU technology stacks",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3,
+          "text": "For each AI or ML model integrated into the cloud service, the cloud service provider MUST disclose the model provider, its jurisdiction of incorporation, its effective control (parent, controlling shareholders, ultimate beneficial owners), and the legal regime governing its model weights and update pipeline.",
+          "seal_contribution": 3,
+          "points": 5,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "SOV-3 + SOV-5 / dependency on non-EU technology stacks"
+          },
+          "supplementary_info": "Extends C3A SOV-5 (supply chain) into the AI layer. The model provider is a critical upstream dependency that can change behaviour, licensing, or availability through unilateral action. SOV-1-style effective-control analysis applied to model providers.",
+          "review_status": "pending-external-review"
         }
       ]
     },
@@ -553,7 +699,8 @@
                 "DR-S01"
               ]
             }
-          }
+          },
+          "c3a_source_id": "SOV-4-01-C1"
         },
         {
           "id": "SOV-4-01-C3",
@@ -571,7 +718,8 @@
             "doc": "C3A",
             "clause": "§2.4.1 SOV-4-01-C3"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-4-01-C3"
         },
         {
           "id": "SOV-4-01-FB",
@@ -613,7 +761,7 @@
               ]
             },
             "national": {
-              "text": "The cloud service provider MUST implement organizational and technical measures ensuring that administrative access to systems used to operate the cloud service is performed through access paths located within {{BLOC}}. Administrative access originating from locations outside {{COUNTRY}} MUST be technically restricted, except in narrowly defined and controlled exceptional scenarios that are subject to additional authorization and monitoring controls.",
+              "text": "The cloud service provider MUST implement organizational and technical measures ensuring that administrative access to systems used to operate the cloud service is performed through access paths located within {{COUNTRY}}. Administrative access originating from locations outside {{COUNTRY}} MUST be technically restricted, except in narrowly defined and controlled exceptional scenarios that are subject to additional authorization and monitoring controls.",
               "seal_contribution": 3,
               "points": 5,
               "source": {
@@ -624,7 +772,8 @@
                 "DR-S01"
               ]
             }
-          }
+          },
+          "c3a_source_id": "SOV-4-02-C1"
         },
         {
           "id": "SOV-4-03",
@@ -640,7 +789,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.3 SOV-4-03-C"
-          }
+          },
+          "c3a_source_id": "SOV-4-03-C"
         },
         {
           "id": "SOV-4-03-AC",
@@ -658,6 +808,26 @@
             "doc": "C3A",
             "clause": "§2.4.3 SOV-4-03-AC"
           },
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-4-03-AC"
+        },
+        {
+          "id": "SOV-4-03-FB",
+          "title": "Redundant Connectivity — Multi-Homed BGP Fallback",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "parent_criterion_id": "SOV-4-03",
+          "text": "Does the cloud service provider implement multi-homed BGP routing across at least two distinct upstream connectivity paths, with documented failover behaviour and at least one annual failover test? Multi-homing MUST be implemented at the routing layer (not merely at the physical link layer) so that loss of a single upstream provider does not interrupt customer-facing service.",
+          "seal_contribution": 2,
+          "points": 3,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "SOV-4 / resilient connectivity under market constraints"
+          },
+          "supplementary_info": "Fallback for SOV-4-03 in markets where multiple commercially-independent national tier-1 ISPs do not exist. Multi-homing at the BGP layer is the underlying control objective the C3A criterion is reaching for — this fallback rewards providers that achieve it through architectural means even where the carrier market is concentrated. Activated only when the parent SOV-4-03 is answered No.",
           "review_status": "pending-external-review"
         },
         {
@@ -693,7 +863,8 @@
                 "DR-S01"
               ]
             }
-          }
+          },
+          "c3a_source_id": "SOV-4-04-C1"
         },
         {
           "id": "SOV-4-05",
@@ -709,7 +880,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.5 SOV-4-05-C"
-          }
+          },
+          "c3a_source_id": "SOV-4-05-C"
         },
         {
           "id": "SOV-4-05-AC1",
@@ -727,7 +899,8 @@
             "doc": "C3A",
             "clause": "§2.4.5 SOV-4-05-AC1"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-4-05-AC1"
         },
         {
           "id": "SOV-4-05-AC2",
@@ -746,7 +919,8 @@
             "clause": "§2.4.5 SOV-4-05-AC2"
           },
           "supplementary_info": "A vulnerability is regarded as known, when it is listed in the European Union Vulnerability Database (EUVD) or in the Common Vulnerabilities and Exposures (CVE) Program from the National Institute of Standards and Technology (NIST).",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-4-05-AC2"
         },
         {
           "id": "SOV-4-06",
@@ -762,7 +936,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.6 SOV-4-06-C"
-          }
+          },
+          "c3a_source_id": "SOV-4-06-C"
         },
         {
           "id": "SOV-4-07",
@@ -778,7 +953,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.7 SOV-4-07-C"
-          }
+          },
+          "c3a_source_id": "SOV-4-07-C"
         },
         {
           "id": "SOV-4-08",
@@ -794,7 +970,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.8 SOV-4-08-C"
-          }
+          },
+          "c3a_source_id": "SOV-4-08-C"
         },
         {
           "id": "SOV-4-08-AC",
@@ -812,7 +989,8 @@
             "doc": "C3A",
             "clause": "§2.4.8 SOV-4-08-AC"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-4-08-AC"
         },
         {
           "id": "SOV-4-09",
@@ -828,7 +1006,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.9 SOV-4-09-C"
-          }
+          },
+          "c3a_source_id": "SOV-4-09-C"
         },
         {
           "id": "SOV-4-09-AC",
@@ -847,7 +1026,8 @@
             "clause": "§2.4.9 SOV-4-09-AC"
           },
           "supplementary_info": "In the context of the disconnect requirement, network connections between the cloud service provider and cloud service customers are excluded from the scope of the disconnection capability.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-4-09-AC"
         },
         {
           "id": "SOV-4-09-FB",
@@ -881,7 +1061,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.4.10 SOV-4-10-C"
-          }
+          },
+          "c3a_source_id": "SOV-4-10-C"
         }
       ]
     },
@@ -905,7 +1086,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.5.1 SOV-5-01-C"
-          }
+          },
+          "c3a_source_id": "SOV-5-01-C"
         },
         {
           "id": "SOV-5-01-AC",
@@ -924,7 +1106,8 @@
             "clause": "§2.5.1 SOV-5-01-AC"
           },
           "supplementary_info": "The terms software components and software suppliers refer exclusively to software used by the cloud service provider to deliver the cloud service. Software deployed by customers or marketplace providers is excluded. Software components under widely used open-source licenses may be excluded from origin reporting where license terms restrict redistribution of such information.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-5-01-AC"
         },
         {
           "id": "SOV-5-02",
@@ -940,7 +1123,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.5.2 SOV-5-02-C"
-          }
+          },
+          "c3a_source_id": "SOV-5-02-C"
         },
         {
           "id": "SOV-5-02-AC",
@@ -958,7 +1142,8 @@
             "doc": "C3A",
             "clause": "§2.5.2 SOV-5-02-AC"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-5-02-AC"
         },
         {
           "id": "SOV-5-03",
@@ -974,7 +1159,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.5.3 SOV-5-03-C"
-          }
+          },
+          "c3a_source_id": "SOV-5-03-C"
         },
         {
           "id": "SOV-5-03-AC",
@@ -993,7 +1179,8 @@
             "clause": "§2.5.3 SOV-5-03-AC"
           },
           "supplementary_info": "External services refer exclusively to services that are functionally required for the provision of the cloud service itself. External cloud services refer to services provided by third-party cloud providers that are integrated into the delivery of the primary cloud service but are operated and maintained by separate providers.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-5-03-AC"
         },
         {
           "id": "SOV-5-04",
@@ -1009,7 +1196,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.5.4 SOV-5-04-C"
-          }
+          },
+          "c3a_source_id": "SOV-5-04-C"
         },
         {
           "id": "SOV-5-05",
@@ -1046,7 +1234,8 @@
                 "DR-S01"
               ]
             }
-          }
+          },
+          "c3a_source_id": "SOV-5-05-C1"
         }
       ]
     },
@@ -1070,7 +1259,46 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.6.1 SOV-6-01-C"
-          }
+          },
+          "c3a_source_id": "SOV-6-01-C"
+        },
+        {
+          "id": "SOV-6-01-FB1",
+          "title": "Source Code — Local Build Capability",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "parent_criterion_id": "SOV-6-01",
+          "text": "Does the cloud service provider maintain a local build environment in {{COUNTRY}} capable of compiling, testing, and deploying the cloud service from source code, with the engineering talent to operate it autonomously for at least 90 days without external dependencies, even if the source code itself is mirrored from a non-{{COUNTRY}} master?",
+          "seal_contribution": 3,
+          "points": 4,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "SOV-6 / operational independence"
+          },
+          "supplementary_info": "Fallback for SOV-6-01 where holding a local source code backup is infeasible (e.g. resold hyperscaler service). This rewards providers that have invested in the operational capability to build and deploy the service from source — even if the source itself originates abroad. The 90-day window aligns with C3A SOV-4-10 (reconnect window).",
+          "review_status": "pending-external-review"
+        },
+        {
+          "id": "SOV-6-01-FB2",
+          "title": "Source Code — Documented Exit & Tested Data Export",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "parent_criterion_id": "SOV-6-01",
+          "text": "Where the cloud service provider cannot guarantee local source code availability, does it maintain a documented exit and portability plan with at least one tested customer data export within the past 12 months, demonstrating that customer data, derived data, and account data can be returned to the customer in a standard portable format within a contractually-defined timeline?",
+          "seal_contribution": 2,
+          "points": 3,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "SOV-6 / customer exit portability"
+          },
+          "supplementary_info": "Customer-side reversibility fallback for SOV-6-01. Consistent with the reversibility dimension of the CSI methodology. Where the provider cannot demonstrate operational independence, tested portability ensures the customer is not stranded.",
+          "review_status": "pending-external-review"
         },
         {
           "id": "SOV-6-02",
@@ -1086,7 +1314,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.6.2 SOV-6-02-C"
-          }
+          },
+          "c3a_source_id": "SOV-6-02-C"
         },
         {
           "id": "SOV-6-02-AC",
@@ -1104,7 +1333,8 @@
             "doc": "C3A",
             "clause": "§2.6.2 SOV-6-02-AC"
           },
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "c3a_source_id": "SOV-6-02-AC"
         },
         {
           "id": "SOV-6-03",
@@ -1120,7 +1350,8 @@
           "source": {
             "doc": "C3A",
             "clause": "§2.6.3 SOV-6-03-C"
-          }
+          },
+          "c3a_source_id": "SOV-6-03-C"
         }
       ]
     },

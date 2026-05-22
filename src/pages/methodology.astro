@@ -151,7 +151,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
         </div>
         <p class="text-gray-500 text-xs border-l-2 border-purple-300 pl-3">
           No weakest-link gate applies in Generalized mode. A single "no" on a strict EU criterion does not collapse the score.
-          Fallback questions <strong>SOV-4-01-FB</strong> (personnel residency) and <strong>SOV-4-09-FB</strong> (disconnect plan) provide alternative routes to partial credit. These questions are CSI Composite-only and appear in the questionnaire <em>only when the parent criterion is answered No</em> — they are hidden otherwise.
+          Fallback questions provide alternative routes to partial credit for CSI Composite Generalized assessments. They are CSI Composite-only and appear in the questionnaire <em>only when the parent criterion is answered No</em> — hidden otherwise. Active fallbacks: <strong>SOV-4-01-FB</strong> (personnel residency), <strong>SOV-4-03-FB</strong> (multi-homed BGP connectivity), <strong>SOV-4-09-FB</strong> (disconnect tabletop exercise), <strong>SOV-6-01-FB1</strong> (local build capability), <strong>SOV-6-01-FB2</strong> (documented exit and tested data export).
         </p>
       </div>
     </section>
@@ -290,9 +290,9 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           <p>Can the customer take their data and identities elsewhere? These criteria ensure the customer retains the technical means to leave with data intact:</p>
           <table class="w-full text-xs border-collapse mt-1">
             <tbody>
-              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium w-48">SOV-3-04</td><td class="py-1 text-slate-600">Customer holds encryption keys <em>outside</em> the provider — can exit with all keys intact (SEAL 3)</td></tr>
-              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-07</td><td class="py-1 text-slate-600">Client-side encryption: only the customer can decrypt; maximum data independence (SEAL 4)</td></tr>
-              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-05 + AC1/2/3</td><td class="py-1 text-slate-600">Identity lives outside the provider via open standards; stateless auth prevents account lock-in (SEAL 2–3)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium w-48">SOV-3-02-C</td><td class="py-1 text-slate-600">Customer holds encryption keys <em>outside</em> the provider — can exit with all keys intact (SEAL 3)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-05-C</td><td class="py-1 text-slate-600">Client-side encryption: only the customer can decrypt; maximum data independence (SEAL 4)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-03-C + AC1/2/3</td><td class="py-1 text-slate-600">Identity lives outside the provider via open standards; stateless auth prevents account lock-in (SEAL 2–3)</td></tr>
               <tr><td class="py-1 pr-3 font-medium">SOV-5-01/02/03-AC</td><td class="py-1 text-slate-600">Documented architectural flexibility to substitute software, hardware, and services (SEAL 3 — Additional Criteria)</td></tr>
             </tbody>
           </table>
