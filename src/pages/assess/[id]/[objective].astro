@@ -10,9 +10,9 @@ export const prerender = false;
 const criteria = criteriaJson as unknown as CriteriaFile;
 const { id, objective } = Astro.params;
 
-// Validate objective
-const objectiveIds = criteria.objectives.map(o => o.id);
-if (!objectiveIds.includes(objective!)) {
+// Validate objective (full list used for redirect fallback before frameworks are known)
+const allObjectiveIds = criteria.objectives.map(o => o.id);
+if (!allObjectiveIds.includes(objective!)) {
   return Astro.redirect(`/assess/${id}/SOV-1`);
 }
 
@@ -47,6 +47,23 @@ try {
 if (countryCode) {
   const all = [...countriesJson.EU, ...countriesJson.EEA_non_EU, ...countriesJson.non_EU];
   country = all.find(c => c.code === countryCode);
+}
+
+// Filter objectives to those with at least one visible question for the selected frameworks
+const fw = new Set(selectedFrameworks);
+const acIdSet = new Set(customerSelectedAcIds);
+const objectiveIds = criteria.objectives
+  .filter(o => o.questions.some(q => {
+    if (q.c3a_tier === 'additional') return fw.has('c3a') && acIdSet.has(q.id);
+    return (fw.has('eu_csf') && q.applies_to_eu_csf) ||
+           (fw.has('c3a') && q.applies_to_c3a) ||
+           (fw.has('csi_composite') && q.applies_to_csi_composite);
+  }))
+  .map(o => o.id);
+
+// Redirect to first valid objective if current one has no visible questions
+if (!objectiveIds.includes(objective!)) {
+  return Astro.redirect(`/assess/${id}/${objectiveIds[0] ?? 'SOV-1'}`);
 }
 
 const resumeUrl = `${Astro.url.origin}/assess/${id}/SOV-1`;
