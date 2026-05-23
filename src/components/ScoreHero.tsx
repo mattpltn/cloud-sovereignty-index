@@ -85,7 +85,7 @@ function C3aCard({ c3a }: { c3a: C3aResult }) {
           <div className="text-xs text-gray-400 italic">No Additional Criteria selected.</div>
         )}
       </div>
-      <p className="text-xs text-gray-400 mt-3">C3A v1.0. Attainment bands replace percentage scoring — binary pass/fail per criterion.</p>
+      <p className="text-xs text-gray-400 mt-3">C3A v1.0. Binary pass/fail per criterion — attainment band reflects criteria met.</p>
     </div>
   );
 }

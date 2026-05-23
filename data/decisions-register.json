@@ -1239,8 +1239,8 @@
           "§2.3.1 SOV-3-01-C5"
         ]
       },
-      "description": "SOV-3-01-C5 (provider data residence) reintroduced in v2.1. This C3A base criterion was inadvertently omitted in v2.0. It covers cloud service provider data (configuration, telemetry, cost data) — distinct from customer data (C3-C4) and derived/account data (C1-C2).",
-      "rationale": "C3A §2.3.1 defines five criteria (C1-C5). v2.0 only included four. Omission was a coverage gap, not an intentional exclusion.",
+      "description": "SOV-3-01-C5 (provider data residence) is a C3A base criterion covering cloud service provider data (configuration, telemetry, cost data) — distinct from customer data (C3-C4) and derived/account data (C1-C2).",
+      "rationale": "C3A §2.3.1 defines five criteria (C1-C5). Inclusion of all five criteria is required for complete coverage of the C3A §2.3.1 provider data residence requirement.",
       "alternatives_considered": [
         "Leave omitted — rejected as it creates a false impression that C3A compliance is achievable without this criterion"
       ],
@@ -1352,7 +1352,7 @@
       "id": "DR-E26",
       "category": "derivation",
       "title": "C3A Layer A blocking gate: six criteria cap global attainment at Not Attained",
-      "rationale": "Sovereignty authorities evaluate binary operational viability, not continuous improvement scores. A provider with excellent supply-chain controls but no legal insulation from foreign law, no data jurisdiction guarantee, or no tested disconnect capability cannot meaningfully claim sovereignty — regardless of overall criterion count. The six Layer A criteria (SOV-2-01 extraterritorial legal exposure, SOV-2-02 audit rights, SOV-2-03 state-of-defense takeover, SOV-3-01 customer data jurisdiction, SOV-4-09 disconnect capability, SOV-4-10 reconnect capability) represent the minimum structural set for that claim. Failure in any answered (non-n/a) Layer A criterion overrides the global attainment band to Not Attained. Encoded as a scoring policy in scoring.ts rather than as criteria metadata to keep criteria.json as a pure data file.",
+      "rationale": "Sovereignty authorities evaluate binary operational viability, not continuous improvement scores. A provider with excellent supply-chain controls but no legal insulation from foreign law, no data jurisdiction guarantee, or no tested disconnect capability cannot meaningfully claim sovereignty — regardless of overall criterion count. The six Layer A criteria (SOV-2-01 extraterritorial legal exposure, SOV-2-02 audit rights, SOV-2-03 state-of-defense takeover, SOV-3-01 customer data jurisdiction, SOV-4-09 disconnect capability, SOV-4-10 reconnect capability) represent the minimum structural set for that claim. Failure in any answered (non-n/a) Layer A criterion overrides the global attainment band to Not Attained.",
       "authority": "CSI methodology",
       "alternatives_considered": [
         "Encode Layer A as a boolean flag per question in criteria.json — rejected to avoid schema complexity and keep criteria.json as a pure data file.",
@@ -1365,11 +1365,11 @@
       "id": "DR-E27",
       "category": "derivation",
       "title": "CSI Generalized maturity tier rename: Dependent / Managed Dependency / Strategic Autonomy / Sovereign",
-      "rationale": "The previous tier names (Foundational / Developing / Advanced / Pioneering) used generic maturity language borrowed from capability maturity models. For LMIC and non-EU contexts, the progression is more accurately described as a sovereignty trajectory: many operators can realistically achieve strategic operational autonomy before full technological sovereignty. The renamed tiers communicate what each level means operationally rather than how mature the provider is abstractly. Thresholds are unchanged (0–40% / 41–70% / 71–90% / 91–100%). The rename is a presentation change only — scoring logic is unaffected.",
+      "rationale": "For LMIC and non-EU contexts, the sovereignty progression is most usefully described as an operational trajectory: many organisations can realistically achieve strategic operational autonomy before full technological sovereignty. The four tiers — Dependent, Managed Dependency, Strategic Autonomy, Sovereign — communicate what each level means for operational sovereignty rather than using generic maturity language. Thresholds: 0–40% / 41–70% / 71–90% / 91–100%.",
       "authority": "CSI methodology",
       "alternatives_considered": [
-        "Keep Foundational/Developing/Advanced/Pioneering — rejected because these names are neutral to the point of being uninformative for sovereignty-specific use.",
-        "Hybrid rename (keep bottom two, rename top two) — rejected in favour of full consistency across the ladder."
+        "Generic capability-maturity language (e.g. Foundational/Advanced) — rejected as uninformative for sovereignty-specific use; names would not communicate operational meaning.",
+        "Partial alignment (rename top tiers only) — rejected in favour of full consistency across the ladder."
       ],
       "review_status": "stable"
     }
