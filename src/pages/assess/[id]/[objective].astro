@@ -66,7 +66,7 @@ if (!objectiveIds.includes(objective!)) {
   return Astro.redirect(`/assess/${id}/${objectiveIds[0] ?? 'SOV-1'}`);
 }
 
-const resumeUrl = `${Astro.url.origin}/assess/${id}/SOV-1`;
+const resumeUrl = Astro.url.href;
 ---
 <!doctype html>
 <html lang="en">
@@ -94,7 +94,7 @@ const resumeUrl = `${Astro.url.origin}/assess/${id}/SOV-1`;
   <div class="bg-amber-50 border-b border-amber-100 px-6 py-2 flex items-center justify-between gap-4 text-xs text-amber-800">
     <span>Bookmark this page to resume your assessment later.</span>
     <div class="flex items-center gap-2 shrink-0">
-      <span id="url-display" class="font-mono text-amber-700 hidden sm:inline">{resumeUrl}</span>
+      <a href={resumeUrl} id="url-display" class="font-mono text-amber-700 underline hidden sm:inline truncate max-w-xs">{resumeUrl}</a>
       <button id="copy-resume-btn" class="bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-800 font-medium px-2.5 py-1 rounded-lg transition">
         Copy link
       </button>
