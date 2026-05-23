@@ -108,6 +108,8 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
     : isGeneralizedCsi
     ? ['yes', 'no', 'partial', 'planned', 'n/a']
     : ['yes', 'no', 'partial', 'n/a'];
+  // When C3A is one of multiple selected frameworks, warn if "planned" is selected on a C3A question
+  const c3aInMix = fw.has('c3a') && !c3aOnly;
 
   useEffect(() => {
     const cached = readCache(id);
@@ -195,6 +197,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               isExpanded={isExpanded}
               onToggleExpand={() => setExpanded(prev => ({ ...prev, [q.id]: !isExpanded }))}
               answerValues={visibleAnswerValues}
+              warnPlannedForC3a={c3aInMix && q.applies_to_c3a}
             />
           );
         }
@@ -314,11 +317,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   );
 }
 
-function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, isExpanded, onToggleExpand, answerValues }: {
+function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, isExpanded, onToggleExpand, answerValues, warnPlannedForC3a }: {
   id: string; title: string; text: string; sealContribution: number; points: number; source: string;
   supplementaryInfo?: string; isAdditionalCriterion?: boolean; value: AnswerValue | undefined;
   onAnswer: (v: AnswerValue) => void; isExpanded: boolean; onToggleExpand: () => void;
-  answerValues: AnswerValue[];
+  answerValues: AnswerValue[]; warnPlannedForC3a?: boolean;
 }) {
   return (
     <div className={`border rounded-xl p-5 transition ${value ? 'border-gray-200' : 'border-gray-300'}`}>
@@ -341,6 +344,11 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
           </button>
         ))}
       </div>
+      {warnPlannedForC3a && value === 'planned' && (
+        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mb-2">
+          'Planned' is not recognised by C3A — counts as Not Met for C3A scoring.
+        </p>
+      )}
       {supplementaryInfo && (
         <div>
           <button onClick={onToggleExpand} className="text-xs text-blue-600 hover:underline">

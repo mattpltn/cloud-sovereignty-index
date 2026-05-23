@@ -36,10 +36,17 @@ export interface EuCsfResult {
 
 // ── C3A mode results ──────────────────────────────────────────────────────────
 
+export type C3aAttainmentBand =
+  | 'not_attained'
+  | 'partially_attained'
+  | 'substantially_attained'
+  | 'fully_attained';
+
 export interface C3aObjectiveTierResult {
   passed: number;
   applicable: number;
   pct: number;
+  attainment: C3aAttainmentBand;
 }
 
 export interface C3aObjectiveResult {
@@ -52,11 +59,11 @@ export interface C3aObjectiveResult {
 export interface C3aResult {
   criterion: {
     per_objective: Record<string, C3aObjectiveTierResult>;
-    global: { passed: number; applicable: number; pct: number };
+    global: { passed: number; applicable: number; pct: number; attainment: C3aAttainmentBand };
   };
   additional_criterion: {
     per_objective: Record<string, C3aObjectiveTierResult | null>;
-    global: { passed: number; applicable: number; pct: number } | null;
+    global: { passed: number; applicable: number; pct: number; attainment: C3aAttainmentBand } | null;
   };
   failed_criteria: Array<{
     question_id: string;
@@ -64,9 +71,16 @@ export interface C3aResult {
     objective_id: string;
     tier: 'criterion' | 'additional_criterion';
   }>;
+  layer_a_blocked: boolean;
 }
 
 // ── CSI Composite mode results ────────────────────────────────────────────────
+
+export type CsiMaturityTier =
+  | 'dependent'
+  | 'managed_dependency'
+  | 'strategic_autonomy'
+  | 'sovereign';
 
 export interface CsiObjectiveResult {
   objective_id: string;
@@ -81,7 +95,7 @@ export interface CsiObjectiveResult {
 
 export interface CsiCompositeResult {
   per_objective: Record<string, CsiObjectiveResult>;
-  global: { csl: number; pct: number; pct_to_next_tier: number | null };
+  global: { csl: number; pct: number; pct_to_next_tier: number | null; maturity_tier?: CsiMaturityTier };
   gap_report: GapItem[];
 }
 

@@ -1,4 +1,4 @@
-import type { AssessmentResult, EuCsfResult, C3aResult, CsiCompositeResult } from '../../shared/src/types';
+import type { AssessmentResult, EuCsfResult, C3aResult, CsiCompositeResult, C3aAttainmentBand } from '../../shared/src/types';
 
 interface Props {
   result: AssessmentResult;
@@ -7,8 +7,21 @@ interface Props {
 const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovereignty', 'Digital Resilience', 'Full Digital Sovereignty'];
 const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
 
-const CSI_MATURITY_NAMES = ['Foundational', 'Developing', 'Advanced', 'Pioneering'];
+const CSI_MATURITY_NAMES = ['Dependent', 'Managed Dependency', 'Strategic Autonomy', 'Sovereign'];
 const CSI_MATURITY_COLORS = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];
+
+const C3A_BAND_LABELS: Record<C3aAttainmentBand, string> = {
+  not_attained: 'Not Attained',
+  partially_attained: 'Partially Attained',
+  substantially_attained: 'Substantially Attained',
+  fully_attained: 'Fully Attained',
+};
+const C3A_BAND_COLORS: Record<C3aAttainmentBand, string> = {
+  not_attained: '#dc2626',
+  partially_attained: '#f97316',
+  substantially_attained: '#eab308',
+  fully_attained: '#16a34a',
+};
 
 function EuCsfCard({ eu_csf, variant }: { eu_csf: EuCsfResult; variant: string }) {
   const seal = eu_csf.global.seal;
@@ -32,6 +45,16 @@ function EuCsfCard({ eu_csf, variant }: { eu_csf: EuCsfResult; variant: string }
   );
 }
 
+function AttainmentBadge({ band }: { band: C3aAttainmentBand }) {
+  const color = C3A_BAND_COLORS[band];
+  return (
+    <div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium text-white"
+      style={{ backgroundColor: color }}>
+      {C3A_BAND_LABELS[band]}
+    </div>
+  );
+}
+
 function C3aCard({ c3a }: { c3a: C3aResult }) {
   const crit = c3a.criterion.global;
   const ac = c3a.additional_criterion.global;
@@ -41,33 +64,38 @@ function C3aCard({ c3a }: { c3a: C3aResult }) {
       <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">BSI C3A — Cloud Computing Autonomy</div>
       <div className="space-y-3">
         <div>
-          <div className="text-3xl font-bold tabular-nums text-gray-900">{Math.round(crit.pct)}%</div>
-          <div className="text-xs text-gray-500 mt-0.5">
-            Criterion — {crit.passed}/{crit.applicable} met (binary pass/fail)
+          <AttainmentBadge band={crit.attainment} />
+          <div className="text-xs text-gray-500 mt-1.5">
+            {crit.passed}/{crit.applicable} criteria met (binary pass/fail)
           </div>
         </div>
+        {c3a.layer_a_blocked && (
+          <div className="rounded-lg bg-red-50 border border-red-200 px-3 py-2">
+            <span className="text-red-600 text-xs font-semibold">Layer A sovereignty gate not cleared — </span>
+            <span className="text-red-500 text-xs">one or more critical controls (legal insulation, data jurisdiction, or operational continuity) not met.</span>
+          </div>
+        )}
         {ac ? (
           <div>
-            <div className="text-3xl font-bold tabular-nums text-gray-900">{Math.round(ac.pct)}%</div>
-            <div className="text-xs text-gray-500 mt-0.5">
-              Additional Criterion — {ac.passed}/{ac.applicable} met (customer-selected)
-            </div>
+            <div className="text-[10px] text-gray-400 uppercase tracking-wide mb-1">Additional Criteria</div>
+            <AttainmentBadge band={ac.attainment} />
+            <div className="text-xs text-gray-500 mt-1.5">{ac.passed}/{ac.applicable} met (customer-selected)</div>
           </div>
         ) : (
           <div className="text-xs text-gray-400 italic">No Additional Criteria selected.</div>
         )}
       </div>
-      <p className="text-xs text-gray-400 mt-3">C3A v1.0. No SEAL — pass/fail per criterion only.</p>
+      <p className="text-xs text-gray-400 mt-3">C3A v1.0. Attainment bands replace percentage scoring — binary pass/fail per criterion.</p>
     </div>
   );
 }
 
 // Tier definitions: label, color, min%, max%, segment width as % of bar
 const CSI_TIERS = [
-  { label: 'Foundational', color: '#dc2626', min: 0,  max: 40,  w: 40 },
-  { label: 'Developing',   color: '#f97316', min: 41, max: 70,  w: 30 },
-  { label: 'Advanced',     color: '#22c55e', min: 71, max: 90,  w: 20 },
-  { label: 'Pioneering',   color: '#16a34a', min: 91, max: 100, w: 10 },
+  { label: 'Dependent',          color: '#dc2626', min: 0,  max: 40,  w: 40 },
+  { label: 'Managed Dependency', color: '#f97316', min: 41, max: 70,  w: 30 },
+  { label: 'Strategic Autonomy', color: '#22c55e', min: 71, max: 90,  w: 20 },
+  { label: 'Sovereign',          color: '#16a34a', min: 91, max: 100, w: 10 },
 ];
 
 function MaturityBar({ pct, csl }: { pct: number; csl: number }) {
@@ -152,7 +180,7 @@ function CsiCard({ csi, variant }: { csi: CsiCompositeResult; variant: string })
       )}
       {isGeneralized && pctToNext === null && (
         <div className="mt-2 pt-2 border-t border-blue-200">
-          <p className="text-xs font-medium text-green-700">Pioneering tier achieved.</p>
+          <p className="text-xs font-medium text-green-700">Sovereign tier achieved.</p>
         </div>
       )}
     </div>

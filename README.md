@@ -17,9 +17,9 @@ You choose which framework(s) to assess against. Each produces a completely inde
 | Framework | Source | Output | Scope |
 |-----------|--------|--------|-------|
 | **EU-CSF** | EU Cloud Sovereignty Framework v1.2.1 (European Commission) | SEAL 0–4 per objective | SOV-1 – SOV-8 |
-| **C3A** | BSI Criteria enabling Cloud Computing Autonomy v1.0 | % Criterion met + % AC met | SOV-1 – SOV-6 |
+| **C3A** | BSI Criteria enabling Cloud Computing Autonomy v1.0 | Attainment band (Not Attained / Partially / Substantially / Fully Attained) + AC attainment | SOV-1 – SOV-6 |
 | **CSI Composite (EU/EEA)** | CSI editorial framework | SEAL 0–4 (same as EU-CSF) | SOV-1 – SOV-8 |
-| **CSI Composite (non-EU)** | CSI editorial framework | Maturity tier: Foundational → Developing → Advanced → Pioneering | SOV-1 – SOV-8 |
+| **CSI Composite (non-EU)** | CSI editorial framework | Sovereignty Ladder: Dependent → Managed Dependency → Strategic Autonomy → Sovereign | SOV-1 – SOV-8 |
 
 **Scope: cloud sovereignty only.** Security attestation (ISO 27001, SOC 2, BSI C5:2026) is assumed and not assessed. C5 is presupposed, not a CSI source.
 
@@ -58,14 +58,14 @@ Editorial blend of EU-CSF and C3A, adapted for global organisations.
 
 **EU/EEA variant:** Same SEAL 0–4 levels and weakest-link gate as EU-CSF. `partial` = half points, `planned` = 0 points.
 
-**Non-EU (Generalized) variant:** Progressive Sovereignty Maturity model — no weakest-link gate. Score is a weighted percentage mapped to four named tiers:
+**Non-EU (Generalized) variant:** Sovereignty Ladder — no weakest-link gate. Score is a weighted percentage mapped to four named tiers:
 
 | Tier | % Threshold | Meaning |
 |------|-------------|---------|
-| Foundational | 0–40% | Initial controls. Significant gaps. |
-| Developing | 41–70% | Core controls operational. |
-| Advanced | 71–90% | Comprehensive controls demonstrated. |
-| Pioneering | 91–100% | Full posture. Tested continuity. |
+| Dependent | 0–40% | Initial controls. Significant gaps. |
+| Managed Dependency | 41–70% | Core controls operational. |
+| Strategic Autonomy | 71–90% | Comprehensive controls demonstrated. |
+| Sovereign | 91–100% | Full posture. Tested continuity. |
 
 Answer values in Generalized mode: `yes` = 100%, `partial` = 50%, `planned` = 25% (roadmap commitment with timeline), `no` = 0%, `n/a` = excluded.
 
@@ -157,7 +157,7 @@ Open [localhost:4321](http://localhost:4321). The Vite dev server proxies `/api/
 pnpm test
 ```
 
-48 unit tests cover the scoring engine (EU-CSF, C3A, CSI Composite, multi-mode), tier resolution, and schema validation.
+51 unit tests cover the scoring engine (EU-CSF, C3A, CSI Composite, multi-mode), tier resolution, and schema validation.
 
 ---
 

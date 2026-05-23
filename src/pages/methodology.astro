@@ -52,7 +52,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
             <p class="text-purple-800 text-xs">
               Output depends on variant:<br/>
               <span class="font-medium">EU/EEA:</span> SEAL 0–4 per objective and globally (same weakest-link gate as EU-CSF).<br/>
-              <span class="font-medium">Non-EU (Generalized):</span> Progressive Sovereignty Maturity tier — Foundational, Developing, Advanced, or Pioneering — based on percentage score. No weakest-link gate. "planned" answers earn 25% of question points.
+              <span class="font-medium">Non-EU (Generalized):</span> Sovereignty Ladder tier — Dependent, Managed Dependency, Strategic Autonomy, or Sovereign — based on percentage score. No weakest-link gate. "planned" answers earn 25% of question points.
             </p>
           </div>
         </div>
@@ -91,7 +91,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
       <p class="text-sm text-gray-600 mb-4">
         The <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level) is defined in EU-CSF §3.
         SEAL applies to EU-CSF mode and to CSI Composite EU/EEA variant assessments.
-        Non-EU assessments using CSI Composite (Generalized) produce a <strong>Progressive Sovereignty Maturity tier</strong> instead — see §3.3.
+        Non-EU assessments using CSI Composite (Generalized) produce a <strong>Sovereignty Ladder tier</strong> instead — see §3.3.
       </p>
       <div class="space-y-3 mb-6">
         {criteria.seal_levels.map(sl => (
@@ -110,16 +110,36 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
         ))}
       </div>
 
-      <h3 class="text-base font-semibold mb-2">3.2 C3A — Criterion & Additional Criterion %</h3>
+      <h3 class="text-base font-semibold mb-2">3.2 C3A — Attainment Bands</h3>
       <div class="text-sm text-gray-700 space-y-2 leading-relaxed mb-6">
-        <p>C3A produces two independent percentage scores per objective and globally:</p>
+        <p>C3A produces an attainment band (not a percentage) per objective and globally, reflecting the binary conformity logic of the source framework:</p>
+        <div class="border border-gray-200 rounded-lg overflow-hidden my-2">
+          <table class="w-full text-xs text-gray-800">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-4 py-2 text-left font-semibold">Band</th>
+                <th class="px-4 py-2 text-left font-semibold">Criteria met</th>
+                <th class="px-4 py-2 text-left font-semibold">Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#dc2626">Not Attained</td><td class="px-4 py-2">0–49%</td><td class="px-4 py-2 text-gray-600">Core structural gaps.</td></tr>
+              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#f97316">Partially Attained</td><td class="px-4 py-2">50–74%</td><td class="px-4 py-2 text-gray-600">Some controls implemented.</td></tr>
+              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#eab308">Substantially Attained</td><td class="px-4 py-2">75–89%</td><td class="px-4 py-2 text-gray-600">Most mandatory controls operational.</td></tr>
+              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#16a34a">Fully Attained</td><td class="px-4 py-2">90–100%</td><td class="px-4 py-2 text-gray-600">All mandatory controls operational.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <strong>Layer A sovereignty gate:</strong> Six criteria — extraterritorial legal exposure (SOV-2-01), audit rights (SOV-2-02), state-of-defense takeover (SOV-2-03), customer data jurisdiction (SOV-3-01), disconnect capability (SOV-4-09), and reconnect capability (SOV-4-10) — are blocking gates. Failure in any answered Layer A criterion overrides the global band to <em>Not Attained</em> regardless of overall criterion count (DR-E26).
+        </p>
         <ul class="list-disc pl-5 space-y-1">
-          <li><strong>Criterion %</strong>: base criteria (c3a_tier = "base") — binary pass/fail, always in denominator.</li>
-          <li><strong>Additional Criterion %</strong>: AC criteria (c3a_tier = "additional") — only customer-selected ACs are in the denominator (C3A §1.4). If no ACs are selected, the AC result is null.</li>
+          <li><strong>Criterion band</strong>: base criteria (c3a_tier = "base") — binary pass/fail, always in denominator.</li>
+          <li><strong>Additional Criterion band</strong>: AC criteria (c3a_tier = "additional") — only customer-selected ACs are in the denominator (C3A §1.4). If no ACs are selected, the AC result is null.</li>
         </ul>
         <p>
-          Partial answers count as not-met in C3A mode (the source is binary). The "Partial" answer option
-          is hidden in the questionnaire when C3A is the only selected mode.
+          Partial and Planned answers count as not-met in C3A mode (the source is binary). Both answer options
+          are hidden when C3A is the only selected mode; a warning is shown in mixed-mode assessments.
         </p>
         <p>There is no SEAL level in C3A mode.</p>
       </div>
@@ -130,7 +150,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           For <strong>EU/EEA assessments</strong>, CSI Composite uses the same SEAL 0–4 scale and weakest-link gate as EU-CSF (see §3.1).
         </p>
         <p>
-          For <strong>non-EU (Generalized) assessments</strong>, CSI Composite uses the <strong>Progressive Sovereignty Maturity</strong> model:
+          For <strong>non-EU (Generalized) assessments</strong>, CSI Composite uses the <strong>Sovereignty Ladder</strong> model:
         </p>
         <div class="border border-purple-100 bg-purple-50 rounded-lg overflow-hidden">
           <table class="w-full text-xs text-purple-900">
@@ -142,10 +162,10 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#dc2626">Foundational</td><td class="px-4 py-2">0–40%</td><td class="px-4 py-2 text-gray-600">Initial controls. Significant jurisdictional and resilience gaps remain.</td></tr>
-              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#f97316">Developing</td><td class="px-4 py-2">41–70%</td><td class="px-4 py-2 text-gray-600">Core controls operational. Data localisation and access controls meet baseline.</td></tr>
-              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#22c55e">Advanced</td><td class="px-4 py-2">71–90%</td><td class="px-4 py-2 text-gray-600">Comprehensive controls active. Auditability, key management, and independence demonstrated.</td></tr>
-              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#16a34a">Pioneering</td><td class="px-4 py-2">91–100%</td><td class="px-4 py-2 text-gray-600">Full posture. All critical controls met, tested continuity, minimal external dependencies.</td></tr>
+              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#dc2626">Dependent</td><td class="px-4 py-2">0–40%</td><td class="px-4 py-2 text-gray-600">Initial controls. Significant jurisdictional and resilience gaps remain.</td></tr>
+              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#f97316">Managed Dependency</td><td class="px-4 py-2">41–70%</td><td class="px-4 py-2 text-gray-600">Core controls operational. Data localisation and access controls meet baseline.</td></tr>
+              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#22c55e">Strategic Autonomy</td><td class="px-4 py-2">71–90%</td><td class="px-4 py-2 text-gray-600">Comprehensive controls active. Auditability, key management, and independence demonstrated.</td></tr>
+              <tr class="border-t border-purple-100"><td class="px-4 py-2 font-medium" style="color:#16a34a">Sovereign</td><td class="px-4 py-2">91–100%</td><td class="px-4 py-2 text-gray-600">Full posture. All critical controls met, tested continuity, minimal external dependencies.</td></tr>
             </tbody>
           </table>
         </div>
@@ -204,7 +224,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
       <div class="text-sm text-gray-700 space-y-3 leading-relaxed mb-4">
         <p><strong>EU/EEA:</strong> Identical to EU-CSF (weakest-link gate, same weights, partial = half points, planned = 0 points).</p>
         <div class="border border-purple-100 bg-purple-50 rounded-lg p-4 space-y-2">
-          <p class="font-medium text-purple-900">Non-EU (Generalized) — Progressive Sovereignty Maturity</p>
+          <p class="font-medium text-purple-900">Non-EU (Generalized) — Sovereignty Ladder</p>
           <ul class="list-disc pl-5 space-y-1 text-purple-800">
             <li><strong>Yes</strong>: full points</li>
             <li><strong>Partial</strong>: 50% of question points</li>
@@ -215,7 +235,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           <p class="text-purple-800">
             No weakest-link gate. Global tier derived from weighted percentage:
             <code class="bg-purple-100 px-1 rounded">Score% = Σ (raw/max × weight) / Σ weight × 100</code><br/>
-            Tier = Foundational if &lt;41%, Developing if 41–70%, Advanced if 71–90%, Pioneering if ≥91%.
+            Tier = Dependent if &lt;41%, Managed Dependency if 41–70%, Strategic Autonomy if 71–90%, Sovereign if ≥91%.
           </p>
         </div>
         <p class="text-gray-500 text-xs border-l-2 border-purple-300 pl-3">
@@ -268,7 +288,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           <p class="font-semibold">Variant Assignment — Known Boundary Cases</p>
           <p><strong>UK (post-Brexit):</strong> The United Kingdom is not an EU member state and is placed in the non-EU group, receiving the Generalized variant (maturity tiers) rather than the EU-CSF SEAL gate. UK-GDPR and NCSC frameworks are substantively equivalent to their EU counterparts, but UK law is not EU law. If a UK cloud provider is targeting EU procurement, they should run the EU-CSF framework explicitly — the tool supports framework selection independently of country.</p>
           <p><strong>Non-EU clients running C3A:</strong> BSI C3A (v1.0) is a German/EU standard designed for EU cloud procurement. Non-EU organisations may use it as an aspirational benchmark, but the output (binary pass/fail, no maturity tier) should be interpreted as "compliance with EU cloud autonomy requirements" — not a local certification. C3A covers only SOV-1 through SOV-6.</p>
-          <p><strong>Score interpretation for non-EU assessments:</strong> CSI Composite scoring weights and questions were designed with EU cloud sovereignty regulations as the reference point. A non-EU provider's score measures alignment with EU sovereignty expectations — not their compliance with their own national framework. A Developing tier score does not imply insecurity; it means certain controls required by EU regulators have not yet been implemented.</p>
+          <p><strong>Score interpretation for non-EU assessments:</strong> CSI Composite scoring weights and questions were designed with EU cloud sovereignty regulations as the reference point. A non-EU provider's score measures alignment with EU sovereignty expectations — not their compliance with their own national framework. A Managed Dependency tier score does not imply insecurity; it means certain controls required by EU regulators have not yet been implemented.</p>
         </div>
 
         <div class="border border-slate-200 bg-slate-50 rounded-lg p-4 text-xs text-slate-800 space-y-3 mt-4">

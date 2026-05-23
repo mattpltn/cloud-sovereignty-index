@@ -1,8 +1,8 @@
 import type { CriteriaFile, Question } from './schema.js';
 import type {
   AssessmentResult, EuCsfResult, EuCsfObjectiveResult,
-  C3aResult, C3aObjectiveTierResult,
-  CsiCompositeResult, CsiObjectiveResult,
+  C3aResult, C3aObjectiveTierResult, C3aAttainmentBand,
+  CsiCompositeResult, CsiObjectiveResult, CsiMaturityTier,
   QuestionResult, GapItem, AnswerMap, FrameworkMode,
 } from './types.js';
 
@@ -159,6 +159,19 @@ function scoreEuCsf(answers: AnswerMap, criteria: CriteriaFile): EuCsfResult {
 
 // ── C3A mode ──────────────────────────────────────────────────────────────────
 
+function pctToC3aAttainment(pct: number): C3aAttainmentBand {
+  if (pct >= 90) return 'fully_attained';
+  if (pct >= 75) return 'substantially_attained';
+  if (pct >= 50) return 'partially_attained';
+  return 'not_attained';
+}
+
+// Layer A: sovereignty-critical controls — failure caps global attainment at not_attained.
+// Encoded as a scoring policy (not criteria metadata) per DR-E26.
+const C3A_LAYER_A_IDS = new Set([
+  'SOV-2-01', 'SOV-2-02', 'SOV-2-03', 'SOV-3-01', 'SOV-4-09', 'SOV-4-10',
+]);
+
 function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAcIds: string[]): C3aResult {
   const acIdSet = new Set(customerSelectedAcIds);
 
@@ -230,13 +243,16 @@ function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAc
       }
     }
 
+    const cPct = cApplicable > 0 ? Math.round((cPassed / cApplicable) * 100) : 0;
     criterionByObj[obj.id] = {
       passed: cPassed,
       applicable: cApplicable,
-      pct: cApplicable > 0 ? Math.round((cPassed / cApplicable) * 100) : 0,
+      pct: cPct,
+      attainment: pctToC3aAttainment(cPct),
     };
+    const acPct = acApplicable > 0 ? Math.round((acPassed / acApplicable) * 100) : 0;
     acByObj[obj.id] = objHasAc
-      ? { passed: acPassed, applicable: acApplicable, pct: acApplicable > 0 ? Math.round((acPassed / acApplicable) * 100) : 0 }
+      ? { passed: acPassed, applicable: acApplicable, pct: acPct, attainment: pctToC3aAttainment(acPct) }
       : null;
 
     globalCPassed += cPassed;
@@ -245,22 +261,36 @@ function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAc
     globalAcApplicable += acApplicable;
   }
 
+  const globalCPct = globalCApplicable > 0 ? Math.round((globalCPassed / globalCApplicable) * 100) : 0;
+
+  // Layer A gate: any answered (non-n/a) Layer A criterion that is not 'yes' blocks global attainment
+  const layerABlocked = C3A_LAYER_A_IDS.size > 0 && failedCriteria.some(f =>
+    f.tier === 'criterion' && C3A_LAYER_A_IDS.has(f.question_id)
+  );
+  const globalAttainment: C3aAttainmentBand = layerABlocked
+    ? 'not_attained'
+    : pctToC3aAttainment(globalCPct);
+
+  const globalAcPct = globalAcApplicable > 0 ? Math.round((globalAcPassed / globalAcApplicable) * 100) : 0;
+
   return {
     criterion: {
       per_objective: criterionByObj,
       global: {
         passed: globalCPassed,
         applicable: globalCApplicable,
-        pct: globalCApplicable > 0 ? Math.round((globalCPassed / globalCApplicable) * 100) : 0,
+        pct: globalCPct,
+        attainment: globalAttainment,
       },
     },
     additional_criterion: {
       per_objective: acByObj,
       global: anyAcSelected
-        ? { passed: globalAcPassed, applicable: globalAcApplicable, pct: globalAcApplicable > 0 ? Math.round((globalAcPassed / globalAcApplicable) * 100) : 0 }
+        ? { passed: globalAcPassed, applicable: globalAcApplicable, pct: globalAcPct, attainment: pctToC3aAttainment(globalAcPct) }
         : null,
     },
     failed_criteria: failedCriteria,
+    layer_a_blocked: layerABlocked,
   };
 }
 
@@ -269,11 +299,15 @@ function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAc
 // Maturity tier thresholds for non-EU Generalized variant (0–1 scale)
 const CSI_TIER_THRESHOLDS = [0, 0.41, 0.71, 0.91] as const;
 
+const CSI_MATURITY_TIERS: CsiMaturityTier[] = [
+  'dependent', 'managed_dependency', 'strategic_autonomy', 'sovereign',
+];
+
 function pctToMaturityLevel(pct: number): number {
-  if (pct >= CSI_TIER_THRESHOLDS[3]) return 3; // Pioneering
-  if (pct >= CSI_TIER_THRESHOLDS[2]) return 2; // Advanced
-  if (pct >= CSI_TIER_THRESHOLDS[1]) return 1; // Developing
-  return 0;                                     // Foundational
+  if (pct >= CSI_TIER_THRESHOLDS[3]) return 3; // Sovereign
+  if (pct >= CSI_TIER_THRESHOLDS[2]) return 2; // Strategic Autonomy
+  if (pct >= CSI_TIER_THRESHOLDS[1]) return 1; // Managed Dependency
+  return 0;                                     // Dependent
 }
 
 function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile, variant: string): CsiCompositeResult {
@@ -344,9 +378,13 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile, variant: 
     pct_to_next_tier = null;
   }
 
+  const maturity_tier: CsiMaturityTier | undefined = isGeneralized
+    ? CSI_MATURITY_TIERS[globalCsl]
+    : undefined;
+
   return {
     per_objective: perObjective,
-    global: { csl: globalCsl, pct: globalPct, pct_to_next_tier },
+    global: { csl: globalCsl, pct: globalPct, pct_to_next_tier, maturity_tier },
     gap_report: buildGapReport(values.map(o => ({ objective_id: o.objective_id, seal_level: o.csl, weight: o.weight, questions: o.questions }))),
   };
 }

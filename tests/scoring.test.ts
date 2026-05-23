@@ -210,10 +210,36 @@ describe('C3A mode', () => {
     expect(result.c3a!.additional_criterion.global!.applicable).toBeGreaterThan(0);
   });
 
-  it('all-yes assessment → 100% criterion', () => {
+  it('all-yes assessment → 100% criterion, fully_attained, layer_a_blocked=false', () => {
     const answers = allYesAnswers('bloc');
     const result = scoreAssessment(answers, criteria, 'test-c3a-6', metaC3a);
     expect(result.c3a!.criterion.global.pct).toBe(100);
+    expect(result.c3a!.criterion.global.attainment).toBe('fully_attained');
+    expect(result.c3a!.layer_a_blocked).toBe(false);
+  });
+
+  it('per-objective results include attainment band', () => {
+    const answers = allYesAnswers('bloc');
+    const result = scoreAssessment(answers, criteria, 'test-c3a-7', metaC3a);
+    const sov1 = result.c3a!.criterion.per_objective['SOV-1'];
+    expect(sov1.attainment).toBeDefined();
+    expect(['not_attained', 'partially_attained', 'substantially_attained', 'fully_attained']).toContain(sov1.attainment);
+  });
+
+  it('failing a Layer A criterion → layer_a_blocked=true, global attainment = not_attained', () => {
+    // SOV-2-01 is a Layer A criterion; answer 'no'
+    const answers = allYesAnswers('bloc');
+    answers['SOV-2-01'] = { tier: 'single', value: 'no' };
+    const result = scoreAssessment(answers, criteria, 'test-c3a-8', metaC3a);
+    expect(result.c3a!.layer_a_blocked).toBe(true);
+    expect(result.c3a!.criterion.global.attainment).toBe('not_attained');
+  });
+
+  it('n/a on a Layer A criterion does NOT trigger layer_a_blocked', () => {
+    const answers = allYesAnswers('bloc');
+    answers['SOV-2-01'] = { tier: 'single', value: 'n/a' };
+    const result = scoreAssessment(answers, criteria, 'test-c3a-9', metaC3a);
+    expect(result.c3a!.layer_a_blocked).toBe(false);
   });
 });
 

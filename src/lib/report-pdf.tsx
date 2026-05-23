@@ -156,7 +156,7 @@ export async function buildReportPdf(
   }
 
   // Maturity progress bar (CSI Composite, non-EU)
-  const CSI_TIER_LABELS = ['Foundational', 'Developing', 'Advanced', 'Pioneering'];
+  const CSI_TIER_LABELS = ['Dependent', 'Managed Dependency', 'Strategic Autonomy', 'Sovereign'];
   const CSI_TIER_RANGES = ['0–40%', '41–70%', '71–90%', '91–100%'];
   const CSI_TIER_COLORS = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];
   const CSI_TIER_WIDTHS = [0.40, 0.30, 0.20, 0.10];
@@ -307,8 +307,21 @@ export async function buildReportPdf(
   const isGeneralized = result.variant === 'Generalized';
   const levelPrefix = 'SEAL';
 
-  const CSI_MATURITY_LABELS = ['Foundational', 'Developing', 'Advanced', 'Pioneering'];
+  const CSI_MATURITY_LABELS = ['Dependent', 'Managed Dependency', 'Strategic Autonomy', 'Sovereign'];
   const CSI_MATURITY_HEX = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];
+
+  const C3A_BAND_LABELS: Record<string, string> = {
+    not_attained: 'Not Attained',
+    partially_attained: 'Partially Attained',
+    substantially_attained: 'Substantially Attained',
+    fully_attained: 'Fully Attained',
+  };
+  const C3A_BAND_HEX: Record<string, string> = {
+    not_attained: '#dc2626',
+    partially_attained: '#f97316',
+    substantially_attained: '#eab308',
+    fully_attained: '#16a34a',
+  };
 
   const selectedFrameworks = result.selected_frameworks ?? ['csi_composite'];
   const frameworkNames = selectedFrameworks.map(f => {
@@ -339,12 +352,17 @@ export async function buildReportPdf(
     ));
   }
   if (result.c3a) {
-    const { passed, applicable, pct } = result.c3a.criterion.global;
+    const { passed, applicable, attainment } = result.c3a.criterion.global;
     const ac = result.c3a.additional_criterion.global;
-    coverResults.push(h(View, { style: { ...styles.coverSealBox, borderLeftWidth: 4, borderLeftColor: '#374151', flex: 1 } },
-      h(Text, { style: { ...styles.coverSealScore, color: '#374151' } }, `${Math.round(pct)}%`),
-      h(Text, { style: styles.coverSealLabel }, `C3A — ${passed}/${applicable} met`),
-      ac ? h(Text, { style: { ...styles.coverSealLabel, fontSize: 9, color: '#9ca3af' } }, `AC: ${ac.passed}/${ac.applicable}`) : null,
+    const bandColor = C3A_BAND_HEX[attainment] ?? '#374151';
+    const bandLabel = C3A_BAND_LABELS[attainment] ?? attainment;
+    coverResults.push(h(View, { style: { ...styles.coverSealBox, borderLeftWidth: 4, borderLeftColor: bandColor, flex: 1 } },
+      h(Text, { style: { ...styles.coverSealScore, color: bandColor } }, bandLabel),
+      h(Text, { style: styles.coverSealLabel }, `C3A — ${passed}/${applicable} criteria met`),
+      result.c3a.layer_a_blocked
+        ? h(Text, { style: { ...styles.coverSealLabel, fontSize: 9, color: '#dc2626' } }, 'Layer A gate not cleared')
+        : null,
+      ac ? h(Text, { style: { ...styles.coverSealLabel, fontSize: 9, color: '#9ca3af' } }, `AC: ${ac.passed}/${ac.applicable} met`) : null,
     ));
   }
   if (result.csi_composite) {
@@ -479,7 +497,7 @@ export async function buildReportPdf(
       ...buildObjectiveScorecardSection(csiObjectives, 'csl', isGeneralized ? 'Tier' : levelPrefix),
       h(Text, { style: styles.subSectionTitle }, 'Strengths'),
       strengths.length === 0
-        ? h(Text, { style: styles.bodyText }, `No objective has reached ${isGeneralized ? 'Advanced' : levelPrefix + ' 3'} yet.`)
+        ? h(Text, { style: styles.bodyText }, `No objective has reached ${isGeneralized ? 'Strategic Autonomy' : levelPrefix + ' 3'} yet.`)
         : h(View, {}, ...strengths.map(obj => {
             const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
             const lbl = isGeneralized ? (CSI_MATURITY_LABELS[obj.csl] ?? `Tier ${obj.csl}`) : `${levelPrefix} ${obj.csl}`;
@@ -505,7 +523,7 @@ export async function buildReportPdf(
         h(Text, { style: styles.subSectionTitle },
           pctToNext !== null && pctToNext > 0
             ? `Roadmap to ${CSI_MATURITY_LABELS[csiCsl + 1]}`
-            : 'Pioneering Tier Achieved'
+            : 'Sovereign Tier Achieved'
         ),
         pctToNext !== null && pctToNext > 0
           ? h(View, {},
@@ -522,7 +540,7 @@ export async function buildReportPdf(
               }),
             )
           : h(Text, { style: styles.bodyText },
-              'This assessment has achieved the Pioneering tier — the highest maturity level in the CSI Progressive Sovereignty Maturity model.'
+              'This assessment has achieved the Sovereign tier — the highest level in the CSI Progressive Sovereignty model.'
             ),
       ) : null,
       footer,
@@ -571,7 +589,7 @@ export async function buildReportPdf(
         ) : null,
         result.csi_composite ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
           isGeneralized
-            ? 'CSI Composite (non-EU): Progressive Sovereignty Maturity model. No weakest-link gate. Tiers: Foundational (0–40%), Developing (41–70%), Advanced (71–90%), Pioneering (91–100%). "planned" answers earn 25% of question points. Fallback questions SOV-4-01-FB and SOV-4-09-FB available for providers unable to meet strict EU criteria.'
+            ? 'CSI Composite (non-EU): Progressive Sovereignty Maturity model. No weakest-link gate. Tiers: Dependent (0–40%), Managed Dependency (41–70%), Strategic Autonomy (71–90%), Sovereign (91–100%). "planned" answers earn 25% of question points. Fallback questions SOV-4-01-FB and SOV-4-09-FB available for providers unable to meet strict EU criteria.'
             : 'CSI Composite (EU/EEA): editorial blend of EU-CSF and C3A with the same SEAL 0–4 weakest-link gate. Not a source-standard certification.'
         ) : null,
         h(Text, { style: styles.bodyText },
