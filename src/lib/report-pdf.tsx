@@ -436,8 +436,8 @@ export async function buildReportPdf(
     c3aPages.push(h(Page, { size: 'A4', style: styles.page },
       h(Text, { style: styles.sectionTitle }, 'BSI C3A — Criteria enabling Cloud Computing Autonomy (v1.0)'),
       h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
-        `Criterion: ${crit.passed}/${crit.applicable} met (${Math.round(crit.pct)}%). ` +
-        (ac ? `Additional Criterion: ${ac.passed}/${ac.applicable} met (${Math.round(ac.pct)}%). ` : 'No Additional Criteria selected. ') +
+        `Criterion: ${crit.passed}/${crit.applicable} met. ` +
+        (ac ? `Additional Criterion: ${ac.passed}/${ac.applicable} met. ` : 'No Additional Criteria selected. ') +
         'Binary pass/fail — no SEAL, no partial credit.'
       ),
       h(Text, { style: styles.subSectionTitle }, 'Per-Objective Results'),
@@ -448,11 +448,11 @@ export async function buildReportPdf(
       ),
       ...Object.entries(result.c3a.criterion.per_objective).map(([objId, objCrit], i) => {
         const objAc = result.c3a!.additional_criterion.per_objective[objId];
-        const color = objCrit.applicable > 0 && objCrit.pct === 100 ? '#16a34a' : objCrit.pct >= 50 ? '#f97316' : '#dc2626';
+        const color = C3A_BAND_HEX[objCrit.attainment] ?? '#6b7280';
         return h(View, { key: objId, style: i % 2 === 0 ? styles.tableRow : styles.tableRowAlt },
           h(Text, { style: styles.colId }, objId),
           h(Text, { style: { ...styles.colTitle, color } },
-            objCrit.applicable > 0 ? `${objCrit.passed}/${objCrit.applicable} (${Math.round(objCrit.pct)}%)` : '—'
+            objCrit.applicable > 0 ? `${objCrit.passed}/${objCrit.applicable} — ${C3A_BAND_LABELS[objCrit.attainment] ?? objCrit.attainment}` : '—'
           ),
           h(Text, { style: styles.colSeal },
             (objAc && objAc.applicable > 0) ? `${objAc.passed}/${objAc.applicable}` : '—'

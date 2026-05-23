@@ -112,21 +112,20 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
 
       <h3 class="text-base font-semibold mb-2">3.2 C3A — Attainment Bands</h3>
       <div class="text-sm text-gray-700 space-y-2 leading-relaxed mb-6">
-        <p>C3A produces an attainment band (not a percentage) per objective and globally, reflecting the binary conformity logic of the source framework:</p>
+        <p>C3A produces a conformity verdict per criterion and an attainment band per objective and globally. No percentages are shown — each criterion is either met or not met:</p>
         <div class="border border-gray-200 rounded-lg overflow-hidden my-2">
           <table class="w-full text-xs text-gray-800">
             <thead class="bg-gray-100">
               <tr>
                 <th class="px-4 py-2 text-left font-semibold">Band</th>
-                <th class="px-4 py-2 text-left font-semibold">Criteria met</th>
-                <th class="px-4 py-2 text-left font-semibold">Meaning</th>
+                <th class="px-4 py-2 text-left font-semibold">What it means</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#dc2626">Not Attained</td><td class="px-4 py-2">0–49%</td><td class="px-4 py-2 text-gray-600">Core structural gaps.</td></tr>
-              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#f97316">Partially Attained</td><td class="px-4 py-2">50–74%</td><td class="px-4 py-2 text-gray-600">Some controls implemented.</td></tr>
-              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#eab308">Substantially Attained</td><td class="px-4 py-2">75–89%</td><td class="px-4 py-2 text-gray-600">Most mandatory controls operational.</td></tr>
-              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#16a34a">Fully Attained</td><td class="px-4 py-2">90–100%</td><td class="px-4 py-2 text-gray-600">All mandatory controls operational.</td></tr>
+              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#dc2626">Not Attained</td><td class="px-4 py-2 text-gray-600">Core structural gaps — majority of mandatory controls not implemented, or a Layer A criterion not met.</td></tr>
+              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#f97316">Partially Attained</td><td class="px-4 py-2 text-gray-600">Some controls implemented but significant gaps remain.</td></tr>
+              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#eab308">Substantially Attained</td><td class="px-4 py-2 text-gray-600">Most mandatory controls operational with isolated gaps.</td></tr>
+              <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium" style="color:#16a34a">Fully Attained</td><td class="px-4 py-2 text-gray-600">All applicable mandatory controls met.</td></tr>
             </tbody>
           </table>
         </div>
@@ -205,16 +204,15 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
       <div class="text-sm text-gray-700 space-y-2 leading-relaxed mb-6">
         <div class="border border-gray-200 bg-gray-50 rounded-lg p-4 space-y-2">
           <ul class="list-disc pl-5 space-y-1">
-            <li><strong>Yes</strong>: criterion met (passed = passed + 1)</li>
+            <li><strong>Yes</strong>: criterion met</li>
             <li><strong>No / Partial</strong>: criterion not-met (partial counts as not-met — C3A is binary)</li>
-            <li><strong>N/A</strong>: excluded from denominator</li>
+            <li><strong>N/A</strong>: excluded from applicable count</li>
           </ul>
           <p>
-            Per objective: <code class="bg-gray-100 px-1 rounded">Criterion % = (passed / applicable) × 100</code>
+            Output per objective: <strong>N criteria met out of M applicable</strong> → attainment band (see §3.2). No percentage is computed or shown.
           </p>
           <p>
-            AC criteria: only questions in the customer's selected AC list contribute to the denominator.
-            An assessment with no ACs selected reports <em>null</em> for the AC track.
+            AC criteria: only customer-selected ACs enter the applicable count. An assessment with no ACs selected reports no AC result.
           </p>
           <p>Scope: SOV-1 through SOV-6 (SOV-7 and SOV-8 have no C3A questions).</p>
         </div>
