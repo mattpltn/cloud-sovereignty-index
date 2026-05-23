@@ -178,13 +178,27 @@ import '../styles/global.css';
         <div class="space-y-6">
           <div>
             <h3 class="text-sm font-semibold mb-1">What do the answer options mean?</h3>
-            <ul class="text-sm text-gray-700 space-y-2 leading-relaxed list-none">
-              <li><strong>Yes</strong> — the criterion is fully met. Full points, counts toward the sovereignty level.</li>
-              <li><strong>No</strong> — the criterion is not met. Zero points, does not count toward the sovereignty level.</li>
-              <li><strong>Partial</strong> — the criterion is partially met. Half points, but does <em>not</em> count toward the EU-CSF / C3A sovereignty level (weakest-link rule). In CSI Composite Generalized mode, partial = 50% of question points with no gate.</li>
-              <li><strong>Planned</strong> — available in CSI Composite Generalized mode only. Earns 25% of question points. Represents a roadmap commitment with a documented timeline. <strong>Requires evidence:</strong> a board-approved roadmap, signed project plan, approved budget with target date, or vendor contract with delivery milestone. A "Planned" answer without a verifiable artefact should be treated as No in any external review. In EU-CSF and C3A, "Planned" scores as 0.</li>
-              <li><strong>N/A</strong> — the criterion does not apply to this deployment. Excluded from both numerator and denominator, so it does not penalise the score.</li>
-            </ul>
+            <div class="border border-gray-200 rounded-lg overflow-hidden my-2">
+              <table class="w-full text-sm text-gray-800">
+                <thead class="bg-gray-50 text-xs text-gray-500">
+                  <tr>
+                    <th class="px-4 py-2 text-left font-medium">Answer</th>
+                    <th class="px-4 py-2 text-left font-medium">EU-CSF</th>
+                    <th class="px-4 py-2 text-left font-medium">C3A</th>
+                    <th class="px-4 py-2 text-left font-medium">CSI Composite EU/EEA</th>
+                    <th class="px-4 py-2 text-left font-medium">CSI Composite Generalized</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium">Yes</td><td class="px-4 py-2">100% · counts toward gate</td><td class="px-4 py-2">Passed</td><td class="px-4 py-2">100% · counts toward gate</td><td class="px-4 py-2">100%</td></tr>
+                  <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium">Partial</td><td class="px-4 py-2">50% · does not satisfy gate</td><td class="px-4 py-2">Not met (binary)</td><td class="px-4 py-2">50% · does not satisfy gate</td><td class="px-4 py-2">50%</td></tr>
+                  <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium">Planned</td><td class="px-4 py-2">0% · hidden in UI</td><td class="px-4 py-2">Not met · hidden in UI</td><td class="px-4 py-2">0% · hidden in UI</td><td class="px-4 py-2">25% · requires evidence</td></tr>
+                  <tr class="border-t border-gray-100"><td class="px-4 py-2 font-medium">No</td><td class="px-4 py-2">0%</td><td class="px-4 py-2">Not met</td><td class="px-4 py-2">0%</td><td class="px-4 py-2">0%</td></tr>
+                  <tr class="border-t border-gray-100 bg-gray-50"><td class="px-4 py-2 font-medium">N/A</td><td class="px-4 py-2 text-gray-400" colspan="4">Excluded from numerator and denominator across all modes — does not affect the score.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-xs text-gray-500 mt-1"><strong>Planned requires evidence:</strong> a board-approved roadmap with a named milestone and target date, a signed project plan, an approved budget line, or a vendor contract with delivery date. A "Planned" without a traceable artefact should be treated as No in any external review.</p>
           </div>
 
           <div>
