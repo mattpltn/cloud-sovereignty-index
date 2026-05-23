@@ -160,6 +160,7 @@ export interface GapItem {
   tier: 'bloc' | 'national' | 'single';
   gap_score: number;
   priority: number;
+  seal_contribution: number;
 }
 
 export interface AssessmentRecord {

@@ -244,7 +244,7 @@ export async function buildReportPdf(
   function resolve(text: string): string { return resolvePlaceholders(text, tierCtx); }
 
   function buildGapSection(
-    gaps: Array<{ objective_id: string; question_id: string; tier: string; gap_score: number }>,
+    gaps: Array<{ objective_id: string; question_id: string; tier: string; gap_score: number; seal_contribution?: number }>,
     sectionLabel: string,
   ) {
     const topGaps = gaps.slice(0, 5);
@@ -257,8 +257,16 @@ export async function buildReportPdf(
               const meta = getQuestionMeta(criteria, gap.question_id, gap.tier);
               const rawText = resolve(meta.text);
               const rawSupp = resolve(meta.supplementary);
+              const sealColor = gap.seal_contribution != null ? (SEAL_COLORS_HEX[gap.seal_contribution] ?? '#6b7280') : '#6b7280';
               const children: unknown[] = [
-                h(Text, { style: styles.cardTitle }, `#${i + 1}. ${meta.title} — ${gap.question_id}`),
+                h(View, { style: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 3 } },
+                  h(Text, { style: { ...styles.cardTitle, flex: 1 } }, `#${i + 1}. ${meta.title} — ${gap.question_id}`),
+                  gap.seal_contribution != null
+                    ? h(View, { style: { backgroundColor: sealColor, borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 } },
+                        h(Text, { style: { fontSize: 7, color: '#ffffff', fontFamily: 'Helvetica-Bold' } }, `SEAL ${gap.seal_contribution}`)
+                      )
+                    : null,
+                ),
               ];
               if (meta.source) children.push(h(Text, { style: { ...styles.cardBody, color: '#9ca3af', marginBottom: 2 } }, `Ref: ${meta.source}`));
               if (rawText) children.push(h(Text, { style: { ...styles.cardBody, marginBottom: rawSupp ? 2 : 0 } },

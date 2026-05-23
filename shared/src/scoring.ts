@@ -88,7 +88,7 @@ function buildGapReport(
     for (const qr of obj.questions) {
       if (qr.value !== 'n/a' && qr.points_possible > 0 && qr.points_earned < qr.points_possible) {
         const g = obj.weight * (1 - qr.points_earned / qr.points_possible) * Math.max(1, 4 - obj.seal_level);
-        gaps.push({ objective_id: obj.objective_id, question_id: qr.question_id, tier: qr.tier, gap_score: g, priority: 0 });
+        gaps.push({ objective_id: obj.objective_id, question_id: qr.question_id, tier: qr.tier, gap_score: g, priority: 0, seal_contribution: qr.seal_contribution });
       }
     }
   }

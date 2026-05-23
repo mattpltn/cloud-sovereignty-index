@@ -113,7 +113,7 @@ const csiGaps = result?.csi_composite?.gap_report ?? [];
 const c3aFailedCriteria = result?.c3a?.failed_criteria ?? [];
 
 // Top improvement for EU-CSF
-interface GapItem { objective_id: string; question_id: string; tier: string; gap_score: number }
+interface GapItem { objective_id: string; question_id: string; tier: string; gap_score: number; seal_contribution?: number }
 function resolveGapTitle(gap: GapItem): string {
   for (const obj of criteria.objectives) {
     const q = obj.questions.find(q => q.id === gap.question_id);
@@ -200,6 +200,12 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
                         <p class="text-sm font-medium">{item.title}</p>
                         <p class="text-xs text-gray-500 mt-0.5">{item.question_id} · {item.tier} tier</p>
                       </div>
+                      {item.seal_contribution != null && (
+                        <div class="text-xs font-semibold px-2 py-0.5 rounded-full text-white shrink-0 self-start mt-0.5"
+                          style={`background-color: ${SEAL_COLORS[item.seal_contribution] ?? '#6b7280'}`}>
+                          SEAL {item.seal_contribution}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -278,6 +284,12 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
                         <p class="text-sm font-medium">{item.title}</p>
                         <p class="text-xs text-gray-500 mt-0.5">{item.question_id} · {item.tier} tier</p>
                       </div>
+                      {item.seal_contribution != null && (
+                        <div class="text-xs font-semibold px-2 py-0.5 rounded-full text-white shrink-0 self-start mt-0.5"
+                          style={`background-color: ${SEAL_COLORS[item.seal_contribution] ?? '#6b7280'}`}>
+                          SEAL {item.seal_contribution}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

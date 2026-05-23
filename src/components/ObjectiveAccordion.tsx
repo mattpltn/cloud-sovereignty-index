@@ -124,6 +124,8 @@ export default function ObjectiveAccordion({ objectives, criteria, country, vari
         const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
         const isOpen = open.has(obj.objective_id);
 
+        const blockingCount = obj.questions.filter(q => questionStatus(q, overallSeal) === 'blocking').length;
+
         return (
           <div key={obj.objective_id} id={`obj-${obj.objective_id}`} className="border border-gray-100 rounded-lg overflow-hidden scroll-mt-4">
             {/* Header row — clickable */}
@@ -139,6 +141,11 @@ export default function ObjectiveAccordion({ objectives, criteria, country, vari
                 </div>
               </div>
               <div className="text-sm font-medium shrink-0" style={{ color }}>{pct}%</div>
+              {blockingCount > 0 && (
+                <div className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-semibold shrink-0">
+                  {blockingCount} blocking
+                </div>
+              )}
               <div className="text-xs px-2 py-0.5 rounded-full text-white font-medium shrink-0" style={{ backgroundColor: color }}>
                 {variant === 'Generalized' ? 'Level' : 'SEAL'} {seal}
               </div>

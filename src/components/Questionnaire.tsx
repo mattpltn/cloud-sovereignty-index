@@ -333,7 +333,10 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
             <span className="ml-2 text-xs bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded">AC</span>
           )}
         </div>
-        <span className="text-xs text-gray-400 whitespace-nowrap">Level {sealContribution} · {points}pt</span>
+        <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-white whitespace-nowrap"
+          style={{ backgroundColor: ['#dc2626','#f97316','#eab308','#22c55e','#16a34a'][sealContribution] ?? '#6b7280' }}>
+          SEAL {sealContribution}
+        </span>
       </div>
       <p className="text-sm text-gray-700 mb-4 leading-relaxed">{text}</p>
       <div className="flex flex-wrap gap-2 mb-3">
