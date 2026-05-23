@@ -42,11 +42,21 @@ export type C3aAttainmentBand =
   | 'substantially_attained'
   | 'fully_attained';
 
+export interface C3aQuestionResult {
+  question_id: string;
+  tier: 'single' | 'bloc' | 'national';
+  value: AnswerValue;
+  passed: boolean;
+  is_layer_a: boolean;
+  is_additional_criterion: boolean;
+}
+
 export interface C3aObjectiveTierResult {
   passed: number;
   applicable: number;
   pct: number;
   attainment: C3aAttainmentBand;
+  questions: C3aQuestionResult[];
 }
 
 export interface C3aObjectiveResult {

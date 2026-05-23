@@ -1,7 +1,7 @@
 import type { CriteriaFile, Question } from './schema.js';
 import type {
   AssessmentResult, EuCsfResult, EuCsfObjectiveResult,
-  C3aResult, C3aObjectiveTierResult, C3aAttainmentBand,
+  C3aResult, C3aObjectiveTierResult, C3aAttainmentBand, C3aQuestionResult,
   CsiCompositeResult, CsiObjectiveResult, CsiMaturityTier,
   QuestionResult, GapItem, AnswerMap, FrameworkMode,
 } from './types.js';
@@ -191,6 +191,8 @@ function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAc
     let acPassed = 0;
     let acApplicable = 0;
     let objHasAc = false;
+    const cQuestions: C3aQuestionResult[] = [];
+    const acQuestions: C3aQuestionResult[] = [];
 
     for (const q of obj.questions) {
       if (!q.applies_to_c3a) continue;
@@ -201,25 +203,38 @@ function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAc
 
       // For tiered questions, score each tier as an independent criterion
       if (q.type === 'tiered') {
-        const tiers: Array<{ key: string; sc: number }> = [{ key: `${q.id}:bloc`, sc: q.tiers.bloc.seal_contribution }];
-        if (q.tiers.national) tiers.push({ key: `${q.id}:national`, sc: q.tiers.national.seal_contribution });
+        const tiers: Array<{ key: string; tierLabel: 'bloc' | 'national' }> = [{ key: `${q.id}:bloc`, tierLabel: 'bloc' }];
+        if (q.tiers.national) tiers.push({ key: `${q.id}:national`, tierLabel: 'national' });
 
         for (const t of tiers) {
           const stored = answers[t.key] ?? answers[q.id];
           if (!stored) continue;
           const value = stored.value;
-          if (value === 'n/a') continue; // N/A excluded from C3A count
-          const passed = value === 'yes'; // partial = not-met in C3A
+          const passed = value === 'yes';
+          const qr: C3aQuestionResult = {
+            question_id: q.id,
+            tier: t.tierLabel,
+            value,
+            passed: passed && value !== 'n/a',
+            is_layer_a: C3A_LAYER_A_IDS.has(q.id),
+            is_additional_criterion: isAc,
+          };
+          if (value === 'n/a') {
+            (isAc ? acQuestions : cQuestions).push(qr);
+            continue; // N/A excluded from C3A count
+          }
           if (isAc) {
             acApplicable++;
             objHasAc = true;
             anyAcSelected = true;
             if (passed) acPassed++;
             else failedCriteria.push({ question_id: q.id, title: q.title, objective_id: obj.id, tier: 'additional_criterion' });
+            acQuestions.push(qr);
           } else {
             cApplicable++;
             if (passed) cPassed++;
             else failedCriteria.push({ question_id: q.id, title: q.title, objective_id: obj.id, tier: 'criterion' });
+            cQuestions.push(qr);
           }
         }
       } else {
@@ -227,18 +242,31 @@ function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAc
         const stored = answers[q.id];
         if (!stored) continue;
         const value = stored.value;
-        if (value === 'n/a') continue;
         const passed = value === 'yes';
+        const qr: C3aQuestionResult = {
+          question_id: q.id,
+          tier: 'single',
+          value,
+          passed: passed && value !== 'n/a',
+          is_layer_a: C3A_LAYER_A_IDS.has(q.id),
+          is_additional_criterion: isAc,
+        };
+        if (value === 'n/a') {
+          (isAc ? acQuestions : cQuestions).push(qr);
+          continue;
+        }
         if (isAc) {
           acApplicable++;
           objHasAc = true;
           anyAcSelected = true;
           if (passed) acPassed++;
           else failedCriteria.push({ question_id: q.id, title: q.title, objective_id: obj.id, tier: 'additional_criterion' });
+          acQuestions.push(qr);
         } else {
           cApplicable++;
           if (passed) cPassed++;
           else failedCriteria.push({ question_id: q.id, title: q.title, objective_id: obj.id, tier: 'criterion' });
+          cQuestions.push(qr);
         }
       }
     }
@@ -249,10 +277,11 @@ function scoreC3a(answers: AnswerMap, criteria: CriteriaFile, customerSelectedAc
       applicable: cApplicable,
       pct: cPct,
       attainment: pctToC3aAttainment(cPct),
+      questions: cQuestions,
     };
     const acPct = acApplicable > 0 ? Math.round((acPassed / acApplicable) * 100) : 0;
     acByObj[obj.id] = objHasAc
-      ? { passed: acPassed, applicable: acApplicable, pct: acPct, attainment: pctToC3aAttainment(acPct) }
+      ? { passed: acPassed, applicable: acApplicable, pct: acPct, attainment: pctToC3aAttainment(acPct), questions: acQuestions }
       : null;
 
     globalCPassed += cPassed;

@@ -3,11 +3,12 @@ import '../../../styles/global.css';
 import ScoreHero from '../../../components/ScoreHero';
 import ExportAnswers from '../../../components/ExportAnswers';
 import ObjectiveAccordion from '../../../components/ObjectiveAccordion';
+import C3aObjectiveAccordion from '../../../components/C3aObjectiveAccordion';
 import PdfExportButton from '../../../components/PdfExportButton';
 import criteriaJson from '../../../../data/criteria.json';
 import countriesJson from '../../../../data/countries.json';
 import type { CriteriaFile } from '../../../../shared/src/schema';
-import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult } from '../../../../shared/src/types';
+import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult, C3aResult } from '../../../../shared/src/types';
 export const prerender = false;
 
 const criteria = criteriaJson as unknown as CriteriaFile;
@@ -231,73 +232,21 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
               <span class="text-xs font-normal text-gray-400">C3A v1.0</span>
             </h2>
 
-            <div class="border border-gray-200 rounded-xl overflow-hidden mb-4">
-              <table class="w-full text-sm">
-                <thead>
-                  <tr class="bg-gray-50 text-left text-xs text-gray-500">
-                    <th class="px-4 py-2 font-medium">Objective</th>
-                    <th class="px-4 py-2 font-medium text-right">Criterion</th>
-                    <th class="px-4 py-2 font-medium text-right">AC</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(result.c3a.criterion.per_objective).map(([objId, crit]) => {
-                    const ac = result.c3a!.additional_criterion.per_objective[objId];
-                    const critColor = crit.applicable > 0 && crit.pct === 100 ? '#16a34a' : crit.pct >= 50 ? '#f97316' : '#dc2626';
-                    return (
-                      <tr class="border-t border-gray-100">
-                        <td class="px-4 py-2 font-mono text-xs text-gray-500">{objId}</td>
-                        <td class="px-4 py-2 text-right">
-                          {crit.applicable > 0 ? (
-                            <span class="font-medium" style={`color: ${critColor}`}>
-                              {crit.passed}/{crit.applicable} ({Math.round(crit.pct)}%)
-                            </span>
-                          ) : (
-                            <span class="text-gray-300">—</span>
-                          )}
-                        </td>
-                        <td class="px-4 py-2 text-right">
-                          {ac && ac.applicable > 0 ? (
-                            <span class="text-gray-600">{ac.passed}/{ac.applicable}</span>
-                          ) : (
-                            <span class="text-gray-300">—</span>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-                <tfoot>
-                  <tr class="border-t-2 border-gray-200 bg-gray-50 font-medium">
-                    <td class="px-4 py-2 text-xs text-gray-600">Total</td>
-                    <td class="px-4 py-2 text-right text-sm">
-                      {result.c3a.criterion.global.passed}/{result.c3a.criterion.global.applicable}
-                      ({Math.round(result.c3a.criterion.global.pct)}%)
-                    </td>
-                    <td class="px-4 py-2 text-right text-sm">
-                      {result.c3a.additional_criterion.global
-                        ? `${result.c3a.additional_criterion.global.passed}/${result.c3a.additional_criterion.global.applicable} (${Math.round(result.c3a.additional_criterion.global.pct)}%)`
-                        : '—'}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-
             {c3aFailedCriteria.length > 0 && (
-              <div>
-                <h3 class="text-sm font-medium text-gray-700 mb-2">Failed criteria</h3>
-                <div class="space-y-1.5">
-                  {c3aFailedCriteria.map(fc => (
-                    <div class="flex items-center gap-3 p-3 rounded-lg border border-red-100 bg-red-50">
-                      <span class="text-xs font-mono text-gray-500 shrink-0">{fc.question_id}</span>
-                      <span class="text-sm text-gray-700 flex-1">{fc.title}</span>
-                      <span class="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">{fc.tier}</span>
-                    </div>
-                  ))}
-                </div>
+              <div class="mb-4 p-3 rounded-xl border border-red-100 bg-red-50 text-sm text-gray-700">
+                <p class="font-medium text-red-700 mb-1">
+                  {c3aFailedCriteria.filter(f => f.tier === 'criterion').length} criterion/criteria not met
+                  {result.c3a.layer_a_blocked && <span class="ml-2 text-xs bg-red-200 text-red-800 px-1.5 py-0.5 rounded font-semibold">Layer A blocked</span>}
+                </p>
+                <p class="text-xs text-gray-500">Expand each objective below to see per-question detail.</p>
               </div>
             )}
+
+            <C3aObjectiveAccordion
+              client:load
+              c3a={result.c3a as C3aResult}
+              criteria={criteria}
+            />
           </section>
         )}
 
