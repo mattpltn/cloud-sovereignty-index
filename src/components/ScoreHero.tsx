@@ -33,12 +33,19 @@ function EuCsfCard({ eu_csf, variant }: { eu_csf: EuCsfResult; variant: string }
   return (
     <div className="border border-gray-200 rounded-xl p-6 flex-1 min-w-0">
       <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">EU Cloud Sovereignty Framework</div>
-      <div className="text-5xl font-bold tabular-nums mb-2" style={{ color }}>{Math.round(pct)}%</div>
-      <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium text-white mb-2"
+      <div className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-white mb-2"
         style={{ backgroundColor: color }}>
         {levelPrefix} {seal} — {label}
       </div>
-      <p className="text-xs text-gray-500">
+      {seal === 0 && (
+        <div className="mb-2 px-3 py-2 rounded-lg bg-red-50 border border-red-100 text-xs text-red-700">
+          Critical sovereignty prerequisites remain unmet. The assessed environment may still depend on external operational, technological, or supply-chain authorities incompatible with sovereign continuity objectives.
+        </div>
+      )}
+      <div className="text-sm text-gray-500 mt-1">
+        Sovereignty readiness: <span className="font-semibold tabular-nums" style={{ color }}>{Math.round(pct)}%</span>
+      </div>
+      <p className="text-xs text-gray-400 mt-1">
         Weakest-link gate: all level ≤{seal} criteria must be met. EU-CSF v1.2.1.
       </p>
     </div>
@@ -71,8 +78,8 @@ function C3aCard({ c3a }: { c3a: C3aResult }) {
         </div>
         {c3a.layer_a_blocked && (
           <div className="rounded-lg bg-red-50 border border-red-200 px-3 py-2">
-            <span className="text-red-600 text-xs font-semibold">Layer A sovereignty gate not cleared — </span>
-            <span className="text-red-500 text-xs">one or more critical controls (legal insulation, data jurisdiction, or operational continuity) not met.</span>
+            <p className="text-red-700 text-xs font-semibold mb-0.5">Layer A Sovereignty Failure</p>
+            <p className="text-red-600 text-xs">Critical autonomy prerequisites remain externally dependent. The assessed environment cannot currently demonstrate autonomous continuity under jurisdictional, operational, or geopolitical disruption scenarios.</p>
           </div>
         )}
         {ac ? (
