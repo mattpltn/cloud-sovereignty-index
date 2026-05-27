@@ -109,6 +109,33 @@ const csiBottlenecks = csiCsl < 4
   : [];
 const csiGaps = result?.csi_composite?.gap_report ?? [];
 
+// Layer grouping for CSI Composite
+const CSI_LAYERS = [
+  { id: 'sovereignty', label: 'Sovereignty', description: 'Who ultimately controls the system', objectives: ['SOV-1', 'SOV-2'] },
+  { id: 'resilience', label: 'Resilience', description: 'Can it survive disruption', objectives: ['SOV-3', 'SOV-4', 'SOV-5'] },
+  { id: 'operational_viability', label: 'Operational Viability', description: 'Can it realistically operate locally', objectives: ['SOV-6', 'SOV-7', 'SOV-8'] },
+] as const;
+
+// Anti-patterns: static rules evaluated against per-objective CSI scores
+function csiObjPct(objId: string): number {
+  return result?.csi_composite?.per_objective[objId]?.pct ?? 0;
+}
+const csiAntiPatterns: Array<{ name: string; explanation: string }> = [];
+if (result?.csi_composite) {
+  if (csiObjPct('SOV-3') >= 70 && csiObjPct('SOV-4') < 50)
+    csiAntiPatterns.push({ name: 'Data sovereign but operationally dependent', explanation: 'Data residency controls are in place but operational continuity under disconnection is not assured.' });
+  if (csiObjPct('SOV-2') >= 70 && csiObjPct('SOV-5') < 50)
+    csiAntiPatterns.push({ name: 'Legally compliant but not survivable', explanation: 'Jurisdictional requirements are met but supply-chain dependencies could disrupt operations under geopolitical stress.' });
+  if (csiObjPct('SOV-6') >= 70 && csiObjPct('SOV-4') < 50)
+    csiAntiPatterns.push({ name: 'Open-source but operationally dependent', explanation: 'Technology stack favours open standards but operational sovereignty is not demonstrated.' });
+  if (csiObjPct('SOV-4') >= 70 && csiObjPct('SOV-2') < 50)
+    csiAntiPatterns.push({ name: 'Resilient but not autonomous', explanation: 'Operational continuity measures exist but legal and jurisdictional control remains external.' });
+  if (csiObjPct('SOV-3') >= 60 && csiObjPct('SOV-1') < 50)
+    csiAntiPatterns.push({ name: 'Localised but externally controlled', explanation: 'Data is held locally but strategic and governance control remains with a foreign authority.' });
+  if (csiObjPct('SOV-7') >= 70 && (csiObjPct('SOV-2') < 50 || csiObjPct('SOV-4') < 50))
+    csiAntiPatterns.push({ name: 'Secure but not sovereign', explanation: 'Security posture is strong but sovereignty prerequisites — legal autonomy or operational continuity — are not met.' });
+}
+
 // ── C3A failed criteria ──────────────────────────────────────────────────────
 const c3aFailedCriteria = result?.c3a?.failed_criteria ?? [];
 const c3aLayerAFailures = c3aFailedCriteria.filter(f => f.tier === 'criterion' && ['SOV-2-01','SOV-2-02','SOV-2-03','SOV-3-01','SOV-4-09','SOV-4-10'].includes(f.question_id));
@@ -298,57 +325,59 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
         {result.csi_composite && (
           <section class="mt-8">
             <h2 class="font-semibold text-base mb-3 flex items-center gap-2">
-              CSI Composite
+              CSI — Operational Sovereignty & Resilience Assessment
               <span class="text-xs font-normal text-gray-400 bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">editorial framework</span>
             </h2>
 
-            {csiCsl < 4 && csiBottlenecks.length > 0 && (
-              <div class="mb-4 p-4 rounded-xl border border-amber-100 bg-amber-50 text-sm text-gray-700">
-                <p>
-                  {levelPrefix} {csiCsl} — bottleneck{csiBottlenecks.length > 1 ? 's' : ''}:
-                  <strong> {csiBottlenecks.map(o => o.title).join(', ')}</strong>.
-                </p>
-              </div>
-            )}
-
-            {csiTopGaps.length > 0 && (
-              <div class="mb-4">
-                <h3 class="text-sm font-medium text-gray-700 mb-2">Priority improvements</h3>
-                <div class="space-y-1.5">
-                  {csiTopGaps.map((item, i) => (
-                    <div class="flex items-start gap-3 p-3 rounded-lg border border-amber-100 bg-amber-50">
-                      <div class="text-xs font-bold text-amber-600 mt-0.5 w-5 shrink-0">#{i + 1}</div>
-                      <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium">{item.title}</p>
-                        <p class="text-xs text-gray-500 mt-0.5">{item.question_id} · {item.tier} tier</p>
-                      </div>
-                      {item.seal_contribution != null && (
-                        <div class="text-xs font-semibold px-2 py-0.5 rounded-full text-white shrink-0 self-start mt-0.5"
-                          style={`background-color: ${SEAL_COLORS[item.seal_contribution] ?? '#6b7280'}`}>
-                          SEAL {item.seal_contribution}
-                        </div>
-                      )}
+            {/* Anti-patterns */}
+            {csiAntiPatterns.length > 0 && (
+              <div class="mb-4 p-4 rounded-xl border border-red-100 bg-red-50">
+                <p class="text-sm font-semibold text-red-700 mb-2">Detected sovereignty anti-patterns</p>
+                <div class="space-y-2">
+                  {csiAntiPatterns.map(ap => (
+                    <div>
+                      <p class="text-sm font-medium text-red-800">{ap.name}</p>
+                      <p class="text-xs text-red-600 mt-0.5">{ap.explanation}</p>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            <ObjectiveAccordion
-              client:load
-              objectives={csiObjectives.map(o => ({
-                objective_id: o.objective_id,
-                title: o.title,
-                seal_level: o.csl,
-                raw_score: o.raw_score,
-                max_score: o.max_score,
-                questions: o.questions,
-              }))}
-              criteria={criteria}
-              country={country}
-              variant={variant as 'EU-CSF' | 'Generalized'}
-              overallSeal={csiCsl}
-            />
+            {/* Layered objective groups */}
+            {CSI_LAYERS.map(layer => {
+              const layerObjs = csiObjectives.filter(o => layer.objectives.includes(o.objective_id as any));
+              if (layerObjs.length === 0) return null;
+              const isEnvLayer = layer.id === 'operational_viability';
+              return (
+                <div class="mb-6">
+                  <div class="flex items-center gap-2 mb-2">
+                    <h3 class="text-sm font-semibold text-gray-800">{layer.label}</h3>
+                    <span class="text-xs text-gray-400">{layer.description}</span>
+                  </div>
+                  {isEnvLayer && (
+                    <p class="text-xs text-gray-400 italic mb-2">
+                      Note: SOV-8 Environmental Sustainability is an ESG/policy dimension and does not affect sovereignty attainment.
+                    </p>
+                  )}
+                  <ObjectiveAccordion
+                    client:load
+                    objectives={layerObjs.map(o => ({
+                      objective_id: o.objective_id,
+                      title: o.title,
+                      seal_level: o.csl,
+                      raw_score: o.raw_score,
+                      max_score: o.max_score,
+                      questions: o.questions,
+                    }))}
+                    criteria={criteria}
+                    country={country}
+                    variant={variant as 'EU-CSF' | 'Generalized'}
+                    overallSeal={csiCsl}
+                  />
+                </div>
+              );
+            })}
           </section>
         )}
 

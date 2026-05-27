@@ -67,6 +67,7 @@ export const ObjectiveSchema = z.object({
   title: z.string(),
   description: z.string(),
   weight: z.number().positive().max(1),
+  layer: z.enum(['sovereignty', 'resilience', 'operational_viability']).optional(),
   questions: z.array(QuestionSchema).min(1),
 });
 

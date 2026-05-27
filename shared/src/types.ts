@@ -180,4 +180,6 @@ export interface AssessmentRecord {
   expires_at: string;
 }
 
-export type AnswerMap = Record<string, { tier: string; value: AnswerValue; evidence_url?: string; note?: string }>;
+export type EvidenceLevel = 'self_declared' | 'documented' | 'audited' | 'operationally_tested';
+
+export type AnswerMap = Record<string, { tier: string; value: AnswerValue; evidence_url?: string; note?: string; evidence_level?: EvidenceLevel }>;

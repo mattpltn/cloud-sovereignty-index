@@ -1,8 +1,36 @@
 import { useState, useEffect, useCallback } from 'react';
 import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
 import type { CriteriaFile, Country, Question } from '../../shared/src/schema.js';
-import type { AnswerMap } from '../../shared/src/types.js';
+import type { AnswerMap, EvidenceLevel } from '../../shared/src/types.js';
 import { setAnswer, flushNow, readCache, writeCache } from '../lib/local-cache.js';
+
+const EVIDENCE_LEVEL_LABELS: Record<EvidenceLevel, string> = {
+  self_declared: 'Self-declared',
+  documented: 'Documented',
+  audited: 'Audited',
+  operationally_tested: 'Operationally tested',
+};
+
+function EvidenceLevelSelect({ answerKey, level, onChange }: {
+  answerKey: string;
+  level: EvidenceLevel | undefined;
+  onChange: (key: string, level: EvidenceLevel) => void;
+}) {
+  return (
+    <div className="mt-2 flex items-center gap-2">
+      <span className="text-xs text-gray-400">Evidence basis:</span>
+      <select
+        value={level ?? 'self_declared'}
+        onChange={e => onChange(answerKey, e.target.value as EvidenceLevel)}
+        className="text-xs border border-gray-200 rounded px-2 py-0.5 text-gray-600 bg-white focus:outline-none focus:border-blue-400"
+      >
+        {(Object.keys(EVIDENCE_LEVEL_LABELS) as EvidenceLevel[]).map(l => (
+          <option key={l} value={l}>{EVIDENCE_LEVEL_LABELS[l]}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
 
 interface Props {
   id: string;
@@ -121,18 +149,32 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   const prevObj = allObjectiveIds[currentObjIndex - 1];
 
   const handleAnswer = useCallback((answerKey: string, value: AnswerValue) => {
-    // answerKey is either `questionId` (single) or `questionId:tier` (tiered)
     const parts = answerKey.split(':');
     const tier = parts[1] ?? 'single';
-    const ans = { tier, value };
     setAnswers(prev => {
+      const existing = prev[answerKey];
+      const ans = { tier, value, evidence_level: existing?.evidence_level };
       const next = { ...prev, [answerKey]: ans };
       const cached = readCache(id) ?? {};
       cached.answers = next;
       writeCache(id, cached);
+      setAnswer(id, answerKey, ans);
       return next;
     });
-    setAnswer(id, answerKey, ans);
+  }, [id]);
+
+  const handleEvidenceLevel = useCallback((answerKey: string, level: EvidenceLevel) => {
+    setAnswers(prev => {
+      const existing = prev[answerKey];
+      if (!existing) return prev;
+      const ans = { ...existing, evidence_level: level };
+      const next = { ...prev, [answerKey]: ans };
+      const cached = readCache(id) ?? {};
+      cached.answers = next;
+      writeCache(id, cached);
+      setAnswer(id, answerKey, ans);
+      return next;
+    });
   }, [id]);
 
   const handleNext = useCallback(() => {
@@ -179,6 +221,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
 
         if (q.type === 'single') {
           const val = answers[q.id]?.value as AnswerValue | undefined;
+          const evidLevel = answers[q.id]?.evidence_level;
           const qText = (variant === 'Generalized' && q.text_generalized) ? q.text_generalized : q.text;
           const qTitle = (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
           return (
@@ -194,6 +237,8 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               isAdditionalCriterion={q.c3a_tier === 'additional'}
               value={val}
               onAnswer={v => handleAnswer(q.id, v)}
+              evidenceLevel={evidLevel}
+              onEvidenceLevel={level => handleEvidenceLevel(q.id, level)}
               isExpanded={isExpanded}
               onToggleExpand={() => setExpanded(prev => ({ ...prev, [q.id]: !isExpanded }))}
               answerValues={visibleAnswerValues}
@@ -238,6 +283,9 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                   )}
                 </p>
                 <AnswerButtons questionKey={natKey} value={natVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />
+                {(natVal === 'yes' || natVal === 'partial') && (
+                  <EvidenceLevelSelect answerKey={natKey} level={answers[natKey]?.evidence_level} onChange={handleEvidenceLevel} />
+                )}
                 {natSatisfied && !isGeneralized && (
                   <p className="mt-3 text-xs text-green-600 bg-green-50 rounded-lg px-3 py-2">
                     ✓ {country!.name} tier satisfied — EU tier is automatically satisfied.
@@ -280,6 +328,9 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                   )}
                 </p>
                 <AnswerButtons questionKey={blocKey} value={blocVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />
+                {(blocVal === 'yes' || blocVal === 'partial') && (
+                  <EvidenceLevelSelect answerKey={blocKey} level={answers[blocKey]?.evidence_level} onChange={handleEvidenceLevel} />
+                )}
                 {q.supplementary_info && (
                   <div className="mt-3">
                     <button
@@ -317,10 +368,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   );
 }
 
-function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, isExpanded, onToggleExpand, answerValues, warnPlannedForC3a }: {
+function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, isExpanded, onToggleExpand, answerValues, warnPlannedForC3a }: {
   id: string; title: string; text: string; sealContribution: number; points: number; source: string;
   supplementaryInfo?: string; isAdditionalCriterion?: boolean; value: AnswerValue | undefined;
-  onAnswer: (v: AnswerValue) => void; isExpanded: boolean; onToggleExpand: () => void;
+  onAnswer: (v: AnswerValue) => void; evidenceLevel?: EvidenceLevel; onEvidenceLevel?: (l: EvidenceLevel) => void;
+  isExpanded: boolean; onToggleExpand: () => void;
   answerValues: AnswerValue[]; warnPlannedForC3a?: boolean;
 }) {
   return (
@@ -347,13 +399,16 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
           </button>
         ))}
       </div>
+      {(value === 'yes' || value === 'partial') && onEvidenceLevel && (
+        <EvidenceLevelSelect answerKey={id} level={evidenceLevel} onChange={(_key, l) => onEvidenceLevel(l)} />
+      )}
       {warnPlannedForC3a && value === 'planned' && (
-        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mb-2">
+        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mt-2 mb-0">
           'Planned' is not recognised by C3A — counts as Not Met for C3A scoring.
         </p>
       )}
       {supplementaryInfo && (
-        <div>
+        <div className="mt-2">
           <button onClick={onToggleExpand} className="text-xs text-blue-600 hover:underline">
             {isExpanded ? 'Hide guidance' : 'Show guidance'}
           </button>

@@ -185,7 +185,8 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2
         }
-      ]
+      ],
+      "layer": "sovereignty"
     },
     {
       "id": "SOV-2",
@@ -299,7 +300,8 @@
           "review_status": "pending-external-review",
           "seal_contribution_csi": 3
         }
-      ]
+      ],
+      "layer": "sovereignty"
     },
     {
       "id": "SOV-3",
@@ -692,7 +694,8 @@
           "supplementary_info": "Extends C3A SOV-5 (supply chain) into the AI layer. The model provider is a critical upstream dependency that can change behaviour, licensing, or availability through unilateral action. SOV-1-style effective-control analysis applied to model providers.",
           "review_status": "pending-external-review"
         }
-      ]
+      ],
+      "layer": "resilience"
     },
     {
       "id": "SOV-4",
@@ -1124,7 +1127,8 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3
         }
-      ]
+      ],
+      "layer": "resilience"
     },
     {
       "id": "SOV-5",
@@ -1310,7 +1314,8 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2
         }
-      ]
+      ],
+      "layer": "resilience"
     },
     {
       "id": "SOV-6",
@@ -1433,7 +1438,8 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3
         }
-      ]
+      ],
+      "layer": "operational_viability"
     },
     {
       "id": "SOV-7",
@@ -1598,7 +1604,8 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3
         }
-      ]
+      ],
+      "layer": "operational_viability"
     },
     {
       "id": "SOV-8",
@@ -1711,7 +1718,8 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3
         }
-      ]
+      ],
+      "layer": "operational_viability"
     }
   ]
 }
