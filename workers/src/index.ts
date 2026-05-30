@@ -55,6 +55,7 @@ async function ensureSchema(db: D1Database): Promise<void> {
   // ADD COLUMN fails if column already exists — catch and ignore
   await db.prepare('ALTER TABLE assessments ADD COLUMN selected_frameworks TEXT DEFAULT \'["csi_composite"]\'').run().catch(() => {});
   await db.prepare('ALTER TABLE assessments ADD COLUMN customer_selected_ac_ids TEXT DEFAULT \'[]\'').run().catch(() => {});
+  await db.prepare('ALTER TABLE assessments ADD COLUMN selected_objectives TEXT DEFAULT \'[]\'').run().catch(() => {});
 }
 
 // ── POST /api/assessments ─────────────────────────────────────────────────────
@@ -68,6 +69,7 @@ const CreateSchema = z.object({
   turnstile_token: z.string(),
   selected_frameworks: z.array(z.enum(['eu_csf', 'c3a', 'csi_composite'])).min(1).default(['csi_composite']),
   customer_selected_ac_ids: z.array(z.string()).default([]),
+  selected_objectives: z.array(z.string()).default([]),
 });
 
 app.post('/api/assessments', async (c) => {
@@ -88,8 +90,8 @@ app.post('/api/assessments', async (c) => {
   const exp = expiresAt();
 
   await c.env.DB.prepare(
-    `INSERT INTO assessments (id,instrument_version,variant,anchor_bloc,national_country,service_models,user_role,company_name,selected_frameworks,customer_selected_ac_ids,created_at,updated_at,expires_at)
-     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`
+    `INSERT INTO assessments (id,instrument_version,variant,anchor_bloc,national_country,service_models,user_role,company_name,selected_frameworks,customer_selected_ac_ids,selected_objectives,created_at,updated_at,expires_at)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
   ).bind(
     id,
     criteria.instrument_version,
@@ -101,6 +103,7 @@ app.post('/api/assessments', async (c) => {
     data.company_name ?? null,
     JSON.stringify(data.selected_frameworks),
     JSON.stringify(data.customer_selected_ac_ids),
+    JSON.stringify(data.selected_objectives),
     ts, ts, exp
   ).run();
 

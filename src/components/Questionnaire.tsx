@@ -425,6 +425,11 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
 }) {
   return (
     <div className={`border rounded-xl p-5 transition ${value ? 'border-gray-200' : 'border-gray-300'}`}>
+      {fidelityTags && fidelityTags.length > 0 && (
+        <div className="mb-2 flex flex-wrap gap-1.5">
+          {fidelityTags.map(tag => <FidelityTag key={tag.framework} info={tag} />)}
+        </div>
+      )}
       <div className="flex items-start justify-between gap-4 mb-3">
         <div>
           <span className="text-xs font-mono text-gray-400 mr-2">{id}</span>
@@ -463,11 +468,6 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
           {isExpanded && (
             <p className="mt-2 text-xs text-gray-500 bg-blue-50 rounded-lg p-3 leading-relaxed">{supplementaryInfo}</p>
           )}
-        </div>
-      )}
-      {fidelityTags && fidelityTags.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-1.5">
-          {fidelityTags.map(tag => <FidelityTag key={tag.framework} info={tag} />)}
         </div>
       )}
       <div className="mt-2 text-xs text-gray-400">Source: {source}</div>

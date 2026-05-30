@@ -131,6 +131,36 @@ for (const ac of acQuestions) {
         <p id="framework-error" class="text-red-600 text-xs mt-2 hidden">Select at least one framework.</p>
       </div>
 
+      <!-- Sovereignty Domain selection -->
+      <div id="domain-panel">
+        <div class="border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="text-sm font-medium">Sovereignty domains to assess</h3>
+            <button type="button" id="domain-select-all-btn" class="text-xs text-blue-600 hover:underline">Select all</button>
+          </div>
+          <p class="text-xs text-gray-500 mb-3">
+            Tick the domains you want to assess. Unticking a domain removes those questions entirely — useful for focused reviews.
+          </p>
+          <div class="grid grid-cols-1 gap-2" id="domain-checkboxes">
+            {criteria.objectives.map(obj => (
+              <label class="flex items-start gap-3 cursor-pointer group" data-obj-id={obj.id}>
+                <input
+                  type="checkbox"
+                  name="selected_objective"
+                  value={obj.id}
+                  checked
+                  class="mt-0.5 h-4 w-4 rounded border-gray-300 domain-cb"
+                />
+                <div>
+                  <span class="text-sm font-medium text-gray-800">{obj.id} — {obj.title}</span>
+                  <p class="text-xs text-gray-500 mt-0.5">{obj.description.slice(0, 90)}{obj.description.length > 90 ? '…' : ''}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <!-- C3A Additional Criteria selection (shown only when C3A is ticked) -->
       <div id="ac-panel" class="hidden">
         <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
@@ -174,10 +204,40 @@ for (const ac of acQuestions) {
     const variantInput = document.getElementById('variant-input');
     const badge = document.getElementById('variant-badge');
     const c3aCheckbox = document.getElementById('fw-c3a');
+    const euCsfCheckbox = document.getElementById('fw-eu-csf');
+    const csiCheckbox = document.getElementById('fw-csi');
     const acPanel = document.getElementById('ac-panel');
     const acSelectAll = document.getElementById('ac-select-all');
     const acHiddenInputs = document.getElementById('ac-hidden-inputs');
     const frameworkError = document.getElementById('framework-error');
+
+    // Domain panel logic
+    const domainSelectAllBtn = document.getElementById('domain-select-all-btn');
+    const domainCbs = document.querySelectorAll('.domain-cb');
+    const C3A_ONLY_OBJS = new Set(['SOV-7', 'SOV-8']); // objectives C3A doesn't cover
+
+    function updateDomainVisibility() {
+      const c3aOnly = c3aCheckbox.checked && !euCsfCheckbox.checked && !csiCheckbox.checked;
+      document.querySelectorAll('[data-obj-id]').forEach(row => {
+        const id = row.getAttribute('data-obj-id');
+        if (c3aOnly && C3A_ONLY_OBJS.has(id)) {
+          row.classList.add('opacity-40', 'pointer-events-none');
+          row.querySelector('input').checked = false;
+        } else {
+          row.classList.remove('opacity-40', 'pointer-events-none');
+        }
+      });
+    }
+
+    [c3aCheckbox, euCsfCheckbox, csiCheckbox].forEach(cb => cb.addEventListener('change', updateDomainVisibility));
+
+    domainSelectAllBtn.addEventListener('click', () => {
+      document.querySelectorAll('[data-obj-id]').forEach(row => {
+        if (!row.classList.contains('pointer-events-none')) {
+          row.querySelector('input').checked = true;
+        }
+      });
+    });
 
     select.addEventListener('change', () => {
       const code = select.value;
@@ -250,6 +310,12 @@ for (const ac of acQuestions) {
 
       const customer_selected_ac_ids = fd.getAll('ac_criterion');
 
+      // Collect selected objectives; empty means "all" (no filter)
+      const allDomainCbs = document.querySelectorAll('.domain-cb');
+      const totalEnabled = Array.from(allDomainCbs).filter(cb => !cb.closest('[data-obj-id]').classList.contains('pointer-events-none'));
+      const checkedDomains = Array.from(allDomainCbs).filter(cb => cb.checked).map(cb => cb.value);
+      const selected_objectives = checkedDomains.length === totalEnabled.length ? [] : checkedDomains;
+
       try {
         const res = await fetch('/api/assessments', {
           method: 'POST',
@@ -260,6 +326,7 @@ for (const ac of acQuestions) {
             user_role: 'customer',
             selected_frameworks,
             customer_selected_ac_ids,
+            selected_objectives,
           }),
         });
         if (!res.ok) {
