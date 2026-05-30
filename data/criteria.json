@@ -584,8 +584,7 @@
           "c3a_source_id": "SOV-3-03-C",
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "inferred",
-          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Ensuring that only the customer has effective control over cryptographic access to their data.' An external identity provider is the authentication-layer equivalent of external key management — it gives the customer control over who can access data, complementary to controlling how data is encrypted. EU-CSF does not name identity provider integration separately.",
+          "eu_csf_fidelity": "csi",
           "c3a_fidelity": "direct"
         },
         {
@@ -755,7 +754,8 @@
           },
           "supplementary_info": "EU CSF v1.2.1 SOV-3 explicitly includes \"extent to which AI models and data pipelines are developed, trained, hosted, and governed under EU control\". Training data jurisdiction is the upstream determinant of model behaviour and legal exposure. Applies to all generative AI features, ML-based recommendations, and embedded model inference within the service.",
           "review_status": "pending-external-review",
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models and data pipelines developed, trained, hosted, and governed under EU control.' Training data jurisdiction disclosure is the prerequisite for verifying EU-controlled training — you cannot substantiate that training occurred under EU control without disclosing where training data was collected and processed. EU-CSF names the control objective; the specific disclosure requirement is a CSI operationalization."
         },
         {
           "id": "SOV-3-AI-02-AC",
@@ -777,7 +777,8 @@
           },
           "supplementary_info": "Where customer data hits the model matters distinctly from where the model was trained. Inference can be the moment of exposure for sensitive prompts, customer documents, or PII. EU CSF SOV-3 covers this under \"where data is processed\". This is the AI-specific complement to SOV-3-01 data residency.",
           "review_status": "pending-external-review",
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models and data pipelines hosted and governed under EU control.' Inference is the moment customer data is actively processed through the model — the 'hosted/processed' dimension of the CF. EU-CSF names the principle; this question requires contractual and technical enforcement of in-EU inference location."
         },
         {
           "id": "SOV-3-AI-03-AC",
@@ -800,7 +801,7 @@
           "supplementary_info": "This is the LMIC-relevant analogue of the EU AI Act's training-data provisions. In sovereign procurement, the risk is that customer data — even derived telemetry — becomes part of a global model, exporting national knowledge into a foreign-jurisdiction artefact.",
           "review_status": "pending-external-review",
           "eu_csf_fidelity": "inferred",
-          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Extent to which AI models and data pipelines are governed under EU control.' Customer opt-out from training data use ensures the customer retains sovereignty over how their data shapes model behaviour — a governance dimension not named explicitly in the CF but directly implied by 'governed under EU control.'"
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models governed under EU control, minimizing dependency on non-EU technology stacks.' Customer opt-out from training data use is a governance control ensuring the customer retains sovereignty over how their data shapes model behaviour — the CF implies governance control but does not specify this mechanism."
         },
         {
           "id": "SOV-3-AI-04-AC",
@@ -822,6 +823,27 @@
           },
           "supplementary_info": "Extends C3A SOV-5 (supply chain) into the AI layer. The model provider is a critical upstream dependency that can change behaviour, licensing, or availability through unilateral action. SOV-1-style effective-control analysis applied to model providers.",
           "review_status": "pending-external-review",
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Minimizing dependency on non-EU technology stacks.' Knowing the model provider's jurisdiction, ownership, and control chain is the prerequisite for assessing whether a dependency constitutes a non-EU technology stack risk. EU-CSF names the risk category; this question operationalizes the supply-chain disclosure needed to assess it."
+        },
+        {
+          "id": "SOV-3-06",
+          "title": "Verifiable Data Erasure",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud service provider implement technical mechanisms guaranteeing irreversible removal of customer data — including customer data, derived data, and account data — upon request or contract termination, and can it provide verifiable evidence of erasure (e.g., cryptographic proof, audited deletion logs, or third-party attestation)?",
+          "supplementary_info": "Irreversible removal means data cannot be recovered by the CSP after erasure — not merely logical deletion from production systems. Evidence must satisfy the customer that data no longer exists anywhere in the CSP's infrastructure, including backups, logs, caches, and derived analytics. GDPR Article 17 establishes the right to erasure; this criterion operationalizes the technical capability behind that right.",
+          "seal_contribution": 2,
+          "points": 4,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "§4 SOV-3 contributing factor: mechanisms guaranteeing irreversible removal of data with verifiable evidence"
+          },
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct"
         }
       ],
@@ -1459,7 +1481,7 @@
           "supplementary_info": "C5:2026 (Cloud Computing Compliance Criteria Catalogue) is a cloud security standard published by the German Federal Office for Information Security (BSI). OPS-01/02/03 cover capacity management: planning for future demand (OPS-01), monitoring current usage (OPS-02), and controlling resource allocation (OPS-03). See: https://www.bsi.bund.de/EN/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html",
           "tiers": {
             "bloc": {
-              "text": "Capacity management MUST be performed in {{BLOC}} in accordance with C5:2026 (OPS-01 Capacity Management – Planning, OPS-02 – Monitoring, OPS-03 – Controlling of Resources).",
+              "text": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{BLOC}}.",
               "seal_contribution": 2,
               "points": 5,
               "source": {
@@ -1469,10 +1491,11 @@
               "decision_refs": [
                 "DR-S02"
               ],
-              "text_generalized": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{BLOC}}."
+              "text_generalized": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{BLOC}}.",
+              "text_c3a": "Capacity management MUST be performed in {{BLOC}} in accordance with C5:2026 (OPS-01 Capacity Management – Planning, OPS-02 – Monitoring, OPS-03 – Controlling of Resources)."
             },
             "national": {
-              "text": "Capacity management MUST be performed in {{COUNTRY}} in accordance with C5:2026 (OPS-01 Capacity Management – Planning, OPS-02 – Monitoring, OPS-03 – Controlling of Resources).",
+              "text": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{COUNTRY}}.",
               "text_generalized": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{COUNTRY}}.",
               "seal_contribution": 3,
               "points": 5,
@@ -1482,7 +1505,8 @@
               },
               "decision_refs": [
                 "DR-S01"
-              ]
+              ],
+              "text_c3a": "Capacity management MUST be performed in {{COUNTRY}} in accordance with C5:2026 (OPS-01 Capacity Management – Planning, OPS-02 – Monitoring, OPS-03 – Controlling of Resources)."
             }
           },
           "c3a_source_id": "SOV-5-05-C1",

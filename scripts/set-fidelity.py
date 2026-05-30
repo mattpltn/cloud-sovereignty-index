@@ -59,8 +59,8 @@ EU_CSF = {
         "Derived from EU-CSF SOV-3 CF: 'Only the customer has effective control over cryptographic access to their data.' The SaaS extension applies this principle to the SaaS delivery model where key management is architecturally more complex. EU-CSF states the principle without distinguishing by service type; this criterion operationalizes it for SaaS.",
     ),
     "SOV-3-03-C": (
-        "inferred",
-        "Derived from EU-CSF SOV-3 CF: 'Ensuring that only the customer has effective control over cryptographic access to their data.' An external identity provider is the authentication-layer equivalent of external key management — it gives the customer control over who can access data, complementary to controlling how data is encrypted. EU-CSF does not name identity provider integration separately.",
+        "csi",
+        None,
     ),
     "SOV-3-03-AC1": (
         "inferred",
@@ -84,13 +84,22 @@ EU_CSF = {
         "Derived from EU-CSF SOV-3 CF: 'Visibility into when, where, and by whom data is accessed.' Granular filtering is the operational control enabling the customer to isolate specific events — a prerequisite for meaningful auditability at scale.",
     ),
     "SOV-3-05-C": ("direct", None),
-    "SOV-3-AI-01-AC": ("direct", None),
-    "SOV-3-AI-02-AC": ("direct", None),
+    "SOV-3-AI-01-AC": (
+        "inferred",
+        "Derived from EU-CSF SOV-3 CF: 'AI models and data pipelines developed, trained, hosted, and governed under EU control.' Training data jurisdiction disclosure is the prerequisite for verifying EU-controlled training — you cannot substantiate that training occurred under EU control without disclosing where training data was collected and processed. EU-CSF names the control objective; the specific disclosure requirement is a CSI operationalization.",
+    ),
+    "SOV-3-AI-02-AC": (
+        "inferred",
+        "Derived from EU-CSF SOV-3 CF: 'AI models and data pipelines hosted and governed under EU control.' Inference is the moment customer data is actively processed through the model — the 'hosted/processed' dimension of the CF. EU-CSF names the principle; this question requires contractual and technical enforcement of in-EU inference location.",
+    ),
     "SOV-3-AI-03-AC": (
         "inferred",
-        "Derived from EU-CSF SOV-3 CF: 'Extent to which AI models and data pipelines are governed under EU control.' Customer opt-out from training data use ensures the customer retains sovereignty over how their data shapes model behaviour — a governance dimension not named explicitly in the CF but directly implied by 'governed under EU control.'",
+        "Derived from EU-CSF SOV-3 CF: 'AI models governed under EU control, minimizing dependency on non-EU technology stacks.' Customer opt-out from training data use is a governance control ensuring the customer retains sovereignty over how their data shapes model behaviour — the CF implies governance control but does not specify this mechanism.",
     ),
-    "SOV-3-AI-04-AC": ("direct", None),
+    "SOV-3-AI-04-AC": (
+        "inferred",
+        "Derived from EU-CSF SOV-3 CF: 'Minimizing dependency on non-EU technology stacks.' Knowing the model provider's jurisdiction, ownership, and control chain is the prerequisite for assessing whether a dependency constitutes a non-EU technology stack risk. EU-CSF names the risk category; this question operationalizes the supply-chain disclosure needed to assess it.",
+    ),
     # SOV-4  ──────────────────────────────────────────────────────────────
     "SOV-4-01": ("direct", None),
     "SOV-4-01-C3": (
@@ -190,12 +199,13 @@ EU_CSF = {
     "SOV-8-03": ("direct", None),
     "SOV-8-04": ("direct", None),
     "SOV-8-05": ("direct", None),
-    # New gap-fill questions (v2.2)  ──────────────────────────────────────
+    # New gap-fill questions (v2.2+)  ─────────────────────────────────────
     "SOV-1-05": ("direct", None),
     "SOV-1-06": ("direct", None),
     "SOV-1-07": ("direct", None),
     "SOV-2-04": ("direct", None),
     "SOV-6-04": ("direct", None),
+    "SOV-3-06": ("direct", None),
 }
 
 # ---------------------------------------------------------------------------

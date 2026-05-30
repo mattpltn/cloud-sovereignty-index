@@ -48,11 +48,16 @@ function scoreTieredQuestion(
       });
       return results;
     }
+    // National not-yes: bloc tier is the fallback path.
+    // When national is 'no', exclude national points from the denominator entirely
+    // so that a passing bloc answer earns full bloc credit (not 50% of national+bloc).
+    // When national is 'partial', count earned partial toward both numerator and denominator.
     const earned = value === 'n/a' ? 0 : value === 'partial' ? points * 0.5 : 0;
+    const possible = value === 'n/a' ? 0 : value === 'partial' ? earned : 0;
     results.push({
       question_id: q.id, tier: 'national', value,
-      points_earned: value === 'n/a' ? 0 : earned,
-      points_possible: value === 'n/a' ? 0 : points,
+      points_earned: earned,
+      points_possible: possible,
       seal_contribution, counts_toward_seal: false, flagged_unsupported: false,
     });
   }

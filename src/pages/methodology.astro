@@ -244,19 +244,24 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
               <th class="px-4 py-2 text-center font-semibold">
                 <span class="text-amber-700">Inferred</span>
               </th>
+              <th class="px-4 py-2 text-center font-semibold">
+                <span class="text-purple-700">CSI addition</span>
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr class="border-t border-gray-200">
               <td class="px-4 py-2 font-medium">EU-CSF v1.2.1</td>
-              <td class="px-4 py-2 text-center">54</td>
-              <td class="px-4 py-2 text-center text-green-700 font-semibold">39 (72%)</td>
-              <td class="px-4 py-2 text-center text-amber-700 font-semibold">15 (28%)</td>
+              <td class="px-4 py-2 text-center">55</td>
+              <td class="px-4 py-2 text-center text-green-700 font-semibold">37 (67%)</td>
+              <td class="px-4 py-2 text-center text-amber-700 font-semibold">17 (31%)</td>
+              <td class="px-4 py-2 text-center text-purple-700 font-semibold">1 (2%)</td>
             </tr>
             <tr class="border-t border-gray-200 bg-gray-50">
               <td class="px-4 py-2 font-medium">C3A v1.0</td>
               <td class="px-4 py-2 text-center">49</td>
               <td class="px-4 py-2 text-center text-green-700 font-semibold">49 (100%)</td>
+              <td class="px-4 py-2 text-center text-gray-400">0</td>
               <td class="px-4 py-2 text-center text-gray-400">0</td>
             </tr>
           </tbody>
@@ -282,11 +287,15 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
                 <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-01-C1</td><td class="py-2 pr-4 whitespace-nowrap">Data Residence — Transparency</td><td class="py-2 text-gray-600">SOV-3: "strict confinement to EU jurisdictions" — location transparency is the prerequisite for verifying confinement; not named separately in the CF</td></tr>
                 <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-01-C5</td><td class="py-2 pr-4 whitespace-nowrap">Data Residence — Provider Data</td><td class="py-2 text-gray-600">SOV-3: "strict confinement to EU jurisdictions" — provider operational data is not named explicitly but is subject to the same confinement principle</td></tr>
                 <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-02-AC</td><td class="py-2 pr-4 whitespace-nowrap">External Key Management — SaaS</td><td class="py-2 text-gray-600">SOV-3: "only customer has effective cryptographic control" — extends the key-management principle to SaaS delivery, which EU-CSF does not distinguish by service type</td></tr>
-                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-03-C</td><td class="py-2 pr-4 whitespace-nowrap">External Identity Provider</td><td class="py-2 text-gray-600">SOV-3: "only customer has effective cryptographic control" — IdP is the authentication-layer equivalent of key management; EU-CSF does not name IdP separately</td></tr>
+                <tr class="bg-purple-50/40"><td class="py-2 pr-4 font-mono text-purple-600 whitespace-nowrap">SOV-3-03-C</td><td class="py-2 pr-4 whitespace-nowrap text-purple-800">External Identity Provider <span class="ml-1 text-xs bg-purple-100 text-purple-700 px-1 rounded">CSI</span></td><td class="py-2 text-purple-700">CSI editorial addition following C3A §2.3.3. EU-CSF does not name IdP integration as a contributing factor. The CSP can bypass the IdP at the infrastructure layer regardless of configuration; IdP provides identity portability and lock-in avoidance, which is an EU-CSF SOV-4 (portability/migration) concern, not a SOV-3 cryptographic-access concern. Included as a complementary sovereignty control.</td></tr>
                 <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-03-AC1/2/3</td><td class="py-2 pr-4 whitespace-nowrap">IdP — Open Standards / Stateless / Dynamic Claims</td><td class="py-2 text-gray-600">SOV-3: customer-controlled access — C3A-specific technical implementations; EU-CSF states the principle without specifying authentication architecture</td></tr>
                 <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-04-AC1</td><td class="py-2 pr-4 whitespace-nowrap">Logging — Real-Time Open API</td><td class="py-2 text-gray-600">SOV-3: "visibility into when, where, by whom data is accessed" — real-time API access is the technical implementation of that visibility</td></tr>
                 <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-04-AC2</td><td class="py-2 pr-4 whitespace-nowrap">Logging — Granular Filtering</td><td class="py-2 text-gray-600">SOV-3: "visibility into when, where, by whom data is accessed" — granularity is the operational prerequisite for meaningful auditability at scale</td></tr>
-                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-AI-03-AC</td><td class="py-2 pr-4 whitespace-nowrap">AI — Right to Opt Out of Training</td><td class="py-2 text-gray-600">SOV-3: "AI models governed under EU control" — customer opt-out operationalizes governance control over model training; implied but not named in the CF</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-AI-01-AC</td><td class="py-2 pr-4 whitespace-nowrap">AI — Training Data Jurisdiction</td><td class="py-2 text-gray-600">SOV-3: "AI models developed, trained, hosted, governed under EU control" — training data jurisdiction is the prerequisite for verifying EU-controlled training; EU-CSF names the objective, this question operationalizes the disclosure needed to verify it</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-AI-02-AC</td><td class="py-2 pr-4 whitespace-nowrap">AI — Inference Location</td><td class="py-2 text-gray-600">SOV-3: "AI models hosted under EU control" — inference is the moment customer data is actively processed through the model; EU-CSF names the hosting/processing principle, this question requires contractual enforcement of in-EU inference</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-AI-03-AC</td><td class="py-2 pr-4 whitespace-nowrap">AI — Right to Opt Out of Training</td><td class="py-2 text-gray-600">SOV-3: "AI models governed under EU control, minimizing dependency on non-EU stacks" — customer opt-out ensures sovereignty over how data shapes model behaviour; the CF implies governance control but does not specify this mechanism</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-AI-04-AC</td><td class="py-2 pr-4 whitespace-nowrap">AI — Model Provider Control Chain</td><td class="py-2 text-gray-600">SOV-3: "minimizing dependency on non-EU technology stacks" — knowing the model provider's jurisdiction and ownership is the prerequisite for assessing whether the dependency constitutes a non-EU stack risk; EU-CSF names the risk, this question operationalizes the supply-chain disclosure</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-06</td><td class="py-2 pr-4 whitespace-nowrap">Verifiable Data Erasure</td><td class="py-2 text-gray-600">SOV-3: "mechanisms guaranteeing irreversible removal of data, with verifiable evidence" — EU-CSF names this explicitly in the CF; this question operationalizes it as a specific evidence requirement (cryptographic proof, audited logs, or third-party attestation)</td></tr>
                 <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-03</td><td class="py-2 pr-4 whitespace-nowrap">Redundant Connectivity</td><td class="py-2 text-gray-600">SOV-4: "EU operators manage without non-EU vendor involvement" — connectivity is the network infrastructure prerequisite; not named as a CF</td></tr>
                 <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-03-AC</td><td class="py-2 pr-4 whitespace-nowrap">Connectivity Independent of CSP Structure</td><td class="py-2 text-gray-600">SOV-4: operational independence — independence from the CSP's corporate structure reduces single-event concentration risk</td></tr>
                 <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-04</td><td class="py-2 pr-4 whitespace-nowrap">Security Operations Centre</td><td class="py-2 text-gray-600">EU-CSF places SOC under SOV-7 CF: "SOCs operating under EU jurisdiction" — placed under SOV-4 following C3A §2.4.4; see DR-E28</td></tr>
