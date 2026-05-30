@@ -11,6 +11,36 @@ const EVIDENCE_LEVEL_LABELS: Record<EvidenceLevel, string> = {
   operationally_tested: 'Operationally tested',
 };
 
+type FidelityLevel = 'direct' | 'inferred' | 'csi';
+interface FidelityTagInfo { framework: string; fidelity: FidelityLevel; rationale?: string }
+
+function FidelityTag({ info }: { info: FidelityTagInfo }) {
+  const [open, setOpen] = useState(false);
+  const colors: Record<FidelityLevel, string> = {
+    direct: 'bg-green-50 text-green-700',
+    inferred: 'bg-amber-50 text-amber-700',
+    csi: 'bg-purple-50 text-purple-700',
+  };
+  const labels: Record<FidelityLevel, string> = { direct: 'Direct', inferred: 'Inferred', csi: 'CSI' };
+  return (
+    <span className="inline-flex flex-col gap-1">
+      <span className={`inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded ${colors[info.fidelity]}`}>
+        {info.framework}: {labels[info.fidelity]}
+        {info.fidelity === 'inferred' && info.rationale && (
+          <button onClick={() => setOpen(o => !o)} className="ml-0.5 opacity-70 hover:opacity-100">
+            {open ? '▴' : '▾'}
+          </button>
+        )}
+      </span>
+      {open && info.rationale && (
+        <span className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded px-2 py-1.5 leading-relaxed">
+          {info.rationale}
+        </span>
+      )}
+    </span>
+  );
+}
+
 function EvidenceLevelSelect({ answerKey, level, onChange }: {
   answerKey: string;
   level: EvidenceLevel | undefined;
@@ -84,6 +114,17 @@ function activeFrameworkTags(q: Question, fw: Set<string>): string {
   if ((q.applies_to_c3a ?? false) && fw.has('c3a')) tags.push('C3A');
   if ((q.applies_to_csi_composite ?? false) && fw.has('csi_composite')) tags.push('CSI');
   return tags.join(' · ');
+}
+
+function questionFidelityTags(q: Question, fw: Set<string>): FidelityTagInfo[] {
+  const tags: FidelityTagInfo[] = [];
+  if (fw.has('eu_csf') && q.applies_to_eu_csf && (q as any).eu_csf_fidelity) {
+    tags.push({ framework: 'EU-CSF', fidelity: (q as any).eu_csf_fidelity, rationale: (q as any).eu_csf_fidelity_rationale });
+  }
+  if (fw.has('c3a') && q.applies_to_c3a && (q as any).c3a_fidelity) {
+    tags.push({ framework: 'C3A', fidelity: (q as any).c3a_fidelity, rationale: (q as any).c3a_fidelity_rationale });
+  }
+  return tags;
 }
 
 function sourceLabel(q: Question, fw: Set<string>, clauseDoc: string, clauseRef: string): string {
@@ -243,6 +284,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               onToggleExpand={() => setExpanded(prev => ({ ...prev, [q.id]: !isExpanded }))}
               answerValues={visibleAnswerValues}
               warnPlannedForC3a={c3aInMix && q.applies_to_c3a}
+              fidelityTags={questionFidelityTags(q, fw)}
             />
           );
         }
@@ -260,8 +302,14 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
         // Show bloc fallback when: no country selected, OR national was answered but not yes (EU-CSF only)
         const showBloc = !isGeneralized && (!hasNational || (natVal !== undefined && !natSatisfied));
 
+        const fidelityTags = questionFidelityTags(q, fw);
         return (
           <div key={q.id} className="border border-gray-200 rounded-xl overflow-hidden">
+            {fidelityTags.length > 0 && (
+              <div className="px-5 pt-3 pb-0 flex flex-wrap gap-1.5">
+                {fidelityTags.map(tag => <FidelityTag key={tag.framework} info={tag} />)}
+              </div>
+            )}
             {hasNational && (
               <div className="p-5 border-b border-gray-100">
                 <div className="flex items-start justify-between gap-4 mb-3">
@@ -368,12 +416,12 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   );
 }
 
-function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, isExpanded, onToggleExpand, answerValues, warnPlannedForC3a }: {
+function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, isExpanded, onToggleExpand, answerValues, warnPlannedForC3a, fidelityTags }: {
   id: string; title: string; text: string; sealContribution: number; points: number; source: string;
   supplementaryInfo?: string; isAdditionalCriterion?: boolean; value: AnswerValue | undefined;
   onAnswer: (v: AnswerValue) => void; evidenceLevel?: EvidenceLevel; onEvidenceLevel?: (l: EvidenceLevel) => void;
   isExpanded: boolean; onToggleExpand: () => void;
-  answerValues: AnswerValue[]; warnPlannedForC3a?: boolean;
+  answerValues: AnswerValue[]; warnPlannedForC3a?: boolean; fidelityTags?: FidelityTagInfo[];
 }) {
   return (
     <div className={`border rounded-xl p-5 transition ${value ? 'border-gray-200' : 'border-gray-300'}`}>
@@ -415,6 +463,11 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
           {isExpanded && (
             <p className="mt-2 text-xs text-gray-500 bg-blue-50 rounded-lg p-3 leading-relaxed">{supplementaryInfo}</p>
           )}
+        </div>
+      )}
+      {fidelityTags && fidelityTags.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {fidelityTags.map(tag => <FidelityTag key={tag.framework} info={tag} />)}
         </div>
       )}
       <div className="mt-2 text-xs text-gray-400">Source: {source}</div>

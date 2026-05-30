@@ -36,6 +36,10 @@ const QuestionBaseSchema = z.object({
   eu_csf_source_factor: z.string().optional(),
   seal_contribution_eu_csf: z.number().int().min(0).max(4).optional(),
   seal_contribution_csi: z.number().int().min(0).max(4).optional(),
+  eu_csf_fidelity: z.enum(['direct', 'inferred', 'csi']).optional(),
+  eu_csf_fidelity_rationale: z.string().optional(),
+  c3a_fidelity: z.enum(['direct', 'inferred', 'csi']).optional(),
+  c3a_fidelity_rationale: z.string().optional(),
 });
 
 const SingleQuestionSchema = QuestionBaseSchema.extend({

@@ -1,7 +1,7 @@
 {
-  "instrument_version": "2.1",
+  "instrument_version": "2.2",
   "register_version": "1.0",
-  "last_updated": "2026-05-23",
+  "last_updated": "2026-05-29",
   "project_name": "Cloud Sovereignty Index",
   "project_url": "https://cloudsovereigntyindex.org",
   "review_contact": "methodology@cloudsovereigntyindex.org",
@@ -1372,6 +1372,32 @@
         "Partial alignment (rename top tiers only) — rejected in favour of full consistency across the ladder."
       ],
       "review_status": "stable"
+    },
+    {
+      "id": "DR-E28",
+      "category": "adaptation",
+      "rationale": "SOV-4-04 (Security Operations Centre) follows C3A §2.4.4 in classifying SOC operations as an Operational Sovereignty (SOV-4) criterion. EU-CSF v1.2.1 §4 places the equivalent contributing factor under SOV-7 (Security & Compliance). CSI retains C3A's placement because: (1) SOC as an operational continuity control is structurally coherent under SOV-4; (2) dual-categorisation would inflate SOV-7 scores for assessors using C3A or CSI Composite modes; (3) the EU-CSF fidelity label on SOV-4-04 is 'inferred' with a rationale directing readers to the SOV-7 CF origin. Assessors running pure EU-CSF mode should note that SOV-4-04 contributes to SOV-4 scoring, not SOV-7.",
+      "authority": "Editorial",
+      "alternatives_considered": [
+        "Move SOV-4-04 to SOV-7 for EU-CSF mode only (adds scoring-engine complexity and diverges from C3A structure)",
+        "Duplicate as SOV-7-08 for EU-CSF mode (inflates question count and creates answer-sync problem)"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-29",
+      "instrument_version": "2.2"
+    },
+    {
+      "id": "DR-E29",
+      "category": "extension",
+      "rationale": "Five new questions added to close EU-CSF v1.2.1 §4 contributing-factor gaps identified by source comparison: SOV-1-05 (EU financing and investment anchoring), SOV-1-06 (EU strategic initiative alignment), SOV-1-07 (operational resilience against coercion), SOV-2-04 (IP jurisdiction), SOV-6-04 (EU HPC independence). These contributing factors were explicitly named in EU-CSF §4 but had no corresponding testable criterion in the v2.0/v2.1 catalog. All five carry eu_csf_fidelity=direct and applies_to_c3a=false, as C3A v1.0 §2 does not address these areas.",
+      "authority": "Source-faithful",
+      "alternatives_considered": [
+        "Leave gaps undocumented (leaves the tool systematically under-covering EU-CSF v1.2.1 §4)",
+        "Mark gaps with placeholder questions (adds noise without substance)"
+      ],
+      "review_status": "pending-external-review",
+      "created": "2026-05-29",
+      "instrument_version": "2.2"
     }
   ]
 }

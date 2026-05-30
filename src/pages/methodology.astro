@@ -173,6 +173,149 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           Fallback questions provide alternative routes to partial credit for CSI Composite Generalized assessments. They are CSI Composite-only and appear in the questionnaire <em>only when the parent criterion is answered No</em> — hidden otherwise. Active fallbacks: <strong>SOV-4-01-FB</strong> (personnel residency), <strong>SOV-4-03-FB</strong> (multi-homed BGP connectivity), <strong>SOV-4-09-FB</strong> (disconnect tabletop exercise), <strong>SOV-6-01-FB1</strong> (local build capability), <strong>SOV-6-01-FB2</strong> (documented exit and tested data export).
         </p>
       </div>
+
+      <h3 class="text-base font-semibold mb-2 mt-6">3.4 Framework Faithfulness & Criterion Attribution</h3>
+      <div class="text-sm text-gray-700 space-y-4 leading-relaxed">
+        <p>
+          The CSI question catalog is fully transparent about the relationship between each criterion and its
+          source framework. <strong>EU-CSF v1.2.1 (§4) defines <em>contributing factors</em> — high-level
+          principles per sovereignty objective — but does not specify assessment questions.</strong> Any tool
+          based on EU-CSF must operationalize those factors into testable criteria; CSI documents every such
+          design choice. BSI C3A v1.0, by contrast, defines explicit MUST/SHOULD requirements that are used
+          verbatim or minimally paraphrased.
+        </p>
+        <p>
+          Every criterion carries one of three fidelity labels, visible as a coloured chip in the questionnaire
+          interface below each question:
+        </p>
+        <ul class="list-none space-y-2 pl-0">
+          <li class="flex gap-3 items-start">
+            <span class="shrink-0 text-xs font-semibold bg-green-50 text-green-700 px-2 py-0.5 rounded mt-0.5">Direct</span>
+            <span>
+              The question text is verbatim or minimally paraphrased from a named criterion or contributing
+              factor in the source document. No substantive editorial judgment was required.
+            </span>
+          </li>
+          <li class="flex gap-3 items-start">
+            <span class="shrink-0 text-xs font-semibold bg-amber-50 text-amber-700 px-2 py-0.5 rounded mt-0.5">Inferred</span>
+            <span>
+              The question operationalizes the <em>intent</em> of a source contributing factor, but the source
+              document does not specify a testable criterion at this level of detail. CSI had to make a design
+              choice to bridge the gap between a principle and a measurable control. The specific contributing
+              factor and the reason for the derivation are documented inline in the questionnaire
+              (tap the amber ▾ badge on any Inferred question to expand the rationale) and in the
+              <a href="/methodology/decisions" class="text-blue-600 hover:underline">Decisions Register</a>.
+            </span>
+          </li>
+          <li class="flex gap-3 items-start">
+            <span class="shrink-0 text-xs font-semibold bg-purple-50 text-purple-700 px-2 py-0.5 rounded mt-0.5">CSI</span>
+            <span>
+              An editorial addition not present in either source framework. Used for LMIC fallback questions,
+              AI-sovereignty criteria, and Generalized-variant adaptations where neither EU-CSF nor C3A
+              provides a control but the underlying sovereignty objective still applies.
+            </span>
+          </li>
+        </ul>
+
+        <div class="border border-amber-200 bg-amber-50 rounded-lg p-4">
+          <p class="font-medium text-amber-900 mb-2">Why Inferred criteria are necessary</p>
+          <p class="text-amber-800">
+            The 15 Inferred criteria in the EU-CSF questionnaire are not gaps in the framework — they are the
+            unavoidable consequence of EU-CSF's design. EU-CSF §4 lists principles such as <em>"Ensuring that
+            bodies having decisive authority over your services are located within EU jurisdiction"</em> or
+            <em>"Ease of migrating workloads or integrating with alternative EU-controlled solutions without
+            vendor lock-in."</em> These are principles, not questions. To build an assessment questionnaire
+            consistent with EU-CSF, CSI must translate each principle into a specific, answerable criterion.
+            Every such translation is documented so that assessors can judge whether they agree with the
+            operationalization. If a contracting authority interprets a contributing factor differently,
+            the fidelity rationale provides the reference point for comparison.
+          </p>
+        </div>
+
+        <p class="font-medium text-gray-800 mt-4">Attribution breakdown — instrument v2.2</p>
+        <table class="w-full text-xs text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-4 py-2 text-left font-semibold">Framework questionnaire</th>
+              <th class="px-4 py-2 text-center font-semibold">Total criteria</th>
+              <th class="px-4 py-2 text-center font-semibold">
+                <span class="text-green-700">Direct</span>
+              </th>
+              <th class="px-4 py-2 text-center font-semibold">
+                <span class="text-amber-700">Inferred</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t border-gray-200">
+              <td class="px-4 py-2 font-medium">EU-CSF v1.2.1</td>
+              <td class="px-4 py-2 text-center">54</td>
+              <td class="px-4 py-2 text-center text-green-700 font-semibold">39 (72%)</td>
+              <td class="px-4 py-2 text-center text-amber-700 font-semibold">15 (28%)</td>
+            </tr>
+            <tr class="border-t border-gray-200 bg-gray-50">
+              <td class="px-4 py-2 font-medium">C3A v1.0</td>
+              <td class="px-4 py-2 text-center">49</td>
+              <td class="px-4 py-2 text-center text-green-700 font-semibold">49 (100%)</td>
+              <td class="px-4 py-2 text-center text-gray-400">0</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <details class="border border-gray-200 rounded-lg">
+          <summary class="px-4 py-3 text-sm font-medium cursor-pointer text-gray-700 hover:bg-gray-50 select-none">
+            Full list of 15 Inferred EU-CSF criteria with derivation rationale
+          </summary>
+          <div class="px-4 pb-4 overflow-x-auto">
+            <table class="w-full text-xs text-gray-700 mt-3">
+              <thead class="border-b border-gray-200">
+                <tr>
+                  <th class="py-2 pr-4 text-left font-semibold whitespace-nowrap">Criterion</th>
+                  <th class="py-2 pr-4 text-left font-semibold">Title</th>
+                  <th class="py-2 text-left font-semibold">Derived from EU-CSF contributing factor</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-1-02</td><td class="py-2 pr-4 whitespace-nowrap">Registered Office</td><td class="py-2 text-gray-600">SOV-1: "bodies having decisive authority within EU jurisdiction" — registered office is the standard legal proxy for jurisdictional anchoring</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-2-02</td><td class="py-2 pr-4 whitespace-nowrap">Audit Rights</td><td class="py-2 text-gray-600">SOV-2: "legal/contractual channels through which authorities could compel access" — audit rights are the customer-side enforcement mechanism; closest named CF is in SOV-7</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-2-03</td><td class="py-2 pr-4 whitespace-nowrap">State of Defense Takeover</td><td class="py-2 text-gray-600">SOV-2: "applicability of international regimes that may restrict usage" + SOV-1: "ability to sustain operations against suspension requests" — C3A defines the specific constitutional trigger</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-01-C1</td><td class="py-2 pr-4 whitespace-nowrap">Data Residence — Transparency</td><td class="py-2 text-gray-600">SOV-3: "strict confinement to EU jurisdictions" — location transparency is the prerequisite for verifying confinement; not named separately in the CF</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-01-C5</td><td class="py-2 pr-4 whitespace-nowrap">Data Residence — Provider Data</td><td class="py-2 text-gray-600">SOV-3: "strict confinement to EU jurisdictions" — provider operational data is not named explicitly but is subject to the same confinement principle</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-02-AC</td><td class="py-2 pr-4 whitespace-nowrap">External Key Management — SaaS</td><td class="py-2 text-gray-600">SOV-3: "only customer has effective cryptographic control" — extends the key-management principle to SaaS delivery, which EU-CSF does not distinguish by service type</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-03-C</td><td class="py-2 pr-4 whitespace-nowrap">External Identity Provider</td><td class="py-2 text-gray-600">SOV-3: "only customer has effective cryptographic control" — IdP is the authentication-layer equivalent of key management; EU-CSF does not name IdP separately</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-03-AC1/2/3</td><td class="py-2 pr-4 whitespace-nowrap">IdP — Open Standards / Stateless / Dynamic Claims</td><td class="py-2 text-gray-600">SOV-3: customer-controlled access — C3A-specific technical implementations; EU-CSF states the principle without specifying authentication architecture</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-04-AC1</td><td class="py-2 pr-4 whitespace-nowrap">Logging — Real-Time Open API</td><td class="py-2 text-gray-600">SOV-3: "visibility into when, where, by whom data is accessed" — real-time API access is the technical implementation of that visibility</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-04-AC2</td><td class="py-2 pr-4 whitespace-nowrap">Logging — Granular Filtering</td><td class="py-2 text-gray-600">SOV-3: "visibility into when, where, by whom data is accessed" — granularity is the operational prerequisite for meaningful auditability at scale</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-3-AI-03-AC</td><td class="py-2 pr-4 whitespace-nowrap">AI — Right to Opt Out of Training</td><td class="py-2 text-gray-600">SOV-3: "AI models governed under EU control" — customer opt-out operationalizes governance control over model training; implied but not named in the CF</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-03</td><td class="py-2 pr-4 whitespace-nowrap">Redundant Connectivity</td><td class="py-2 text-gray-600">SOV-4: "EU operators manage without non-EU vendor involvement" — connectivity is the network infrastructure prerequisite; not named as a CF</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-03-AC</td><td class="py-2 pr-4 whitespace-nowrap">Connectivity Independent of CSP Structure</td><td class="py-2 text-gray-600">SOV-4: operational independence — independence from the CSP's corporate structure reduces single-event concentration risk</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-04</td><td class="py-2 pr-4 whitespace-nowrap">Security Operations Centre</td><td class="py-2 text-gray-600">EU-CSF places SOC under SOV-7 CF: "SOCs operating under EU jurisdiction" — placed under SOV-4 following C3A §2.4.4; see DR-E28</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-05</td><td class="py-2 pr-4 whitespace-nowrap">Ingress Data Control</td><td class="py-2 text-gray-600">SOV-4: "EU operators manage without non-EU involvement" — ingress gateways are the network-layer enforcement mechanism; not named in EU-CSF CFs</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-05-AC1/2</td><td class="py-2 pr-4 whitespace-nowrap">Ingress — Physical Devices / Documentation</td><td class="py-2 text-gray-600">SOV-4: operational independence — C3A-specific implementation and disclosure requirements not present in EU-CSF</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-06</td><td class="py-2 pr-4 whitespace-nowrap">Update Threat Analysis</td><td class="py-2 text-gray-600">SOV-4: "full technical documentation enabling long-term autonomy" — threat-aware update analysis is how autonomy is maintained against supply-chain attacks</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-07</td><td class="py-2 pr-4 whitespace-nowrap">Data Exchange Monitoring</td><td class="py-2 text-gray-600">SOV-4: "operational support from within EU" — monitoring provides runtime verification that EU-bounded operations remain bounded</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-08</td><td class="py-2 pr-4 whitespace-nowrap">Data Exchange Gateways</td><td class="py-2 text-gray-600">SOV-4: "EU operators manage without non-EU involvement" — gateways are the physical control points for cross-boundary data flows</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-08-AC</td><td class="py-2 pr-4 whitespace-nowrap">Gateways — DFD to Authority</td><td class="py-2 text-gray-600">SOV-4: "subject exclusively to EU legal frameworks" — regulatory disclosure to cybersecurity authorities is implied; not named in EU-CSF</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-4-09-AC</td><td class="py-2 pr-4 whitespace-nowrap">Disconnect — Documentation to Authority</td><td class="py-2 text-gray-600">SOV-4: "ease of migration" — documentation obligation implied by EU oversight but not named in EU-CSF contributing factors</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-5-01-AC</td><td class="py-2 pr-4 whitespace-nowrap">Software Dependencies — Risk-Based Process</td><td class="py-2 text-gray-600">SOV-5: "software origin and supply chain visibility" — risk process operationalizes the visibility principle as organisational governance</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-5-02-AC</td><td class="py-2 pr-4 whitespace-nowrap">Hardware Dependencies — Risk-Based Process</td><td class="py-2 text-gray-600">SOV-5: "hardware geographic source and dependency" — same rationale as SOV-5-01-AC; C3A specifies the process that EU-CSF implies</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-5-03-AC</td><td class="py-2 pr-4 whitespace-nowrap">External Service Dependencies — Documented Process</td><td class="py-2 text-gray-600">SOV-5: "visibility into supplier chain, audit rights" — documented management process operationalizes EU-CSF visibility principle</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-5-04</td><td class="py-2 pr-4 whitespace-nowrap">Export Restriction</td><td class="py-2 text-gray-600">EU-CSF places export restrictions under SOV-2 CF: "international regimes restricting usage" — placed under SOV-5 following C3A §2.5.4 supply-chain classification</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-5-05</td><td class="py-2 pr-4 whitespace-nowrap">Capacity Management</td><td class="py-2 text-gray-600">EU-CSF SOV-4 CF: "EU operators manage without non-EU involvement" — placed under SOV-5 following C3A §2.5.5; capacity decisions are a supply-chain capacity control</td></tr>
+                <tr><td class="py-2 pr-4 font-mono text-gray-500 whitespace-nowrap">SOV-6-02-AC</td><td class="py-2 pr-4 whitespace-nowrap">Continuous Service Delivery — Engineering Capability</td><td class="py-2 text-gray-600">SOV-6: "transparency and adaptability" + SOV-4: "operational know-how enabling long-term autonomy" — post-disruption engineering capability extends source code sovereignty</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <p class="text-xs text-gray-500 border-l-2 border-gray-200 pl-3 mt-2">
+          No Inferred criterion changes the scoring formula of its source framework. Inference applies only
+          to the question design — the SEAL gate logic, the weights, and the pass/fail rules are all faithful
+          to source. All derivation decisions are recorded in the
+          <a href="/methodology/decisions" class="text-blue-600 hover:underline">Decisions Register</a>
+          (DR-E25 through DR-E29).
+        </p>
+      </div>
     </section>
 
     <section class="mb-10">

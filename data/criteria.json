@@ -1,5 +1,5 @@
 {
-  "instrument_version": "2.1",
+  "instrument_version": "2.2",
   "source_documents": [
     {
       "id": "EU-CSF",
@@ -96,7 +96,9 @@
           "supplementary_info": "If restrictions are imposed by cloud service customers for the chosen country, they should be justified, and it should be ensured that their implementation, for example in procurement procedures, is legally permissible on the basis of reasons such as public safety.",
           "c3a_source_id": "SOV-1-01-C1",
           "seal_contribution_eu_csf": 1,
-          "seal_contribution_csi": 1
+          "seal_contribution_csi": 1,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-1-02",
@@ -129,7 +131,10 @@
           "supplementary_info": "If the cloud service provider uses a subcontractor for the provision of services, such as operations, that subcontractor MUST also meet the criteria.",
           "c3a_source_id": "SOV-1-02-C1",
           "seal_contribution_eu_csf": 1,
-          "seal_contribution_csi": 1
+          "seal_contribution_csi": 1,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-1 CF: 'Ensuring that bodies having decisive authority over your services are located within EU jurisdiction.' A registered head office is the primary legal indicator of this jurisdictional anchoring under EU company law. EU-CSF names the control objective; registered-office location is the standard evidentiary proxy.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-1-03",
@@ -162,7 +167,9 @@
           "supplementary_info": "Effective control means the possibility to exert direct or indirect influence, or determine the key strategic, financial, or operational decisions from non-{{BLOC}} undertakings.",
           "c3a_source_id": "SOV-1-03-C1",
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-1-04",
@@ -183,7 +190,71 @@
           "text_c3a": "The cloud service provider MUST inform cloud service customers 90 days in advance of any actual changes affecting the cloud service provider’s control that could undermine or affect the C3A controls associated with the cloud service, including significant changes to ownership, shareholding, or governance relationships of the cloud service provider.",
           "c3a_source_id": "SOV-1-04-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
+        },
+        {
+          "id": "SOV-1-05",
+          "title": "EU Financing & Investment Anchoring",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud service provider rely predominantly on EU-sourced financing (EU-domiciled institutional investors, EU public funding, EU capital markets), and can it demonstrate material investment in EU infrastructure, EU-based jobs, and EU value creation as part of its core operating model?",
+          "text_generalized": "Does the cloud service provider rely predominantly on domestically-sourced or regionally-sourced financing, and can it demonstrate material investment in local infrastructure, local jobs, and local value creation as part of its core operating model?",
+          "supplementary_info": "\"EU-sourced financing\" covers investors incorporated and tax-resident in EU member states, EIB/EIF instruments, and EU structural funds. Non-EU minority shareholders or bond-holders do not automatically disqualify, but a majority-non-EU investor base is material evidence against this criterion.",
+          "seal_contribution": 2,
+          "points": 4,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "§4 SOV-1 contributing factor: EU-sourced financing and EU investment"
+          },
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct"
+        },
+        {
+          "id": "SOV-1-06",
+          "title": "EU Strategic Initiative Alignment",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud service provider actively participate in EU-level digital sovereignty initiatives (e.g., Gaia-X, EUCS, IPCEI-CIS, EU Sovereign Cloud Label) and demonstrate consistency with the EU's digital, green, and industrial sovereignty objectives?",
+          "text_generalized": "Does the cloud service provider actively participate in nationally- or regionally-endorsed cloud sovereignty or digital independence initiatives, and demonstrate consistency with the country's stated digital strategy objectives?",
+          "supplementary_info": "Participation is evidenced by formal membership, published contributions, or certified compliance with initiative requirements — not self-declaration of alignment. Certification under EUCS (ENISA EU Cloud Services scheme) is the strongest evidence.",
+          "seal_contribution": 3,
+          "points": 4,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "§4 SOV-1 contributing factor: involvement in EU initiatives and digital sovereignty objectives"
+          },
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct"
+        },
+        {
+          "id": "SOV-1-07",
+          "title": "Operational Resilience Against Coercion",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud service provider have documented legal, operational, and technical measures enabling it to continue providing the contracted service even if subject to a foreign government request to cease or suspend operations, or if a key upstream vendor withdraws support?",
+          "supplementary_info": "Evidence includes: legal opinion on the provider's obligations under competing jurisdictions, vendor-independent operational runbooks covering the top-3 upstream dependencies, and at least one documented contingency drill in the past 12 months.",
+          "seal_contribution": 3,
+          "points": 5,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "§4 SOV-1 contributing factor: sustain operations against suspension requests or vendor disruption"
+          },
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct"
         }
       ],
       "layer": "sovereignty"
@@ -211,7 +282,9 @@
           },
           "c3a_source_id": "SOV-2-01-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-2-02",
@@ -246,7 +319,10 @@
           "supplementary_info": "Audit rights may be derived from contract or law. Authorities try to rely on existing audits (e.g., BSI C5, SOC 2 Type 2) before conducting their own. Fees shall not be so high as to effectively deny this right.",
           "c3a_source_id": "SOV-2-02-C1",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-2 CF: 'Existence of legal, contractual, or technical channels through which non-EU authorities could compel access to data or systems.' Audit rights operationalize the customer's ability to verify what access channels exist — the contractual enforcement mechanism for this CF. The EU-CSF framework does not name audit rights explicitly in SOV-2; the closest named CF is in SOV-7.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-2-03",
@@ -279,7 +355,10 @@
           "supplementary_info": "This usually means that documentation, source code, and administration tools are held in a portable format so that the competent national authority can use them.",
           "c3a_source_id": "SOV-2-03-C1",
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-2 CF: 'Applicability of international regimes, which may restrict usage or transfer' and SOV-1 CF: 'Ability to sustain secure operations against requests to cease or suspend the service.' The state-of-defense takeover question operationalizes the most extreme legal-regime case. EU-CSF names the principle; C3A defines the specific constitutional trigger (state of defense).",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-2-03-CSI",
@@ -299,6 +378,27 @@
           "supplementary_info": "This is the CSI-Composite-Generalized equivalent of C3A SOV-2-03 (\"state of defense\"), which is bound to specific EU constitutional concepts. Many LMIC constitutions provide for declared states of emergency, exception, or public calamity rather than \"state of defense.\" This question generalizes the underlying control objective — sovereign takeover readiness — to those analogous regimes. Activated only in non-EU (Generalized) variant.",
           "review_status": "pending-external-review",
           "seal_contribution_csi": 3
+        },
+        {
+          "id": "SOV-2-04",
+          "title": "IP Jurisdiction",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Is the intellectual property underlying the cloud service created, registered, and primarily developed within the EU, subject to EU intellectual property law, with no encumbering foreign IP claims that could restrict the customer's access to or use of the service under EU law?",
+          "text_generalized": "Is the intellectual property underlying the cloud service created, registered, and primarily developed within {{COUNTRY}} or {{BLOC}}, subject to national intellectual property law, with no encumbering foreign IP claims that could restrict the customer's access to or use of the service under national law?",
+          "supplementary_info": "IP domicile is assessed at the level of the core platform IP (not third-party libraries). Foreign subsidiary IP held by an EU parent is acceptable if it remains subject to EU law via contractual and corporate structure. Foreign IP held by a non-EU parent and licensed back creates material risk of access restriction.",
+          "seal_contribution": 2,
+          "points": 4,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "§4 SOV-2 contributing factor: location of IP creation, registration, and development"
+          },
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct"
         }
       ],
       "layer": "sovereignty"
@@ -345,7 +445,9 @@
           },
           "supplementary_info": "Data residence options must be contractually guaranteed and verifiable by the customer.",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-01-C1",
@@ -367,7 +469,10 @@
           ],
           "c3a_source_id": "SOV-3-01-C1",
           "seal_contribution_eu_csf": 1,
-          "seal_contribution_csi": 1
+          "seal_contribution_csi": 1,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Strict confinement of storage and processing to European jurisdictions, with no fallback to third countries.' Disclosure of data locations is a prerequisite for verifying confinement — without transparency, the customer cannot confirm this CF is met. Transparency is implied by the confinement standard but not named as a separate CF.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-01-C2",
@@ -390,7 +495,9 @@
           ],
           "c3a_source_id": "SOV-3-01-C2",
           "seal_contribution_eu_csf": 1,
-          "seal_contribution_csi": 1
+          "seal_contribution_csi": 1,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-01-C5",
@@ -411,7 +518,10 @@
             "doc": "C3A",
             "clause": "§2.3.1 SOV-3-01-C5"
           },
-          "supplementary_info": "Cloud service provider data covers configuration and utilization information of system components, storage and network resource allocations, physical and virtual resource failure rates, operational costs, etc. (C3A §1.5). It is under the control of the cloud service provider, distinct from customer data and derived data. Often overlooked because it is operational metadata, but its location can be a sovereignty exposure."
+          "supplementary_info": "Cloud service provider data covers configuration and utilization information of system components, storage and network resource allocations, physical and virtual resource failure rates, operational costs, etc. (C3A §1.5). It is under the control of the cloud service provider, distinct from customer data and derived data. Often overlooked because it is operational metadata, but its location can be a sovereignty exposure.",
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Strict confinement of storage and processing to European jurisdictions.' Provider-operational data (configuration, telemetry, resource allocations) is not named explicitly in the CF, but is subject to the same confinement principle. Provider data can contain sovereignty-sensitive operational intelligence about infrastructure and capacity.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-02-C",
@@ -430,7 +540,9 @@
           },
           "c3a_source_id": "SOV-3-02-C",
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-02-AC",
@@ -451,7 +563,8 @@
           "supplementary_info": "The integration of external key management systems for IaaS and PaaS is widely implemented and commonly standardized. For SaaS solutions, external encryption key management systems are less common; therefore, cloud service providers should support external encryption key management capabilities for SaaS where technically feasible and appropriate to the service architecture. If this criterion is only fulfilled for some SaaS, the cloud service provider MUST provide a list of these services to the cloud services customer.",
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-02-AC",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-03-C",
@@ -470,7 +583,10 @@
           },
           "c3a_source_id": "SOV-3-03-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Ensuring that only the customer has effective control over cryptographic access to their data.' An external identity provider is the authentication-layer equivalent of external key management — it gives the customer control over who can access data, complementary to controlling how data is encrypted. EU-CSF does not name identity provider integration separately.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-03-AC1",
@@ -490,7 +606,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-03-AC1",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-03-AC2",
@@ -510,7 +627,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-03-AC2",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-03-AC3",
@@ -530,7 +648,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-03-AC3",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-04-C",
@@ -549,7 +668,9 @@
           },
           "c3a_source_id": "SOV-3-04-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-04-AC1",
@@ -569,7 +690,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-04-AC1",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-04-AC2",
@@ -589,7 +711,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-04-AC2",
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-05-C",
@@ -608,7 +731,9 @@
           },
           "c3a_source_id": "SOV-3-05-C",
           "seal_contribution_eu_csf": 4,
-          "seal_contribution_csi": 4
+          "seal_contribution_csi": 4,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-3-AI-01-AC",
@@ -629,7 +754,8 @@
             "clause": "SOV-3 / AI pipeline location"
           },
           "supplementary_info": "EU CSF v1.2.1 SOV-3 explicitly includes \"extent to which AI models and data pipelines are developed, trained, hosted, and governed under EU control\". Training data jurisdiction is the upstream determinant of model behaviour and legal exposure. Applies to all generative AI features, ML-based recommendations, and embedded model inference within the service.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-3-AI-02-AC",
@@ -650,7 +776,8 @@
             "clause": "SOV-3 / where data is processed"
           },
           "supplementary_info": "Where customer data hits the model matters distinctly from where the model was trained. Inference can be the moment of exposure for sensitive prompts, customer documents, or PII. EU CSF SOV-3 covers this under \"where data is processed\". This is the AI-specific complement to SOV-3-01 data residency.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-3-AI-03-AC",
@@ -671,7 +798,9 @@
             "clause": "SOV-3 / customer retains autonomy over AI capabilities"
           },
           "supplementary_info": "This is the LMIC-relevant analogue of the EU AI Act's training-data provisions. In sovereign procurement, the risk is that customer data — even derived telemetry — becomes part of a global model, exporting national knowledge into a foreign-jurisdiction artefact.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Extent to which AI models and data pipelines are governed under EU control.' Customer opt-out from training data use ensures the customer retains sovereignty over how their data shapes model behaviour — a governance dimension not named explicitly in the CF but directly implied by 'governed under EU control.'"
         },
         {
           "id": "SOV-3-AI-04-AC",
@@ -692,7 +821,8 @@
             "clause": "SOV-3 + SOV-5 / dependency on non-EU technology stacks"
           },
           "supplementary_info": "Extends C3A SOV-5 (supply chain) into the AI layer. The model provider is a critical upstream dependency that can change behaviour, licensing, or availability through unilateral action. SOV-1-style effective-control analysis applied to model providers.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "eu_csf_fidelity": "direct"
         }
       ],
       "layer": "resilience"
@@ -739,7 +869,9 @@
           },
           "c3a_source_id": "SOV-4-01-C1",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-01-C3",
@@ -759,7 +891,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-01-C3",
-          "seal_contribution_csi": 4
+          "seal_contribution_csi": 4,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-01-FB",
@@ -815,7 +948,9 @@
           },
           "c3a_source_id": "SOV-4-02-C1",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-03",
@@ -834,7 +969,10 @@
           },
           "c3a_source_id": "SOV-4-03-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage, maintain, and support the technology without requiring non-EU vendor involvement.' Redundant independent connectivity is the network infrastructure prerequisite for continuous EU-controlled operations — single-provider failure would collapse operational sovereignty regardless of personnel or process controls. Not named as a contributing factor in EU-CSF SOV-4.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-03-AC",
@@ -854,7 +992,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-03-AC",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-03-FB",
@@ -911,7 +1050,10 @@
           },
           "c3a_source_id": "SOV-4-04-C1",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "EU-CSF explicitly places SOC under SOV-7 CF: 'Security Operations Centres and response teams operating exclusively under EU jurisdiction.' This criterion follows C3A §2.4.4 in classifying SOC as an operational sovereignty matter (SOV-4). When used in EU-CSF scoring, the question contributes to SOV-4 but its primary source reference is the SOV-7 contributing factor.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-05",
@@ -930,7 +1072,10 @@
           },
           "c3a_source_id": "SOV-4-05-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage without requiring non-EU vendor involvement.' Ingress data control gateways are the network-layer enforcement mechanism for EU-bounded operations — without controlled ingress, external actors can bypass EU operational controls.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-05-AC1",
@@ -950,7 +1095,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-05-AC1",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-05-AC2",
@@ -971,7 +1117,8 @@
           "supplementary_info": "A vulnerability is regarded as known, when it is listed in the European Union Vulnerability Database (EUVD) or in the Common Vulnerabilities and Exposures (CVE) Program from the National Institute of Standards and Technology (NIST).",
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-05-AC2",
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-06",
@@ -990,7 +1137,10 @@
           },
           "c3a_source_id": "SOV-4-06-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Availability of full technical documentation, source code, and operational know-how enabling long-term autonomy.' Threat-aware update analysis is the operational practice through which this autonomy is maintained against supply-chain attacks on the software update pipeline.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-07",
@@ -1009,7 +1159,10 @@
           },
           "c3a_source_id": "SOV-4-07-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Assurance that operational support is delivered from within the EU.' Data exchange monitoring provides runtime verification that EU-bounded operations remain bounded — without monitoring, EU operational sovereignty is an unverifiable claim.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-08",
@@ -1028,7 +1181,10 @@
           },
           "c3a_source_id": "SOV-4-08-C",
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage without requiring non-EU vendor involvement.' Data exchange gateways are the physical control points ensuring cross-boundary data flows remain under EU authority.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-08-AC",
@@ -1048,7 +1204,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-08-AC",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-09",
@@ -1067,7 +1224,9 @@
           },
           "c3a_source_id": "SOV-4-09-C",
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-09-AC",
@@ -1088,7 +1247,8 @@
           "supplementary_info": "In the context of the disconnect requirement, network connections between the cloud service provider and cloud service customers are excluded from the scope of the disconnection capability.",
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-09-AC",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-4-09-FB",
@@ -1125,7 +1285,9 @@
           },
           "c3a_source_id": "SOV-4-10-C",
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         }
       ],
       "layer": "resilience"
@@ -1153,7 +1315,9 @@
           },
           "c3a_source_id": "SOV-5-01-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-5-01-AC",
@@ -1174,7 +1338,8 @@
           "supplementary_info": "The terms software components and software suppliers refer exclusively to software used by the cloud service provider to deliver the cloud service. Software deployed by customers or marketplace providers is excluded. Software components under widely used open-source licenses may be excluded from origin reporting where license terms restrict redistribution of such information.",
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-5-01-AC",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-5-02",
@@ -1193,7 +1358,9 @@
           },
           "c3a_source_id": "SOV-5-02-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-5-02-AC",
@@ -1213,7 +1380,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-5-02-AC",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-5-03",
@@ -1232,7 +1400,9 @@
           },
           "c3a_source_id": "SOV-5-03-C",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-5-03-AC",
@@ -1253,7 +1423,8 @@
           "supplementary_info": "External services refer exclusively to services that are functionally required for the provision of the cloud service itself. External cloud services refer to services provided by third-party cloud providers that are integrated into the delivery of the primary cloud service but are operated and maintained by separate providers.",
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-5-03-AC",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-5-04",
@@ -1272,7 +1443,10 @@
           },
           "c3a_source_id": "SOV-5-04-C",
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-2 CF: 'Applicability of international regimes, which may restrict usage or transfer.' Export restrictions are supply-chain continuity risks classified under SOV-5 following C3A §2.5.4, where they appear as supply chain risks rather than legal/jurisdictional risks.",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-5-05",
@@ -1294,7 +1468,8 @@
               },
               "decision_refs": [
                 "DR-S02"
-              ]
+              ],
+              "text_generalized": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{BLOC}}."
             },
             "national": {
               "text": "Capacity management MUST be performed in {{COUNTRY}} in accordance with C5:2026 (OPS-01 Capacity Management – Planning, OPS-02 – Monitoring, OPS-03 – Controlling of Resources).",
@@ -1312,7 +1487,10 @@
           },
           "c3a_source_id": "SOV-5-05-C1",
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage, maintain, and support the technology.' Capacity management performed within the EU ensures that scaling decisions and resource allocation remain under EU-controlled operations. Placed under SOV-5 following C3A §2.5.5, which classifies it as a supply-chain capacity control.",
+          "c3a_fidelity": "direct"
         }
       ],
       "layer": "resilience"
@@ -1340,7 +1518,9 @@
           },
           "c3a_source_id": "SOV-6-01-C",
           "seal_contribution_eu_csf": 4,
-          "seal_contribution_csi": 4
+          "seal_contribution_csi": 4,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-6-01-FB1",
@@ -1397,7 +1577,9 @@
           },
           "c3a_source_id": "SOV-6-02-C",
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-6-02-AC",
@@ -1417,7 +1599,8 @@
           },
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-6-02-AC",
-          "seal_contribution_csi": 4
+          "seal_contribution_csi": 4,
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-6-03",
@@ -1436,7 +1619,30 @@
           },
           "c3a_source_id": "SOV-6-03-C",
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct",
+          "c3a_fidelity": "direct"
+        },
+        {
+          "id": "SOV-6-04",
+          "title": "EU HPC Independence",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "For compute-intensive workloads (AI/ML inference, data analytics, simulation), can the cloud service provider demonstrate that its high-performance computing capability — including the processors, accelerators (GPUs/TPUs), and software ecosystems used — is sourced from EU-controlled or EU-accessible supply chains, with no critical dependency on a single non-EU semiconductor vendor whose withdrawal would materially impair the service?",
+          "text_generalized": "For compute-intensive workloads (AI/ML inference, data analytics, simulation), can the cloud service provider demonstrate that its high-performance computing capability has supply chain diversification sufficient to continue operations if access to any single non-{{BLOC}} semiconductor or accelerator vendor is disrupted?",
+          "supplementary_info": "\"EU-accessible\" means the processor/accelerator is obtainable under normal trade terms without export licence restrictions. Concentration risk: if >75% of HPC capacity depends on a single non-EU accelerator family (e.g., NVIDIA H-series), this criterion is not met at the strictest level.",
+          "seal_contribution": 3,
+          "points": 4,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "§4 SOV-6 contributing factor: EU independence in high-performance computing capabilities"
+          },
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct"
         }
       ],
       "layer": "operational_viability"
@@ -1467,7 +1673,8 @@
             "DR-X02"
           ],
           "seal_contribution_eu_csf": 1,
-          "seal_contribution_csi": 1
+          "seal_contribution_csi": 1,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-7-02",
@@ -1490,7 +1697,8 @@
             "DR-X02"
           ],
           "seal_contribution_eu_csf": 1,
-          "seal_contribution_csi": 1
+          "seal_contribution_csi": 1,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-7-03",
@@ -1514,7 +1722,8 @@
             "DR-X02"
           ],
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-7-04",
@@ -1538,7 +1747,8 @@
             "DR-X02"
           ],
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-7-05",
@@ -1559,7 +1769,8 @@
             "DR-X02"
           ],
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-7-06",
@@ -1580,7 +1791,8 @@
             "DR-X02"
           ],
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-7-07",
@@ -1602,7 +1814,8 @@
             "DR-X02"
           ],
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct"
         }
       ],
       "layer": "operational_viability"
@@ -1632,7 +1845,8 @@
             "DR-X03"
           ],
           "seal_contribution_eu_csf": 1,
-          "seal_contribution_csi": 1
+          "seal_contribution_csi": 1,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-8-02",
@@ -1653,7 +1867,8 @@
             "DR-X03"
           ],
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-8-03",
@@ -1674,7 +1889,8 @@
             "DR-X03"
           ],
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-8-04",
@@ -1695,7 +1911,8 @@
             "DR-X03"
           ],
           "seal_contribution_eu_csf": 2,
-          "seal_contribution_csi": 2
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct"
         },
         {
           "id": "SOV-8-05",
@@ -1716,7 +1933,8 @@
             "DR-X03"
           ],
           "seal_contribution_eu_csf": 3,
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct"
         }
       ],
       "layer": "operational_viability"
