@@ -119,47 +119,44 @@ for (const ac of acQuestions) {
               <p class="text-xs text-gray-500 mt-0.5">C3A v1.0 — BSI. Output: pass/fail per criterion, % met. SOV-1 through SOV-6 only. Binary — no partial credit.</p>
             </div>
           </label>
-          <label class="flex items-start gap-3 p-3 border border-blue-200 bg-blue-50 rounded-lg cursor-pointer hover:border-blue-400 transition">
-            <input type="checkbox" name="framework" value="csi_composite" id="fw-csi" checked
-              class="mt-0.5 h-4 w-4 rounded border-gray-300" />
-            <div>
-              <span class="text-sm font-medium">CSI Composite <span class="text-xs text-blue-600 font-normal ml-1">Recommended for global users</span></span>
-              <p class="text-xs text-gray-500 mt-0.5">CSI editorial framework — blends EU-CSF and C3A with adaptations for global use. Output: SEAL 0–4 for EU/EEA; Progressive Sovereignty Maturity tier for non-EU.</p>
-            </div>
-          </label>
-        </div>
-        <p id="framework-error" class="text-red-600 text-xs mt-2 hidden">Select at least one framework.</p>
-      </div>
+          <div class="border border-blue-200 bg-blue-50 rounded-lg">
+            <label class="flex items-start gap-3 p-3 cursor-pointer hover:border-blue-400 transition">
+              <input type="checkbox" name="framework" value="csi_composite" id="fw-csi" checked
+                class="mt-0.5 h-4 w-4 rounded border-gray-300" />
+              <div>
+                <span class="text-sm font-medium">CSI Composite <span class="text-xs text-blue-600 font-normal ml-1">Recommended for global users</span></span>
+                <p class="text-xs text-gray-500 mt-0.5">CSI editorial framework — blends EU-CSF and C3A with adaptations for global use. Output: SEAL 0–4 for EU/EEA; Progressive Sovereignty Maturity tier for non-EU.</p>
+              </div>
+            </label>
 
-      <!-- Sovereignty Domain selection -->
-      <div id="domain-panel">
-        <div class="border border-gray-200 rounded-lg p-4">
-          <div class="flex items-center justify-between mb-1">
-            <h3 class="text-sm font-medium">Sovereignty domains to assess</h3>
-            <button type="button" id="domain-select-all-btn" class="text-xs text-blue-600 hover:underline">Select all</button>
+            <!-- Sovereignty Domain selection — only for CSI Composite -->
+            <div id="domain-panel" class="border-t border-blue-200 px-3 pb-3 pt-2">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-medium text-blue-800">Sovereignty domains to assess</span>
+                <button type="button" id="domain-select-all-btn" class="text-xs text-blue-600 hover:underline">Select all</button>
+              </div>
+              <p class="text-xs text-gray-500 mb-3">
+                Unticking a domain removes those questions from your CSI assessment — useful for focused reviews.
+              </p>
+              <div class="grid grid-cols-1 gap-2" id="domain-checkboxes">
+                {criteria.objectives.map(obj => (
+                  <label class="flex items-start gap-3 cursor-pointer group" data-obj-id={obj.id}>
+                    <input
+                      type="checkbox"
+                      name="selected_objective"
+                      value={obj.id}
+                      checked
+                      class="mt-0.5 h-4 w-4 rounded border-gray-300 domain-cb"
+                    />
+                    <div>
+                      <span class="text-sm font-medium text-gray-800">{obj.id} — {obj.title}</span>
+                      <p class="text-xs text-gray-500 mt-0.5">{obj.description.slice(0, 90)}{obj.description.length > 90 ? '…' : ''}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
-          <p class="text-xs text-gray-500 mb-3">
-            Tick the domains you want to assess. Unticking a domain removes those questions entirely — useful for focused reviews.
-          </p>
-          <div class="grid grid-cols-1 gap-2" id="domain-checkboxes">
-            {criteria.objectives.map(obj => (
-              <label class="flex items-start gap-3 cursor-pointer group" data-obj-id={obj.id}>
-                <input
-                  type="checkbox"
-                  name="selected_objective"
-                  value={obj.id}
-                  checked
-                  class="mt-0.5 h-4 w-4 rounded border-gray-300 domain-cb"
-                />
-                <div>
-                  <span class="text-sm font-medium text-gray-800">{obj.id} — {obj.title}</span>
-                  <p class="text-xs text-gray-500 mt-0.5">{obj.description.slice(0, 90)}{obj.description.length > 90 ? '…' : ''}</p>
-                </div>
-              </label>
-            ))}
-          </div>
-        </div>
-      </div>
 
       <!-- C3A Additional Criteria selection (shown only when C3A is ticked) -->
       <div id="ac-panel" class="hidden">
@@ -228,6 +225,12 @@ for (const ac of acQuestions) {
         }
       });
     }
+
+    const domainPanel = document.getElementById('domain-panel');
+    function updateDomainPanelVisibility() {
+      domainPanel.classList.toggle('hidden', !csiCheckbox.checked);
+    }
+    csiCheckbox.addEventListener('change', updateDomainPanelVisibility);
 
     [c3aCheckbox, euCsfCheckbox, csiCheckbox].forEach(cb => cb.addEventListener('change', updateDomainVisibility));
 
