@@ -12,7 +12,7 @@ The Cloud Sovereignty Index guides you through a structured self-assessment of a
 
 - Strategic · Legal · Data · Operational · Supply Chain · Technology · Security · Sustainability
 
-You choose which framework(s) to assess against. Each produces a completely independent result — no combined cross-mode score.
+You choose which framework(s) to assess against and which sovereignty domains to include. Each framework produces a completely independent result — no combined cross-mode score.
 
 | Framework | Source | Output | Scope |
 |-----------|--------|--------|-------|
@@ -21,13 +21,19 @@ You choose which framework(s) to assess against. Each produces a completely inde
 | **CSI Composite (EU/EEA)** | CSI editorial framework | SEAL 0–4 (same as EU-CSF) | SOV-1 – SOV-8 |
 | **CSI Composite (non-EU)** | CSI editorial framework | Sovereignty Ladder: Dependent → Managed Dependency → Strategic Autonomy → Sovereign | SOV-1 – SOV-8 |
 
-**Scope: cloud sovereignty only.** Security attestation (ISO 27001, SOC 2, BSI C5:2026) is assumed and not assessed. C5 is presupposed, not a CSI source.
+**Scope: cloud sovereignty only.** Security attestation (ISO 27001, SOC 2, BSI C5) is assumed and not assessed. C5 is presupposed by C3A, not a CSI source.
 
 ---
 
 ## EU-CSF mode
 
 Source-faithful SEAL scoring per EU-CSF §4 (weakest-link gate) and §5 (objective weights). `partial` counts as half points but does not satisfy the SEAL gate.
+
+55 questions covering all EU-CSF v1.2.1 §4 contributing factors. Each question is labelled with its source relationship:
+
+- **Direct** (green) — maps verbatim to a named contributing factor
+- **Inferred** (amber) — operationalizes the intent of a CF where EU-CSF states a principle but not a specific question; the derivation rationale is shown inline
+- **CSI** (purple) — editorial addition not in EU-CSF, included for completeness
 
 | Level | Label |
 |-------|-------|
@@ -43,7 +49,7 @@ The SEAL is the highest level L where **all** criteria with contribution ≤ L a
 
 ## C3A mode
 
-Binary pass/fail per criterion (C3A §1.3). `partial` counts as not-met. Two tiers:
+Binary pass/fail per criterion (C3A §1.3). `partial` counts as not-met. All 49 questions are verbatim from C3A v1.0. Two tiers:
 
 - **Criterion** — base criteria, always in scope
 - **Additional Criterion (AC)** — customer-selected before the assessment (C3A §1.4). Only selected ACs enter the denominator.
@@ -69,13 +75,19 @@ Editorial blend of EU-CSF and C3A, adapted for global organisations.
 
 Answer values in Generalized mode: `yes` = 100%, `partial` = 50%, `planned` = 25% (roadmap commitment with timeline), `no` = 0%, `n/a` = excluded.
 
-Two fallback questions provide partial credit for providers unable to meet strict EU criteria. They are **only shown when the parent criterion is answered No** — they remain hidden otherwise:
-- **SOV-4-01-FB** — security-cleared local residents as alternative to EU-citizen-only staffing
+Five fallback questions provide partial credit for providers unable to meet strict criteria. They are **only shown when the parent criterion is answered No**:
+
+- **SOV-4-01-FB** — security-cleared local residents (alternative to EU-citizen-only staffing)
+- **SOV-4-03-FB** — multi-homed BGP routing (alternative to independent-ISP connectivity)
 - **SOV-4-09-FB** — documented disconnect plan with annual tabletop exercise
+- **SOV-6-01-FB1** — local build-from-source capability
+- **SOV-6-01-FB2** — documented exit plan with tested data export
 
-Each question in the web questionnaire includes a **"Show guidance"** toggle that explains the question context, relevant standards (e.g. BSI C5:2026), and what good evidence looks like.
+---
 
-The tool shows "To reach [next tier]: X% more needed" alongside the top gap questions on the results page and in the PDF report.
+## Domain selector
+
+At setup, you can restrict the assessment to specific sovereignty domains (e.g. Data only, or Operational + Supply Chain). Unselected domains are excluded from the questionnaire and scoring. Default is all 8 domains.
 
 ---
 
@@ -95,6 +107,8 @@ Download a blank **XLSX template** at `/assess/template.xlsx`, fill it in, then 
 - **Setup sheet** — country, company name, framework checkboxes (EU-CSF / C3A / CSI Composite)
 - **Assessment sheet** — all questions with evidence and answer columns
 - **Privacy sheet** — what data is and isn't stored
+
+The template is generated from `criteria.json` and is always in sync with the online questionnaire.
 
 ---
 

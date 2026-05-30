@@ -1,7 +1,7 @@
 {
   "instrument_version": "2.2",
   "register_version": "1.0",
-  "last_updated": "2026-05-29",
+  "last_updated": "2026-05-30",
   "project_name": "Cloud Sovereignty Index",
   "project_url": "https://cloudsovereigntyindex.org",
   "review_contact": "methodology@cloudsovereigntyindex.org",
@@ -1346,7 +1346,8 @@
         "Populate seal_contribution_eu_csf=4 for all AC rows regardless of EU-CSF applicability flag — rejected because it would misrepresent the EU-CSF gate structure and inflate apparent SEAL coverage for criteria the EU-CSF does not assess.",
         "Leave documentation implicit — rejected because the reviewer correctly identified this as an ambiguous design decision requiring an explicit record."
       ],
-      "review_status": "stable"
+      "review_status": "stable",
+      "instrument_version": "2.2"
     },
     {
       "id": "DR-E26",
@@ -1359,7 +1360,8 @@
         "Use SEAL-4 criteria as the blocking set — rejected because SEAL-4 is a per-question property used for gate progression, not a viability threshold; the Layer A set is a distinct concept.",
         "Warn only (no attainment override) — rejected because it would allow a provider to display 'Substantially Attained' while failing legal insulation, which misrepresents operational sovereignty."
       ],
-      "review_status": "stable"
+      "review_status": "stable",
+      "instrument_version": "2.2"
     },
     {
       "id": "DR-E27",
@@ -1371,7 +1373,8 @@
         "Generic capability-maturity language (e.g. Foundational/Advanced) — rejected as uninformative for sovereignty-specific use; names would not communicate operational meaning.",
         "Partial alignment (rename top tiers only) — rejected in favour of full consistency across the ladder."
       ],
-      "review_status": "stable"
+      "review_status": "stable",
+      "instrument_version": "2.2"
     },
     {
       "id": "DR-E28",
