@@ -40,6 +40,11 @@ const QuestionBaseSchema = z.object({
   eu_csf_fidelity_rationale: z.string().optional(),
   c3a_fidelity: z.enum(['direct', 'inferred', 'csi']).optional(),
   c3a_fidelity_rationale: z.string().optional(),
+  applies_to_cada: z.boolean().optional(),
+  cada_assurance_level: z.array(z.number().int().min(1).max(4)).optional(),
+  cada_annex_ref: z.string().optional(),
+  cada_fidelity: z.enum(['direct', 'inferred', 'csi']).optional(),
+  cada_fidelity_rationale: z.string().optional(),
 });
 
 const SingleQuestionSchema = QuestionBaseSchema.extend({
@@ -144,7 +149,7 @@ export const ScopeSchema = z.enum(['IaaS', 'PaaS', 'SaaS', 'FaaS', 'CaaS', 'STaa
 
 export const RoleSchema = z.enum(['customer', 'provider', 'auditor']);
 
-export const FrameworkModeSchema = z.enum(['eu_csf', 'c3a', 'csi_composite']);
+export const FrameworkModeSchema = z.enum(['eu_csf', 'c3a', 'csi_composite', 'cada']);
 
 export const AssessmentSetupSchema = z.object({
   variant: VariantSchema,

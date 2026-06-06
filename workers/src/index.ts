@@ -67,7 +67,7 @@ const CreateSchema = z.object({
   user_role: z.enum(['customer', 'provider', 'auditor']),
   company_name: z.string().optional(),
   turnstile_token: z.string(),
-  selected_frameworks: z.array(z.enum(['eu_csf', 'c3a', 'csi_composite'])).min(1).default(['csi_composite']),
+  selected_frameworks: z.array(z.enum(['eu_csf', 'c3a', 'csi_composite', 'cada'])).min(1).default(['csi_composite']),
   customer_selected_ac_ids: z.array(z.string()).default([]),
   selected_objectives: z.array(z.string()).default([]),
 });

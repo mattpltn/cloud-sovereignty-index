@@ -1,5 +1,5 @@
 {
-  "instrument_version": "2.2",
+  "instrument_version": "3.0",
   "source_documents": [
     {
       "id": "EU-CSF",
@@ -14,6 +14,20 @@
       "date": "2026-04-27",
       "publisher": "BSI",
       "title": "Criteria enabling Cloud Computing Autonomy"
+    },
+    {
+      "id": "EU-CSF-CALC",
+      "version": "1.0",
+      "date": "2025-10-01",
+      "publisher": "European Commission",
+      "title": "Annex — Sovereignty Assessment Calculator (Cloud III DPS)"
+    },
+    {
+      "id": "CADA",
+      "version": "COM(2026) 502",
+      "date": "2026-06-03",
+      "publisher": "European Commission",
+      "title": "Cloud and AI Development Act — Proposed Regulation"
     }
   ],
   "weights": {
@@ -134,7 +148,13 @@
           "seal_contribution_csi": 1,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-1 CF: 'Ensuring that bodies having decisive authority over your services are located within EU jurisdiction.' A registered head office is the primary legal indicator of this jurisdictional anchoring under EU company law. EU-CSF names the control objective; registered-office location is the standard evidentiary proxy.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            1
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L1(a)"
         },
         {
           "id": "SOV-1-03",
@@ -169,7 +189,14 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2,
+            3
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(g), L3(g)"
         },
         {
           "id": "SOV-1-04",
@@ -255,6 +282,63 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct"
+        },
+        {
+          "id": "SOV-1-08",
+          "title": "Roadmap Influence — EU Stakeholder Governance",
+          "type": "tiered",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "tiers": {
+            "bloc": {
+              "text": "Do EU stakeholders participate in formal governance bodies (e.g. advisory boards, customer councils, roadmap committees) that provide meaningful, documented influence over the cloud service provider's technology roadmap and service evolution?",
+              "seal_contribution": 3,
+              "points": 5,
+              "source": {
+                "doc": "EU-CSF-CALC",
+                "clause": "SOV-1 Q3: Control Over Roadmap — governance bodies with EU actor participation"
+              }
+            },
+            "national": {
+              "text": "Do EU actors exercise full and determinative influence over the provider's technology roadmap and service evolution, with binding governance rights that can override or direct provider decisions on matters affecting EU users?",
+              "seal_contribution": 4,
+              "points": 5,
+              "source": {
+                "doc": "EU-CSF-CALC",
+                "clause": "SOV-1 Q3: Control Over Roadmap — full EU actor influence"
+              }
+            }
+          },
+          "supplementary_info": "Evidence includes: governance charter or terms of reference for EU customer advisory council, documented roadmap arbitration outcomes, binding contractual rights to participate in product direction. A 'voice of customer' feedback portal alone does not meet the bloc threshold.",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct",
+          "eu_csf_source_factor": "SOV-1 Q3 Control Over Roadmap"
+        },
+        {
+          "id": "SOV-1-09-CADA",
+          "title": "Third-Country Subsidiary Legal Separation",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Where the cloud service provider has subsidiaries or affiliates established in third countries, does it maintain documented and enforced legal, technical, and organisational separation ensuring that EU operations, EU customer data, and EU service continuity cannot be directed, accessed, or disrupted by third-country parent, sibling, or affiliate entities?",
+          "supplementary_info": "CADA Annex II L2(k) requires global providers to demonstrate effective separation of EU operations from 3rd-country subsidiaries. Evidence includes: governance separation policy, no privileged access from non-EU entities to EU production environments, redirect policy for foreign government requests.",
+          "seal_contribution": 4,
+          "points": 6,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L2(k)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(k)"
         }
       ],
       "layer": "sovereignty"
@@ -322,7 +406,14 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-2 CF: 'Existence of legal, contractual, or technical channels through which non-EU authorities could compel access to data or systems.' Audit rights operationalize the customer's ability to verify what access channels exist — the contractual enforcement mechanism for this CF. The EU-CSF framework does not name audit rights explicitly in SOV-2; the closest named CF is in SOV-7.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "inferred",
+          "cada_annex_ref": "Annex III §7",
+          "cada_fidelity_rationale": "CADA Annex III §7 mandates detailed ownership/control evidence that operationalizes audit rights for sovereignty assessment."
         },
         {
           "id": "SOV-2-03",
@@ -358,7 +449,13 @@
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-2 CF: 'Applicability of international regimes, which may restrict usage or transfer' and SOV-1 CF: 'Ability to sustain secure operations against requests to cease or suspend the service.' The state-of-defense takeover question operationalizes the most extreme legal-regime case. EU-CSF names the principle; C3A defines the specific constitutional trigger (state of defense).",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(g)(iv)"
         },
         {
           "id": "SOV-2-03-CSI",
@@ -399,6 +496,85 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct"
+        },
+        {
+          "id": "SOV-2-05",
+          "title": "Data Access Pathways — Non-EU Authority Compelled Access",
+          "type": "tiered",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "tiers": {
+            "bloc": {
+              "text": "Does the cloud service provider have implemented and demonstrated legal, technical, and organisational measures that prevent non-EU authorities from compelling access to customer data or systems through any channel — with all such requests consistently rejected and customers notified of any attempt?",
+              "seal_contribution": 2,
+              "points": 8,
+              "source": {
+                "doc": "EU-CSF-CALC",
+                "clause": "SOV-2 Q3: Data Access Pathways — consistent rejection of non-EU authority access requests"
+              }
+            }
+          },
+          "supplementary_info": "This question covers whether non-EU authorities (e.g. under FISA, CLOUD Act, Chinese Cybersecurity Law) have any enforceable channel to compel access to EU customer data or systems. Providers subject to such laws that have merely mitigation clauses (e.g. 'we will notify customers') do not pass this criterion. Only providers operating entirely outside the reach of such laws — or with legally verified structural immunity — pass. See XLSX SOV-2 Q3 and CADA L2(g)(iv).",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "eu_csf_source_factor": "SOV-2 Q3 Data Access Pathways",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(g)(i)-(iii)"
+        },
+        {
+          "id": "SOV-2-05-CADA",
+          "title": "Third-Country Vulnerability Disclosure Prohibition",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Does the provider demonstrate — through legal analysis or independent verification — that no law or regulation in any third country applicable to the provider or its subcontractors requires disclosure of software vulnerabilities to that country's authorities before those vulnerabilities have been publicly remediated or disclosed?",
+          "supplementary_info": "CADA Annex II L1(g) explicitly prohibits recognition at UAL 1 where such laws exist without demonstrated countermeasures. Evidence: legal opinion covering applicable jurisdictions, supplier self-declarations, independent legal review.",
+          "seal_contribution": 4,
+          "points": 5,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L1(g)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            1
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L1(g)"
+        },
+        {
+          "id": "SOV-2-06-CADA",
+          "title": "Annual Independent Audit Renewal",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud service provider commit to obtaining an annual independent audit opinion confirming continued compliance with the claimed Union Assurance Level, from an auditing organisation that meets the independence and competence requirements of CADA Article 20?",
+          "supplementary_info": "CADA Art. 20(8) requires audited providers at UAL 2-4 to submit annual reviews. This is a procedural commitment question — evidence is a contractual clause or formal policy statement committing to annual renewal.",
+          "seal_contribution": 4,
+          "points": 5,
+          "source": {
+            "doc": "CADA",
+            "clause": "Art. 20(8)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2,
+            3,
+            4
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Art. 20(8)"
         }
       ],
       "layer": "sovereignty"
@@ -447,7 +623,14 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            1,
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L1(c), L2(c)"
         },
         {
           "id": "SOV-3-01-C1",
@@ -472,7 +655,14 @@
           "seal_contribution_csi": 1,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Strict confinement of storage and processing to European jurisdictions, with no fallback to third countries.' Disclosure of data locations is a prerequisite for verifying confinement — without transparency, the customer cannot confirm this CF is met. Transparency is implied by the confinement standard but not named as a separate CF.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            1
+          ],
+          "cada_fidelity": "inferred",
+          "cada_annex_ref": "Annex III §3",
+          "cada_fidelity_rationale": "CADA Annex III §3 requires detailed data flow diagrams demonstrating exclusive EU data storage and processing."
         },
         {
           "id": "SOV-3-01-C2",
@@ -755,7 +945,13 @@
           "supplementary_info": "EU CSF v1.2.1 SOV-3 explicitly includes \"extent to which AI models and data pipelines are developed, trained, hosted, and governed under EU control\". Training data jurisdiction is the upstream determinant of model behaviour and legal exposure. Applies to all generative AI features, ML-based recommendations, and embedded model inference within the service.",
           "review_status": "pending-external-review",
           "eu_csf_fidelity": "inferred",
-          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models and data pipelines developed, trained, hosted, and governed under EU control.' Training data jurisdiction disclosure is the prerequisite for verifying EU-controlled training — you cannot substantiate that training occurred under EU control without disclosing where training data was collected and processed. EU-CSF names the control objective; the specific disclosure requirement is a CSI operationalization."
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models and data pipelines developed, trained, hosted, and governed under EU control.' Training data jurisdiction disclosure is the prerequisite for verifying EU-controlled training — you cannot substantiate that training occurred under EU control without disclosing where training data was collected and processed. EU-CSF names the control objective; the specific disclosure requirement is a CSI operationalization.",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(f)"
         },
         {
           "id": "SOV-3-AI-02-AC",
@@ -778,7 +974,13 @@
           "supplementary_info": "Where customer data hits the model matters distinctly from where the model was trained. Inference can be the moment of exposure for sensitive prompts, customer documents, or PII. EU CSF SOV-3 covers this under \"where data is processed\". This is the AI-specific complement to SOV-3-01 data residency.",
           "review_status": "pending-external-review",
           "eu_csf_fidelity": "inferred",
-          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models and data pipelines hosted and governed under EU control.' Inference is the moment customer data is actively processed through the model — the 'hosted/processed' dimension of the CF. EU-CSF names the principle; this question requires contractual and technical enforcement of in-EU inference location."
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models and data pipelines hosted and governed under EU control.' Inference is the moment customer data is actively processed through the model — the 'hosted/processed' dimension of the CF. EU-CSF names the principle; this question requires contractual and technical enforcement of in-EU inference location.",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(f)"
         },
         {
           "id": "SOV-3-AI-03-AC",
@@ -893,7 +1095,14 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2,
+            3
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(b), L3(d)"
         },
         {
           "id": "SOV-4-01-C3",
@@ -1073,9 +1282,15 @@
           "c3a_source_id": "SOV-4-04-C1",
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "inferred",
+          "eu_csf_fidelity": "direct",
           "eu_csf_fidelity_rationale": "EU-CSF explicitly places SOC under SOV-7 CF: 'Security Operations Centres and response teams operating exclusively under EU jurisdiction.' This criterion follows C3A §2.4.4 in classifying SOC as an operational sovereignty matter (SOV-4). When used in EU-CSF scoring, the question contributes to SOV-4 but its primary source reference is the SOV-7 contributing factor.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(h)"
         },
         {
           "id": "SOV-4-05",
@@ -1162,7 +1377,14 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Availability of full technical documentation, source code, and operational know-how enabling long-term autonomy.' Threat-aware update analysis is the operational practice through which this autonomy is maintained against supply-chain attacks on the software update pipeline.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "inferred",
+          "cada_annex_ref": "Annex II L2(i)(ii)",
+          "cada_fidelity_rationale": "CADA L2(i)(ii) mandates controls to block remote tampering features and source code audits for 3rd-country software components."
         },
         {
           "id": "SOV-4-07",
@@ -1310,6 +1532,29 @@
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
           "c3a_fidelity": "direct"
+        },
+        {
+          "id": "SOV-4-11-CADA",
+          "title": "Open-Source Component Remote Tampering Controls",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Where the cloud service provider uses open-source software components, does it verify, document, and test that no open-source component includes remote features or mechanisms that could be used to materially tamper with or disrupt the cloud service without the provider's authorisation?",
+          "supplementary_info": "CADA Annex II L2(j) requires specific controls for OSS remote-feature risks. Evidence: testing procedures for OSS remote features, change management covering firmware/BIOS/software updates, documented monitoring for OSS acquisition by 3rd-country entities.",
+          "seal_contribution": 4,
+          "points": 5,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L2(j)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(j)"
         }
       ],
       "layer": "resilience"
@@ -1339,7 +1584,13 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(i)"
         },
         {
           "id": "SOV-5-01-AC",
@@ -1515,6 +1766,29 @@
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage, maintain, and support the technology.' Capacity management performed within the EU ensures that scaling decisions and resource allocation remain under EU-controlled operations. Placed under SOV-5 following C3A §2.5.5, which classifies it as a supply-chain capacity control.",
           "c3a_fidelity": "direct"
+        },
+        {
+          "id": "SOV-5-06-CADA",
+          "title": "Subcontractor Transparency & Sovereignty Due Diligence",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud service provider maintain a complete, up-to-date register of all subcontractors involved in service delivery — including their country of establishment, access rights, and role — and conduct structured sovereignty due diligence on each subcontractor covering extraterritorial legal exposure, control chains, and EU data access restrictions?",
+          "supplementary_info": "CADA Annex II L1(f) requires full subcontractor transparency and due diligence as a baseline UAL 1 criterion. Evidence: published or contractually disclosed subcontractor list, due diligence questionnaire results, contractual flow-down of sovereignty obligations.",
+          "seal_contribution": 4,
+          "points": 5,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L1(f)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            1
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L1(f)"
         }
       ],
       "layer": "resilience"
@@ -1667,6 +1941,74 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct"
+        },
+        {
+          "id": "SOV-6-05",
+          "title": "Interoperability & Open Interfaces",
+          "type": "tiered",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "tiers": {
+            "bloc": {
+              "text": "Does the cloud service provider offer core services through open, well-documented, standards-based APIs and protocols that follow recognised open standards (e.g. ETSI, ISO/IEC, IETF/W3C), enabling integration with third-party or alternative solutions without requiring proprietary client libraries?",
+              "seal_contribution": 2,
+              "points": 6,
+              "source": {
+                "doc": "EU-CSF-CALC",
+                "clause": "SOV-6 Q1: Interoperability & Open Interfaces — standards-based and broadly compatible"
+              }
+            },
+            "national": {
+              "text": "Are ALL critical service functions accessible via open, non-proprietary, publicly documented APIs and data formats, with published specifications ensuring full data portability and enabling easy third-party integration with no vendor-specific lock-in?",
+              "seal_contribution": 4,
+              "points": 6,
+              "source": {
+                "doc": "EU-CSF-CALC",
+                "clause": "SOV-6 Q1: Interoperability & Open Interfaces — open-by-default with portability"
+              }
+            }
+          },
+          "supplementary_info": "Assess whether core services (compute, storage, identity, security, data) use proprietary or standard interfaces. A provider with closed proprietary APIs for core functions does not meet this criterion regardless of open standards in peripheral services.",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "eu_csf_source_factor": "SOV-6 Q1 Interoperability & Open Interfaces"
+        },
+        {
+          "id": "SOV-6-06",
+          "title": "Open Standards Compliance — Organisational Policy",
+          "type": "tiered",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "tiers": {
+            "bloc": {
+              "text": "Does the cloud service provider have a documented formal policy mandating and governing open standards adoption for most core services, with managed exceptions and published rationale for any proprietary alternatives used?",
+              "seal_contribution": 3,
+              "points": 5,
+              "source": {
+                "doc": "EU-CSF-CALC",
+                "clause": "SOV-6 Q2: Open Standards Compliance — policy for most core services"
+              }
+            },
+            "national": {
+              "text": "Does the cloud service provider have a documented formal policy mandating open standards for ALL core services without exception, and independently auditable evidence of compliance?",
+              "seal_contribution": 4,
+              "points": 5,
+              "source": {
+                "doc": "EU-CSF-CALC",
+                "clause": "SOV-6 Q2: Open Standards Compliance — policy for all core services"
+              }
+            }
+          },
+          "supplementary_info": "Core services include identity/access management, data formats, messaging, security, logging, and integration protocols. Ad hoc or case-by-case use of open standards without a formal policy does not meet the bloc threshold.",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3,
+          "eu_csf_fidelity": "direct",
+          "eu_csf_source_factor": "SOV-6 Q2 Open Standards Compliance"
         }
       ],
       "layer": "operational_viability"
@@ -1698,7 +2040,14 @@
           ],
           "seal_contribution_eu_csf": 1,
           "seal_contribution_csi": 1,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2,
+            4
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(e), L4(e)"
         },
         {
           "id": "SOV-7-02",
@@ -1840,6 +2189,40 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct"
+        },
+        {
+          "id": "SOV-7-08",
+          "title": "Incident Disclosure & CSIRT Cooperation",
+          "type": "tiered",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "tiers": {
+            "bloc": {
+              "text": "Does the cloud service provider have a documented, operational incident disclosure process aligned with GDPR/NIS2 timelines, with contractual readiness to support EU-directed investigations and a capability for CSIRT cooperation?",
+              "seal_contribution": 2,
+              "points": 6,
+              "source": {
+                "doc": "EU-CSF-CALC",
+                "clause": "SOV-7 Q5: Incident Disclosure — GDPR/NIS2-aligned reporting, CSIRT cooperation available"
+              }
+            },
+            "national": {
+              "text": "Does the cloud service provider provide real-time data sharing with EU CSIRTs, proactive vulnerability disclosure, proven incident readiness with audit-backed reporting processes, and active participation in EU threat intelligence frameworks?",
+              "seal_contribution": 4,
+              "points": 6,
+              "source": {
+                "doc": "EU-CSF-CALC",
+                "clause": "SOV-7 Q5: Incident Disclosure — full EU-compliant, real-time CSIRT sharing"
+              }
+            }
+          },
+          "supplementary_info": "Evidence includes: documented incident response plan referencing GDPR Art. 33/34 and NIS2 Art. 23 timelines, CSIRT cooperation agreements, records of breach notification exercises. 'Best-effort' CSIRT cooperation without formal agreements or SLAs does not meet the bloc threshold.",
+          "seal_contribution_eu_csf": 2,
+          "seal_contribution_csi": 2,
+          "eu_csf_fidelity": "direct",
+          "eu_csf_source_factor": "SOV-7 Q5 Incident Disclosure"
         }
       ],
       "layer": "operational_viability"

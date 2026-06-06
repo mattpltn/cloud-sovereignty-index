@@ -109,6 +109,32 @@ export interface CsiCompositeResult {
   gap_report: GapItem[];
 }
 
+// ── CADA mode results ─────────────────────────────────────────────────────────
+
+export interface CadaLevelResult {
+  level: number;
+  label: string;
+  gate_passed: boolean;
+  criteria_passed: number;
+  criteria_total: number;
+  failing_criteria: Array<{ question_id: string; title: string; objective_id: string }>;
+}
+
+export interface CadaGapItem {
+  question_id: string;
+  title: string;
+  objective_id: string;
+  blocks_level: number;
+  priority: number;
+}
+
+export interface CadaResult {
+  highest_level_achieved: number;
+  levels: CadaLevelResult[];
+  gap_report: CadaGapItem[];
+  audit_required: boolean;
+}
+
 // ── v2.0 AssessmentResult ─────────────────────────────────────────────────────
 
 export interface AssessmentResult {
@@ -123,6 +149,7 @@ export interface AssessmentResult {
   eu_csf?: EuCsfResult;
   c3a?: C3aResult;
   csi_composite?: CsiCompositeResult;
+  cada?: CadaResult;
 }
 
 // ── v1.x legacy result (stored in D1 for old assessments) ────────────────────

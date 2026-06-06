@@ -3,6 +3,7 @@ import type {
   AssessmentResult, EuCsfResult, EuCsfObjectiveResult,
   C3aResult, C3aObjectiveTierResult, C3aAttainmentBand, C3aQuestionResult,
   CsiCompositeResult, CsiObjectiveResult, CsiMaturityTier,
+  CadaResult, CadaLevelResult, CadaGapItem,
   QuestionResult, GapItem, AnswerMap, FrameworkMode,
 } from './types.js';
 
@@ -423,6 +424,97 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile, variant: 
   };
 }
 
+// ── CADA mode ─────────────────────────────────────────────────────────────────
+
+const CADA_LEVEL_LABELS = [
+  'Not Attained',
+  'Union Assurance Level 1 — Self-Assessment',
+  'Union Assurance Level 2 — Third-Party Audited',
+  'Union Assurance Level 3 — Enhanced',
+  'Union Assurance Level 4 — Highest Assurance',
+];
+
+function scoreCada(answers: AnswerMap, criteria: CriteriaFile): CadaResult {
+  // Collect all CADA-applicable questions with their level requirements
+  const cadaQuestions: Array<{
+    question_id: string;
+    title: string;
+    objective_id: string;
+    cada_assurance_level: number[];
+    min_level: number;
+  }> = [];
+
+  for (const obj of criteria.objectives) {
+    for (const q of obj.questions) {
+      const qa = q as any;
+      if (!qa.applies_to_cada || !qa.cada_assurance_level?.length) continue;
+      cadaQuestions.push({
+        question_id: q.id,
+        title: q.title,
+        objective_id: obj.id,
+        cada_assurance_level: qa.cada_assurance_level,
+        min_level: Math.min(...qa.cada_assurance_level),
+      });
+    }
+  }
+
+  // For each level L, gates[L] = all questions required for that level (cumulative: min_level <= L)
+  const levels: CadaLevelResult[] = [];
+  let highest = 0;
+
+  for (let L = 1; L <= 4; L++) {
+    const gated = cadaQuestions.filter(q => q.min_level <= L);
+    const failing = gated.filter(q => {
+      const ans = answers[q.question_id];
+      return !ans || ans.value !== 'yes';
+    });
+    const passed = gated.length - failing.length;
+    const gate_passed = failing.length === 0;
+
+    levels.push({
+      level: L,
+      label: CADA_LEVEL_LABELS[L],
+      gate_passed,
+      criteria_passed: passed,
+      criteria_total: gated.length,
+      failing_criteria: failing.map(q => ({
+        question_id: q.question_id,
+        title: q.title,
+        objective_id: q.objective_id,
+      })),
+    });
+
+    if (gate_passed) highest = L;
+    else break; // cumulative: stop at first failure
+  }
+
+  // Gap report: failing criteria for the next level to achieve
+  const nextLevel = highest + 1;
+  const gapItems: CadaGapItem[] = [];
+  if (nextLevel <= 4) {
+    const nextLevelResult = levels.find(l => l.level === nextLevel);
+    if (nextLevelResult) {
+      nextLevelResult.failing_criteria.forEach((fc, i) => {
+        const q = cadaQuestions.find(q => q.question_id === fc.question_id);
+        gapItems.push({
+          question_id: fc.question_id,
+          title: fc.title,
+          objective_id: fc.objective_id,
+          blocks_level: nextLevel,
+          priority: i + 1,
+        });
+      });
+    }
+  }
+
+  return {
+    highest_level_achieved: highest,
+    levels,
+    gap_report: gapItems,
+    audit_required: highest >= 2,
+  };
+}
+
 // ── Main entry point ──────────────────────────────────────────────────────────
 
 export function scoreAssessment(
@@ -461,6 +553,9 @@ export function scoreAssessment(
   }
   if (frameworks.includes('csi_composite')) {
     result.csi_composite = scoreCsiComposite(answers, criteria, meta.variant);
+  }
+  if (frameworks.includes('cada')) {
+    result.cada = scoreCada(answers, criteria);
   }
 
   return result;
