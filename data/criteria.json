@@ -77,7 +77,7 @@
       "id": "SOV-1",
       "title": "Strategic Sovereignty",
       "description": "Strategic sovereignty captures the degree to which the services of a cloud provider are anchored within the European Union legal, financial, and industrial ecosystem. It assesses ownership stability, governance influence, and alignment with EU strategic priorities.",
-      "weight": 0.15,
+      "weight": 0.2,
       "questions": [
         {
           "id": "SOV-1-01",
@@ -91,7 +91,7 @@
             "bloc": {
               "text": "Does the cloud service provider operate under {{BLOC}} jurisdiction, with contract governance and dispute resolution?",
               "seal_contribution": 1,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.1.1 SOV-1-01-C1"
@@ -100,7 +100,7 @@
             "national": {
               "text": "Does the cloud service provider operate under {{COUNTRY}} jurisdiction, with contract governance and dispute resolution?",
               "seal_contribution": 2,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.1.1 SOV-1-01-C2"
@@ -126,7 +126,7 @@
             "bloc": {
               "text": "Does the cloud service provider have a registered head office in {{BLOC}}?",
               "seal_contribution": 1,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.1.2 SOV-1-02-C1"
@@ -135,7 +135,7 @@
             "national": {
               "text": "Does the cloud service provider have a registered head office in {{COUNTRY}}?",
               "seal_contribution": 2,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.1.2 SOV-1-02-C2"
@@ -168,7 +168,7 @@
             "bloc": {
               "text": "Is the cloud service provider effectively controlled by one or more {{BLOC}} corporations, with effective controls transparent to customers?",
               "seal_contribution": 3,
-              "points": 7,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.1.3 SOV-1-03-C1"
@@ -177,7 +177,7 @@
             "national": {
               "text": "Is the cloud service provider under the effective control of one or more {{COUNTRY}} undertakings, with effective controls transparent to customers?",
               "seal_contribution": 4,
-              "points": 7,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.1.3 SOV-1-03-C2"
@@ -208,7 +208,7 @@
           "c3a_tier": "base",
           "text": "Does the cloud service provider commit to inform customers 90 days in advance of any actual changes affecting control that could undermine the sovereignty controls assessed in this tool (e.g., changes to ownership, shareholding, or governance)?",
           "seal_contribution": 2,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.1.4 SOV-1-04-C"
@@ -233,7 +233,7 @@
           "text_generalized": "Does the cloud service provider rely predominantly on domestically-sourced or regionally-sourced financing, and can it demonstrate material investment in local infrastructure, local jobs, and local value creation as part of its core operating model?",
           "supplementary_info": "\"EU-sourced financing\" covers investors incorporated and tax-resident in EU member states, EIB/EIF instruments, and EU structural funds. Non-EU minority shareholders or bond-holders do not automatically disqualify, but a majority-non-EU investor base is material evidence against this criterion.",
           "seal_contribution": 2,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-1 contributing factor: EU-sourced financing and EU investment"
@@ -254,7 +254,7 @@
           "text_generalized": "Does the cloud service provider actively participate in nationally- or regionally-endorsed cloud sovereignty or digital independence initiatives, and demonstrate consistency with the country's stated digital strategy objectives?",
           "supplementary_info": "Participation is evidenced by formal membership, published contributions, or certified compliance with initiative requirements — not self-declaration of alignment. Certification under EUCS (ENISA EU Cloud Services scheme) is the strongest evidence.",
           "seal_contribution": 3,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-1 contributing factor: involvement in EU initiatives and digital sovereignty objectives"
@@ -274,7 +274,7 @@
           "text": "Does the cloud service provider have documented legal, operational, and technical measures enabling it to continue providing the contracted service even if subject to a foreign government request to cease or suspend operations, or if a key upstream vendor withdraws support?",
           "supplementary_info": "Evidence includes: legal opinion on the provider's obligations under competing jurisdictions, vendor-independent operational runbooks covering the top-3 upstream dependencies, and at least one documented contingency drill in the past 12 months.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-1 contributing factor: sustain operations against suspension requests or vendor disruption"
@@ -295,7 +295,7 @@
             "bloc": {
               "text": "Do EU stakeholders participate in formal governance bodies (e.g. advisory boards, customer councils, roadmap committees) that provide meaningful, documented influence over the cloud service provider's technology roadmap and service evolution?",
               "seal_contribution": 3,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "EU-CSF-CALC",
                 "clause": "SOV-1 Q3: Control Over Roadmap — governance bodies with EU actor participation"
@@ -304,7 +304,7 @@
             "national": {
               "text": "Do EU actors exercise full and determinative influence over the provider's technology roadmap and service evolution, with binding governance rights that can override or direct provider decisions on matters affecting EU users?",
               "seal_contribution": 4,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "EU-CSF-CALC",
                 "clause": "SOV-1 Q3: Control Over Roadmap — full EU actor influence"
@@ -328,7 +328,7 @@
           "text": "Where the cloud service provider has subsidiaries or affiliates established in third countries, does it maintain documented and enforced legal, technical, and organisational separation ensuring that EU operations, EU customer data, and EU service continuity cannot be directed, accessed, or disrupted by third-country parent, sibling, or affiliate entities?",
           "supplementary_info": "CADA Annex II L2(k) requires global providers to demonstrate effective separation of EU operations from 3rd-country subsidiaries. Evidence includes: governance separation policy, no privileged access from non-EU entities to EU production environments, redirect policy for foreign government requests.",
           "seal_contribution": 4,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "CADA",
             "clause": "Annex II L2(k)"
@@ -359,7 +359,7 @@
           "c3a_tier": "base",
           "text": "Does the cloud service provider, at least once a year, identify any laws from jurisdictions other than those in which the provider operates or the customer is located, that could compel the provider to disclose data, restrict access, suspend service, or otherwise act against the customer's interests — AND conduct a structured risk assessment of those laws?",
           "seal_contribution": 2,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.2.1 SOV-2-01-C"
@@ -382,7 +382,7 @@
             "bloc": {
               "text": "Does the cloud service provider document procedures that allow the relevant federal or national cybersecurity authority (in the country where the data center is located) to verify compliance with sovereignty criteria by audit?",
               "seal_contribution": 2,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.2.2 SOV-2-02-C1"
@@ -392,7 +392,7 @@
             "national": {
               "text": "Does the cloud service provider document procedures that allow {{NATIONAL_ADMIN}} to verify compliance with sovereignty criteria by audit?",
               "seal_contribution": 3,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.2.2 SOV-2-02-C2"
@@ -427,7 +427,7 @@
             "bloc": {
               "text": "If a {{BLOC}} member state declares a state of defense, can the cloud service provider enable that state to take over the capabilities required to operate the cloud (including physical assets and personnel) within the framework of legal possibilities?",
               "seal_contribution": 3,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.2.3 SOV-2-03-C1"
@@ -436,7 +436,7 @@
             "national": {
               "text": "If {{COUNTRY}} declares a state of defense, can the cloud service provider enable {{NATIONAL_ADMIN}} to take over the capabilities required to operate the cloud (including material assets and personnel) within the framework of legal possibilities?",
               "seal_contribution": 4,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.2.3 SOV-2-03-C2"
@@ -467,7 +467,7 @@
           "c3a_tier": "not_applicable",
           "text": "If {{COUNTRY}} declares a constitutional state of emergency under {{EMERGENCY_REGIME}}, can the cloud service provider enable the competent national authority to take over the capabilities required to operate the cloud (including material assets, source code, administration tools, and personnel) within the framework of legal possibilities?",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "SOV-2 / takeover readiness under emergency regime"
@@ -488,7 +488,7 @@
           "text_generalized": "Is the intellectual property underlying the cloud service created, registered, and primarily developed within {{COUNTRY}} or {{BLOC}}, subject to national intellectual property law, with no encumbering foreign IP claims that could restrict the customer's access to or use of the service under national law?",
           "supplementary_info": "IP domicile is assessed at the level of the core platform IP (not third-party libraries). Foreign subsidiary IP held by an EU parent is acceptable if it remains subject to EU law via contractual and corporate structure. Foreign IP held by a non-EU parent and licensed back creates material risk of access restriction.",
           "seal_contribution": 2,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-2 contributing factor: location of IP creation, registration, and development"
@@ -509,7 +509,7 @@
             "bloc": {
               "text": "Does the cloud service provider have implemented and demonstrated legal, technical, and organisational measures that prevent non-EU authorities from compelling access to customer data or systems through any channel — with all such requests consistently rejected and customers notified of any attempt?",
               "seal_contribution": 2,
-              "points": 8,
+              "points": 10,
               "source": {
                 "doc": "EU-CSF-CALC",
                 "clause": "SOV-2 Q3: Data Access Pathways — consistent rejection of non-EU authority access requests"
@@ -539,7 +539,7 @@
           "text": "Does the provider demonstrate — through legal analysis or independent verification — that no law or regulation in any third country applicable to the provider or its subcontractors requires disclosure of software vulnerabilities to that country's authorities before those vulnerabilities have been publicly remediated or disclosed?",
           "supplementary_info": "CADA Annex II L1(g) explicitly prohibits recognition at UAL 1 where such laws exist without demonstrated countermeasures. Evidence: legal opinion covering applicable jurisdictions, supplier self-declarations, independent legal review.",
           "seal_contribution": 4,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "CADA",
             "clause": "Annex II L1(g)"
@@ -562,7 +562,7 @@
           "text": "Does the cloud service provider commit to obtaining an annual independent audit opinion confirming continued compliance with the claimed Union Assurance Level, from an auditing organisation that meets the independence and competence requirements of CADA Article 20?",
           "supplementary_info": "CADA Art. 20(8) requires audited providers at UAL 2-4 to submit annual reviews. This is a procedural commitment question — evidence is a contractual clause or formal policy statement committing to annual renewal.",
           "seal_contribution": 4,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "CADA",
             "clause": "Art. 20(8)"
@@ -597,7 +597,7 @@
             "bloc": {
               "text": "The cloud service provider MUST provide a service option where cloud service customer data is exclusively stored and processed in {{BLOC}}.",
               "seal_contribution": 2,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.3.1 SOV-3-01-C3"
@@ -609,7 +609,7 @@
             "national": {
               "text": "The cloud service provider MUST provide a service option where cloud service customer data is exclusively stored and processed in {{COUNTRY}}.",
               "seal_contribution": 3,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.3.1 SOV-3-01-C4"
@@ -642,7 +642,7 @@
           "c3a_tier": "base",
           "text": "A cloud service customer MUST be able to check where their cloud service derived data, cloud service customer data, and account data are stored and processed.",
           "seal_contribution": 1,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.1 SOV-3-01-C1"
@@ -675,7 +675,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST provide a service option where cloud service derived data and account data are exclusively stored and processed in {{BLOC}}.",
           "seal_contribution": 1,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.1 SOV-3-01-C2"
@@ -703,7 +703,7 @@
           "seal_contribution_csi": 2,
           "text": "The cloud service provider MUST provide a service option where cloud service provider data is exclusively stored and processed in {{BLOC}}.",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.1 SOV-3-01-C5"
@@ -723,7 +723,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST allow the integration of external encryption key management system for creating, managing, and storing encryption keys outside of the cloud service provider environment for the use of IaaS and PaaS, or provide functionally equivalent mechanisms that ensure the customer can only create, manage and store the encryption keys only outside of the cloud service provider environment.",
           "seal_contribution": 3,
-          "points": 7,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.2 SOV-3-02-C"
@@ -745,7 +745,7 @@
           "parent_criterion_id": "SOV-3-02-C",
           "text": "The cloud service provider MUST allow the integration of external key management systems for creating, managing and storing keys outside of the cloud environment also for SaaS, or provide functionally equivalent mechanisms that ensure the customer can only create, manage and store the encryption keys outside of the cloud service provider environment.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.2 SOV-3-02-AC"
@@ -766,7 +766,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST support standards-based integration of external identity providers for authentication and access management for the cloud service.",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-C"
@@ -788,7 +788,7 @@
           "parent_criterion_id": "SOV-3-03-C",
           "text": "The integration of an external Identity Provider MUST be implemented via open, non-proprietary standards.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-AC1"
@@ -809,7 +809,7 @@
           "parent_criterion_id": "SOV-3-03-C",
           "text": "The provider MUST support a stateless authentication model that does not mandate the creation and copies of accounts within the provider's directory.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-AC2"
@@ -830,7 +830,7 @@
           "parent_criterion_id": "SOV-3-03-C",
           "text": "Authorization MUST be controllable via dynamic claims and attributes issued directly by the customer's external identity provider.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.3 SOV-3-03-AC3"
@@ -850,7 +850,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST provide customers with the capability to record, retain, and review logs of management and data access activities related to cloud service customer data. These logs MUST enable customers to identify when access occurred, the identity associated with the request, and the relevant operational context available through the service's logging capabilities.",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.4 SOV-3-04-C"
@@ -872,7 +872,7 @@
           "parent_criterion_id": "SOV-3-04-C",
           "text": "The logging service MUST ensure full data flow transparency by providing real-time access via standardized open-source APIs.",
           "seal_contribution": 3,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.4 SOV-3-04-AC1"
@@ -893,7 +893,7 @@
           "parent_criterion_id": "SOV-3-04-C",
           "text": "The service MUST support granular filtering.",
           "seal_contribution": 2,
-          "points": 3,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.4 SOV-3-04-AC2"
@@ -913,7 +913,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST enable client-side encryption of cloud service customer data. Whenever the cloud service customer data is transmitted, processed or stored inside the cloud environment, it MUST be encrypted with a private key that is only available to the cloud service customer outside of the cloud service provider environment.",
           "seal_contribution": 4,
-          "points": 8,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.3.5 SOV-3-05-C"
@@ -937,7 +937,7 @@
           "seal_contribution_csi": 3,
           "text": "For any AI or ML model used to deliver the cloud service, the cloud service provider MUST disclose the jurisdictions in which the model's training data was collected, stored, and processed. Where training data is sourced from {{BLOC}}, the provider MUST be able to demonstrate it.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "SOV-3 / AI pipeline location"
@@ -966,7 +966,7 @@
           "seal_contribution_csi": 2,
           "text": "For any AI or ML model used to deliver the cloud service, the cloud service provider MUST ensure that inference (the processing of customer data through the model) occurs exclusively within {{BLOC}}. The provider MUST contractually guarantee no cross-border inference fallback.",
           "seal_contribution": 2,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "SOV-3 / where data is processed"
@@ -995,7 +995,7 @@
           "seal_contribution_csi": 3,
           "text": "The cloud service provider MUST offer a contractual and technical opt-out from any use of customer data (cloud service customer data, cloud service derived data, account data, or prompts) for training, fine-tuning, or evaluating AI/ML models. Opt-out MUST be the default for sovereign tier customers.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "SOV-3 / customer retains autonomy over AI capabilities"
@@ -1018,7 +1018,7 @@
           "seal_contribution_csi": 3,
           "text": "For each AI or ML model integrated into the cloud service, the cloud service provider MUST disclose the model provider, its jurisdiction of incorporation, its effective control (parent, controlling shareholders, ultimate beneficial owners), and the legal regime governing its model weights and update pipeline.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "SOV-3 + SOV-5 / dependency on non-EU technology stacks"
@@ -1039,7 +1039,7 @@
           "text": "Does the cloud service provider implement technical mechanisms guaranteeing irreversible removal of customer data — including customer data, derived data, and account data — upon request or contract termination, and can it provide verifiable evidence of erasure (e.g., cryptographic proof, audited deletion logs, or third-party attestation)?",
           "supplementary_info": "Irreversible removal means data cannot be recovered by the CSP after erasure — not merely logical deletion from production systems. Evidence must satisfy the customer that data no longer exists anywhere in the CSP's infrastructure, including backups, logs, caches, and derived analytics. GDPR Article 17 establishes the right to erasure; this criterion operationalizes the technical capability behind that right.",
           "seal_contribution": 2,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-3 contributing factor: mechanisms guaranteeing irreversible removal of data with verifiable evidence"
@@ -1069,7 +1069,7 @@
             "bloc": {
               "text": "All personnel who have logical or physical access to infrastructure used to operate the cloud service, as well as those who are responsible for customer support, and all persons who have management control of the cloud service provider MUST be {{BLOC}} citizens with {{BLOC}} as main residency.",
               "seal_contribution": 2,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.4.1 SOV-4-01-C1"
@@ -1081,7 +1081,7 @@
             "national": {
               "text": "All personnel who have logical or physical access to infrastructure used to operate the cloud service, as well as those who are responsible for customer support, and all persons who have management control of the cloud service provider MUST be {{BLOC}} citizens with {{COUNTRY}} as main residency.",
               "seal_contribution": 3,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.4.1 SOV-4-01-C2"
@@ -1115,7 +1115,7 @@
           "parent_criterion_id": "SOV-4-01",
           "text": "The operating personnel is part of an organization that MUST be a standalone European organization.",
           "seal_contribution": 4,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.1 SOV-4-01-C3"
@@ -1136,7 +1136,7 @@
           "parent_criterion_id": "SOV-4-01",
           "text": "Does the provider ensure that all personnel with privileged access to the service are security-cleared residents of {{COUNTRY}}, bound by confidentiality obligations under applicable national law?",
           "seal_contribution": 1,
-          "points": 3,
+          "points": 10,
           "source": {
             "doc": "CSI Editorial",
             "clause": "SOV-4 fallback"
@@ -1155,7 +1155,7 @@
             "bloc": {
               "text": "The cloud service provider MUST implement organizational and technical measures ensuring that administrative access to systems used to operate the cloud service is performed through access paths located within {{BLOC}}. Administrative access originating from locations outside {{BLOC}} MUST be technically restricted, except in narrowly defined and controlled exceptional scenarios that are subject to additional authorization and monitoring controls.",
               "seal_contribution": 2,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.4.2 SOV-4-02-C1"
@@ -1167,7 +1167,7 @@
             "national": {
               "text": "The cloud service provider MUST implement organizational and technical measures ensuring that administrative access to systems used to operate the cloud service is performed through access paths located within {{COUNTRY}}. Administrative access originating from locations outside {{COUNTRY}} MUST be technically restricted, except in narrowly defined and controlled exceptional scenarios that are subject to additional authorization and monitoring controls.",
               "seal_contribution": 3,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.4.2 SOV-4-02-C2"
@@ -1193,7 +1193,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST ensure redundant and independent connectivity for the delivery of the sovereign cloud service. In the event of a disruption of one connectivity provider, alternative connectivity providers MUST be able to maintain connectivity in accordance with the contractual service level agreements. At least one of the connectivity providers MUST be an {{BLOC}} based company.",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.3 SOV-4-03-C"
@@ -1216,7 +1216,7 @@
           "parent_criterion_id": "SOV-4-03",
           "text": "At least one of the connectivity providers is not part of the corporate structure of the cloud service provider.",
           "seal_contribution": 3,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.3 SOV-4-03-AC"
@@ -1237,7 +1237,7 @@
           "parent_criterion_id": "SOV-4-03",
           "text": "Does the cloud service provider implement multi-homed BGP routing across at least two distinct upstream connectivity paths, with documented failover behaviour and at least one annual failover test? Multi-homing MUST be implemented at the routing layer (not merely at the physical link layer) so that loss of a single upstream provider does not interrupt customer-facing service.",
           "seal_contribution": 2,
-          "points": 3,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "SOV-4 / resilient connectivity under market constraints"
@@ -1257,7 +1257,7 @@
             "bloc": {
               "text": "The cloud service provider MUST ensure that Security Operations Center (SOC) capabilities for the offered cloud services are established and operated within {{BLOC}}. In the case of a disconnect (SOV-4-10), a stand-alone and equivalent SOC MUST be provided in {{BLOC}}.",
               "seal_contribution": 2,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.4.4 SOV-4-04-C1"
@@ -1269,7 +1269,7 @@
             "national": {
               "text": "The cloud service provider MUST ensure that Security Operations Center (SOC) capabilities for the offered cloud services are established and operated within {{COUNTRY}}. In the case of a disconnect (SOV-4-10), a stand-alone and equivalent SOC MUST be provided in {{COUNTRY}}.",
               "seal_contribution": 3,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.4.4 SOV-4-04-C2"
@@ -1302,7 +1302,7 @@
           "c3a_tier": "base",
           "text": "All software updates and operational data affecting the cloud service MUST be received, authorized and validated in a secured network area managed and controlled by the cloud service provider. The cloud service provider MUST verify and check updates for known vulnerabilities. Updates MUST include documentation satisfying the needs of the cloud service provider. The update process MUST be based on a controlled change management processes.",
           "seal_contribution": 2,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.5 SOV-4-05-C"
@@ -1325,7 +1325,7 @@
           "parent_criterion_id": "SOV-4-05",
           "text": "The cloud service provider MUST implement the secure network area (e.g. DMZ) on dedicated physical devices.",
           "seal_contribution": 3,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.5 SOV-4-05-AC1"
@@ -1346,7 +1346,7 @@
           "parent_criterion_id": "SOV-4-05",
           "text": "The cloud service provider MUST provide technical documentation how the criterion SOV-4-05-C is implemented to the responsible cybersecurity authority if requested, in accordance with applicable law and established supervisory, cooperation agreements or audit mechanisms. The responsible authority is the one in the country where the data center is located. Such information may be provided through appropriate confidentiality protections and secure disclosure procedures.",
           "seal_contribution": 2,
-          "points": 3,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.5 SOV-4-05-AC2"
@@ -1367,7 +1367,7 @@
           "c3a_tier": "base",
           "text": "When using third-party software under the cloud service provider's responsibility, the cloud service provider MUST implement risk-based security analysis prior to deployment, including measures to detect and mitigate malicious code, viruses, spyware, and ransomware.",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.6 SOV-4-06-C"
@@ -1396,7 +1396,7 @@
           "c3a_tier": "base",
           "text": "Any cloud service derived data, cloud service customer data and account data exchanged between the cloud service provider and third parties MUST always be monitored, controlled and logged. In order to do so, the cloud service provider MUST establish a documented process. The documentation MUST be reviewed and updated regularly, at least once a year. The cloud service provider MUST document what kind of data is exchanged with third parties. This documentation MUST ensure that it is clear which data is flowing to which party and this can also be meaningfully aggregated. The cloud service provider MUST make this documentation available to the cloud service customer. It is acceptable that this is only made available to the customer if they have agreed to keep the information confidential and not publicly disclose it. The cloud service provider MUST clearly define the exchange format and document it as part of the data exchange documentation.",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.7 SOV-4-07-C"
@@ -1418,7 +1418,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST document, define, and visualize (via a Data Flow Diagram) all data exchanges between the cloud service provider and third parties of cloud service derived data, cloud service customer data, and account data. The data exchanges MUST occur only via known gateways. The documentation MUST clearly identify data origins, destinations, transport protocols, data type and security mechanisms protecting these exchanges. The documentation MUST be reviewed and updated regularly, at least once a year. This documentation does not need to be published publicly.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.8 SOV-4-08-C"
@@ -1441,7 +1441,7 @@
           "parent_criterion_id": "SOV-4-08",
           "text": "The cloud service provider MUST provide the Data Flow Diagram to the responsible cybersecurity authority if requested, in accordance with applicable law and established supervisory, cooperation agreements or audit mechanisms. The responsible authority is the one in the country where the data center is located. Such information may be provided through appropriate confidentiality protections and secure disclosure procedures.",
           "seal_contribution": 3,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.8 SOV-4-08-AC"
@@ -1461,7 +1461,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST be able to disconnect all non-{{BLOC}} network-connections to the cloud without an impairment of the availability, integrity, authenticity and confidentiality of the cloud service. This includes all incoming updates and data exchanges with non-{{BLOC}} entities (including but not limited to: external heartbeat signals and global license validation servers) that are in the responsibility of the cloud service provider. The cloud service provider MUST establish and document a process, when and how a disconnect is executed. This process MUST be independent from non-{{BLOC}} entities. The cloud service provider MUST update this documentation regularly, at least once a year. The cloud service provider MUST conduct disconnection tests for ensuring the availability of all cloud services in case of a disconnection from the non-{{BLOC}} network-connections at least once a year. The cloud service provider MUST document these tests as part of the aforementioned documentations. The documentation MUST include, but is not limited to, the results of the performed test.",
           "seal_contribution": 3,
-          "points": 7,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.9 SOV-4-09-C"
@@ -1483,7 +1483,7 @@
           "parent_criterion_id": "SOV-4-09",
           "text": "The cloud service provider MUST provide the documentation of the disconnect process and disconnection tests to the responsible cybersecurity authority if requested, in accordance with applicable law and established supervisory, cooperation agreements or audit mechanisms. Where relevant, the cloud service provider may provide supporting documentation. The responsible authority is the one in the country where the data center is located. Such information may be provided through appropriate confidentiality protections and secure disclosure procedures.",
           "seal_contribution": 3,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.9 SOV-4-09-AC"
@@ -1505,7 +1505,7 @@
           "parent_criterion_id": "SOV-4-09",
           "text": "Does the provider maintain a documented disconnect and reconnect procedure, with evidence of at least one annual tabletop exercise validating the plan?",
           "seal_contribution": 1,
-          "points": 3,
+          "points": 10,
           "source": {
             "doc": "CSI Editorial",
             "clause": "SOV-4 fallback"
@@ -1522,7 +1522,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST be able to reestablish all non-{{BLOC}}-connections after a disconnect in accordance of criterion SOV-4-9-C (\"Disconnect\") has been performed and has a process to install updates if the cloud environment was disconnected for a maximum of 90 days. The process to install updates if the cloud environment was disconnected for at most 90 days MUST also be tested.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.4.10 SOV-4-10-C"
@@ -1544,7 +1544,7 @@
           "text": "Where the cloud service provider uses open-source software components, does it verify, document, and test that no open-source component includes remote features or mechanisms that could be used to materially tamper with or disrupt the cloud service without the provider's authorisation?",
           "supplementary_info": "CADA Annex II L2(j) requires specific controls for OSS remote-feature risks. Evidence: testing procedures for OSS remote features, change management covering firmware/BIOS/software updates, documented monitoring for OSS acquisition by 3rd-country entities.",
           "seal_contribution": 4,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "CADA",
             "clause": "Annex II L2(j)"
@@ -1563,7 +1563,7 @@
       "id": "SOV-5",
       "title": "Supply Chain Sovereignty",
       "description": "Supply chain sovereignty evaluates the extent to which the cloud service provider can identify, manage, and reduce dependencies on non-EU software, hardware, and external services, and maintain operational continuity in the event of supply chain disruptions.",
-      "weight": 0.2,
+      "weight": 0.1,
       "questions": [
         {
           "id": "SOV-5-01",
@@ -1575,7 +1575,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST identify, for each cloud service, the software components used and their respective countries of origin. A list of the relevant software suppliers and their country or countries for each service, MUST be compiled and available on demand to cloud service customers. The identification of the software components should be based on a Software Bill of Materials (SBOM) (e.g. TR-03183-2) or achieve a comparable level of quality.",
           "seal_contribution": 2,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.5.1 SOV-5-01-C"
@@ -1603,7 +1603,7 @@
           "parent_criterion_id": "SOV-5-01",
           "text": "The cloud service provider MUST maintain a risk-based process for identifying and mitigating dependencies on external software suppliers relevant to the operation of the cloud service. Where critical dependencies are identified, the cloud service provider MUST implement appropriate mitigation strategies and maintain architectural flexibility that enables substitution of software components. If it is not technically and reasonably feasible, this information MUST be adequately provided to the cloud service customer.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.5.1 SOV-5-01-AC"
@@ -1624,7 +1624,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST maintain a documented inventory of the hardware components used to provide cloud services. A list of the relevant hardware suppliers and their country or countries MUST be compiled and available on demand to cloud service customers.",
           "seal_contribution": 2,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.5.2 SOV-5-02-C"
@@ -1646,7 +1646,7 @@
           "parent_criterion_id": "SOV-5-02",
           "text": "The cloud service provider MUST maintain a risk-based process for identifying and mitigating dependencies on hardware suppliers relevant to the operation of the cloud service. Where critical dependencies are identified, the cloud service provider MUST implement mitigation strategies and maintain architectural flexibility enabling substitution of hardware components. If it is not technically and operationally feasible, this information MUST be adequately provided to the cloud service customer.",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.5.2 SOV-5-02-AC"
@@ -1666,7 +1666,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST maintain a documented inventory of used external cloud services that are necessary for the delivery of the cloud service. The list of information regarding the relevant external service providers and the country or countries of service provision or development MUST be made available to cloud service customers.",
           "seal_contribution": 2,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.5.3 SOV-5-03-C"
@@ -1688,7 +1688,7 @@
           "parent_criterion_id": "SOV-5-03",
           "text": "The cloud service provider MUST maintain a documented process for identifying and managing external service dependencies relevant to the delivery of the cloud service. Where critical dependencies are identified, the cloud service provider MUST implement mitigation strategies and maintain architectural flexibility enabling substitution of service dependencies. If it is not technically and operationally feasible, this information MUST be adequately provided to the cloud service customer.",
           "seal_contribution": 3,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.5.3 SOV-5-03-AC"
@@ -1709,7 +1709,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST maintain documented processes for identifying and mitigating risks related to export restrictions or supply chain disruptions affecting software, external services, and hardware used in the delivery of the cloud service. Where such restrictions may materially affect the operation of the cloud service, the cloud service provider MUST inform affected customers.",
           "seal_contribution": 3,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.5.4 SOV-5-04-C"
@@ -1734,7 +1734,7 @@
             "bloc": {
               "text": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{BLOC}}.",
               "seal_contribution": 2,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.5.5 SOV-5-05-C1"
@@ -1749,7 +1749,7 @@
               "text": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{COUNTRY}}.",
               "text_generalized": "Capacity management covering resource planning, usage monitoring, and capacity control MUST be performed within {{COUNTRY}}.",
               "seal_contribution": 3,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "C3A",
                 "clause": "§2.5.5 SOV-5-05-C2"
@@ -1778,7 +1778,7 @@
           "text": "Does the cloud service provider maintain a complete, up-to-date register of all subcontractors involved in service delivery — including their country of establishment, access rights, and role — and conduct structured sovereignty due diligence on each subcontractor covering extraterritorial legal exposure, control chains, and EU data access restrictions?",
           "supplementary_info": "CADA Annex II L1(f) requires full subcontractor transparency and due diligence as a baseline UAL 1 criterion. Evidence: published or contractually disclosed subcontractor list, due diligence questionnaire results, contractual flow-down of sovereignty obligations.",
           "seal_contribution": 4,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "CADA",
             "clause": "Annex II L1(f)"
@@ -1809,7 +1809,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST have a backup of the source code in {{BLOC}} that is not older than 24 hours and contains at minimum 5 versions of the cloud services so that the operation of the cloud service is possible at any time without external dependencies. This includes all infrastructure-as-code build-scripts and deployment toolchains. The local source code backup MUST include a documentation that enables the cloud service provider to independently work with the source code and develop it further at any time without external dependencies.",
           "seal_contribution": 4,
-          "points": 8,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.6.1 SOV-6-01-C"
@@ -1831,7 +1831,7 @@
           "parent_criterion_id": "SOV-6-01",
           "text": "Does the cloud service provider maintain a local build environment in {{COUNTRY}} capable of compiling, testing, and deploying the cloud service from source code, with the engineering talent to operate it autonomously for at least 90 days without external dependencies, even if the source code itself is mirrored from a non-{{COUNTRY}} master?",
           "seal_contribution": 3,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "SOV-6 / operational independence"
@@ -1850,7 +1850,7 @@
           "parent_criterion_id": "SOV-6-01",
           "text": "Where the cloud service provider cannot guarantee local source code availability, does it maintain a documented exit and portability plan with at least one tested customer data export within the past 12 months, demonstrating that customer data, derived data, and account data can be returned to the customer in a standard portable format within a contractually-defined timeline?",
           "seal_contribution": 2,
-          "points": 3,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "SOV-6 / customer exit portability"
@@ -1868,7 +1868,7 @@
           "c3a_tier": "base",
           "text": "In the event of disconnection of third parties, the cloud service provider MUST maintain documented contingency strategies ensuring continued secure delivery of the cloud services. These strategies may include alternative software suppliers, internal remediation capabilities, or compensating security controls.",
           "seal_contribution": 3,
-          "points": 7,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.6.2 SOV-6-02-C"
@@ -1890,7 +1890,7 @@
           "parent_criterion_id": "SOV-6-02",
           "text": "In the event of disruption or loss of an external software vendor, the cloud service provider MUST maintain the capability to remediate software vulnerabilities and implement necessary changes. The cloud provider MUST maintain specialized engineering talent and local build-environments necessary to compile, test, and deploy emergency security patches to the cloud services independently of third parties.",
           "seal_contribution": 4,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.6.2 SOV-6-02-AC"
@@ -1910,7 +1910,7 @@
           "c3a_tier": "base",
           "text": "The cloud service provider MUST ensure that authorised personnel have access to the software development tools and environments necessary to maintain and update the cloud services. The cloud service provider MUST also maintain documented contingency procedures for scenarios in which access to critical software development tools or development environment dependencies is disrupted, ensuring the continued ability to maintain and update the cloud services.",
           "seal_contribution": 3,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "C3A",
             "clause": "§2.6.3 SOV-6-03-C"
@@ -1933,7 +1933,7 @@
           "text_generalized": "For compute-intensive workloads (AI/ML inference, data analytics, simulation), can the cloud service provider demonstrate that its high-performance computing capability has supply chain diversification sufficient to continue operations if access to any single non-{{BLOC}} semiconductor or accelerator vendor is disrupted?",
           "supplementary_info": "\"EU-accessible\" means the processor/accelerator is obtainable under normal trade terms without export licence restrictions. Concentration risk: if >75% of HPC capacity depends on a single non-EU accelerator family (e.g., NVIDIA H-series), this criterion is not met at the strictest level.",
           "seal_contribution": 3,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-6 contributing factor: EU independence in high-performance computing capabilities"
@@ -1954,7 +1954,7 @@
             "bloc": {
               "text": "Does the cloud service provider offer core services through open, well-documented, standards-based APIs and protocols that follow recognised open standards (e.g. ETSI, ISO/IEC, IETF/W3C), enabling integration with third-party or alternative solutions without requiring proprietary client libraries?",
               "seal_contribution": 2,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "EU-CSF-CALC",
                 "clause": "SOV-6 Q1: Interoperability & Open Interfaces — standards-based and broadly compatible"
@@ -1963,7 +1963,7 @@
             "national": {
               "text": "Are ALL critical service functions accessible via open, non-proprietary, publicly documented APIs and data formats, with published specifications ensuring full data portability and enabling easy third-party integration with no vendor-specific lock-in?",
               "seal_contribution": 4,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "EU-CSF-CALC",
                 "clause": "SOV-6 Q1: Interoperability & Open Interfaces — open-by-default with portability"
@@ -1988,7 +1988,7 @@
             "bloc": {
               "text": "Does the cloud service provider have a documented formal policy mandating and governing open standards adoption for most core services, with managed exceptions and published rationale for any proprietary alternatives used?",
               "seal_contribution": 3,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "EU-CSF-CALC",
                 "clause": "SOV-6 Q2: Open Standards Compliance — policy for most core services"
@@ -1997,7 +1997,7 @@
             "national": {
               "text": "Does the cloud service provider have a documented formal policy mandating open standards for ALL core services without exception, and independently auditable evidence of compliance?",
               "seal_contribution": 4,
-              "points": 5,
+              "points": 10,
               "source": {
                 "doc": "EU-CSF-CALC",
                 "clause": "SOV-6 Q2: Open Standards Compliance — policy for all core services"
@@ -2017,7 +2017,7 @@
       "id": "SOV-7",
       "title": "Security & Compliance",
       "description": "Security and compliance sovereignty evaluates whether the cloud service provider maintains certifications, regulatory compliance, and security controls anchored in EU frameworks, including the capacity for independent auditing and enforcement of EU-based security standards.",
-      "weight": 0.1,
+      "weight": 0.15,
       "questions": [
         {
           "id": "SOV-7-01",
@@ -2030,7 +2030,7 @@
           "text": "Does the cloud service provider hold a current ISO 27001 certification or equivalent ENISA-recognised security scheme?",
           "text_generalized": "Does the cloud service provider hold a current ISO 27001 certification or equivalent internationally recognised security certification (e.g. SOC 2 Type II, ISO 27017, or a nationally recognised equivalent)?",
           "seal_contribution": 1,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-7 contributing factor: security certification"
@@ -2061,7 +2061,7 @@
           "text": "Does the cloud service provider document and contractually commit to GDPR compliance for all processing of personal data under the cloud service?",
           "text_generalized": "Does the cloud service provider document and contractually commit to compliance with the applicable national data protection law for all processing of personal data under the cloud service?",
           "seal_contribution": 1,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-7 contributing factor: GDPR compliance"
@@ -2085,7 +2085,7 @@
           "text": "Where NIS2 Directive obligations apply to the cloud service provider or customer, does the provider demonstrate documented compliance with applicable NIS2 security and incident reporting requirements?",
           "text_generalized": "Where applicable national cybersecurity regulations impose security and incident reporting obligations on the cloud service provider or customer, does the provider demonstrate documented compliance with those requirements?",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-7 contributing factor: NIS2 compliance"
@@ -2110,7 +2110,7 @@
           "text": "Where DORA (Digital Operational Resilience Act) obligations apply, does the cloud service provider meet the ICT third-party risk requirements under DORA?",
           "text_generalized": "Where applicable financial sector regulations impose ICT third-party risk requirements on the cloud service provider or customer, does the provider meet those ICT third-party risk requirements?",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-7 contributing factor: DORA compliance"
@@ -2133,7 +2133,7 @@
           "c3a_tier": "not_applicable",
           "text": "Does the cloud service provider give customers direct access to complete security logs and monitoring data for their cloud service environment, independently of the provider?",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-7 contributing factor: customer access to logs and monitoring"
@@ -2155,7 +2155,7 @@
           "c3a_tier": "not_applicable",
           "text": "Can the cloud service provider apply security patches and updates to the cloud service without requiring authorisation or technical involvement from non-{{BLOC}} vendors?",
           "seal_contribution": 3,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-7 contributing factor: patch autonomy from non-EU vendors"
@@ -2178,7 +2178,7 @@
           "c3a_tier": "not_applicable",
           "text": "Can the cloud service and its sovereignty controls be audited by an independent {{BLOC}}-based auditor, without requiring access or cooperation from non-{{BLOC}} entities?",
           "seal_contribution": 3,
-          "points": 6,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-7 contributing factor: independent EU audit capacity"
@@ -2202,7 +2202,7 @@
             "bloc": {
               "text": "Does the cloud service provider have a documented, operational incident disclosure process aligned with GDPR/NIS2 timelines, with contractual readiness to support EU-directed investigations and a capability for CSIRT cooperation?",
               "seal_contribution": 2,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "EU-CSF-CALC",
                 "clause": "SOV-7 Q5: Incident Disclosure — GDPR/NIS2-aligned reporting, CSIRT cooperation available"
@@ -2211,7 +2211,7 @@
             "national": {
               "text": "Does the cloud service provider provide real-time data sharing with EU CSIRTs, proactive vulnerability disclosure, proven incident readiness with audit-backed reporting processes, and active participation in EU threat intelligence frameworks?",
               "seal_contribution": 4,
-              "points": 6,
+              "points": 10,
               "source": {
                 "doc": "EU-CSF-CALC",
                 "clause": "SOV-7 Q5: Incident Disclosure — full EU-compliant, real-time CSIRT sharing"
@@ -2243,7 +2243,7 @@
           "c3a_tier": "not_applicable",
           "text": "Does the cloud service provider measure and publish Power Usage Effectiveness (PUE) for data centres used to deliver the cloud service, and commit to a target PUE?",
           "seal_contribution": 1,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-8 contributing factor: PUE measurement and target"
@@ -2265,7 +2265,7 @@
           "c3a_tier": "not_applicable",
           "text": "Does the cloud service provider source a documented and verifiable proportion of its electricity from renewable or low-carbon energy for data centres used to deliver the cloud service?",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-8 contributing factor: renewable / low-carbon energy sourcing"
@@ -2287,7 +2287,7 @@
           "c3a_tier": "not_applicable",
           "text": "Does the cloud service provider implement and document circular economy practices for hardware end-of-life, including secure data destruction and environmentally responsible disposal or refurbishment?",
           "seal_contribution": 2,
-          "points": 4,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-8 contributing factor: circular economy / hardware end-of-life"
@@ -2309,7 +2309,7 @@
           "c3a_tier": "not_applicable",
           "text": "Does the cloud service provider publish annual sustainability disclosures covering carbon emissions, water usage, and energy consumption for the cloud service?",
           "seal_contribution": 2,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-8 contributing factor: carbon, water, sustainability disclosure"
@@ -2331,7 +2331,7 @@
           "c3a_tier": "not_applicable",
           "text": "Does the cloud service provider set, track, and publish time-bound continuous improvement targets for environmental sustainability metrics for the cloud service?",
           "seal_contribution": 3,
-          "points": 5,
+          "points": 10,
           "source": {
             "doc": "EU-CSF",
             "clause": "§4 SOV-8 contributing factor: continuous improvement targets"

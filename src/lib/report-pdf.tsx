@@ -590,7 +590,7 @@ export async function buildReportPdf(
         ),
         result.eu_csf ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
           'EU-CSF results follow EU Cloud Sovereignty Framework v1.2.1 (European Commission). ' +
-          `${levelPrefix} levels use a weakest-link gate. Weights: SOV-1 15%, SOV-2 10%, SOV-3 10%, SOV-4 15%, SOV-5 20%, SOV-6 15%, SOV-7 10%, SOV-8 5%.`
+          `${levelPrefix} levels use a weakest-link gate. Weights: SOV-1 20%, SOV-2 10%, SOV-3 10%, SOV-4 15%, SOV-5 10%, SOV-6 15%, SOV-7 15%, SOV-8 5%.`
         ) : null,
         result.c3a ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
           'C3A results follow BSI Criteria enabling Cloud Computing Autonomy v1.0. Binary pass/fail. Partial = not-met. ACs included only when customer-selected.'
