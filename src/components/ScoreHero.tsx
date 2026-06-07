@@ -1,4 +1,4 @@
-import type { AssessmentResult, EuCsfResult, C3aResult, CsiCompositeResult, C3aAttainmentBand } from '../../shared/src/types';
+import type { AssessmentResult, EuCsfResult, C3aResult, CsiCompositeResult, CadaResult, C3aAttainmentBand } from '../../shared/src/types';
 
 interface Props {
   result: AssessmentResult;
@@ -194,8 +194,54 @@ function CsiCard({ csi, variant }: { csi: CsiCompositeResult; variant: string })
   );
 }
 
+const UAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
+const UAL_NAMES = [
+  'Not Attained',
+  'Level 1 — Self-Assessment',
+  'Level 2 — Third-Party Audited',
+  'Level 3 — Enhanced',
+  'Level 4 — Highest Assurance',
+];
+
+function CadaCard({ cada }: { cada: CadaResult }) {
+  const level = cada.highest_level_achieved;
+  const color = UAL_COLORS[level] ?? '#6b7280';
+  const label = UAL_NAMES[level] ?? `Level ${level}`;
+  const lastLevel = cada.levels[cada.levels.length - 1];
+  const totalCriteria = lastLevel?.criteria_total ?? 0;
+  const criteriaPassed = level === 0 ? 0 : (cada.levels.find(l => l.level === level)?.criteria_passed ?? 0);
+
+  return (
+    <div className="border border-purple-200 bg-purple-50 rounded-xl p-6 flex-1 min-w-0">
+      <div className="text-xs font-semibold text-purple-400 uppercase tracking-wide mb-3">
+        Cloud &amp; AI Development Act <span className="normal-case font-normal">(COM(2026) 502)</span>
+      </div>
+      <div className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-white mb-2"
+        style={{ backgroundColor: color }}>
+        UAL {level} — {label}
+      </div>
+      {level === 0 && (
+        <div className="mb-2 px-3 py-2 rounded-lg bg-red-50 border border-red-100 text-xs text-red-700">
+          No Union Assurance Level attained. Level 1 criteria remain unmet.
+        </div>
+      )}
+      {cada.audit_required && (
+        <div className="mb-2 text-xs text-purple-700 bg-purple-100 border border-purple-200 rounded px-2 py-1 inline-block">
+          Independent third-party audit required (UAL 2+)
+        </div>
+      )}
+      <div className="text-sm text-gray-600 mt-1">
+        {criteriaPassed}/{totalCriteria} cumulative criteria passed
+      </div>
+      <p className="text-xs text-gray-400 mt-2">
+        Proposed regulation — not yet adopted EU law. Results are indicative only.
+      </p>
+    </div>
+  );
+}
+
 export default function ScoreHero({ result }: Props) {
-  const { eu_csf, c3a, csi_composite, variant, instrument_version, selected_frameworks } = result;
+  const { eu_csf, c3a, csi_composite, cada, variant, instrument_version, selected_frameworks } = result;
 
   return (
     <div className="py-6">
@@ -203,6 +249,7 @@ export default function ScoreHero({ result }: Props) {
         {eu_csf && <EuCsfCard eu_csf={eu_csf} variant={variant} />}
         {c3a && <C3aCard c3a={c3a} />}
         {csi_composite && <CsiCard csi={csi_composite} variant={variant} />}
+        {cada && <CadaCard cada={cada} />}
       </div>
       <p className="text-xs text-gray-400 mt-3 text-center">
         {variant} · Instrument v{instrument_version} ·{' '}

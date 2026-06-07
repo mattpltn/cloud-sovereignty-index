@@ -331,11 +331,15 @@ export async function buildReportPdf(
     fully_attained: '#16a34a',
   };
 
+  const UAL_COLORS_PDF = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
+  const UAL_NAMES_PDF = ['Not Attained', 'UAL 1 — Self-Assessment', 'UAL 2 — Third-Party Audited', 'UAL 3 — Enhanced', 'UAL 4 — Highest Assurance'];
+
   const selectedFrameworks = result.selected_frameworks ?? ['csi_composite'];
   const frameworkNames = selectedFrameworks.map(f => {
     if (f === 'eu_csf') return 'EU-CSF v1.2.1';
     if (f === 'c3a') return 'BSI C3A v1.0';
     if (f === 'csi_composite') return 'CSI Composite';
+    if (f === 'cada') return 'CADA (COM(2026) 502)';
     return f;
   });
 
@@ -381,6 +385,19 @@ export async function buildReportPdf(
       h(Text, { style: { ...styles.coverSealScore, color } }, `${Math.round(pct)}%`),
       h(Text, { style: styles.coverSealLabel }, 'CSI Composite'),
       h(Text, { style: { ...styles.coverSealLabel, fontSize: 9, color: '#9ca3af' } }, csiLabel),
+    ));
+  }
+  if (result.cada) {
+    const level = result.cada.highest_level_achieved;
+    const color = UAL_COLORS_PDF[level] ?? '#6b7280';
+    const lastLevel = result.cada.levels[result.cada.levels.length - 1];
+    const totalCrit = lastLevel?.criteria_total ?? 0;
+    const critPassed = level === 0 ? 0 : (result.cada.levels.find(l => l.level === level)?.criteria_passed ?? 0);
+    coverResults.push(h(View, { style: { ...styles.coverSealBox, borderLeftWidth: 4, borderLeftColor: color, flex: 1 } },
+      h(Text, { style: { ...styles.coverSealScore, color } }, `UAL ${level}`),
+      h(Text, { style: styles.coverSealLabel }, UAL_NAMES_PDF[level]),
+      h(Text, { style: { ...styles.coverSealLabel, fontSize: 9, color: '#9ca3af' } }, `${critPassed}/${totalCrit} criteria · CADA COM(2026) 502`),
+      result.cada.audit_required ? h(Text, { style: { ...styles.coverSealLabel, fontSize: 9, color: '#7c3aed' } }, 'Independent audit required') : null,
     ));
   }
 
@@ -581,6 +598,79 @@ export async function buildReportPdf(
     ...euCsfPages,
     ...c3aPages,
     ...csiPages,
+    // ── CADA detail pages ──────────────────────────────────────────────────────
+    ...(result.cada ? (() => {
+      const cada = result.cada!;
+      const level = cada.highest_level_achieved;
+      const levelColor = UAL_COLORS_PDF[level] ?? '#6b7280';
+      const lastLvl = cada.levels[cada.levels.length - 1];
+      const totalCrit = lastLvl?.criteria_total ?? 0;
+      const critPassed = level === 0 ? 0 : (cada.levels.find(l => l.level === level)?.criteria_passed ?? 0);
+
+      return [h(Page, { size: 'A4', style: styles.page },
+        h(Text, { style: styles.sectionTitle }, 'Cloud & AI Development Act (CADA) — Union Assurance Level'),
+        // Disclaimer
+        h(View, { style: { backgroundColor: '#fffbeb', borderWidth: 1, borderColor: '#fde68a', borderRadius: 4, padding: 8, marginBottom: 12 } },
+          h(Text, { style: { fontSize: 9, color: '#92400e' } },
+            'CADA (COM(2026) 502) is a proposed EU Regulation — not yet adopted law. Results are indicative only and carry no legal status.',
+          ),
+        ),
+        // Global result
+        h(View, { style: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 14 } },
+          h(View, { style: { backgroundColor: levelColor, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 6 } },
+            h(Text, { style: { fontSize: 13, fontFamily: 'Helvetica-Bold', color: '#ffffff' } }, `UAL ${level} — ${UAL_NAMES_PDF[level]}`),
+          ),
+          h(Text, { style: { fontSize: 10, color: '#6b7280' } }, `${critPassed}/${totalCrit} cumulative criteria passed`),
+          cada.audit_required ? h(View, { style: { backgroundColor: '#f3e8ff', borderWidth: 1, borderColor: '#c4b5fd', borderRadius: 4, paddingHorizontal: 8, paddingVertical: 4 } },
+            h(Text, { style: { fontSize: 9, color: '#6d28d9' } }, 'Independent audit required (Art. 20)'),
+          ) : null,
+        ),
+        // Level breakdown table
+        h(Text, { style: styles.subSectionTitle }, 'Union Assurance Level Gate Breakdown'),
+        h(View, { style: styles.tableHeader },
+          h(Text, { style: { ...styles.colId, width: 50 } }, 'Level'),
+          h(Text, { style: { ...styles.colTitle } }, 'Description'),
+          h(Text, { style: { ...styles.colPct, width: 60 } }, 'Gate'),
+          h(Text, { style: { ...styles.colSeal, width: 55 } }, 'Criteria'),
+        ),
+        ...cada.levels.map((lvl, i) => h(View, { key: i, style: i % 2 === 0 ? styles.tableRow : styles.tableRowAlt },
+          h(View, { style: { width: 50, flexDirection: 'row', alignItems: 'center' } },
+            h(View, { style: { width: 36, backgroundColor: UAL_COLORS_PDF[lvl.level], borderRadius: 3, paddingHorizontal: 4, paddingVertical: 2 } },
+              h(Text, { style: { fontSize: 8, color: '#ffffff', fontFamily: 'Helvetica-Bold' } }, `UAL ${lvl.level}`),
+            ),
+          ),
+          h(Text, { style: { ...styles.colTitle, fontSize: 8, color: '#6b7280' } }, lvl.label),
+          h(Text, { style: { ...styles.colPct, width: 60, color: lvl.gate_passed ? '#16a34a' : '#dc2626', fontFamily: 'Helvetica-Bold' } },
+            lvl.gate_passed ? '✓ Passed' : '✗ Failed',
+          ),
+          h(Text, { style: { ...styles.colSeal, width: 55, fontSize: 9 } }, `${lvl.criteria_passed}/${lvl.criteria_total}`),
+        )),
+        // Gap report
+        ...(cada.gap_report.length > 0 ? [
+          h(Text, { style: styles.subSectionTitle }, `Priority actions to reach UAL ${level + 1}`),
+          ...cada.gap_report.slice(0, 8).map((item, i) => {
+            const q = criteria.objectives.flatMap(o => o.questions).find(q => q.id === item.question_id);
+            const annex = (q as any)?.cada_annex_ref ?? '';
+            return h(View, { key: i, style: { ...styles.weakCard, marginBottom: 5 } },
+              h(Text, { style: styles.cardTitle }, `#${item.priority}. ${item.title}`),
+              h(Text, { style: styles.cardBody }, `${item.question_id}${annex ? ` · ${annex}` : ''} · Blocks UAL ${item.blocks_level}`),
+            );
+          }),
+        ] : []),
+        // Full compliance note
+        ...(level === 4 ? [
+          h(View, { style: { backgroundColor: '#f0fdf4', borderWidth: 1, borderColor: '#bbf7d0', borderRadius: 4, padding: 10, marginTop: 8 } },
+            h(Text, { style: { fontSize: 10, color: '#15803d', fontFamily: 'Helvetica-Bold' } },
+              'All CADA Annex II criteria met.',
+            ),
+            h(Text, { style: { fontSize: 9, color: '#166534', marginTop: 3 } },
+              'Seek formal recognition from your national competent authority via independent third-party audit (CADA Art. 17 + Art. 20).',
+            ),
+          ),
+        ] : []),
+        footer,
+      )];
+    })() : []),
     // Methodology note
     h(Page, { size: 'A4', style: styles.page },
       h(Text, { style: styles.sectionTitle }, 'Methodology & Disclaimer'),
@@ -599,6 +689,10 @@ export async function buildReportPdf(
           isGeneralized
             ? 'CSI Composite (non-EU): Progressive Sovereignty Maturity model. No weakest-link gate. Tiers: Dependent (0–40%), Managed Dependency (41–70%), Strategic Autonomy (71–90%), Sovereign (91–100%). "planned" answers earn 25% of question points. Fallback questions SOV-4-01-FB and SOV-4-09-FB available for providers unable to meet strict EU criteria.'
             : 'CSI Composite (EU/EEA): editorial blend of EU-CSF and C3A with the same SEAL 0–4 weakest-link gate. Not a source-standard certification.'
+        ) : null,
+        result.cada ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
+          'CADA results follow the Cloud and AI Development Act (COM(2026) 502), proposed EU Regulation. ' +
+          'UAL 1–4 cumulative gate model: UAL N requires all criteria at levels 1 through N to pass. UAL 2+ requires independent third-party audit for formal recognition. Proposed regulation — not yet adopted law.'
         ) : null,
         h(Text, { style: styles.bodyText },
           'This tool is not affiliated with or endorsed by BSI or the European Commission. Published under the MIT license.'

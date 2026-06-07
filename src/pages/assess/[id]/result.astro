@@ -8,7 +8,7 @@ import PdfExportButton from '../../../components/PdfExportButton';
 import criteriaJson from '../../../../data/criteria.json';
 import countriesJson from '../../../../data/countries.json';
 import type { CriteriaFile } from '../../../../shared/src/schema';
-import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult, C3aResult } from '../../../../shared/src/types';
+import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult, C3aResult, CadaResult } from '../../../../shared/src/types';
 export const prerender = false;
 
 const criteria = criteriaJson as unknown as CriteriaFile;
@@ -150,6 +150,11 @@ function resolveGapTitle(gap: GapItem): string {
   }
   return gap.question_id;
 }
+
+// ── CADA analysis helpers ────────────────────────────────────────────────────
+const cadaResult = result?.cada as CadaResult | undefined;
+const UAL_COLORS_RESULT = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
+const UAL_NAMES_RESULT = ['Not Attained', 'Level 1 — Self-Assessment', 'Level 2 — Third-Party Audited', 'Level 3 — Enhanced', 'Level 4 — Highest Assurance'];
 
 const euCsfAllGaps = (euCsfGaps as GapItem[]).slice(0, 8).map(g => ({ ...g, title: resolveGapTitle(g) }));
 // Sovereignty blockers: failing criteria that gate SEAL advancement (seal_contribution ≤ euCsfSeal + 1)
@@ -378,6 +383,106 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
                 </div>
               );
             })}
+          </section>
+        )}
+
+        {/* ── CADA section ─────────────────────────────────────────────────── */}
+        {cadaResult && (
+          <section class="mt-8">
+            <h2 class="font-semibold text-base mb-1 flex items-center gap-2">
+              Cloud &amp; AI Development Act (CADA)
+              <span class="text-xs font-normal text-gray-400">COM(2026) 502</span>
+            </h2>
+            <div class="mb-4 px-3 py-2 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
+              Proposed EU Regulation — not yet adopted law. Results are indicative only and carry no legal status.
+            </div>
+
+            {/* Global result callout */}
+            <div class="mb-4 p-4 rounded-xl border" style={`border-color: ${UAL_COLORS_RESULT[cadaResult.highest_level_achieved]}40; background-color: ${UAL_COLORS_RESULT[cadaResult.highest_level_achieved]}0a`}>
+              <div class="flex items-center gap-3 flex-wrap">
+                <span class="px-3 py-1.5 rounded-lg text-sm font-bold text-white" style={`background-color: ${UAL_COLORS_RESULT[cadaResult.highest_level_achieved]}`}>
+                  UAL {cadaResult.highest_level_achieved} — {UAL_NAMES_RESULT[cadaResult.highest_level_achieved]}
+                </span>
+                {cadaResult.audit_required && (
+                  <span class="text-xs text-purple-700 bg-purple-50 border border-purple-200 rounded px-2 py-1">
+                    Independent audit required for formal recognition (Art. 20)
+                  </span>
+                )}
+              </div>
+              {cadaResult.highest_level_achieved === 4 && (
+                <p class="text-sm text-green-700 mt-2 font-medium">All CADA Annex II criteria met. Seek third-party audit for formal UAL 4 recognition.</p>
+              )}
+            </div>
+
+            {/* Level gate breakdown table */}
+            <div class="mb-4 border border-gray-200 rounded-xl overflow-hidden">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="bg-gray-50 text-gray-500 text-left text-xs font-medium">
+                    <th class="px-4 py-2.5">Level</th>
+                    <th class="px-4 py-2.5">Gate</th>
+                    <th class="px-4 py-2.5">Criteria</th>
+                    <th class="px-4 py-2.5">Failing criteria</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cadaResult.levels.map(lvl => (
+                    <tr class="border-t border-gray-100">
+                      <td class="px-4 py-2.5">
+                        <span class="font-medium text-xs px-2 py-0.5 rounded text-white" style={`background-color: ${UAL_COLORS_RESULT[lvl.level]}`}>
+                          UAL {lvl.level}
+                        </span>
+                        <span class="ml-2 text-xs text-gray-500 hidden sm:inline">{lvl.label}</span>
+                      </td>
+                      <td class="px-4 py-2.5">
+                        {lvl.gate_passed
+                          ? <span class="text-green-700 font-semibold text-xs">✓ Passed</span>
+                          : <span class="text-red-600 font-semibold text-xs">✗ Failed</span>}
+                      </td>
+                      <td class="px-4 py-2.5 text-xs tabular-nums text-gray-600">
+                        {lvl.criteria_passed}/{lvl.criteria_total}
+                      </td>
+                      <td class="px-4 py-2.5 text-xs text-gray-500">
+                        {lvl.failing_criteria.length > 0
+                          ? lvl.failing_criteria.slice(0, 3).map(f => f.title).join(' · ') + (lvl.failing_criteria.length > 3 ? ` +${lvl.failing_criteria.length - 3} more` : '')
+                          : <span class="text-green-600">—</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Gap report: priority actions for next level */}
+            {cadaResult.gap_report.length > 0 && (
+              <div>
+                <h3 class="text-sm font-semibold mb-2 text-gray-700">
+                  Priority actions to reach UAL {cadaResult.highest_level_achieved + 1}
+                </h3>
+                <div class="space-y-1.5">
+                  {cadaResult.gap_report.map((item) => {
+                    const q = criteria.objectives.flatMap(o => o.questions).find(q => q.id === item.question_id);
+                    const annex = (q as any)?.cada_annex_ref ?? '';
+                    return (
+                      <div class="flex items-start gap-3 p-3 rounded-lg border border-red-100 bg-red-50">
+                        <div class="text-xs font-bold text-red-500 mt-0.5 w-5 shrink-0">#{item.priority}</div>
+                        <div class="flex-1 min-w-0">
+                          <p class="text-sm font-medium">{item.title}</p>
+                          <p class="text-xs text-gray-500 mt-0.5">
+                            {item.question_id}
+                            {annex && <span class="ml-2 font-mono text-purple-600">{annex}</span>}
+                            <span class="ml-2">· Blocks UAL {item.blocks_level}</span>
+                          </p>
+                        </div>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full text-white shrink-0 self-start mt-0.5" style={`background-color: ${UAL_COLORS_RESULT[item.blocks_level]}`}>
+                          UAL {item.blocks_level}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </section>
         )}
 

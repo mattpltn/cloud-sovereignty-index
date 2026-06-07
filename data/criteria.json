@@ -193,7 +193,8 @@
           "applies_to_cada": true,
           "cada_assurance_level": [
             2,
-            3
+            3,
+            4
           ],
           "cada_fidelity": "direct",
           "cada_annex_ref": "Annex II L2(g), L3(g)"
@@ -1047,6 +1048,29 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct"
+        },
+        {
+          "id": "SOV-3-08-CADA",
+          "title": "Sensitive Data Risk Assessment & Residency (UAL 4)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "Has the cloud service provider conducted a documented risk assessment that formally identifies which categories of customer data, metadata, and telemetry are classified as sensitive, and does it guarantee — without exceptions — that all such sensitive data is processed, stored, and transferred exclusively within the Union, including backups, replicas, and derived data?",
+          "supplementary_info": "CADA L4(c) requires a formal sensitivity classification process as a prerequisite: the residency obligation applies specifically to data 'identified as sensitive' following a risk assessment. This differs from L1(c)/L2(c) which apply universally to all customer data. Evidence: risk assessment documentation, data classification policy, technical controls preventing any non-EU transfer of classified-sensitive data.",
+          "seal_contribution": 4,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L4(c)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            4
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L4(c)"
         }
       ],
       "layer": "resilience"
@@ -1287,7 +1311,8 @@
           "c3a_fidelity": "direct",
           "applies_to_cada": true,
           "cada_assurance_level": [
-            2
+            2,
+            3
           ],
           "cada_fidelity": "direct",
           "cada_annex_ref": "Annex II L2(h)"
@@ -1555,6 +1580,30 @@
           ],
           "cada_fidelity": "direct",
           "cada_annex_ref": "Annex II L2(j)"
+        },
+        {
+          "id": "SOV-4-13-CADA",
+          "title": "Infrastructure & Assets Located in EU",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud computing service provider ensure that all infrastructure and assets used in the provision of the service — including those of subcontractors directly involved in delivery — are physically located within the Union, with no routing of operations through non-EU data centres or infrastructure for any part of the audited service?",
+          "supplementary_info": "Evidence per CADA Annex III §2: data centre location lists with precise addresses, network diagrams showing EU-exclusive architecture, asset registers, colocation agreements confirming EU location. At UAL 1, the location requirement applies unless the public sector body explicitly requires otherwise. At UAL 2, it is absolute.",
+          "seal_contribution": 4,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L1(b), L2(b)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            1,
+            2
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L1(b), L2(b)"
         }
       ],
       "layer": "resilience"
@@ -2223,6 +2272,29 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
           "eu_csf_source_factor": "SOV-7 Q5 Incident Disclosure"
+        },
+        {
+          "id": "SOV-7-03-CADA",
+          "title": "Cybersecurity Compliance Self-Declaration (UAL 1)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud service provider issue a documented self-declaration demonstrating that the service complies with state-of-the-art cybersecurity standards — covering risk management, access control, incident response, patch management, and supply chain security — and make this declaration publicly available?",
+          "supplementary_info": "CADA L1(e) requires self-declared compliance with state-of-the-art standards (no formal certification required at UAL 1). This is distinct from SOV-7-01 which requires a formal EUCS or national cybersecurity certificate (applicable at UAL 2+). The declaration should reference recognised standards (e.g. ISO 27001, ENISA guidelines, BSI IT-Grundschutz).",
+          "seal_contribution": 4,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L1(e)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            1
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L1(e)"
         }
       ],
       "layer": "operational_viability"
