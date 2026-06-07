@@ -113,6 +113,7 @@ function activeFrameworkTags(q: Question, fw: Set<string>): string {
   if ((q.applies_to_eu_csf ?? false) && fw.has('eu_csf')) tags.push('EU-CSF');
   if ((q.applies_to_c3a ?? false) && fw.has('c3a')) tags.push('C3A');
   if ((q.applies_to_csi_composite ?? false) && fw.has('csi_composite')) tags.push('CSI');
+  if (((q as any).applies_to_cada ?? false) && fw.has('cada')) tags.push('CADA');
   return tags.join(' · ');
 }
 
@@ -123,6 +124,9 @@ function questionFidelityTags(q: Question, fw: Set<string>): FidelityTagInfo[] {
   }
   if (fw.has('c3a') && q.applies_to_c3a && (q as any).c3a_fidelity) {
     tags.push({ framework: 'C3A', fidelity: (q as any).c3a_fidelity, rationale: (q as any).c3a_fidelity_rationale });
+  }
+  if (fw.has('cada') && (q as any).applies_to_cada && (q as any).cada_fidelity) {
+    tags.push({ framework: 'CADA', fidelity: (q as any).cada_fidelity, rationale: (q as any).cada_fidelity_rationale });
   }
   return tags;
 }
@@ -155,7 +159,8 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
     }
     const frameworkCheck = (fw.has('eu_csf') && q.applies_to_eu_csf) ||
            (fw.has('c3a') && q.applies_to_c3a) ||
-           (fw.has('csi_composite') && q.applies_to_csi_composite);
+           (fw.has('csi_composite') && q.applies_to_csi_composite) ||
+           (fw.has('cada') && (q as any).applies_to_cada);
     if (!frameworkCheck) return false;
     // Fallback questions (parent_criterion_id set) only appear when parent is answered 'no'
     if (q.parent_criterion_id) {

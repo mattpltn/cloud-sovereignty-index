@@ -191,11 +191,11 @@ for (const ac of acQuestions) {
       </div>
 
       <button type="submit" id="submit-btn"
-        class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
+        class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
         Start assessment
       </button>
 
-      <p id="error-msg" class="text-red-600 text-sm hidden"></p>
+      <p id="error-msg" class="text-red-600 text-sm border border-red-200 bg-red-50 rounded-lg px-3 py-2 hidden"></p>
     </form>
 
   </main>
@@ -291,6 +291,8 @@ for (const ac of acQuestions) {
     const countryError = document.getElementById('country-error');
     const companyError = document.getElementById('company-error');
 
+    const submitBtn = document.getElementById('submit-btn');
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorMsg.classList.add('hidden');
@@ -319,7 +321,10 @@ for (const ac of acQuestions) {
         frameworkError.classList.remove('hidden');
         hasError = true;
       }
-      if (hasError) return;
+      if (hasError) { document.querySelector('[id$="-error"]:not(.hidden)')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating assessment…';
 
       const customer_selected_ac_ids = fd.getAll('ac_criterion');
 
@@ -343,8 +348,8 @@ for (const ac of acQuestions) {
           }),
         });
         if (!res.ok) {
-          const err = await res.json();
-          throw new Error(JSON.stringify(err.error));
+          const errBody = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+          throw new Error(errBody.error ?? `HTTP ${res.status}`);
         }
         const data = await res.json();
         localStorage.setItem(`csi:${data.id}`, JSON.stringify({ answers: {} }));
@@ -352,6 +357,9 @@ for (const ac of acQuestions) {
       } catch (err) {
         errorMsg.textContent = String(err);
         errorMsg.classList.remove('hidden');
+        errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Start assessment';
       }
     });
   </script>
