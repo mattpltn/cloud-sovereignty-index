@@ -1,0 +1,211 @@
+---
+import '../../styles/global.css';
+import criteriaJson from '../../../data/criteria.json';
+import type { CriteriaFile } from '../../../shared/src/schema';
+
+export function getStaticPaths() {
+  return [
+    { params: { framework: 'eu-csf' } },
+    { params: { framework: 'c3a' } },
+    { params: { framework: 'cada' } },
+    { params: { framework: 'csi' } },
+  ];
+}
+
+const { framework } = Astro.params;
+const criteria = criteriaJson as unknown as CriteriaFile;
+
+const META: Record<string, {
+  name: string;
+  shortName: string;
+  version: string;
+  publisher: string;
+  date: string;
+  description: string;
+  scoringModel: string;
+  scopeNote: string;
+  sourceLinks: Array<{ label: string; url: string }>;
+  filterKey: string;
+  setupPath: string;
+  proposed?: boolean;
+}> = {
+  'eu-csf': {
+    name: 'EU Cloud Sovereignty Framework',
+    shortName: 'EU-CSF',
+    version: 'v1.2.1',
+    publisher: 'European Commission',
+    date: 'October 2025',
+    description: 'The EU-CSF was first presented in October 2025 as part of the Cloud III DPS tender by the European Commission. It lays out criteria for evaluating the sovereignty of cloud providers across 8 objectives, and defines how SEAL 0–4 levels are calculated using a weakest-link gate model.',
+    scoringModel: 'SEAL 0–4 (weakest-link gate). For each objective, the SEAL is the highest level where ALL criteria at that level and below are met. The global SEAL is the minimum across all 8 objectives. A weighted global score (%) reflects partial progress at each objective.',
+    scopeNote: 'Designed for EU/EEA public procurement. The XLSX calculator (Cloud III DPS, October 2025) is the definitive scoring rubric. 43 questions across 8 objectives; the tool implements 35 with 8 intentionally excluded inferred/C3A-only questions (see decisions register).',
+    sourceLinks: [
+      { label: 'EU-CSF PDF v1.2.1 — European Commission', url: 'https://commission.europa.eu/document/download/09579818-64a6-4dd5-9577-446ab6219113_en' },
+      { label: 'Cloud III DPS XLSX Calculator (source of scoring rubric)', url: '#' },
+    ],
+    filterKey: 'applies_to_eu_csf',
+    setupPath: '/start/eu-csf',
+  },
+  'c3a': {
+    name: 'Cloud Computing Autonomy Criteria',
+    shortName: 'C3A',
+    version: 'v1.0',
+    publisher: 'BSI — Bundesamt für Sicherheit in der Informationstechnik',
+    date: '2026',
+    description: 'The C3A defines criteria for cloud computing autonomy, covering sovereignty objectives SOV-1 through SOV-6. It is designed for German entities and references BSI standards. The binary pass/fail model separates base criteria (mandatory) from additional criteria (customer-selected per C3A §1.4).',
+    scoringModel: 'Binary pass/fail per criterion. No partial credit. Attainment bands: Not Attained (<50%), Partially Attained (50–74%), Substantially Attained (75–89%), Fully Attained (≥90%). Layer A criteria (critical sovereignty prerequisites) gate overall attainment — any Layer A failure results in "Not Attained" regardless of % met.',
+    scopeNote: 'Covers SOV-1 through SOV-6 only (no SOV-7 Security or SOV-8 Environmental). 33 base questions and 16 additional questions in the tool. Source has 45 base criterion IDs + 15 additional IDs; tiered questions cover 2 IDs each.',
+    sourceLinks: [
+      { label: 'C3A v1.0 PDF — BSI', url: 'https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/CloudComputing/C3A/BSI-C3A-v1.0.pdf' },
+    ],
+    filterKey: 'applies_to_c3a',
+    setupPath: '/start/c3a',
+  },
+  'cada': {
+    name: 'Cloud & AI Development Act',
+    shortName: 'CADA',
+    version: 'COM(2026) 502',
+    publisher: 'European Commission',
+    date: '3 June 2026',
+    description: 'CADA is a proposed EU Regulation establishing legally binding Union Assurance Levels (UAL 1–4) for cloud sovereignty. It provides a harmonised, auditable set of criteria at four levels of sovereignty. UAL 2+ requires independent third-party audit for formal recognition. Not yet adopted law — results are indicative only.',
+    scoringModel: 'Cumulative gate: UAL N is achieved if and only if all criteria at levels 1 through N are answered "yes". Self-assessment suffices for UAL 1; UAL 2–4 require third-party audit (CADA Art. 20) for formal recognition by national competent authorities (CADA Art. 17).',
+    scopeNote: '22 questions covering all CADA Annex II criteria (L1 through L4). Does not cover SOV-8 Environmental Sustainability.',
+    sourceLinks: [
+      { label: 'COM(2026) 502 Main Text — European Commission', url: '#' },
+      { label: 'COM(2026) 502 Annexes I–III', url: '#' },
+    ],
+    filterKey: 'applies_to_cada',
+    setupPath: '/start/cada',
+    proposed: true,
+  },
+  'csi': {
+    name: 'CSI Composite',
+    shortName: 'CSI',
+    version: `v${criteria.instrument_version}`,
+    publisher: 'Cloud Sovereignty Index — Editorial framework',
+    date: '2026',
+    description: 'The CSI Composite is an editorial framework blending EU-CSF and C3A with adaptations for global use. It is not a source standard. For EU/EEA organisations it applies the same SEAL 0–4 weakest-link model as EU-CSF. For non-EU organisations it uses Progressive Sovereignty Maturity tiers based on a weighted score percentage.',
+    scoringModel: 'EU/EEA: SEAL 0–4 weakest-link gate (same as EU-CSF). Non-EU/Generalized: Progressive Sovereignty Maturity tiers — Dependent (0–40%), Managed Dependency (41–70%), Strategic Autonomy (71–90%), Sovereign (91–100%). Partial credit available via "planned" answers (25% of question points) in Generalized mode.',
+    scopeNote: 'Covers all 8 objectives. Includes fallback criteria for providers unable to meet strict EU criteria (e.g. multi-homed BGP connectivity, security-cleared local residents). Not affiliated with or endorsed by BSI or the European Commission.',
+    sourceLinks: [],
+    filterKey: 'applies_to_csi_composite',
+    setupPath: '/start/csi',
+  },
+};
+
+const meta = META[framework!];
+const frameworkQuestions = criteria.objectives.flatMap(obj =>
+  obj.questions.filter(q => (q as any)[meta.filterKey] === true).map(q => ({ ...q, objective_id: obj.id, objective_title: obj.title }))
+);
+const totalQuestions = frameworkQuestions.length;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{meta.shortName} Methodology — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+    <nav class="flex gap-4 text-sm text-gray-600">
+      <a href="/methodology" class="hover:text-gray-900">All frameworks</a>
+      <a href="/methodology/decisions" class="hover:text-gray-900">Decisions register</a>
+      <a href="/privacy" class="hover:text-gray-900">Privacy</a>
+    </nav>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-6 py-12">
+
+    <!-- Framework header -->
+    <div class="mb-2 flex items-center gap-2">
+      <a href="/methodology" class="text-xs text-gray-400 hover:text-gray-600">← All frameworks</a>
+    </div>
+    <div class="flex items-start justify-between gap-3 mb-1">
+      <h1 class="text-2xl font-bold">{meta.name}</h1>
+      {meta.proposed && (
+        <span class="bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0">Proposed regulation</span>
+      )}
+    </div>
+    <p class="text-sm text-gray-400 mb-1">{meta.shortName} {meta.version} · {meta.publisher} · {meta.date}</p>
+    <p class="text-sm text-gray-600 mb-8 leading-relaxed">{meta.description}</p>
+
+    <!-- Scoring model -->
+    <section class="mb-8">
+      <h2 class="text-base font-semibold mb-2">Scoring model</h2>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700 leading-relaxed">
+        {meta.scoringModel}
+      </div>
+    </section>
+
+    <!-- Objectives & weights -->
+    <section class="mb-8">
+      <h2 class="text-base font-semibold mb-2">Objectives & weights ({totalQuestions} questions)</h2>
+      <p class="text-xs text-gray-500 mb-3">{meta.scopeNote}</p>
+      <div class="border border-gray-100 rounded-lg overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-gray-500 text-xs font-medium text-left">
+              <th class="px-4 py-2">Objective</th>
+              <th class="px-4 py-2 text-right">Weight</th>
+              <th class="px-4 py-2 text-right">Questions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {criteria.objectives.map(obj => {
+              const count = obj.questions.filter(q => (q as any)[meta.filterKey] === true).length;
+              if (count === 0) return null;
+              return (
+                <tr class="border-t border-gray-100">
+                  <td class="px-4 py-2">
+                    <span class="font-mono text-xs text-gray-400 mr-2">{obj.id}</span>
+                    {obj.title}
+                  </td>
+                  <td class="px-4 py-2 text-right text-gray-500">{Math.round(obj.weight * 100)}%</td>
+                  <td class="px-4 py-2 text-right tabular-nums text-gray-500">{count}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Source documents -->
+    {meta.sourceLinks.length > 0 && (
+      <section class="mb-8">
+        <h2 class="text-base font-semibold mb-2">Source documents</h2>
+        <ul class="space-y-1">
+          {meta.sourceLinks.map(link => (
+            <li>
+              <a href={link.url} class="text-sm text-blue-600 hover:underline" target="_blank" rel="noopener">
+                {link.label} ↗
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <!-- CTA -->
+    <div class="border-t border-gray-100 pt-8 flex gap-4">
+      <a href={meta.setupPath}
+        class="inline-block bg-gray-900 text-white rounded-lg px-5 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
+        Start {meta.shortName} assessment →
+      </a>
+      <a href="/methodology/decisions"
+        class="inline-block border border-gray-200 text-gray-700 rounded-lg px-5 py-2.5 text-sm font-medium hover:bg-gray-50 transition">
+        Decisions register
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-gray-100 px-6 py-6 text-center text-xs text-gray-400 mt-8">
+    Instrument v{criteria.instrument_version} ·
+    <a href="/methodology" class="underline">Methodology hub</a> ·
+    <a href="/privacy" class="underline">Privacy</a> ·
+    <a href="https://github.com/mattpltn/cloud-sovereignty-index" class="underline" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+</body>
+</html>

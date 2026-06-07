@@ -6,8 +6,8 @@ import '../styles/global.css';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cloud Sovereignty Index</title>
-  <meta name="description" content="Assess your cloud provider's sovereignty posture against EU-CSF, BSI C3A, or CSI Composite — three independent frameworks covering 8 sovereignty objectives." />
+  <title>Cloud Sovereignty Index — Choose your assessment</title>
+  <meta name="description" content="Assess your cloud provider's sovereignty posture. Choose from EU-CSF, BSI C3A, CADA, or CSI Composite — each a fully independent assessment." />
 </head>
 <body class="bg-white text-gray-900 min-h-screen">
   <header class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
@@ -15,58 +15,127 @@ import '../styles/global.css';
     <nav class="flex gap-6 text-sm text-gray-600">
       <a href="/faq" class="hover:text-gray-900">FAQ</a>
       <a href="/methodology" class="hover:text-gray-900">Methodology</a>
-      <a href="/corpus" class="hover:text-gray-900">Public Corpus</a>
       <a href="/privacy" class="hover:text-gray-900">Privacy</a>
       <a href="https://github.com/mattpltn/cloud-sovereignty-index" class="hover:text-gray-900" target="_blank" rel="noopener">GitHub ↗</a>
     </nav>
   </header>
 
-  <main class="max-w-3xl mx-auto px-6 py-16">
+  <main class="max-w-4xl mx-auto px-6 py-16">
     <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold tracking-tight mb-4">
-        Cloud Sovereignty Assessment
-      </h1>
-      <p class="text-lg text-gray-600 max-w-xl mx-auto">
-        Assess your cloud provider's sovereignty posture against <strong>EU-CSF</strong>, <strong>BSI C3A</strong>, or <strong>CSI Composite</strong> —
-        three independent frameworks covering 8 sovereignty objectives.
+      <h1 class="text-4xl font-bold tracking-tight mb-4">Cloud Sovereignty Assessment</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Choose the assessment framework that applies to your context. Each framework has its own questionnaire, scoring model, and report.
       </p>
     </div>
 
-    <div class="text-center mb-8">
-      <a href="/assess/setup"
-        class="inline-block bg-gray-900 text-white rounded-xl px-8 py-3 text-base font-medium hover:bg-gray-700 transition">
-        Start assessment →
-      </a>
-      <p class="text-sm text-gray-500 mt-3">Select your country — criteria adapt automatically for EU and non-EU organisations.</p>
-    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
 
-    <div class="text-center mb-10">
-      <p class="text-sm text-gray-500">
-        Need to collect answers offline?
-        <a href="/assess/template.xlsx" class="text-blue-600 hover:underline ml-1">
-          Download blank assessment template →
+      <!-- EU-CSF -->
+      <div class="border border-gray-200 rounded-2xl p-6 flex flex-col hover:border-gray-400 transition">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">European Commission</div>
+            <h2 class="text-lg font-bold text-gray-900">EU Cloud Sovereignty Framework</h2>
+            <div class="text-xs text-gray-500 font-mono mt-0.5">EU-CSF v1.2.1</div>
+          </div>
+          <div class="bg-blue-100 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ml-3">EU/EEA</div>
+        </div>
+        <p class="text-sm text-gray-600 mb-4 flex-1">
+          The official EU procurement framework used in the Cloud III DPS tender. Assesses 8 sovereignty objectives and outputs a SEAL 0–4 level per objective (weakest-link gate). Recommended for EU public sector procurement compliance.
+        </p>
+        <div class="text-xs text-gray-400 mb-4 space-y-1">
+          <div><span class="font-medium text-gray-600">Output:</span> SEAL 0–4 (No Sovereignty → Full Digital Sovereignty)</div>
+          <div><span class="font-medium text-gray-600">Scope:</span> SOV-1 through SOV-8 · 35 questions</div>
+          <div><span class="font-medium text-gray-600">Who it's for:</span> EU/EEA public bodies, procurement authorities</div>
+        </div>
+        <a href="/start/eu-csf"
+          class="block text-center bg-gray-900 text-white rounded-xl px-5 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
+          Start EU-CSF assessment →
         </a>
-      </p>
+      </div>
+
+      <!-- C3A -->
+      <div class="border border-gray-200 rounded-2xl p-6 flex flex-col hover:border-gray-400 transition">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">BSI — Bundesamt für Sicherheit in der Informationstechnik</div>
+            <h2 class="text-lg font-bold text-gray-900">Cloud Computing Autonomy Criteria</h2>
+            <div class="text-xs text-gray-500 font-mono mt-0.5">C3A v1.0</div>
+          </div>
+          <div class="bg-gray-100 text-gray-700 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ml-3">Germany</div>
+        </div>
+        <p class="text-sm text-gray-600 mb-4 flex-1">
+          BSI criteria for cloud computing autonomy covering SOV-1 through SOV-6. Binary pass/fail model with base criteria and customer-selected additional criteria. Designed for German entities; adaptation needed for other jurisdictions.
+        </p>
+        <div class="text-xs text-gray-400 mb-4 space-y-1">
+          <div><span class="font-medium text-gray-600">Output:</span> % base criteria met · % additional criteria met</div>
+          <div><span class="font-medium text-gray-600">Scope:</span> SOV-1 through SOV-6 · Binary pass/fail</div>
+          <div><span class="font-medium text-gray-600">Who it's for:</span> German entities, BSI-aligned assessments</div>
+        </div>
+        <a href="/start/c3a"
+          class="block text-center bg-gray-900 text-white rounded-xl px-5 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
+          Start C3A assessment →
+        </a>
+      </div>
+
+      <!-- CADA -->
+      <div class="border border-purple-200 bg-purple-50 rounded-2xl p-6 flex flex-col hover:border-purple-400 transition">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <div class="text-xs font-semibold text-purple-400 uppercase tracking-wide mb-1">European Commission</div>
+            <h2 class="text-lg font-bold text-gray-900">Cloud & AI Development Act</h2>
+            <div class="text-xs text-gray-500 font-mono mt-0.5">CADA · COM(2026) 502</div>
+          </div>
+          <div class="bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ml-3">Proposed</div>
+        </div>
+        <p class="text-sm text-gray-600 mb-4 flex-1">
+          The proposed EU Regulation establishing legally binding Union Assurance Levels (UAL 1–4) for cloud sovereignty. Cumulative gate model. Use for future-readiness assessment — not yet adopted law.
+        </p>
+        <div class="text-xs text-gray-400 mb-4 space-y-1">
+          <div><span class="font-medium text-gray-600">Output:</span> UAL 0–4 (Not Attained → Highest Assurance)</div>
+          <div><span class="font-medium text-gray-600">Scope:</span> 22 CADA Annex II criteria · Cumulative gate</div>
+          <div><span class="font-medium text-gray-600">Who it's for:</span> Future EU compliance preparation · UAL 2+ requires audit</div>
+        </div>
+        <a href="/start/cada"
+          class="block text-center bg-purple-700 text-white rounded-xl px-5 py-2.5 text-sm font-medium hover:bg-purple-600 transition">
+          Start CADA readiness assessment →
+        </a>
+      </div>
+
+      <!-- CSI Composite -->
+      <div class="border border-blue-200 bg-blue-50 rounded-2xl p-6 flex flex-col hover:border-blue-400 transition">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <div class="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-1">Editorial framework</div>
+            <h2 class="text-lg font-bold text-gray-900">CSI Composite</h2>
+            <div class="text-xs text-gray-500 font-mono mt-0.5">CSI · Blends EU-CSF + C3A</div>
+          </div>
+          <div class="bg-blue-100 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ml-3">Global</div>
+        </div>
+        <p class="text-sm text-gray-600 mb-4 flex-1">
+          An editorial blend of EU-CSF and C3A with global adaptations. For EU/EEA: SEAL 0–4 weakest-link gate. For non-EU: Progressive Sovereignty Maturity tiers (Dependent → Sovereign). Recommended as a starting point for non-EU organisations.
+        </p>
+        <div class="text-xs text-gray-400 mb-4 space-y-1">
+          <div><span class="font-medium text-gray-600">Output:</span> SEAL 0–4 (EU) · Maturity tier (non-EU)</div>
+          <div><span class="font-medium text-gray-600">Scope:</span> SOV-1 through SOV-8 · Full question set</div>
+          <div><span class="font-medium text-gray-600">Who it's for:</span> Global organisations, non-EU public bodies</div>
+        </div>
+        <a href="/start/csi"
+          class="block text-center bg-blue-700 text-white rounded-xl px-5 py-2.5 text-sm font-medium hover:bg-blue-600 transition">
+          Start CSI Composite assessment →
+        </a>
+      </div>
+
     </div>
 
-    <div class="grid gap-6 sm:grid-cols-3 text-center text-sm text-gray-600 border-t border-gray-100 pt-10">
-      <div>
-        <div class="font-semibold text-gray-900 mb-1">8 objectives</div>
-        Strategic, Legal, Data, Operational, Supply Chain, Technology, Security, Sustainability
-      </div>
-      <div>
-        <div class="font-semibold text-gray-900 mb-1">Framework-native scoring</div>
-        SEAL 0–4 for EU-CSF · % criteria met for C3A · Maturity tiers for non-EU CSI
-      </div>
-      <div>
-        <div class="font-semibold text-gray-900 mb-1">Open methodology</div>
-        All decisions documented, all criteria traceable to source frameworks
-      </div>
-    </div>
+    <p class="text-center text-xs text-gray-400 mt-10">
+      Self-assessment only — not an official certification. All methodology is
+      <a href="/methodology" class="underline hover:text-gray-600">publicly documented</a>.
+    </p>
   </main>
 
   <footer class="border-t border-gray-100 px-6 py-6 text-center text-xs text-gray-400">
-    Cloud Sovereignty Index v1.0 · Based on EU Cloud Sovereignty Framework v1.2.1 · BSI C3A v1.0 · CSI Composite ·
+    Cloud Sovereignty Index · Based on EU-CSF v1.2.1 · BSI C3A v1.0 · COM(2026) 502 ·
     <a href="/methodology" class="underline">Methodology</a> ·
     <a href="/privacy" class="underline">Privacy</a> ·
     <a href="https://github.com/mattpltn/cloud-sovereignty-index" class="underline" target="_blank" rel="noopener">GitHub</a> ·

@@ -344,7 +344,10 @@ export async function buildReportPdf(
   });
 
   const dateStr = result.assessed_at
-    ? new Date(result.assessed_at).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })
+    ? new Date(result.assessed_at).toLocaleString('en-GB', {
+        year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', timeZoneName: 'short',
+      })
     : 'Unknown date';
 
   const footer = h(View, { style: styles.footer },
@@ -401,6 +404,23 @@ export async function buildReportPdf(
     ));
   }
 
+  // ── Running page header (company · country · date) ──────────────────────────
+  const pageHeader = h(View, {
+    style: {
+      flexDirection: 'row' as const,
+      justifyContent: 'space-between' as const,
+      marginBottom: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#e5e7eb',
+      paddingBottom: 5,
+    },
+  },
+    h(Text, { style: { fontSize: 8, color: '#9ca3af' } }, companyName ?? 'Confidential Assessment'),
+    h(Text, { style: { fontSize: 8, color: '#9ca3af' } },
+      [country?.name, dateStr, `Instrument v${result.instrument_version}`].filter(Boolean).join(' · ')
+    ),
+  );
+
   // ── EU-CSF detail pages ──────────────────────────────────────────────────────
   const euCsfPages: unknown[] = [];
   if (result.eu_csf) {
@@ -410,7 +430,10 @@ export async function buildReportPdf(
     const weaknesses = euObjectives.filter(o => o.seal <= 1 || (o.seal === euSeal && euSeal < 4));
 
     euCsfPages.push(h(Page, { size: 'A4', style: styles.page },
-      h(Text, { style: styles.sectionTitle }, 'EU Cloud Sovereignty Framework (EU-CSF v1.2.1)'),
+      pageHeader,
+      h(Text, { style: styles.sectionTitle }, 'EU Cloud Sovereignty Framework — Assessment Report'),
+      h(Text, { style: { ...styles.bodyText, fontSize: 9, color: '#9ca3af', marginTop: -6, marginBottom: 6 } },
+        'EU-CSF v1.2.1 · European Commission · October 2025 · Cloud III DPS Sovereignty Calculator'),
       h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
         `Global result: ${levelPrefix} ${euSeal} — ${SEAL_LABELS[euSeal]} (${Math.round(result.eu_csf.global.pct)}%). ` +
         `Weakest-link gate per EU-CSF §4. Weights per EU-CSF §5.`
@@ -451,7 +474,10 @@ export async function buildReportPdf(
     const failedCriteria = result.c3a.failed_criteria;
 
     c3aPages.push(h(Page, { size: 'A4', style: styles.page },
-      h(Text, { style: styles.sectionTitle }, 'BSI C3A — Criteria enabling Cloud Computing Autonomy (v1.0)'),
+      pageHeader,
+      h(Text, { style: styles.sectionTitle }, 'BSI C3A — Cloud Computing Autonomy — Assessment Report'),
+      h(Text, { style: { ...styles.bodyText, fontSize: 9, color: '#9ca3af', marginTop: -6, marginBottom: 6 } },
+        'C3A v1.0 · BSI (Bundesamt für Sicherheit in der Informationstechnik) · 2026'),
       h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
         `Criterion: ${crit.passed}/${crit.applicable} met. ` +
         (ac ? `Additional Criterion: ${ac.passed}/${ac.applicable} met. ` : 'No Additional Criteria selected. ') +
@@ -509,7 +535,10 @@ export async function buildReportPdf(
       : csiObjectives.filter(o => o.csl <= 1 || (o.csl === csiCsl && csiCsl < 4));
 
     csiPages.push(h(Page, { size: 'A4', style: styles.page },
-      h(Text, { style: styles.sectionTitle }, 'CSI Composite (editorial framework)'),
+      pageHeader,
+      h(Text, { style: styles.sectionTitle }, 'CSI Composite — Sovereignty Readiness Assessment'),
+      h(Text, { style: { ...styles.bodyText, fontSize: 9, color: '#9ca3af', marginTop: -6, marginBottom: 6 } },
+        `Editorial framework · v${result.instrument_version} · Blends EU-CSF v1.2.1 + C3A v1.0`),
       h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
         isGeneralized
           ? `Global result: ${csiTierLabel} — ${Math.round(csiPct)}%. Progressive Sovereignty Maturity model. Not a source-standard certification.`
@@ -608,7 +637,10 @@ export async function buildReportPdf(
       const critPassed = level === 0 ? 0 : (cada.levels.find(l => l.level === level)?.criteria_passed ?? 0);
 
       return [h(Page, { size: 'A4', style: styles.page },
-        h(Text, { style: styles.sectionTitle }, 'Cloud & AI Development Act (CADA) — Union Assurance Level'),
+        pageHeader,
+        h(Text, { style: styles.sectionTitle }, 'Cloud & AI Development Act (CADA) — Readiness Assessment'),
+        h(Text, { style: { ...styles.bodyText, fontSize: 9, color: '#9ca3af', marginTop: -6, marginBottom: 6 } },
+          'COM(2026) 502 · European Commission · 3 June 2026 · Proposed Regulation — not yet adopted law'),
         // Disclaimer
         h(View, { style: { backgroundColor: '#fffbeb', borderWidth: 1, borderColor: '#fde68a', borderRadius: 4, padding: 8, marginBottom: 12 } },
           h(Text, { style: { fontSize: 9, color: '#92400e' } },
@@ -673,6 +705,7 @@ export async function buildReportPdf(
     })() : []),
     // Methodology note
     h(Page, { size: 'A4', style: styles.page },
+      pageHeader,
       h(Text, { style: styles.sectionTitle }, 'Methodology & Disclaimer'),
       h(View, { style: styles.noteBox },
         h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },

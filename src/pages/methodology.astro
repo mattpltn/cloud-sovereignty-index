@@ -29,7 +29,23 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
   </header>
   <main class="max-w-2xl mx-auto px-6 py-12">
     <h1 class="text-3xl font-bold mb-2">Methodology</h1>
-    <p class="text-gray-500 text-sm mb-10">Instrument v{criteria.instrument_version}</p>
+    <p class="text-gray-500 text-sm mb-6">Instrument v{criteria.instrument_version}</p>
+
+    <!-- Per-framework methodology pages -->
+    <div class="grid grid-cols-2 gap-3 mb-10">
+      {[
+        { href: '/methodology/eu-csf', name: 'EU Cloud Sovereignty Framework', short: 'EU-CSF', color: 'border-gray-200' },
+        { href: '/methodology/c3a', name: 'Cloud Computing Autonomy Criteria', short: 'C3A', color: 'border-gray-200' },
+        { href: '/methodology/cada', name: 'Cloud & AI Development Act', short: 'CADA', color: 'border-purple-200' },
+        { href: '/methodology/csi', name: 'CSI Composite', short: 'CSI', color: 'border-blue-200' },
+      ].map(fw => (
+        <a href={fw.href} class={`border ${fw.color} rounded-xl p-4 hover:bg-gray-50 transition block`}>
+          <div class="text-xs font-semibold text-gray-400 mb-0.5">{fw.short}</div>
+          <div class="text-sm font-medium text-gray-800">{fw.name}</div>
+          <div class="text-xs text-blue-600 mt-1">View methodology →</div>
+        </a>
+      ))}
+    </div>
 
     <section class="mb-10">
       <h2 class="text-xl font-semibold mb-3">1. Overview</h2>

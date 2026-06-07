@@ -1,0 +1,396 @@
+---
+import '../../styles/global.css';
+import countriesJson from '../../../data/countries.json';
+import criteriaJson from '../../../data/criteria.json';
+import ImportAssessment from '../../components/ImportAssessment';
+import type { CriteriaFile } from '../../../shared/src/schema';
+
+export function getStaticPaths() {
+  return [
+    { params: { framework: 'eu-csf' } },
+    { params: { framework: 'c3a' } },
+    { params: { framework: 'cada' } },
+    { params: { framework: 'csi' } },
+  ];
+}
+
+const { framework } = Astro.params;
+
+const FRAMEWORK_META: Record<string, {
+  apiId: string;
+  name: string;
+  shortName: string;
+  source: string;
+  description: string;
+  outputDesc: string;
+  color: string; // tailwind border/badge color key
+  proposed?: boolean;
+  xlsParam: string;
+}> = {
+  'eu-csf': {
+    apiId: 'eu_csf',
+    name: 'EU Cloud Sovereignty Framework',
+    shortName: 'EU-CSF',
+    source: 'EU-CSF v1.2.1 — European Commission',
+    description: 'The official EU procurement framework used in the Cloud III DPS tender. Covers 8 sovereignty objectives. Output: SEAL 0–4 per objective (weakest-link gate).',
+    outputDesc: 'SEAL 0–4 · Weakest-link gate',
+    color: 'gray',
+    xlsParam: 'eu_csf',
+  },
+  'c3a': {
+    apiId: 'c3a',
+    name: 'Cloud Computing Autonomy Criteria',
+    shortName: 'C3A',
+    source: 'C3A v1.0 — BSI (Bundesamt für Sicherheit in der Informationstechnik)',
+    description: 'BSI criteria for cloud computing autonomy. Covers SOV-1 through SOV-6. Binary pass/fail. Includes base criteria and customer-selectable additional criteria.',
+    outputDesc: '% base criteria met · % additional criteria met',
+    color: 'gray',
+    xlsParam: 'c3a',
+  },
+  'cada': {
+    apiId: 'cada',
+    name: 'Cloud & AI Development Act',
+    shortName: 'CADA',
+    source: 'COM(2026) 502 — European Commission',
+    description: 'The proposed EU Regulation establishing Union Assurance Levels (UAL 1–4) for cloud sovereignty. Cumulative gate: UAL N requires all criteria 1..N to pass. UAL 2+ requires independent third-party audit.',
+    outputDesc: 'UAL 0–4 · Cumulative gate',
+    color: 'purple',
+    proposed: true,
+    xlsParam: 'cada',
+  },
+  'csi': {
+    apiId: 'csi_composite',
+    name: 'CSI Composite',
+    shortName: 'CSI',
+    source: 'Editorial framework — blends EU-CSF + C3A with global adaptations',
+    description: 'An editorial blend of EU-CSF and C3A with global adaptations. For EU/EEA: SEAL 0–4 weakest-link. For non-EU: Progressive Sovereignty Maturity tiers (Dependent → Sovereign).',
+    outputDesc: 'SEAL 0–4 (EU) · Maturity tier (non-EU)',
+    color: 'blue',
+    xlsParam: 'csi_composite',
+  },
+};
+
+const meta = FRAMEWORK_META[framework!];
+
+const criteria = criteriaJson as unknown as CriteriaFile;
+
+const euCodes = new Set([
+  ...countriesJson.EU.map(c => c.code),
+  ...countriesJson.EEA_non_EU.map(c => c.code),
+]);
+
+const allCountries = [
+  ...countriesJson.EU,
+  ...countriesJson.EEA_non_EU,
+  ...countriesJson.non_EU,
+].sort((a, b) => a.name.localeCompare(b.name));
+
+// AC questions for C3A panel
+const acQuestions: Array<{ id: string; title: string; objective_id: string; objective_title: string; text: string }> = [];
+for (const obj of criteria.objectives) {
+  for (const q of obj.questions) {
+    if (q.c3a_tier === 'additional' && q.type === 'single') {
+      acQuestions.push({ id: q.id, title: q.title, objective_id: obj.id, objective_title: obj.title, text: q.text });
+    }
+  }
+}
+
+const acByObjective = new Map<string, { title: string; questions: typeof acQuestions }>();
+for (const ac of acQuestions) {
+  if (!acByObjective.has(ac.objective_id)) {
+    acByObjective.set(ac.objective_id, { title: ac.objective_title, questions: [] });
+  }
+  acByObjective.get(ac.objective_id)!.questions.push(ac);
+}
+
+const isC3a = framework === 'c3a';
+const isCsi = framework === 'csi';
+const borderColor = meta.color === 'purple' ? 'border-purple-200' : meta.color === 'blue' ? 'border-blue-200' : 'border-gray-200';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{meta.shortName} Assessment — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4 flex items-center gap-3">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+    <span class="text-gray-300">/</span>
+    <span class="text-sm text-gray-600">{meta.shortName} Assessment</span>
+  </header>
+
+  <main class="max-w-xl mx-auto px-6 py-12">
+
+    <!-- Framework header -->
+    <div class={`border ${borderColor} rounded-xl p-5 mb-8`}>
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h1 class="text-xl font-bold mb-0.5">{meta.name}</h1>
+          <p class="text-xs text-gray-400">{meta.source}</p>
+        </div>
+        {meta.proposed && (
+          <span class="bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0">Proposed regulation</span>
+        )}
+      </div>
+      <p class="text-sm text-gray-600 mt-2">{meta.description}</p>
+      <div class="text-xs text-gray-400 mt-2">Output: <span class="font-medium text-gray-600">{meta.outputDesc}</span></div>
+    </div>
+
+    <div class="cf-turnstile mb-6" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '1x00000000000000000000AA'} data-theme="light" data-callback="onTurnstileSolved"></div>
+
+    <!-- XLS import -->
+    <div class="mb-2">
+      <p class="text-xs text-gray-500 mb-3">
+        Upload a pre-filled template to import all answers at once.
+        <a href={`/assess/template.xlsx?fw=${meta.xlsParam}`} class="text-blue-600 hover:underline ml-1">Download blank {meta.shortName} template →</a>
+      </p>
+      <ImportAssessment
+        client:load
+        criteria={criteria}
+        countries={countriesJson}
+        defaultVariant="EU-CSF"
+      />
+    </div>
+
+    <div class="relative flex items-center py-6">
+      <div class="flex-grow border-t border-gray-200"></div>
+      <span class="mx-4 text-xs text-gray-400">or start a new assessment manually</span>
+      <div class="flex-grow border-t border-gray-200"></div>
+    </div>
+
+    <form id="setup-form" class="space-y-6">
+      <input type="hidden" id="variant-input" name="variant" value="EU-CSF" />
+      <input type="hidden" name="framework" value={meta.apiId} />
+
+      <div>
+        <label class="block text-sm font-medium mb-2">Country</label>
+        <select name="national_country" id="country-select" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+          <option value="">— Select your country —</option>
+          {allCountries.map(c => (
+            <option value={c.code}>{c.name}</option>
+          ))}
+        </select>
+        <p id="country-error" class="text-red-600 text-xs mt-1 hidden">Select a country.</p>
+        <p id="variant-badge" class="text-xs mt-1.5 text-gray-400 hidden"></p>
+        <!-- Country mismatch warning -->
+        <div id="country-warning" class="hidden mt-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+          <span id="country-warning-text"></span>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Organisation name</label>
+        <input type="text" name="company_name" id="company-name" placeholder="Acme Corp"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        <p id="company-error" class="text-red-600 text-xs mt-1 hidden">Enter your organisation name.</p>
+        <p class="text-xs text-gray-400 mt-1">Not indexed. Stored only in your assessment record.</p>
+      </div>
+
+      <!-- C3A Additional Criteria selection -->
+      {isC3a && (
+        <div>
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <h3 class="text-sm font-medium mb-1">Additional Criteria (AC)</h3>
+            <p class="text-xs text-gray-500 mb-3">
+              Per C3A §1.4, the customer selects which Additional Criteria apply.
+              There are <strong>{acQuestions.length} Additional Criteria</strong> across {acByObjective.size} objectives
+              (vs {criteria.objectives.reduce((n, o) => n + o.questions.filter(q => q.c3a_tier === 'base' && q.applies_to_c3a).length, 0)} base criteria).
+            </p>
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" id="ac-select-all" class="h-4 w-4 rounded border-gray-300" />
+              <div>
+                <span class="text-sm font-medium text-gray-800">Include all {acQuestions.length} Additional Criteria</span>
+                <p class="text-xs text-gray-500 mt-0.5">Uncheck to exclude ACs from your result.</p>
+              </div>
+            </label>
+            <div id="ac-hidden-inputs"></div>
+          </div>
+        </div>
+      )}
+
+      <!-- CSI domain selection -->
+      {isCsi && (
+        <div>
+          <div class="border border-blue-200 bg-blue-50 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-medium text-blue-800">Sovereignty domains to assess</span>
+              <button type="button" id="domain-select-all-btn" class="text-xs text-blue-600 hover:underline">Select all</button>
+            </div>
+            <p class="text-xs text-gray-500 mb-3">
+              Untick a domain to exclude those questions — useful for focused reviews.
+            </p>
+            <div class="grid grid-cols-1 gap-2" id="domain-checkboxes">
+              {criteria.objectives.map(obj => (
+                <label class="flex items-start gap-3 cursor-pointer group" data-obj-id={obj.id}>
+                  <input type="checkbox" name="selected_objective" value={obj.id} checked
+                    class="mt-0.5 h-4 w-4 rounded border-gray-300 domain-cb" />
+                  <div>
+                    <span class="text-sm font-medium text-gray-800">{obj.id} — {obj.title}</span>
+                    <p class="text-xs text-gray-500 mt-0.5">{obj.description.slice(0, 90)}{obj.description.length > 90 ? '…' : ''}</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <button type="submit" id="submit-btn"
+        class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+        Start {meta.shortName} assessment
+      </button>
+
+      <p id="error-msg" class="text-red-600 text-sm border border-red-200 bg-red-50 rounded-lg px-3 py-2 hidden"></p>
+    </form>
+
+  </main>
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script is:inline>
+    window.__turnstileToken = '';
+    function onTurnstileSolved(token) { window.__turnstileToken = token; }
+  </script>
+  <script define:vars={{
+    euCodes: [...euCodes],
+    allAcIds: acQuestions.map(q => q.id),
+    frameworkId: framework,
+    shortName: meta.shortName,
+    isC3a,
+    isCsi,
+  }}>
+    const euSet = new Set(euCodes);
+    const select = document.getElementById('country-select');
+    const variantInput = document.getElementById('variant-input');
+    const badge = document.getElementById('variant-badge');
+    const warning = document.getElementById('country-warning');
+    const warningText = document.getElementById('country-warning-text');
+
+    // Country warnings per framework
+    const EU_CSF_CADA_WARNING = 'This framework was designed for EU/EEA procurement contexts. Some criteria reference EU-specific legal obligations. Adaptation may be needed for your jurisdiction.';
+    const C3A_WARNING = 'C3A was developed by BSI for German entities and references BSI standards and German regulatory requirements. Adaptation will be needed for non-German jurisdictions.';
+
+    select.addEventListener('change', () => {
+      const code = select.value;
+      if (!code) {
+        variantInput.value = 'EU-CSF';
+        badge.classList.add('hidden');
+        warning.classList.add('hidden');
+        return;
+      }
+      const isEU = euSet.has(code);
+      variantInput.value = isEU ? 'EU-CSF' : 'Generalized';
+      badge.textContent = isEU
+        ? '✓ EU/EEA country'
+        : '✓ Non-EU country — Generalized criteria apply';
+      badge.className = `text-xs mt-1.5 ${isEU ? 'text-blue-600' : 'text-green-700'}`;
+
+      // Show framework-specific country warning
+      let msg = '';
+      if ((frameworkId === 'eu-csf' || frameworkId === 'cada') && !isEU) {
+        msg = EU_CSF_CADA_WARNING;
+      } else if (frameworkId === 'c3a' && code !== 'DE') {
+        msg = C3A_WARNING;
+      }
+      if (msg) {
+        warningText.textContent = msg;
+        warning.classList.remove('hidden');
+      } else {
+        warning.classList.add('hidden');
+      }
+    });
+
+    // AC panel (C3A only)
+    if (isC3a) {
+      const acSelectAll = document.getElementById('ac-select-all');
+      const acHiddenInputs = document.getElementById('ac-hidden-inputs');
+      acSelectAll?.addEventListener('change', () => {
+        acHiddenInputs.innerHTML = '';
+        if (acSelectAll.checked) {
+          allAcIds.forEach(id => {
+            const inp = document.createElement('input');
+            inp.type = 'hidden';
+            inp.name = 'ac_criterion';
+            inp.value = id;
+            acHiddenInputs.appendChild(inp);
+          });
+        }
+      });
+    }
+
+    // CSI domain select-all
+    if (isCsi) {
+      document.getElementById('domain-select-all-btn')?.addEventListener('click', () => {
+        document.querySelectorAll('.domain-cb').forEach(cb => { cb.checked = true; });
+      });
+    }
+
+    const form = document.getElementById('setup-form');
+    const errorMsg = document.getElementById('error-msg');
+    const countryError = document.getElementById('country-error');
+    const companyError = document.getElementById('company-error');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.classList.add('hidden');
+      countryError.classList.add('hidden');
+      companyError.classList.add('hidden');
+
+      const fd = new FormData(form);
+      const variant = fd.get('variant');
+      const national_country = fd.get('national_country') || undefined;
+      const company_name = (fd.get('company_name') || '').trim() || undefined;
+      const turnstile_token = window.__turnstileToken || 'test-token';
+
+      let hasError = false;
+      if (!national_country) { countryError.classList.remove('hidden'); hasError = true; }
+      if (!company_name) { companyError.classList.remove('hidden'); hasError = true; }
+      if (hasError) {
+        document.querySelector('[id$="-error"]:not(.hidden)')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating assessment…';
+
+      const selected_frameworks = fd.getAll('framework');
+      const customer_selected_ac_ids = isC3a ? fd.getAll('ac_criterion') : [];
+
+      // Collect selected objectives for CSI domain filter
+      const domainCbs = document.querySelectorAll('.domain-cb');
+      const checkedDomains = Array.from(domainCbs).filter(cb => cb.checked).map(cb => cb.value);
+      const selected_objectives = isCsi && checkedDomains.length < domainCbs.length ? checkedDomains : [];
+
+      try {
+        const res = await fetch('/api/assessments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            variant, national_country, company_name, turnstile_token,
+            service_models: ['all'],
+            user_role: 'customer',
+            selected_frameworks,
+            customer_selected_ac_ids,
+            selected_objectives,
+          }),
+        });
+        if (!res.ok) {
+          const errBody = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+          throw new Error(errBody.error ?? `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        localStorage.setItem(`csi:${data.id}`, JSON.stringify({ answers: {} }));
+        window.location.href = `/assess/${data.id}/created`;
+      } catch (err) {
+        errorMsg.textContent = String(err);
+        errorMsg.classList.remove('hidden');
+        errorMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        submitBtn.disabled = false;
+        submitBtn.textContent = `Start ${shortName} assessment`;
+      }
+    });
+  </script>
+</body>
+</html>

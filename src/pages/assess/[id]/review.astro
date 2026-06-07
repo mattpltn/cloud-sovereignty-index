@@ -25,23 +25,8 @@ const { id } = Astro.params;
 
     <div id="answer-summary" class="mb-8 text-sm text-gray-600">Loading answers…</div>
 
-    <div class="border border-gray-200 rounded-xl p-5 mb-6">
-      <h2 class="font-semibold text-base mb-3">Contribute to public corpus</h2>
-      <label class="flex items-start gap-3 cursor-pointer">
-        <input type="checkbox" id="corpus-opt-in" class="mt-0.5 rounded" />
-        <span class="text-sm text-gray-700 leading-relaxed">
-          Contribute this assessment to the public Cloud Sovereignty Index corpus (anonymized).
-          <br />
-          <span class="text-xs text-gray-500 mt-1 block">
-            What's shared: variant, jurisdiction (ISO code only), service models, scores, SEAL levels, instrument version, submission month.
-            What's not shared: company name, evidence text, IP address, precise timestamp.
-          </span>
-        </span>
-      </label>
-    </div>
-
     <button id="submit-btn"
-      class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition">
+      class="w-full bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
       Submit assessment
     </button>
 
@@ -49,7 +34,6 @@ const { id } = Astro.params;
   </main>
 
   <script define:vars={{ id }}>
-    // Show answer summary from localStorage
     const cached = JSON.parse(localStorage.getItem(`csi:${id}`) ?? '{}');
     const answers = cached.answers ?? {};
     const count = Object.keys(answers).length;
@@ -58,12 +42,15 @@ const { id } = Astro.params;
       summary.textContent = `${count} question${count !== 1 ? 's' : ''} answered.`;
     }
 
-    document.getElementById('submit-btn')?.addEventListener('click', async () => {
-      const sharePublicly = (document.getElementById('corpus-opt-in')).checked;
-      const errorMsg = document.getElementById('error-msg');
+    const submitBtn = document.getElementById('submit-btn');
+    const errorMsg = document.getElementById('error-msg');
+
+    submitBtn?.addEventListener('click', async () => {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+      errorMsg.classList.add('hidden');
 
       try {
-        // Flush answers first
         const patchRes = await fetch(`/api/assessments/${id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -74,16 +61,16 @@ const { id } = Astro.params;
         const res = await fetch(`/api/assessments/${id}/submit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ share_publicly: sharePublicly }),
+          body: JSON.stringify({ share_publicly: false }),
         });
         if (!res.ok) throw new Error('Submit failed');
 
         window.location.href = `/assess/${id}/result`;
       } catch (err) {
-        if (errorMsg) {
-          errorMsg.textContent = String(err);
-          errorMsg.classList.remove('hidden');
-        }
+        errorMsg.textContent = String(err);
+        errorMsg.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit assessment';
       }
     });
   </script>
