@@ -140,6 +140,7 @@ function cellStr(cell: ExcelJS.Cell): string {
 function addAssessmentSheet(
   wb: ExcelJS.Workbook,
   criteria: CriteriaFile,
+  skipFrameworkGreying = false,
 ) {
   const ws = wb.addWorksheet('Assessment');
 
@@ -277,18 +278,21 @@ function addAssessmentSheet(
   ws.dataValidations.add('M2:M500', ANSWER_VALIDATION);
 
   // Rule 1: grey out rows where none of the user's selected frameworks apply.
-  ws.addConditionalFormatting({
-    ref: 'A2:R500',
-    rules: [{
-      type: 'expression',
-      priority: 1,
-      formulae: ['NOT(OR(AND(Setup!$C$7="yes",$G2),AND(Setup!$C$8="yes",$H2),AND(Setup!$C$9="yes",$I2)))'],
-      style: {
-        font: { color: { argb: 'FFB0B7C3' } },
-        fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FFF3F4F6' } },
-      },
-    }],
-  });
+  // Skipped for framework-specific templates — rows are already pre-filtered to that framework.
+  if (!skipFrameworkGreying) {
+    ws.addConditionalFormatting({
+      ref: 'A2:R500',
+      rules: [{
+        type: 'expression',
+        priority: 1,
+        formulae: ['NOT(OR(AND(Setup!$C$7="yes",$G2),AND(Setup!$C$8="yes",$H2),AND(Setup!$C$9="yes",$I2)))'],
+        style: {
+          font: { color: { argb: 'FFB0B7C3' } },
+          fill: { type: 'pattern', pattern: 'solid', bgColor: { argb: 'FFF3F4F6' } },
+        },
+      }],
+    });
+  }
 
   // Rule 2: grey out EU-only rows (bloc, eu_csf) when a non-EU/EEA country is selected.
   ws.addConditionalFormatting({
@@ -473,7 +477,7 @@ export async function buildTemplateXlsx(
   };
 
   // ── Sheet 2: Assessment questions (single merged sheet) ─────────────────────
-  addAssessmentSheet(wb, criteria);
+  addAssessmentSheet(wb, criteria, !!frameworkApiId);
 
   // ── Sheet 4: Privacy ───────────────────────────────────────────────────────
   const privacy = wb.addWorksheet('Privacy');
