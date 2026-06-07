@@ -339,6 +339,7 @@ export async function buildTemplateXlsx(
   criteria: CriteriaFile,
   countries: CountriesFile,
   frameworkLabel?: string,
+  frameworkApiId?: string,
 ): Promise<Blob> {
   const ExcelJS = (await import('exceljs')).default;
   const wb = new ExcelJS.Workbook();
@@ -419,38 +420,49 @@ export async function buildTemplateXlsx(
   };
   setup.getCell('C6').font = { italic: true, color: { argb: 'FF6B7280' } };
 
-  // Framework selection
-  setup.getRow(7).height = 20;
-  setup.getCell('B7').value = 'Include EU-CSF?';
-  setup.getCell('B7').font = { bold: true };
-  setup.getCell('C7').value = 'yes';
-  setup.getCell('C7').fill = INPUT_FILL;
-  setup.getCell('C7').dataValidation = { type: 'list', allowBlank: false, formulae: ['"yes,no"'], showErrorMessage: true, errorStyle: 'stop', errorTitle: 'Invalid', error: 'yes or no' } as ExcelJS.DataValidation;
+  // Framework selection — fixed for framework-specific templates, editable for generic
+  const fwFixed = !!frameworkApiId;
+  const isEuCsf = frameworkApiId === 'eu_csf';
+  const isC3a   = frameworkApiId === 'c3a';
+  const isCsi   = frameworkApiId === 'csi_composite';
+  const isCada  = frameworkApiId === 'cada';
 
-  setup.getRow(8).height = 20;
-  setup.getCell('B8').value = 'Include C3A?';
-  setup.getCell('B8').font = { bold: true };
-  setup.getCell('C8').value = 'no';
-  setup.getCell('C8').fill = INPUT_FILL;
-  setup.getCell('C8').dataValidation = { type: 'list', allowBlank: false, formulae: ['"yes,no"'], showErrorMessage: true, errorStyle: 'stop', errorTitle: 'Invalid', error: 'yes or no' } as ExcelJS.DataValidation;
+  function setFwRow(row: number, label: string, value: 'yes' | 'no', editable: boolean) {
+    setup.getRow(row).height = 20;
+    setup.getCell(`B${row}`).value = label;
+    setup.getCell(`B${row}`).font = { bold: !fwFixed, color: { argb: fwFixed ? 'FF9CA3AF' : 'FF111827' } };
+    setup.getCell(`C${row}`).value = value;
+    if (editable) {
+      setup.getCell(`C${row}`).fill = INPUT_FILL;
+      setup.getCell(`C${row}`).dataValidation = { type: 'list', allowBlank: false, formulae: ['"yes,no"'], showErrorMessage: true, errorStyle: 'stop', errorTitle: 'Invalid', error: 'yes or no' } as ExcelJS.DataValidation;
+    } else {
+      // Fixed — grey background, no dropdown
+      setup.getCell(`C${row}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF3F4F6' } } as ExcelJS.Fill;
+      setup.getCell(`C${row}`).font = { color: { argb: value === 'yes' ? 'FF15803D' : 'FF9CA3AF' }, bold: value === 'yes' };
+    }
+  }
 
-  setup.getRow(9).height = 20;
-  setup.getCell('B9').value = 'Include CSI Composite?';
-  setup.getCell('B9').font = { bold: true };
-  setup.getCell('C9').value = 'yes';
-  setup.getCell('C9').fill = INPUT_FILL;
-  setup.getCell('C9').dataValidation = { type: 'list', allowBlank: false, formulae: ['"yes,no"'], showErrorMessage: true, errorStyle: 'stop', errorTitle: 'Invalid', error: 'yes or no' } as ExcelJS.DataValidation;
+  setFwRow(7, 'EU-CSF',        isEuCsf ? 'yes' : 'no',  !fwFixed || !isEuCsf ? !fwFixed : false);
+  setFwRow(8, 'C3A',           isC3a   ? 'yes' : 'no',  !fwFixed || !isC3a   ? !fwFixed : false);
+  setFwRow(9, 'CSI Composite', isCsi   ? 'yes' : 'no',  !fwFixed || !isCsi   ? !fwFixed : false);
+  setFwRow(10, 'CADA',         isCada  ? 'yes' : 'no',  !fwFixed || !isCada  ? !fwFixed : false);
+
+  const uploadPath = frameworkApiId
+    ? ({ eu_csf: '/start/eu-csf', c3a: '/start/c3a', csi_composite: '/start/csi', cada: '/start/cada' } as Record<string, string>)[frameworkApiId] ?? '/start/csi'
+    : '/start/csi';
 
   setup.getRow(11).height = 16;
   setup.mergeCells('B11:C11');
-  const instrCell = setup.getCell('B11');
-  instrCell.value = '→ Fill in the "Assessment" sheet. Rows greyed out = not required for your selected framework(s).';
-  instrCell.font = { italic: true, color: { argb: 'FF1D4ED8' } };
+  setup.getCell('B11').value = `Upload at: cloud-sovereignty-index.pages.dev${uploadPath}`;
+  setup.getCell('B11').font = { color: { argb: 'FF6B7280' } };
 
   setup.getRow(12).height = 16;
   setup.mergeCells('B12:C12');
-  setup.getCell('B12').value = 'Once filled in, save this file and upload it at: cloud-sovereignty-index.pages.dev/assess/setup';
-  setup.getCell('B12').font = { color: { argb: 'FF6B7280' } };
+  const instrCell = setup.getCell('B12');
+  instrCell.value = fwFixed
+    ? `→ Pre-configured for ${frameworkLabel}. Fill in the "Assessment" sheet and upload.`
+    : '→ Fill in the "Assessment" sheet. Rows greyed out = not required for your selected framework(s).';
+  instrCell.font = { italic: true, color: { argb: 'FF1D4ED8' } };
 
   // Hidden row — formula-based variant for parseXlsx to read back
   setup.getRow(13).hidden = true;

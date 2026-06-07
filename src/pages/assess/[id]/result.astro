@@ -156,6 +156,34 @@ const cadaResult = result?.cada as CadaResult | undefined;
 const UAL_COLORS_RESULT = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
 const UAL_NAMES_RESULT = ['Not Attained', 'Level 1 — Self-Assessment', 'Level 2 — Third-Party Audited', 'Level 3 — Enhanced', 'Level 4 — Highest Assurance'];
 
+// Build per-level CADA criterion breakdown for the detailed view
+const cadaCriteriaByLevel = cadaResult ? (() => {
+  const allCadaQs = criteria.objectives.flatMap(obj =>
+    obj.questions
+      .filter(q => (q as any).applies_to_cada)
+      .map(q => ({
+        id: q.id,
+        title: q.title,
+        objective_id: obj.id,
+        min_level: Math.min(...((q as any).cada_assurance_level ?? [99])),
+        annex_ref: (q as any).cada_annex_ref ?? '',
+        supplementary: q.supplementary_info ?? '',
+      }))
+  );
+  return cadaResult.levels.map(lvl => {
+    const failSet = new Set(lvl.failing_criteria.map(f => f.question_id));
+    const applicable = allCadaQs.filter(q => q.min_level <= lvl.level);
+    return {
+      level: lvl.level,
+      label: lvl.label,
+      gate_passed: lvl.gate_passed,
+      criteria_passed: lvl.criteria_passed,
+      criteria_total: lvl.criteria_total,
+      criteria: applicable.map(q => ({ ...q, passed: !failSet.has(q.id) })),
+    };
+  });
+})() : [];
+
 const euCsfAllGaps = (euCsfGaps as GapItem[]).slice(0, 8).map(g => ({ ...g, title: resolveGapTitle(g) }));
 // Sovereignty blockers: failing criteria that gate SEAL advancement (seal_contribution ≤ euCsfSeal + 1)
 const euCsfBlockers = euCsfAllGaps.filter(g => g.seal_contribution != null && g.seal_contribution > 0 && g.seal_contribution <= euCsfSeal + 1);
@@ -414,48 +442,53 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
               )}
             </div>
 
-            {/* Level gate breakdown table */}
-            <div class="mb-4 border border-gray-200 rounded-xl overflow-hidden">
-              <table class="w-full text-sm">
-                <thead>
-                  <tr class="bg-gray-50 text-gray-500 text-left text-xs font-medium">
-                    <th class="px-4 py-2.5">Level</th>
-                    <th class="px-4 py-2.5">Gate</th>
-                    <th class="px-4 py-2.5">Criteria</th>
-                    <th class="px-4 py-2.5">Failing criteria</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cadaResult.levels.map(lvl => (
-                    <tr class="border-t border-gray-100">
-                      <td class="px-4 py-2.5">
-                        <span class="font-medium text-xs px-2 py-0.5 rounded text-white" style={`background-color: ${UAL_COLORS_RESULT[lvl.level]}`}>
-                          UAL {lvl.level}
+            {/* Per-level criterion breakdown */}
+            <div class="space-y-4 mb-4">
+              {cadaCriteriaByLevel.map(lvl => (
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                  <div class={`px-4 py-3 flex items-center justify-between ${lvl.gate_passed ? 'bg-green-50' : 'bg-red-50'}`}>
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-xs px-2 py-0.5 rounded text-white" style={`background-color: ${UAL_COLORS_RESULT[lvl.level]}`}>
+                        UAL {lvl.level}
+                      </span>
+                      <span class="text-xs text-gray-600 hidden sm:inline">{lvl.label}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <span class="text-xs tabular-nums text-gray-500">{lvl.criteria_passed}/{lvl.criteria_total} criteria</span>
+                      {lvl.gate_passed
+                        ? <span class="text-green-700 font-semibold text-xs">✓ Gate passed</span>
+                        : <span class="text-red-600 font-semibold text-xs">✗ Gate not cleared</span>}
+                    </div>
+                  </div>
+                  <div class="divide-y divide-gray-100">
+                    {lvl.criteria.map(crit => (
+                      <div class={`px-4 py-2.5 flex items-start gap-3 ${crit.passed ? '' : 'bg-red-50'}`}>
+                        <span class={`text-sm font-bold mt-0.5 shrink-0 ${crit.passed ? 'text-green-600' : 'text-red-500'}`}>
+                          {crit.passed ? '✓' : '✗'}
                         </span>
-                        <span class="ml-2 text-xs text-gray-500 hidden sm:inline">{lvl.label}</span>
-                      </td>
-                      <td class="px-4 py-2.5">
-                        {lvl.gate_passed
-                          ? <span class="text-green-700 font-semibold text-xs">✓ Passed</span>
-                          : <span class="text-red-600 font-semibold text-xs">✗ Failed</span>}
-                      </td>
-                      <td class="px-4 py-2.5 text-xs tabular-nums text-gray-600">
-                        {lvl.criteria_passed}/{lvl.criteria_total}
-                      </td>
-                      <td class="px-4 py-2.5 text-xs text-gray-500">
-                        {lvl.failing_criteria.length > 0
-                          ? lvl.failing_criteria.slice(0, 3).map(f => f.title).join(' · ') + (lvl.failing_criteria.length > 3 ? ` +${lvl.failing_criteria.length - 3} more` : '')
-                          : <span class="text-green-600">—</span>}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        <div class="flex-1 min-w-0">
+                          <p class={`text-sm ${crit.passed ? 'text-gray-700' : 'text-gray-900 font-medium'}`}>{crit.title}</p>
+                          <p class="text-xs text-gray-400 mt-0.5">
+                            <span class="font-mono">{crit.id}</span>
+                            {crit.annex_ref && <span class="ml-2 text-purple-600">{crit.annex_ref}</span>}
+                            <span class="ml-2 text-gray-400">{crit.objective_id}</span>
+                          </p>
+                          {!crit.passed && crit.supplementary && (
+                            <p class="text-xs text-red-700 bg-red-50 rounded mt-1 px-2 py-1 leading-relaxed line-clamp-2">
+                              {crit.supplementary.slice(0, 150)}{crit.supplementary.length > 150 ? '…' : ''}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Gap report: priority actions for next level */}
-            {cadaResult.gap_report.length > 0 && (
-              <div>
+            {cadaResult.gap_report.length > 0 && cadaResult.highest_level_achieved < 4 && (
+              <div class="mb-4">
                 <h3 class="text-sm font-semibold mb-2 text-gray-700">
                   Priority actions to reach UAL {cadaResult.highest_level_achieved + 1}
                 </h3>
@@ -463,6 +496,7 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
                   {cadaResult.gap_report.map((item) => {
                     const q = criteria.objectives.flatMap(o => o.questions).find(q => q.id === item.question_id);
                     const annex = (q as any)?.cada_annex_ref ?? '';
+                    const hint = q?.supplementary_info ?? '';
                     return (
                       <div class="flex items-start gap-3 p-3 rounded-lg border border-red-100 bg-red-50">
                         <div class="text-xs font-bold text-red-500 mt-0.5 w-5 shrink-0">#{item.priority}</div>
@@ -473,6 +507,11 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
                             {annex && <span class="ml-2 font-mono text-purple-600">{annex}</span>}
                             <span class="ml-2">· Blocks UAL {item.blocks_level}</span>
                           </p>
+                          {hint && (
+                            <p class="text-xs text-red-700 mt-1 leading-relaxed">
+                              {hint.slice(0, 180)}{hint.length > 180 ? '…' : ''}
+                            </p>
+                          )}
                         </div>
                         <span class="text-xs font-semibold px-2 py-0.5 rounded-full text-white shrink-0 self-start mt-0.5" style={`background-color: ${UAL_COLORS_RESULT[item.blocks_level]}`}>
                           UAL {item.blocks_level}

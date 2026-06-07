@@ -265,6 +265,13 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
       {visibleQuestions.map(q => {
         const isExpanded = expanded[q.id];
 
+        // Determine level badge prefix: CADA-only questions show UAL, EU-CSF/CSI show SEAL, C3A-only hides
+        const cadaOnly = (q as any).applies_to_cada && !q.applies_to_eu_csf && !q.applies_to_csi_composite;
+        const cadaFramework = fw.has('cada') && !fw.has('eu_csf') && !fw.has('csi_composite');
+        const levelPrefix = (cadaOnly && cadaFramework) ? 'UAL'
+          : fw.has('c3a') && !fw.has('eu_csf') && !fw.has('csi_composite') ? ''
+          : 'SEAL';
+
         if (q.type === 'single') {
           const val = answers[q.id]?.value as AnswerValue | undefined;
           const evidLevel = answers[q.id]?.evidence_level;
@@ -290,6 +297,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               answerValues={visibleAnswerValues}
               warnPlannedForC3a={c3aInMix && q.applies_to_c3a}
               fidelityTags={questionFidelityTags(q, fw)}
+              levelPrefix={levelPrefix}
             />
           );
         }
@@ -328,7 +336,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                     </span>
                   </div>
                   <span className="text-xs text-gray-400 whitespace-nowrap">
-                    Level {q.tiers.national!.seal_contribution} · {q.tiers.national!.points}pt
+                    {levelPrefix || 'SEAL'} {q.tiers.national!.seal_contribution} · {q.tiers.national!.points}pt
                   </span>
                 </div>
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
@@ -368,7 +376,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                     )}
                   </div>
                   <span className="text-xs text-gray-400 whitespace-nowrap">
-                    Level {q.tiers.bloc.seal_contribution} · {q.tiers.bloc.points}pt
+                    {levelPrefix || 'SEAL'} {q.tiers.bloc.seal_contribution} · {q.tiers.bloc.points}pt
                   </span>
                 </div>
                 {hasNational && (
@@ -423,12 +431,13 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   );
 }
 
-function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, isExpanded, onToggleExpand, answerValues, warnPlannedForC3a, fidelityTags }: {
+function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, isExpanded, onToggleExpand, answerValues, warnPlannedForC3a, fidelityTags, levelPrefix }: {
   id: string; title: string; text: string; sealContribution: number; points: number; source: string;
   supplementaryInfo?: string; isAdditionalCriterion?: boolean; value: AnswerValue | undefined;
   onAnswer: (v: AnswerValue) => void; evidenceLevel?: EvidenceLevel; onEvidenceLevel?: (l: EvidenceLevel) => void;
   isExpanded: boolean; onToggleExpand: () => void;
   answerValues: AnswerValue[]; warnPlannedForC3a?: boolean; fidelityTags?: FidelityTagInfo[];
+  levelPrefix?: string;
 }) {
   return (
     <div className={`border rounded-xl p-5 transition ${value ? 'border-gray-200' : 'border-gray-300'}`}>
@@ -445,10 +454,12 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
             <span className="ml-2 text-xs bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded">AC</span>
           )}
         </div>
-        <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-white whitespace-nowrap"
-          style={{ backgroundColor: ['#dc2626','#f97316','#eab308','#22c55e','#16a34a'][sealContribution] ?? '#6b7280' }}>
-          SEAL {sealContribution}
-        </span>
+        {levelPrefix !== '' && (
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-white whitespace-nowrap"
+            style={{ backgroundColor: ['#dc2626','#f97316','#eab308','#22c55e','#16a34a'][sealContribution] ?? '#6b7280' }}>
+            {levelPrefix ?? 'SEAL'} {sealContribution}
+          </span>
+        )}
       </div>
       <p className="text-sm text-gray-700 mb-4 leading-relaxed">{text}</p>
       <div className="flex flex-wrap gap-2 mb-3">

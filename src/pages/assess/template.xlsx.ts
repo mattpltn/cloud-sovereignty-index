@@ -49,7 +49,7 @@ export const GET: APIRoute = async ({ url }) => {
       } as unknown as CriteriaFile
     : allCriteria;
 
-  const blob = await buildTemplateXlsx(criteria, countriesJson, label);
+  const blob = await buildTemplateXlsx(criteria, countriesJson, label, fw || undefined);
   const buffer = await blob.arrayBuffer();
   const filename = FW_FILENAME[fw] ?? 'csi-assessment-template.xlsx';
 
