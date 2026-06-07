@@ -1,12 +1,13 @@
 import { useState, useRef } from 'react';
 import type { CriteriaFile } from '../../shared/src/schema.js';
 import type { AnswerMap } from '../../shared/src/types.js';
-import { buildTemplateXlsx, parseXlsx } from '../lib/template-xlsx.js';
+import { parseXlsx } from '../lib/template-xlsx.js';
 
 interface Props {
   criteria: CriteriaFile;
   countries: { EU: unknown[]; EEA_non_EU: unknown[]; non_EU: unknown[] };
   defaultVariant: 'EU-CSF' | 'Generalized';
+  templateDownloadUrl?: string;
 }
 
 type AnswerValue = 'yes' | 'no' | 'partial' | 'planned' | 'n/a';
@@ -59,30 +60,12 @@ function parseCsv(text: string): { answers: AnswerMap; error?: string } {
   return { answers, error: msg };
 }
 
-export default function ImportAssessment({ criteria, countries, defaultVariant }: Props) {
+export default function ImportAssessment({ criteria, countries, defaultVariant, templateDownloadUrl }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-
-  async function handleTemplateDownload() {
-    try {
-      const blob = await buildTemplateXlsx(
-        criteria,
-        countries as Parameters<typeof buildTemplateXlsx>[1],
-      );
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'csi-assessment-template.xlsx';
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Template generation failed:', err);
-      alert('Failed to generate template: ' + String(err));
-    }
-  }
 
   async function handleImport() {
     if (!file) return;
@@ -176,12 +159,14 @@ export default function ImportAssessment({ criteria, countries, defaultVariant }
             Upload a previously exported JSON, CSV, or filled XLSX template to skip the form.
           </p>
         </div>
-        <button
-          onClick={handleTemplateDownload}
-          className="text-xs text-blue-600 hover:underline whitespace-nowrap ml-4"
-        >
-          Download blank template (.xlsx) ↓
-        </button>
+        {templateDownloadUrl && (
+          <a
+            href={templateDownloadUrl}
+            className="text-xs text-blue-600 hover:underline whitespace-nowrap ml-4"
+          >
+            Download blank template (.xlsx) ↓
+          </a>
+        )}
       </div>
 
       <div
