@@ -119,7 +119,7 @@ for (const ac of acQuestions) {
               <p class="text-xs text-gray-500 mt-0.5">C3A v1.0 — BSI. Output: pass/fail per criterion, % met. SOV-1 through SOV-6 only. Binary — no partial credit.</p>
             </div>
           </label>
-          <label id="fw-cada-label" class="flex items-start gap-3 p-3 border border-purple-200 rounded-lg cursor-pointer hover:border-purple-400 transition">
+          <label class="flex items-start gap-3 p-3 border border-purple-200 rounded-lg cursor-pointer hover:border-purple-400 transition">
             <input type="checkbox" name="framework" value="cada" id="fw-cada"
               class="mt-0.5 h-4 w-4 rounded border-gray-300" />
             <div>
@@ -165,6 +165,8 @@ for (const ac of acQuestions) {
               </div>
             </div>
           </div>
+        <p id="framework-error" class="text-red-600 text-xs mt-2 hidden">Select at least one framework.</p>
+      </div>
 
       <!-- C3A Additional Criteria selection (shown only when C3A is ticked) -->
       <div id="ac-panel" class="hidden">
@@ -211,8 +213,6 @@ for (const ac of acQuestions) {
     const c3aCheckbox = document.getElementById('fw-c3a');
     const euCsfCheckbox = document.getElementById('fw-eu-csf');
     const csiCheckbox = document.getElementById('fw-csi');
-    const cadaCheckbox = document.getElementById('fw-cada');
-    const cadaLabel = document.getElementById('fw-cada-label');
     const acPanel = document.getElementById('ac-panel');
     const acSelectAll = document.getElementById('ac-select-all');
     const acHiddenInputs = document.getElementById('ac-hidden-inputs');
@@ -252,30 +252,15 @@ for (const ac of acQuestions) {
       });
     });
 
-    function updateCadaAvailability(isEU) {
-      if (isEU) {
-        cadaCheckbox.disabled = false;
-        cadaLabel.classList.remove('opacity-40', 'pointer-events-none');
-        cadaLabel.title = '';
-      } else {
-        cadaCheckbox.disabled = true;
-        cadaCheckbox.checked = false;
-        cadaLabel.classList.add('opacity-40', 'pointer-events-none');
-        cadaLabel.title = 'CADA applies to EU/EEA assessments only';
-      }
-    }
-
     select.addEventListener('change', () => {
       const code = select.value;
       if (!code) {
         variantInput.value = 'EU-CSF';
         badge.classList.add('hidden');
-        updateCadaAvailability(true);
         return;
       }
       const isEU = euSet.has(code);
       variantInput.value = isEU ? 'EU-CSF' : 'Generalized';
-      updateCadaAvailability(isEU);
       badge.textContent = isEU
         ? '✓ EU/EEA country — EU Cloud Sovereignty Framework criteria apply'
         : '✓ Non-EU country — Generalized criteria with local framework references';
