@@ -77,6 +77,12 @@ if (!finalObjectiveIds.includes(objective!)) {
 }
 
 const resumeUrl = Astro.url.href;
+
+// Map API framework IDs to methodology page slugs
+const FW_SLUG: Record<string, string> = { eu_csf: 'eu-csf', c3a: 'c3a', csi_composite: 'csi', cada: 'cada' };
+const methodologyHref = selectedFrameworks.length === 1 && FW_SLUG[selectedFrameworks[0]]
+  ? `/methodology/${FW_SLUG[selectedFrameworks[0]]}`
+  : '/methodology';
 ---
 <!doctype html>
 <html lang="en">
@@ -98,7 +104,7 @@ const resumeUrl = Astro.url.href;
         </a>
       ))}
       <span class="text-gray-200 mx-1">|</span>
-      <a href="/methodology" class="px-2 py-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-700">
+      <a href={methodologyHref} class="px-2 py-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-700">
         Methodology
       </a>
     </nav>
