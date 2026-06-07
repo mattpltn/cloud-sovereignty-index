@@ -338,6 +338,7 @@ function addAssessmentSheet(
 export async function buildTemplateXlsx(
   criteria: CriteriaFile,
   countries: CountriesFile,
+  frameworkLabel?: string,
 ): Promise<Blob> {
   const ExcelJS = (await import('exceljs')).default;
   const wb = new ExcelJS.Workbook();
@@ -355,7 +356,9 @@ export async function buildTemplateXlsx(
   // Title
   setup.mergeCells('B1:C1');
   const titleCell = setup.getCell('B1');
-  titleCell.value = 'Cloud Sovereignty Index — Assessment Template';
+  titleCell.value = frameworkLabel
+    ? `Cloud Sovereignty Index — ${frameworkLabel} Assessment Template`
+    : 'Cloud Sovereignty Index — Assessment Template';
   titleCell.font = { bold: true, size: 14 };
   titleCell.alignment = { vertical: 'middle' };
   setup.getRow(1).height = 28;
