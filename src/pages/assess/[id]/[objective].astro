@@ -88,7 +88,7 @@ const resumeUrl = Astro.url.href;
 <body class="bg-white text-gray-900 min-h-screen">
   <header class="border-b border-gray-200 px-6 py-3 flex items-center justify-between gap-4">
     <a href="/" class="font-semibold text-base tracking-tight shrink-0">Cloud Sovereignty Index</a>
-    <nav class="flex gap-1 text-xs text-gray-400 flex-wrap">
+    <nav class="flex gap-1 text-xs text-gray-400 flex-wrap items-center">
       {finalObjectiveIds.map(oid => (
         <a
           href={`/assess/${id}/${oid}`}
@@ -97,6 +97,10 @@ const resumeUrl = Astro.url.href;
           {oid}
         </a>
       ))}
+      <span class="text-gray-200 mx-1">|</span>
+      <a href="/methodology" class="px-2 py-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-700">
+        Methodology
+      </a>
     </nav>
   </header>
 

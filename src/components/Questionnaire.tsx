@@ -304,8 +304,10 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
         const natSatisfied = natVal === 'yes';
         // Generalized variant has no supranational bloc — national tier is the only tier
         const isGeneralized = variant === 'Generalized';
-        // Show bloc fallback when: no country selected, OR national was answered but not yes (EU-CSF only)
-        const showBloc = !isGeneralized && (!hasNational || (natVal !== undefined && !natSatisfied));
+        // Show bloc when:
+        //  - no national tier exists (bloc is the only content — always show regardless of variant)
+        //  - or: national tier exists but wasn't satisfied (show bloc as EU-tier fallback, EU mode only)
+        const showBloc = !hasNational || (!isGeneralized && natVal !== undefined && !natSatisfied);
 
         const fidelityTags = questionFidelityTags(q, fw);
         return (
