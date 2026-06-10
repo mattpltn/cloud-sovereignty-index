@@ -66,9 +66,25 @@ const TieredQuestionSchema = QuestionBaseSchema.extend({
   }),
 });
 
+// EU-CSF faithful: 5-level Likert scale per official XLSX
+const EuCsfOptionSchema = z.object({
+  text: z.string(),
+  value: z.number(),  // raw point value (0–200 depending on question)
+  seal: z.number().int().min(0).max(4),
+});
+
+const EuCsfQuestionSchema = QuestionBaseSchema.extend({
+  type: z.literal('eu_csf'),
+  eu_csf_id: z.string(),          // official EU-CSF question ID e.g. "SOV-1-01"
+  seal_contribution: z.number().int().min(0).max(4),  // max SEAL this question can achieve
+  max_score: z.number(),           // max point value (highest option)
+  eu_csf_options: z.array(EuCsfOptionSchema).min(2).max(6),
+});
+
 export const QuestionSchema = z.discriminatedUnion('type', [
   SingleQuestionSchema,
   TieredQuestionSchema,
+  EuCsfQuestionSchema,
 ]);
 
 export const ObjectiveSchema = z.object({

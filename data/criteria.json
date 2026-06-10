@@ -77,7 +77,7 @@
       "id": "SOV-1",
       "title": "Strategic Sovereignty",
       "description": "Strategic sovereignty captures the degree to which the services of a cloud provider are anchored within the European Union legal, financial, and industrial ecosystem. It assesses ownership stability, governance influence, and alignment with EU strategic priorities.",
-      "weight": 0.2,
+      "weight": 0.15,
       "questions": [
         {
           "id": "SOV-1-01",
@@ -450,13 +450,7 @@
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-2 CF: 'Applicability of international regimes, which may restrict usage or transfer' and SOV-1 CF: 'Ability to sustain secure operations against requests to cease or suspend the service.' The state-of-defense takeover question operationalizes the most extreme legal-regime case. EU-CSF names the principle; C3A defines the specific constitutional trigger (state of defense).",
-          "c3a_fidelity": "direct",
-          "applies_to_cada": true,
-          "cada_assurance_level": [
-            2
-          ],
-          "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(g)(iv)"
+          "c3a_fidelity": "direct"
         },
         {
           "id": "SOV-2-03-CSI",
@@ -576,6 +570,31 @@
           ],
           "cada_fidelity": "direct",
           "cada_annex_ref": "Art. 20(8)"
+        },
+        {
+          "id": "SOV-2-07-CADA",
+          "title": "Immunity from Third-Country Restrictive Measures",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud service provider guarantee that no third country can force it to implement, enforce, give effect to, or comply with any restrictive measures such as sanction regimes, embargoes, or equivalent legal or administrative measures adopted by a third country, against the public sector body or the cloud service itself — unless the measure is legitimate under Member State or Union law?",
+          "supplementary_info": "CADA Annex II L2(g)(iv) text verbatim: 'any legal or administrative measures by a third country requiring the cloud computing service provider to implement, enforce, give effect to, or comply with restrictive measures, such as sanction regimes, embargoes, or any equivalent legal or administrative measures adopted by a third country, will not prevent or impede [the provider] from providing the agreed cloud computing service, except where legitimate under Member State or Union law.' Evidence: contractual clause asserting this guarantee, legal opinion for providers subject to potential third-country export-control law, documented mechanism for contesting conflicting third-country orders.",
+          "seal_contribution": 3,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L2(g)(iv)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2,
+            3,
+            4
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(g)(iv), L3(g)(iv), L4(g)(iv)"
         }
       ],
       "layer": "sovereignty"
@@ -951,8 +970,9 @@
           "cada_assurance_level": [
             2
           ],
-          "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(f)"
+          "cada_fidelity": "inferred",
+          "cada_annex_ref": "Annex III §6",
+          "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and prohibits any transfer outside the Union. This question asks only for training-data jurisdiction disclosure, which is weaker than the flat prohibition. It is inferred evidence under Annex III §6 (model cards / training-source records), not a direct mapping to L2(f)."
         },
         {
           "id": "SOV-3-AI-02-AC",
@@ -980,8 +1000,9 @@
           "cada_assurance_level": [
             2
           ],
-          "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(f)"
+          "cada_fidelity": "inferred",
+          "cada_annex_ref": "Annex II L2(c)",
+          "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and transfer outside the Union. This question addresses inference location (processing of customer data), which maps more naturally to L2(c)'s processing-localisation requirement. Re-tagged inferred from L2(c) rather than a direct mapping to L2(f)."
         },
         {
           "id": "SOV-3-AI-03-AC",
@@ -1005,6 +1026,31 @@
           "review_status": "pending-external-review",
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models governed under EU control, minimizing dependency on non-EU technology stacks.' Customer opt-out from training data use is a governance control ensuring the customer retains sovereignty over how their data shapes model behaviour — the CF implies governance control but does not specify this mechanism."
+        },
+        {
+          "id": "SOV-3-09-CADA",
+          "title": "Prohibition on Third-Country AI Training Use and Data Transfer",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "Does the cloud service provider guarantee that data generated by using the audited service will not be used to train or fine-tune any AI system operated by a third country or a legal entity established in a third country, and will not be transferred outside the Union in any case?",
+          "supplementary_info": "CADA Annex II L2(f)/L3(f)/L4(f) verbatim: 'the data generated by using the audited service are not used to train or fine-tune any AI system operated by a third country or a legal entity established in a third-country, and are not transferred outside the Union in any case.' This is a flat prohibition — not an opt-out mechanism. Evidence per Annex III §6: contractual clauses prohibiting this use, data-flow diagrams covering all MLOps touchpoints, EU build/test/release records, model cards, data lineage documentation, and subcontractor list confirming no third-country ML processing.",
+          "seal_contribution": 3,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L2(f)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2,
+            3,
+            4
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(f), L3(f), L4(f)"
         },
         {
           "id": "SOV-3-AI-04-AC",
@@ -1612,7 +1658,7 @@
       "id": "SOV-5",
       "title": "Supply Chain Sovereignty",
       "description": "Supply chain sovereignty evaluates the extent to which the cloud service provider can identify, manage, and reduce dependencies on non-EU software, hardware, and external services, and maintain operational continuity in the event of supply chain disruptions.",
-      "weight": 0.1,
+      "weight": 0.20,
       "questions": [
         {
           "id": "SOV-5-01",
@@ -2066,7 +2112,7 @@
       "id": "SOV-7",
       "title": "Security & Compliance",
       "description": "Security and compliance sovereignty evaluates whether the cloud service provider maintains certifications, regulatory compliance, and security controls anchored in EU frameworks, including the capacity for independent auditing and enforcement of EU-based security standards.",
-      "weight": 0.15,
+      "weight": 0.10,
       "questions": [
         {
           "id": "SOV-7-01",

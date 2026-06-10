@@ -121,6 +121,28 @@ function scoreEuCsf(answers: AnswerMap, criteria: CriteriaFile): EuCsfResult {
     for (const q of obj.questions) {
       if (!q.applies_to_eu_csf) continue;
 
+      // EU-CSF faithful Likert questions: exact official XLSX scoring
+      if (q.type === 'eu_csf') {
+        const stored = answers[q.id];
+        const optIdx = stored?.eu_csf_option;
+        const opt = optIdx != null ? q.eu_csf_options[optIdx] : undefined;
+        const earned = opt ? opt.value : 0;
+        const seal = opt ? opt.seal : 0;
+        questionResults.push({
+          question_id: q.id,
+          tier: 'single',
+          value: opt ? 'yes' : 'no',  // synthetic value for display compatibility
+          points_earned: earned,
+          points_possible: q.max_score,
+          seal_contribution: seal,
+          counts_toward_seal: opt != null,
+          flagged_unsupported: false,
+        });
+        raw += earned;
+        max += q.max_score;
+        continue;
+      }
+
       let results: QuestionResult[];
       if (q.type === 'tiered') {
         results = scoreTieredQuestion(q, answers);
@@ -146,15 +168,16 @@ function scoreEuCsf(answers: AnswerMap, criteria: CriteriaFile): EuCsfResult {
   const values = Object.values(perObjective);
   const globalSeal = values.length > 0 ? Math.min(...values.map(o => o.seal)) : 0;
 
-  let overallNumerator = 0;
-  let weightSum = 0;
+  // Official formula: Σ(weight × raw_score) / Σ(weight × max_score) × 100
+  let weightedRaw = 0;
+  let weightedMax = 0;
   for (const o of values) {
     if (o.max_score > 0) {
-      overallNumerator += (o.raw_score / o.max_score) * o.weight;
-      weightSum += o.weight;
+      weightedRaw += o.weight * o.raw_score;
+      weightedMax += o.weight * o.max_score;
     }
   }
-  const globalPct = weightSum > 0 ? Math.min(100, (overallNumerator / weightSum) * 100) : 0;
+  const globalPct = weightedMax > 0 ? Math.min(100, (weightedRaw / weightedMax) * 100) : 0;
 
   return {
     per_objective: perObjective,
