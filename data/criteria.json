@@ -371,6 +371,114 @@
             "value": "no",
             "when_unmet": "exclude"
           }
+        },
+        {
+          "id": "SOV-1-04-LMIC",
+          "title": "Material Licensing-Model Change Notice (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P1",
+          "lmic_axis": "autonomy",
+          "lmic_sourcing": "adapt",
+          "text": "Where the provider (or its upstream platform vendor) makes a material change to the licensing model that would alter the cost structure, permitted use, or portability of the service, does the contract require: (a) timely advance notice to the customer; and (b) the customer’s right to terminate the contract without penalty before the change takes effect?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "SWIPO IaaS Code of Conduct v3.0",
+            "clause": "TR05 (material portability changes — notice + termination right)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EU-CSF v1.2.1",
+              "ref": "§4 SOV-1 contributing factor 2 (‘assurances against change of control’)"
+            },
+            {
+              "framework": "EBA/GL/2019/02",
+              "ref": "§13.3 (notification of material changes to the outsourcing arrangement)"
+            },
+            {
+              "framework": "SWIPO IaaS Code of Conduct v3.0",
+              "ref": "TR05 (CSP shall inform CSC in a timely manner of changes that would materially alter portability, incl. costs; CSC should have the right to terminate in advance)",
+              "note": "Requirement IDs verified against the Code structure as reproduced in published CSP transparency statements."
+            }
+          ],
+          "lmic_rationale": "The Broadcom/VMware licensing upheaval demonstrated that a licensing-model change at a stack vendor propagates to sovereign-cloud customers exactly like a change of control: costs escalate, portability degrades, and exit becomes expensive at the worst moment. EU-CSF CF SOV-1-2 already scores ‘assurances against change of control’; SWIPO TR05 provides verbatim industry-code language for the notice + termination right. This question extends both to cover licensing-model changes specifically."
+        },
+        {
+          "id": "SOV-1-11-LMIC",
+          "title": "Local Investment, Employment and Knowledge Transfer (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P1",
+          "lmic_axis": "autonomy",
+          "lmic_sourcing": "adapt",
+          "text": "Does the provider demonstrate investment, employment, and value creation in the customer’s country attributable to the service — including local hiring commitments, training and certification programs, and knowledge transfer to local staff or the customer’s personnel?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "EU-CSF v1.2.1",
+            "clause": "§4 SOV-1 contributing factor 4 (‘Extent of investment, jobs, and value creation within EU’ — bloc substituted)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EU-CSF v1.2.1",
+              "ref": "§4 SOV-1 contributing factor 4 (‘Extent of investment, jobs, and value creation within EU’ — bloc substituted)"
+            },
+            {
+              "framework": "World Bank Procurement Regulations for IPF Borrowers, 7th ed. (Sep 2025)",
+              "ref": "§5.54 (local labor participation requirement: minimum % of total labor cost to local staff; Rated Criteria for skills development); §§4.2-4.3 (PPSD must address the requirement)",
+              "note": "§5.54 formally applies to works contracts; cited as the Bank-native pattern extended by analogy to cloud services, with EU-CSF §4 SOV-4 CF-3 as the primary criterion source."
+            }
+          ],
+          "lmic_rationale": "Verbatim EU-CSF contributing factor with the bloc substituted — the EU scores exactly this for itself — now reinforced by the World Bank’s own procurement framework (7th ed. §5.54) adding a local labor participation requirement. The Bank’s Regulations (7th ed., §5.54) impose a local-labor minimum and contemplate Rated Criteria for skills development in works procurement; this question applies the same Bank-endorsed mechanism to cloud services, where the primary source remains EU-CSF’s talent-pool contributing factor. §5.54 formally covers works contracts; cited here by analogy to cloud operations with that scope noted."
+        },
+        {
+          "id": "SOV-1-12-LMIC",
+          "title": "Local Operating Staff Ratio (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P1",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "adapt",
+          "supplementary_info": "Answer yes if at least 30% of the personnel operating, supporting, and maintaining the service for this country’s customers are nationals or long-term residents of that country. Band boundaries: <30% / 30-50% / 50-75% / >75%. The 30% boundary is adopted from the World Bank’s local labor participation requirement (30% of total labor cost, effective 1 Sep 2025). The 50% and 75% boundaries are progression bands above the Bank floor (DR-L9). ADOPTED-FROM: World Bank Procurement Regulations 7th ed. (Sep 2025) §5.54.",
+          "text": "What proportion of the personnel operating, supporting, and maintaining the service for this country’s customers are nationals or long-term residents of that country?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "EU-CSF v1.2.1",
+            "clause": "§4 SOV-4 contributing factor 3 (‘EU-based talent pool with expertise to operate and sustain the service’ — jurisdiction substituted)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EU-CSF v1.2.1",
+              "ref": "§4 SOV-4 contributing factor 3 (‘EU-based talent pool with expertise to operate and sustain the service’ — jurisdiction substituted)"
+            },
+            {
+              "framework": "C3A",
+              "ref": "SOV-4-01 personnel family (location/clearance of operating personnel)"
+            },
+            {
+              "framework": "World Bank Procurement Regulations for IPF Borrowers, 7th ed. (Sep 2025)",
+              "ref": "§5.54 (local labor participation requirement — 30% of total labor cost; applies to works contracts; cited by analogy for cloud operations staffing)",
+              "note": "§5.54 formally applies to works contracts; the 30% threshold is adopted here for cloud operations staffing. Where a project’s SPD/PPSD establishes a different percentage, that figure governs (DR-L9). The Bank’s own Regulations (7th ed., §5.54) impose a local-labor minimum and contemplate Rated Criteria for skills development in works procurement; this question applies the same Bank-endorsed mechanism to cloud services."
+            }
+          ],
+          "lmic_rationale": "The criterion (local operating talent) is EU-CSF CF SOV-4-3 and the C3A personnel family with the jurisdiction substituted; the Bank’s 7th-edition local-labor requirement (§5.54) shows the same expectation in Bank procurement itself. Only the percentage bands are editorial — they are scoring thresholds, registered as such (DR-L9), and adjustable per country profile. The 30% boundary is not set by this tool: it is the World Bank’s own local labor participation floor for internationally procured works contracts, adopted here by analogy for cloud operations staffing. Where a project’s SPD/PPSD establishes a different percentage, that figure governs. §5.54 formally covers works contracts; applied by analogy with that scope disclosed."
         }
       ],
       "layer": "sovereignty"
@@ -641,6 +749,38 @@
             "value": "no",
             "when_unmet": "exclude"
           }
+        },
+        {
+          "id": "SOV-2-08-LMIC",
+          "title": "Local Establishment and Contractual Enforceability (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P2",
+          "lmic_axis": "autonomy",
+          "lmic_sourcing": "grounded-new",
+          "text": "Does the provider maintain a genuine and stable establishment in the customer’s country — or contract through a locally registered entity — against which the contract is enforceable in local courts or an agreed neutral arbitral forum, evidenced by local registration, physical presence or authorized representation, and locally executed contracting?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "CADA COM(2026) 502",
+            "clause": "Annex III §1 (genuine-and-stable establishment)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "CADA COM(2026) 502",
+              "ref": "Annex III §1 (genuine-and-stable establishment indicia: registration, premises, staff, contractual operations, banking) — ported from EU jurisdiction to customer jurisdiction"
+            },
+            {
+              "framework": "EBA/GL/2019/02",
+              "ref": "§12.2 (due diligence on the contracting counterparty)"
+            }
+          ],
+          "lmic_rationale": "The indicia of ‘genuine and stable establishment’ are CADA’s own audit-evidence catalogue (Annex III §1), ported with one substitution: the jurisdiction. Enforceability is the LMIC analog of EU establishment — a sovereignty assessment that ignores whether the contract can actually be enforced locally measures paper rights."
         }
       ],
       "layer": "sovereignty"
@@ -1791,6 +1931,42 @@
           ],
           "cada_fidelity": "direct",
           "cada_annex_ref": "Annex II L3(h)"
+        },
+        {
+          "id": "SOV-4-17-LMIC",
+          "title": "Business-Impact Analysis for Connectivity Loss (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P4",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "grounded-new",
+          "text": "For each critical workload, has a documented business-impact analysis defined the maximum tolerable period of disruption under loss of international connectivity or loss of the provider, and does the architecture demonstrably meet it (e.g., local caching, offline/degraded operating mode, in-country failover)?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "ISO 22301",
+            "clause": "clause 8.2 (business-impact analysis and continuity requirements, cite by number only)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "ISO 22301",
+              "ref": "business-impact analysis and continuity requirements (cite clause 8.2 by number only)"
+            },
+            {
+              "framework": "NIST SP 800-53 Rev. 5",
+              "ref": "CP-2 (contingency plan); CP-10 (system recovery and reconstitution)"
+            },
+            {
+              "framework": "CSI (existing)",
+              "ref": "SOV-6-02 / SOV-6-02-AC (C3A vendor-loss continuity pattern)"
+            }
+          ],
+          "lmic_rationale": "BIA-driven tolerable-disruption targets are the textbook ISO 22301 mechanism and public-domain NIST CP controls; C3A already applies the same logic to vendor loss (SOV-6-02). The question changes only the disruption scenario to the one LMICs face most concretely: subsea-cable or international-connectivity loss."
         }
       ],
       "layer": "resilience"
@@ -2047,6 +2223,207 @@
           ],
           "cada_fidelity": "direct",
           "cada_annex_ref": "Annex II L4(i)(ii)"
+        },
+        {
+          "id": "SOV-5-08-LMIC",
+          "title": "Support Substitutability Ladder (LMIC)",
+          "type": "tiered_ladder",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P5",
+          "lmic_axis": "both",
+          "lmic_sourcing": "grounded-new",
+          "text": "If the current support vendor for the platform software fails, exits the market, changes licensing terms, or becomes subject to third-country restrictions, what is the demonstrated path to continued supported operation?",
+          "ladder": [
+            {
+              "tier": "A",
+              "label": "Same deployed stack is supportable by at least one alternative vendor or in-house team under an existing written arrangement (takeover support contract, escrowed support agreement, or documented in-house capability), without redeployment.",
+              "points": 10,
+              "gate_requires": [
+                "SOV-5-08-EV1"
+              ]
+            },
+            {
+              "tier": "B",
+              "label": "Support switch requires control-plane redeployment on an alternative distribution, but workloads and data port via standards-based APIs and formats, AND a control-plane rebuild runbook exists and has been exercised.",
+              "points": 7,
+              "gate_requires": [
+                "SOV-5-08-EV2",
+                "SOV-5-08-EV3"
+              ]
+            },
+            {
+              "tier": "C",
+              "label": "Exit from the current platform requires re-platforming workloads (no portable path), or no documented rebuild path exists.",
+              "points": 2
+            }
+          ],
+          "lmic_anchors": [
+            {
+              "framework": "DORA (Reg. 2022/2554)",
+              "ref": "Art. 29 (assessment of substitutability of ICT third-party providers; concentration risk)"
+            },
+            {
+              "framework": "EBA/GL/2019/02",
+              "ref": "§12.2 (due diligence incl. substitutability), §15 (exit strategies)"
+            },
+            {
+              "framework": "OpenInfra Foundation — Interop Working Group",
+              "ref": "OpenStack Powered guidelines (board-approved guideline 2020.11 + add-on programs), must-pass capability tests; conformance demonstrated via RefStack results"
+            },
+            {
+              "framework": "CSI (existing)",
+              "ref": "SOV-6-02/-02-AC (C3A vendor-loss continuity)"
+            }
+          ],
+          "lmic_rationale": "Substitutability of critical providers is a named supervisory requirement (DORA Art. 29; EBA §12.2), not an invention. The three tiers encode the empirical structure of the market: identical-stack takeover support is rare even for open platforms; what open standards genuinely deliver is workload/data portability across distributions (anchored by the OpenInfra interoperability certification — guideline 2020.11, validated via RefStack), which is Tier B; proprietary platforms whose exit means re-platforming workloads are Tier C. The Tier B gate (exercised rebuild runbook) prevents paper reversibility: a portable data plane without a tested control-plane rebuild path is Tier C in any real crisis. DR-L7 records the OpenStack Powered guideline vintage 2020.11."
+        },
+        {
+          "id": "SOV-5-08-EV1",
+          "title": "Alternative Support Arrangement (EV1)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P5",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "grounded-new",
+          "evidence_status_required": "documented",
+          "text": "Provide the written alternative-support arrangement for the currently deployed stack (takeover support contract, escrowed support agreement, or documented in-house capability with named, trained personnel).",
+          "seal_contribution": 0,
+          "points": 3,
+          "source": {
+            "doc": "EBA/GL/2019/02",
+            "clause": "§15 (exit strategy documentation)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EBA/GL/2019/02",
+              "ref": "§15 (exit strategy documentation)"
+            },
+            {
+              "framework": "NIST SP 800-53 Rev. 5",
+              "ref": "SA-9, SR-6 (external services and supplier review — public domain, quotable)"
+            }
+          ],
+          "lmic_rationale": "Tier A is only credible against a written arrangement; a sales-deck assurance is a vendor claim and cannot satisfy a gate (locked design decision 4)."
+        },
+        {
+          "id": "SOV-5-08-EV2",
+          "title": "Cross-Distribution API Portability Evidence (EV2)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P5",
+          "lmic_axis": "autonomy",
+          "lmic_sourcing": "grounded-new",
+          "evidence_status_required": "documented",
+          "text": "Demonstrate workload and data-plane portability across distributions: standards-based API conformance (e.g., interoperability certification or documented conformance test results), standard image/volume formats, and tenant configuration export.",
+          "seal_contribution": 0,
+          "points": 3,
+          "source": {
+            "doc": "OpenInfra Foundation — Interop Working Group",
+            "clause": "OpenStack Powered guidelines (board-approved guideline 2020.11 + add-on programs), must-pass capability tests; conformance demonstrated via RefStack results"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "OpenInfra Foundation — Interop Working Group",
+              "ref": "OpenStack Powered guidelines (board-approved guideline 2020.11 + add-on programs), must-pass capability tests; conformance demonstrated via RefStack results"
+            },
+            {
+              "framework": "ISO/IEC 19941",
+              "ref": "portability concepts (cite clause only)"
+            },
+            {
+              "framework": "EU Data Act (Reg. 2023/2854)",
+              "ref": "Art. 30 (technical aspects of switching — the pattern for standards-based portability evidence)"
+            }
+          ],
+          "lmic_rationale": "Distinguishes genuine API-level portability from marketing claims of openness; conformance certification (OpenStack Powered guideline 2020.11 via RefStack) is the citable instrument for exactly this. DR-L7 records the guideline vintage."
+        },
+        {
+          "id": "SOV-5-08-EV3",
+          "title": "Exercised Control-Plane Rebuild Runbook (EV3)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P5",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "adapt",
+          "evidence_status_required": "demonstrated",
+          "text": "Provide the control-plane rebuild runbook for redeployment on an alternative distribution, and evidence it has been exercised (test report of a representative rebuild — full or scoped — with date, scope, duration, and outcome).",
+          "seal_contribution": 0,
+          "points": 3,
+          "source": {
+            "doc": "EBA/GL/2019/02",
+            "clause": "§15 (exit plans incl. testing considerations)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EBA/GL/2019/02",
+              "ref": "§15 (exit plans incl. testing considerations)"
+            },
+            {
+              "framework": "DORA (Reg. 2022/2554)",
+              "ref": "Art. 28(8) (exit strategies for critical services)"
+            },
+            {
+              "framework": "CSI (existing)",
+              "ref": "SOV-6-12-LMIC / SOV-4-15-CADA tested-switchover pattern (CADA Annex III §9(3)(b)-(c))"
+            }
+          ],
+          "lmic_rationale": "MAINTAINER-LOCKED GATE: an unexercised runbook is paper reversibility. Same tested-switchover standard CADA’s audit evidence demands and EBA/DORA expect for critical exits; only the application point (control plane) is specific."
+        },
+        {
+          "id": "SOV-5-09-LMIC",
+          "title": "Customization Drift and OSS Currency Control (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P5",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "grounded-new",
+          "text": "Where the platform is open-source or source-available, does the operator maintain: (a) a documented register of deviations from the upstream project or supported distribution baseline; (b) a defined upgrade cadence with evidence of staying within N-2 of supported releases; and (c) confirmation that deviations do not break standards-based API conformance relied on for portability?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "NIST SP 800-53 Rev. 5",
+            "clause": "CM-2 (baseline configuration), CM-3 (configuration change control)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "NIST SP 800-53 Rev. 5",
+              "ref": "CM-2 (baseline configuration), CM-3 (configuration change control) — public domain, quotable"
+            },
+            {
+              "framework": "CSI (existing)",
+              "ref": "SOV-5-01-AC (C3A risk-based dependency process); SOV-4-16-CADA family (OSS currency/maintenance risks, CADA Annex III §10(2))"
+            },
+            {
+              "framework": "CADA COM(2026) 502",
+              "ref": "Annex III §10(2)(b) (up-to-date OSS applied without undue delay)"
+            }
+          ],
+          "lmic_rationale": "A heavily forked ‘open’ platform that only its builders understand has the reversibility profile of proprietary software with none of the support. Baseline/change control is verbatim NIST CM territory and OSS-currency risk is in CADA’s own audit evidence; the question composes the two. Failing clause (c) degrades the SOV-5-08 ladder answer: deviations breaking API conformance invalidate the Tier B portability premise."
         }
       ],
       "layer": "resilience"
@@ -2294,6 +2671,214 @@
             "value": "no",
             "when_unmet": "exclude"
           }
+        },
+        {
+          "id": "SOV-6-08-LMIC",
+          "title": "Contractual Switching Rights (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P6",
+          "lmic_axis": "autonomy",
+          "lmic_sourcing": "grounded-new",
+          "text": "Does the written contract include: (a) the customer’s right, upon request, to switch to another provider or port all exportable data and digital assets to on-premises infrastructure; (b) a maximum notice period of no more than two months to initiate switching; (c) a transitional period of no more than 30 calendar days, extendable once by the customer, with any technical-unfeasibility extension notified within 14 working days and duly justified; (d) a data retrieval period of at least 30 calendar days after the transitional period; and (e) a guarantee of full erasure of the customer’s exportable data and digital assets after the retrieval period?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "EU Data Act (Reg. 2023/2854)",
+            "clause": "Art. 25(2)(a),(d),(e),(g),(h); Art. 25(4)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EU Data Act (Reg. 2023/2854)",
+              "ref": "Art. 25(2)(a),(d),(e),(g),(h); Art. 25(4)"
+            },
+            {
+              "framework": "ISO/IEC 19086-1",
+              "ref": "cloud SLA framework — termination/exit components (cite clause only)"
+            },
+            {
+              "framework": "EBA/GL/2019/02",
+              "ref": "Section 15 (exit strategies)"
+            },
+            {
+              "framework": "SWIPO IaaS Code of Conduct v3.0",
+              "ref": "FR1 (CSA documented and legally binding); PLR05 (data availability period after termination; timely deletion warnings)",
+              "note": "Requirement IDs verified against the Code structure as reproduced in published CSP transparency statements; vendor the Code PDF into docs/sources/."
+            }
+          ],
+          "lmic_rationale": "Every parameter in this question — the 2-month notice ceiling, 30-day transition, 30-day retrieval floor, erasure guarantee — is copied from the mandatory contractual terms that Regulation (EU) 2023/2854 Art. 25 imposes on every cloud contract in the EU since 12 September 2025. Nothing is invented: the question asks whether the provider will give an LMIC public buyer the same contractual baseline EU law already obliges it to give any European customer. A provider arguing these terms are unreasonable is arguing against its own EU standard terms."
+        },
+        {
+          "id": "SOV-6-09-LMIC",
+          "title": "Exportable Data Categories and Open Formats (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P6",
+          "lmic_axis": "autonomy",
+          "lmic_sourcing": "grounded-new",
+          "text": "Does the provider contractually specify, exhaustively, all categories of exportable data and digital assets — including customer data, relevant derived/usage data, and service configurations — and make them exportable in commonly used, machine-readable, openly documented formats via documented interfaces?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "EU Data Act (Reg. 2023/2854)",
+            "clause": "Art. 25(2)(e); Art. 30"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EU Data Act (Reg. 2023/2854)",
+              "ref": "Art. 25(2)(e) (exhaustive specification); Art. 30 (technical aspects of switching)"
+            },
+            {
+              "framework": "SWIPO IaaS Code of Conduct v3.0",
+              "ref": "DP01 (import/export in structured, commonly used, machine-readable formats); DP06 (open standards and open protocols); DP08 (self-service periodic retrieval interface)",
+              "note": "Requirement IDs verified against the Code structure as reproduced in published CSP transparency statements."
+            },
+            {
+              "framework": "ISO/IEC 19941",
+              "ref": "cloud portability — syntactic/semantic data portability (cite clause only)"
+            }
+          ],
+          "lmic_rationale": "The ‘exhaustive specification of exportable categories’ requirement is verbatim Data Act Art. 25(2)(e); open machine-readable formats via documented interfaces is the Art. 30 mechanism; SWIPO DP01/DP06/DP08 and ISO/IEC 19941 supply the industry-standard vocabulary. The question composes three citable sources and adds no criterion of its own."
+        },
+        {
+          "id": "SOV-6-10-LMIC",
+          "title": "Switching Charges Disclosure and Waiver (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P6",
+          "lmic_axis": "autonomy",
+          "lmic_sourcing": "grounded-new",
+          "text": "Are all charges associated with switching away from the service — including data egress charges — disclosed before contract signature, capped at the provider’s directly incurred costs during the contract, and contractually waived for the switching process at exit?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "EU Data Act (Reg. 2023/2854)",
+            "clause": "Art. 29(1)-(4); Art. 2(36)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EU Data Act (Reg. 2023/2854)",
+              "ref": "Art. 29(1) (no switching charges from 12 Jan 2027); Art. 29(2)-(3) (cost-cap until then); Art. 29(4) (pre-contract disclosure); Art. 2(36) (definition includes data egress charges)"
+            }
+          ],
+          "lmic_rationale": "This question asks the provider to match, contractually, the exact regime Art. 29 makes mandatory in the EU: disclosure up front, cost-based cap, zero switching charges. A provider already operating this regime for EU customers cannot credibly claim it is unreasonable for an LMIC government. Single binding-law anchor; qualifies under the one-binding-law rule."
+        },
+        {
+          "id": "SOV-6-11-LMIC",
+          "title": "IaaS Functional Equivalence Obligation (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P6",
+          "lmic_axis": "autonomy",
+          "lmic_sourcing": "grounded-new",
+          "text": "For infrastructure services (IaaS), does the provider commit to take all reasonable measures — including documentation, capabilities, and technical support — to facilitate that the customer achieves functional equivalence when switching to another provider or to on-premises infrastructure?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "EU Data Act (Reg. 2023/2854)",
+            "clause": "Art. 23; Art. 30(1)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EU Data Act (Reg. 2023/2854)",
+              "ref": "Art. 23; Art. 30(1) (functional equivalence obligation for IaaS)"
+            }
+          ],
+          "lmic_rationale": "Wording tracks Art. 30(1) almost verbatim, including the ‘all reasonable measures’ standard and the documentation/capabilities/support triad. No editorial content."
+        },
+        {
+          "id": "SOV-6-12-LMIC",
+          "title": "Tested Exit Plan per Critical Workload (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P6",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "adapt",
+          "text": "Does a documented exit plan exist for each critical workload, and has it been tested or exercised — at minimum a partial restore or migration of a representative workload to an alternative environment — before go-live or within the last 24 months, with documented results?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "EBA/GL/2019/02",
+            "clause": "Section 15 (exit strategies)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EBA/GL/2019/02",
+              "ref": "Section 15 (documented exit strategies for critical functions)"
+            },
+            {
+              "framework": "DORA (Reg. 2022/2554)",
+              "ref": "Art. 28(8) (exit strategies for critical ICT services)"
+            },
+            {
+              "framework": "SWIPO IaaS Code of Conduct v3.0",
+              "ref": "PLR01 (procedure to determine testing of the porting mechanisms and APIs; CSC recommended to have a test suite)",
+              "note": "Requirement IDs verified against the Code structure as reproduced in published CSP transparency statements."
+            },
+            {
+              "framework": "CSI (existing)",
+              "ref": "SOV-4-15-CADA tested-switchover language (CADA Annex III §9(3)(b)-(c))"
+            }
+          ],
+          "lmic_rationale": "Documented-and-tested exit strategies for critical outsourced functions are the established supervisory standard in EU financial regulation (EBA §15, DORA Art. 28(8)) and appear in CADA’s audit-evidence catalogue as ‘tests… and a switchover plan’. SWIPO PLR01 adds an industry-code basis for testing exit mechanisms. The 24-month cadence is the only editorial parameter; it is a scoring threshold, not a criterion, and is recorded in the decisions register."
+        },
+        {
+          "id": "SOV-6-13-LMIC",
+          "title": "Infrastructure-as-Code Portability (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P6",
+          "lmic_axis": "autonomy",
+          "lmic_sourcing": "editorial",
+          "supplementary_info": "EDITORIAL: no source framework contains a verbatim IaC control; this question operationalizes ISO/IEC 19941 portability concepts. It is the single openly editorial item in the LMIC set, tagged accordingly, and is scored but never gated.",
+          "text": "Are the customer’s deployments defined in portable, declarative infrastructure-as-code formats that can be re-targeted to an alternative provider or on-premises environment without reconstruction from scratch?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "ISO/IEC 19941",
+            "clause": "portability concepts (cite clause only)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "ISO/IEC 19941",
+              "ref": "syntactic and semantic portability concepts (cite clause only)"
+            },
+            {
+              "framework": "SWIPO IaaS Code of Conduct v3.0",
+              "ref": "portability practice"
+            }
+          ],
+          "lmic_rationale": "No source framework contains a verbatim IaC control; this question operationalizes ISO/IEC 19941 portability concepts. It is scored but never gated, and is labeled editorial. Providers that deploy via IaC reduce exit friction regardless of contractual terms; the question captures this empirical fact."
         }
       ],
       "layer": "operational_viability"
@@ -2653,6 +3238,193 @@
         }
       ],
       "layer": "operational_viability"
+    },
+    {
+      "id": "SOV-9",
+      "title": "Economic & Payment Continuity",
+      "description": "Evaluates whether the cloud service relationship can remain stable under payment-rail disruption, FX volatility, sanctions exposure, and provider financial distress — the continuity dimension that standard sovereignty frameworks underweight for LMIC procurement.",
+      "weight": 0,
+      "layer": "lmic_only",
+      "questions": [
+        {
+          "id": "SOV-9-01-LMIC",
+          "title": "Local Currency Invoicing and Payment Rails (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P7",
+          "lmic_axis": "both",
+          "lmic_sourcing": "grounded-new",
+          "text": "Can the provider invoice through a locally established entity, accept payment in the customer country’s local currency through domestic banking rails, and maintain service without dependence on international card networks for payment processing?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "World Bank Procurement Regulations for IPF Borrowers, 7th ed. (Sep 2025)",
+            "clause": "§§5.55-5.56 (7th ed.): bid pricing in local currency; payment in the currencies requested"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "World Bank Procurement Regulations for IPF Borrowers, 7th ed. (Sep 2025)",
+              "ref": "§§5.55-5.56 (7th ed.): bid pricing in local currency; payment in the currencies requested"
+            },
+            {
+              "framework": "EBA/GL/2019/02",
+              "ref": "§12.2 (due diligence on service-delivery dependencies)"
+            }
+          ],
+          "lmic_rationale": "Local-currency payment is not a novel demand: World Bank procurement rules (7th ed. §§5.55-5.56) provide for bids priced and paid in the borrower’s currency, and most Bank-financed contracts operate this way. The question extends a standard procurement provision to the cloud billing relationship. The card-network clause addresses a documented failure mode: customers in sanctioned or de-risked economies losing cloud access not by provider decision but because their payment instrument fails."
+        },
+        {
+          "id": "SOV-9-02-LMIC",
+          "title": "Payment-Failure Grace and Cure Period (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P7",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "grounded-new",
+          "text": "Does the contract define what happens when payment fails for reasons outside the customer’s control (payment-rail disruption, banking restrictions, force majeure): a defined grace and cure period, continuation of service during that period, and an escalation process — rather than automatic suspension or termination?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "DORA (Reg. 2022/2554)",
+            "clause": "Art. 28(7)-(8) (managed termination; exit without disruption for critical services)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "DORA (Reg. 2022/2554)",
+              "ref": "Art. 28(7)-(8) (managed termination; exit without disruption for critical services)"
+            },
+            {
+              "framework": "ISO 22301",
+              "ref": "business-continuity requirements — disruption scenarios (cite clause only)"
+            },
+            {
+              "framework": "CSI (existing)",
+              "ref": "SOV-2-05 demonstrated-measures pattern (CADA L2(g)(iii): prevention of service disruption originating from third-country measures)"
+            }
+          ],
+          "lmic_rationale": "EU financial regulation already treats abrupt termination of a critical ICT service as a harm to be managed (DORA Art. 28), and CADA L2(g)(iii) treats third-country-originated service disruption as a sovereignty failure. This question applies the same logic to the disruption vector LMICs actually face — payment-rail failure — without prescribing commercial terms: it asks only that the failure mode be contractually defined rather than left to default suspension clauses."
+        },
+        {
+          "id": "SOV-9-03-LMIC",
+          "title": "Data Return During Sanctions-Triggered Suspension (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P7",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "grounded-new",
+          "text": "Does the contract guarantee that, if the service is suspended or terminated due to payment failure caused by sanctions, banking restrictions, or payment-rail disruption, the customer retains a data retrieval window of at least 30 calendar days with export in the open formats defined for switching, before any erasure or withholding of data?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "EU Data Act (Reg. 2023/2854)",
+            "clause": "Art. 25(2)(g) (≥30-day retrieval period); Art. 25(2)(h) (erasure only after retrieval)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EU Data Act (Reg. 2023/2854)",
+              "ref": "Art. 25(2)(g) (≥30-day retrieval period); Art. 25(2)(h) (erasure only after retrieval)"
+            },
+            {
+              "framework": "SWIPO IaaS Code of Conduct v3.0",
+              "ref": "PLR05 (data availability period after termination; timely deletion warnings)",
+              "note": "Requirement IDs verified against the Code structure as reproduced in published CSP transparency statements."
+            },
+            {
+              "framework": "ISO/IEC 19086-1",
+              "ref": "SLA exit/termination components (cite clause only)"
+            },
+            {
+              "framework": "CSI (existing)",
+              "ref": "SOV-2-07-CADA (provider not enforcing third-country restrictive measures; CADA L2(g)(iv))"
+            }
+          ],
+          "lmic_rationale": "The 30-day retrieval-before-erasure mechanism is lifted directly from Data Act Art. 25(2)(g)-(h); the question extends its trigger from voluntary switching to involuntary payment failure. CADA L2(g)(iv) — already in this tool as SOV-2-07-CADA — establishes that a provider should not give effect to third-country restrictive measures against its customer, and holding a government’s data hostage to a bill it is legally unable to pay would do exactly that. This is the Myanmar clause: data return must survive payment failure."
+        },
+        {
+          "id": "SOV-9-04-LMIC",
+          "title": "Foreign-Exchange Exposure Protections (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P7",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "grounded-new",
+          "text": "Does the provider offer contractual protections against foreign-exchange exposure for a locally-budgeted customer: local-currency or exchange-rate-protected pricing, fixed-price terms for a defined period, prepayment or committed-spend options, and caps or alerts on consumption-based charges including egress?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "World Bank Procurement Regulations for IPF Borrowers, 7th ed. (Sep 2025)",
+            "clause": "§§5.55-5.56 (currency of bid and payment); §5.57 (price adjustments / fixed price)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "World Bank Procurement Regulations for IPF Borrowers, 7th ed. (Sep 2025)",
+              "ref": "§§5.55-5.56 (currency of bid and payment); §5.57 (price adjustments / fixed price)"
+            },
+            {
+              "framework": "EU Data Act (Reg. 2023/2854)",
+              "ref": "Art. 29(4) (pre-contract disclosure of fees and charges — the transparency pattern)"
+            }
+          ],
+          "lmic_rationale": "Price-adjustment and currency provisions are standard architecture in World Bank procurement documents (§5.57, §§5.55-5.56); this question asks whether the provider’s commercial terms can plug into that architecture. For a budget denominated in a volatile currency, an FX move is functionally a service-continuity event — the bill doubles, the budget doesn’t. The question prescribes no specific instrument; it asks which of the standard mitigations the provider supports."
+        },
+        {
+          "id": "SOV-9-05-LMIC",
+          "title": "Provider Financial Viability and Dependency Disclosure (LMIC)",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "applies_to_lmic": true,
+          "lmic_pillar": "P7",
+          "lmic_axis": "assurance",
+          "lmic_sourcing": "grounded-new",
+          "text": "Does the provider disclose evidence of financial viability (audited financial statements or equivalent) and material dependency concentrations (key suppliers, parent-company support, customer concentration) sufficient for the customer to assess continuity risk over the contract term?",
+          "seal_contribution": 0,
+          "points": 5,
+          "source": {
+            "doc": "EBA/GL/2019/02",
+            "clause": "§12.2 (pre-outsourcing due diligence incl. financial position)"
+          },
+          "lmic_anchors": [
+            {
+              "framework": "EBA/GL/2019/02",
+              "ref": "§12.2 (pre-outsourcing due diligence incl. financial position)"
+            },
+            {
+              "framework": "SWIPO IaaS Code of Conduct v3.0",
+              "ref": "TR03(f) (policies and process for accessing data in the event of CSP bankruptcy or acquisition, incl. informing the CSC without undue delay once bankruptcy proceedings start)",
+              "note": "Requirement IDs verified against the Code structure as reproduced in published CSP transparency statements."
+            },
+            {
+              "framework": "NIST SP 800-53 Rev. 5",
+              "ref": "SR-6 (supplier assessments and reviews); SA-9 (external system services)"
+            }
+          ],
+          "lmic_rationale": "Financial due diligence on critical service providers is a verbatim supervisory expectation (EBA §12.2) and a public-domain NIST control (SR-6, SA-9). SWIPO TR03(f) adds an industry-code basis for bankruptcy/acquisition continuity. Especially material when the candidate is a young local CSP: the framework takes local providers seriously by applying viability scrutiny to them, not by exempting them."
+        }
+      ]
     }
   ]
 }

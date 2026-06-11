@@ -1,7 +1,7 @@
 {
   "instrument_version": "2.2",
   "register_version": "1.0",
-  "last_updated": "2026-05-30",
+  "last_updated": "2026-06-11",
   "project_name": "Cloud Sovereignty Index",
   "project_url": "https://cloudsovereigntyindex.org",
   "review_contact": "methodology@cloudsovereigntyindex.org",
@@ -1401,6 +1401,93 @@
       "review_status": "pending-external-review",
       "created": "2026-05-29",
       "instrument_version": "2.2"
+    },
+    {
+      "id": "DR-L1",
+      "category": "adaptation",
+      "rationale": "LMIC mode introduces two orthogonal scoring axes (autonomy and assurance) instead of a single score. Axis-assignment table: autonomy axis = questions tagged lmic_axis autonomy or both (P1 ownership, P2 jurisdiction, P5 stack substitutability, P6 reversibility); assurance axis = questions tagged lmic_axis assurance or both (P7 payment/continuity, P4 resilience, P8 security, P1 staff capability). SOV-5-08-LMIC and SOV-9-01 tagged both. SOV-8 sustainability set and disclosure-only items tagged none. Full axis assignment of ~34 existing recycled questions awaits csi-lmic-sourcing-map.md.",
+      "authority": "Plan v3 locked design decision 2",
+      "alternatives_considered": "Single blended score (rejected: hides the trade-off); min(autonomy, assurance) (rejected: penalizes specialization)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-L2",
+      "category": "evidence",
+      "rationale": "Tier B of the SOV-5-08-LMIC support substitutability ladder requires a control-plane rebuild runbook that has been exercised (evidence_status: demonstrated on SOV-5-08-EV3). An unexercised runbook is paper reversibility. This gate mirrors the tested-exit standard that EBA/GL/2019/02 §15 and DORA Art. 28(8) expect for critical outsourcing exits. Vendor claims explicitly excluded per locked design decision 4.",
+      "authority": "Plan v3 locked design decision 1; maintainer decision 2026-06-11",
+      "alternatives_considered": "Documented runbook without exercise (rejected: paper reversibility); no gate on Tier B (rejected: would make Tier B meaningless)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-L3",
+      "category": "adaptation",
+      "rationale": "Upper stack-autonomy rungs (SOV-6-03, SOV-6-01, SOV-5-07-CADA) contribute points to the autonomy axis ONLY when autonomyRungsUnlocked() returns true. Predicate requires: (1) tested exit plan (SOV-6-12-LMIC), (2) viable provider (SOV-9-05-LMIC), (3) at least one support path (SOV-5-08-EV1 or SOV-5-08-EV3), and (4) local staff ratio >= LOCAL_STAFF_FLOOR_PCT (30%). When locked, rung questions are excluded from both numerator and denominator — not penalized twice.",
+      "authority": "Plan v3 locked design decision 3",
+      "alternatives_considered": "Always include rung scores (rejected: allows paper autonomy); zero without denominator exclusion (rejected: punishes legitimate specialization)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-L4",
+      "category": "adaptation",
+      "rationale": "A SOV-5-08-LMIC resolved Tier C forces the exit time band to at minimum medium (4-10 months) regardless of other inputs. Tier C means re-platforming is required or no documented rebuild path exists — this is the technically-unfeasible exit scenario covered by Data Act Art. 25(4). See data/exit-bands.json and DR-L10 for band derivation.",
+      "authority": "Plan v3 Phase 4.2; DR-L10",
+      "alternatives_considered": "Allow low band for Tier C if SOV-6-09/10 are green (rejected: contractual portability without a viable technical path is unreliable)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-L5",
+      "category": "adaptation",
+      "rationale": "If SOV-5-09-LMIC is answered no (customization drift breaks API conformance or OSS currency not maintained), the SOV-5-08-LMIC ladder tier is capped at C regardless of other gates. The Tier B premise is that workloads port via standards-based APIs; if the operators customizations break that conformance, the portability promise is void. This cap is applied post-resolveLadderTier in scoreLmic() with a report annotation.",
+      "authority": "Plan v3 §3.1 additional rule; maintainer decision 2026-06-11",
+      "alternatives_considered": "Reduce points for Tier B (rejected: preserves false impression of portability); separate penalty question (rejected: double-counts the same failure)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-L6",
+      "category": "adaptation",
+      "rationale": "World Bank Procurement Regulations 7th ed. §5.54 formally governs works contracts under international competitive procurement. It is cited by analogy for cloud operations staffing in SOV-1-11-LMIC and SOV-1-12-LMIC, with EU-CSF §4 SOV-4 contributing factor 3 as the primary criterion source. The analogy is stated in the question rationale and UI disclosure. The Banks own regulations (7th ed.) impose a local-labor minimum and contemplate Rated Criteria for skills development in works procurement; the same Bank-endorsed mechanism is applied here to cloud services.",
+      "authority": "Anchor verification addendum; maintainer decision 2026-06-11",
+      "alternatives_considered": "Cite no quantitative source for local labor (rejected: makes the threshold uninstitutionally founded); use a different threshold (rejected: the Banks 30% has institutional provenance — see DR-L9)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-L7",
+      "category": "adaptation",
+      "rationale": "The OpenStack Powered guideline vintage used as the Tier B portability anchor is 2020.11 — the latest board-approved version as of June 2026. The guideline cadence has slowed; this vintage is acceptable because the must-pass API capabilities it defines are exactly the portability surface Tier B relies on. This DR records the vintage explicitly so nobody accuses the tool of citing a stale program unknowingly. When a newer board-approved guideline is published, update SOV-5-08-EV2, SOV-5-08-LMIC lmic_anchors, and this DR entry.",
+      "authority": "Anchor verification addendum; maintainer decision 2026-06-11",
+      "alternatives_considered": "Cite OpenStack API specs directly (rejected: the Powered guideline is the certification instrument that providers demonstrate against via RefStack)",
+      "review_status": "under-review"
+    },
+    {
+      "id": "DR-L8",
+      "category": "evidence",
+      "rationale": "SWIPO Code of Conduct requirement IDs (DP01, DP06, DP08, FR1, PLR01, PLR05, TR03(f), TR05) were verified against the Code structure as reproduced in published CSP transparency statements (Google Cloud transparency statement). The artifact is a provider self-declaration, not the Code itself. Citable material is the requirement-ID column which reproduces the Codes own numbering and text. The Code PDF should be vendored into docs/sources/ and all SWIPO cites re-pointed at it. Never cite a vendor response column as the standard.",
+      "authority": "Anchor verification addendum; maintainer decision 2026-06-11",
+      "alternatives_considered": "Cite the Code PDF directly (preferred — action pending); cite generic SWIPO provisions without IDs (rejected: less precise)",
+      "review_status": "pending-external-review"
+    },
+    {
+      "id": "DR-L9",
+      "category": "adaptation",
+      "rationale": "LOCAL_STAFF_FLOOR_PCT = 30. The 30% threshold is adopted from the World Bank local labor participation floor for internationally procured works contracts (Procurement Regulations 7th ed. §5.54, effective 1 Sep 2025). It is the Banks own number. Intellectual-honesty note: the Center for Global Development and others have argued the 30% rule has limited effectiveness as an economic-development instrument. The tool adopts the number for its institutional provenance and configurability — it is a Bank-endorsed floor, not an empirical optimum. The tool mimics §5.54s override mechanism: where a project SPD/PPSD establishes a different percentage, that figure governs. §5.54 formally applies to works contracts; this question uses the same mechanism by analogy for cloud operations staffing (see DR-L6). ADOPTED-FROM: World Bank PR 2025-07-18 + Procurement Regulations 7th ed. §5.54.",
+      "authority": "Threshold adoption addendum; World Bank PR 2025-07-18; Procurement Regulations 7th ed. §5.54; maintainer decision 2026-06-11",
+      "alternatives_considered": [
+        "No quantitative threshold (rejected: makes the question unassessable)",
+        "Different percentage (rejected: 30% has institutional provenance)",
+        "Hard-coded threshold (accepted with override mechanism)"
+      ],
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-L10",
+      "category": "adaptation",
+      "rationale": "data/exit-bands.json band boundaries are statutory envelopes from Regulation (EU) 2023/2854 Arts. 25/29, used as planning heuristics — not measured migration durations. Time-band boundaries (4 months / 10 months) are the statutory maximum durations for standard and technically-unfeasible switching. Real exits can be faster. Cost-band boundaries follow the three Art. 29 charge regimes (zero / cost-capped / uncapped). The CMA cloud market investigation (Appendix N, egress-fee evidence) is cited as empirical context on the methodology page but no CMA number is used as a threshold. ADOPTED-FROM: Regulation (EU) 2023/2854 Arts. 25(2)(a),(d),(g), 25(4), 29(1)-(4), 2(36).",
+      "authority": "Threshold adoption addendum; Regulation (EU) 2023/2854; maintainer decision 2026-06-11",
+      "alternatives_considered": [
+        "Empirically derived bands (rejected: insufficient public data)",
+        "CMA-derived bands (rejected: UK-specific and pre-Data Act)"
+      ],
+      "review_status": "stable"
     }
   ],
   "DR-F1": {

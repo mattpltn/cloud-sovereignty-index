@@ -135,6 +135,29 @@ export interface CadaResult {
   audit_required: boolean;
 }
 
+// ── LMIC mode results ─────────────────────────────────────────────────────────
+
+export interface LmicAxes {
+  autonomyPct: number;
+  assurancePct: number;
+}
+
+export interface LmicPillarResult {
+  pillar_id: string;
+  raw_autonomy: number;
+  max_autonomy: number;
+  raw_assurance: number;
+  max_assurance: number;
+  rungs_locked: boolean;
+}
+
+export interface LmicResult {
+  axes: LmicAxes;
+  per_pillar: Record<string, LmicPillarResult>;
+  ladder_tier?: 'A' | 'B' | 'C';
+  ladder_tier_capped: boolean;
+}
+
 // ── v2.0 AssessmentResult ─────────────────────────────────────────────────────
 
 export interface AssessmentResult {
@@ -150,6 +173,7 @@ export interface AssessmentResult {
   c3a?: C3aResult;
   csi_composite?: CsiCompositeResult;
   cada?: CadaResult;
+  lmic?: LmicResult;
 }
 
 // ── v1.x legacy result (stored in D1 for old assessments) ────────────────────
@@ -209,5 +233,16 @@ export interface AssessmentRecord {
 
 export type EvidenceLevel = 'self_declared' | 'documented' | 'audited' | 'operationally_tested';
 
+export type EvidenceStatus = 'demonstrated' | 'documented' | 'vendor_claim' | 'unverified';
+
 // eu_csf_option: 0-based index into the question's eu_csf_options array (EU-CSF Likert questions only)
-export type AnswerMap = Record<string, { tier: string; value: AnswerValue; evidence_url?: string; note?: string; evidence_level?: EvidenceLevel; eu_csf_option?: number }>;
+export type AnswerMap = Record<string, {
+  tier: string;
+  value: AnswerValue;
+  evidence_url?: string;
+  note?: string;
+  evidence_level?: EvidenceLevel;
+  eu_csf_option?: number;
+  evidence_status?: EvidenceStatus;
+  tier_claimed?: 'A' | 'B' | 'C';
+}>;

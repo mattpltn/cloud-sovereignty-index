@@ -131,10 +131,28 @@ describe('Framework question count control loop', () => {
   });
 
   test('All questions have a valid type', () => {
+    const validTypes = ['single', 'tiered', 'eu_csf', 'tiered_ladder'];
     for (const obj of criteria.objectives) {
       for (const q of obj.questions) {
-        expect(['single', 'tiered'], `${q.id} has invalid type`).toContain(q.type);
+        expect(validTypes, `${q.id} has invalid type`).toContain(q.type);
       }
+    }
+  });
+
+  test('LMIC: question count and pillar coverage', () => {
+    const lmicQuestions = criteria.objectives.flatMap(o => o.questions.filter(q => q.applies_to_lmic));
+    // 21 new LMIC questions: 6 SOV-6 + 1 SOV-2 + 1 SOV-4 + 4 SOV-1 + 5 SOV-5 + 5 SOV-9
+    // (SOV-1-04-LMIC + SOV-1-11-LMIC + SOV-1-12-LMIC = 3 in SOV-1; SOV-5-08-LMIC + EV1 + EV2 + EV3 + SOV-5-09 = 5 in SOV-5)
+    const LMIC_EXPECTED = 21;
+    expect(lmicQuestions.length, `LMIC count: expected ${LMIC_EXPECTED}`).toBe(LMIC_EXPECTED);
+    // SOV-9 objective must exist and be lmic_only
+    const sov9 = criteria.objectives.find(o => o.id === 'SOV-9');
+    expect(sov9, 'SOV-9 objective missing').toBeDefined();
+    expect((sov9 as { layer?: string })?.layer).toBe('lmic_only');
+    // Every LMIC question must have lmic_pillar and lmic_rationale
+    for (const q of lmicQuestions) {
+      expect(q.lmic_pillar, `${q.id} missing lmic_pillar`).toBeDefined();
+      expect(q.lmic_rationale, `${q.id} missing lmic_rationale`).toBeTruthy();
     }
   });
 

@@ -14,6 +14,7 @@ describe('EU-CSF §5 weight fidelity', () => {
 
   it('per-objective weight fields agree with §5 and with the top-level map', () => {
     for (const obj of criteriaJson.objectives) {
+      if ((obj as { layer?: string }).layer === 'lmic_only') continue; // LMIC-only objectives not in EU-CSF §5
       expect(obj.weight, `weight drift on ${obj.id}`).toBeCloseTo(EU_CSF_S5_WEIGHTS[obj.id], 9);
       expect(obj.weight, `dual-source disagreement on ${obj.id}`).toBeCloseTo(
         (criteriaJson.weights as Record<string, number>)[obj.id], 9

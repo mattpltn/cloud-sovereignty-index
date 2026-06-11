@@ -1,0 +1,45 @@
+{
+  "description": "Time-to-exit and cost-to-exit planning bands derived from EU Data Act Art. 25/29 statutory envelopes. Bands are planning heuristics, not measured migration durations (DR-L10).",
+  "ADOPTED-FROM": "Regulation (EU) 2023/2854 Arts. 25(2)(a),(d),(g), 25(4), 29(1)-(4), 2(36)",
+  "time_bands": [
+    {
+      "band": "low",
+      "label": "≤ 4 months",
+      "basis": "Within the standard statutory switching envelope: Data Act Art. 25(2)(d) 2-month max notice + Art. 25(2)(a) 30-day max transitional period + Art. 25(2)(g) 30-day min retrieval period."
+    },
+    {
+      "band": "medium",
+      "label": "4–10 months",
+      "basis": "Within the technically-unfeasible envelope: Art. 25(4) permits a duly justified alternative transitional period of up to 7 months when the standard transitional period is technically infeasible."
+    },
+    {
+      "band": "high",
+      "label": "> 10 months",
+      "basis": "Exceeds the maximum switching duration EU law contemplates even for technically unfeasible cases — re-platforming territory outside the statutory envelope."
+    }
+  ],
+  "cost_bands": [
+    {
+      "band": "low",
+      "label": "No switching charges",
+      "basis": "Matches Data Act Art. 29(1): zero switching charges (incl. data egress charges per Art. 2(36) definition) — the mandatory EU regime applicable from 12 Jan 2027."
+    },
+    {
+      "band": "medium",
+      "label": "Cost-based charges only",
+      "basis": "Matches the Art. 29(2)-(3) interim regime: switching charges capped at costs directly linked to the switching process, disclosed pre-contract per Art. 29(4)."
+    },
+    {
+      "band": "high",
+      "label": "Uncapped or undisclosed charges, or early-termination penalties material to exit",
+      "basis": "Falls outside both Art. 29 regimes; treated as a commercial barrier to exit."
+    }
+  ],
+  "ladder_tier_mapping": {
+    "note": "SOV-5-08-LMIC resolved tier feeds into time band determination (DR-L4).",
+    "tier_A": "eligible for low time band (same-stack takeover — no redeployment)",
+    "tier_B": "eligible for low-to-medium time band (control-plane redeployment; workload portability demonstrated)",
+    "tier_C": "forces at minimum medium time band (re-platforming or no documented path)"
+  },
+  "methodology_note": "Bands are statutory envelopes used as planning heuristics (DR-L10). The time bands are derived from the legal maxima in Regulation (EU) 2023/2854; real exits can be faster. The CMA cloud market investigation (Appendix N, egress-fee evidence) provides empirical context for cost bands in the methodology page, but no CMA number is used as a threshold — only the Data Act statutory regimes."
+}

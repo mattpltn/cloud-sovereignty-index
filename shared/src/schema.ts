@@ -21,6 +21,12 @@ const TierSchema = z.object({
 
 const C3aTierSchema = z.enum(['base', 'additional', 'not_applicable']);
 
+const LmicAnchorSchema = z.object({
+  framework: z.string(),
+  ref: z.string(),
+  note: z.string().optional(),
+});
+
 const QuestionBaseSchema = z.object({
   id: z.string().regex(/^SOV-\d+(-[A-Z\d]+)+$/),
   title: z.string(),
@@ -51,6 +57,14 @@ const QuestionBaseSchema = z.object({
     value: z.enum(['yes', 'no']),
     when_unmet: z.literal('exclude'),
   }).optional(),
+  // LMIC mode fields
+  applies_to_lmic: z.boolean().optional(),
+  lmic_pillar: z.enum(['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8']).optional(),
+  lmic_sourcing: z.enum(['reuse', 'port', 'adapt', 'grounded-new', 'editorial']).optional(),
+  lmic_anchors: z.array(LmicAnchorSchema).optional(),
+  lmic_rationale: z.string().optional(),
+  lmic_axis: z.enum(['autonomy', 'assurance', 'both', 'none']).optional(),
+  evidence_status_required: z.enum(['demonstrated', 'documented', 'any']).optional(),
 });
 
 const SingleQuestionSchema = QuestionBaseSchema.extend({
@@ -87,18 +101,34 @@ const EuCsfQuestionSchema = QuestionBaseSchema.extend({
   eu_csf_options: z.array(EuCsfOptionSchema).min(2).max(6),
 });
 
+const LadderRungSchema = z.object({
+  tier: z.string(),
+  label: z.string(),
+  points: z.number(),
+  gate_requires: z.array(z.string()).optional(),
+});
+
+const TieredLadderQuestionSchema = QuestionBaseSchema.extend({
+  type: z.literal('tiered_ladder'),
+  text: z.string(),
+  ladder: z.array(LadderRungSchema).min(2),
+  seal_contribution: z.number().int().min(0).max(4).optional(),
+  source: SourceRefSchema.optional(),
+});
+
 export const QuestionSchema = z.discriminatedUnion('type', [
   SingleQuestionSchema,
   TieredQuestionSchema,
   EuCsfQuestionSchema,
+  TieredLadderQuestionSchema,
 ]);
 
 export const ObjectiveSchema = z.object({
   id: z.string().regex(/^SOV-\d+$/),
   title: z.string(),
   description: z.string(),
-  weight: z.number().positive().max(1),
-  layer: z.enum(['sovereignty', 'resilience', 'operational_viability']).optional(),
+  weight: z.number().nonnegative().max(1),
+  layer: z.enum(['sovereignty', 'resilience', 'operational_viability', 'lmic_only']).optional(),
   questions: z.array(QuestionSchema).min(1),
 });
 
@@ -123,6 +153,22 @@ export const CriteriaFileSchema = z.object({
   weights: z.record(z.string(), z.number()),
   seal_levels: z.array(SealLevelInCriteriaSchema),
   objectives: z.array(ObjectiveSchema),
+}).superRefine((data, ctx) => {
+  for (const obj of data.objectives) {
+    for (const q of obj.questions) {
+      if (q.applies_to_lmic) {
+        if (!q.lmic_pillar) {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${q.id}: applies_to_lmic requires lmic_pillar` });
+        }
+        if (!q.lmic_rationale) {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${q.id}: applies_to_lmic requires lmic_rationale` });
+        }
+      }
+      if (q.lmic_sourcing === 'grounded-new' && (!q.lmic_anchors || q.lmic_anchors.length === 0)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${q.id}: lmic_sourcing grounded-new requires lmic_anchors` });
+      }
+    }
+  }
 });
 
 // ── Decisions Register ────────────────────────────────────────────────────────
@@ -171,7 +217,7 @@ export const ScopeSchema = z.enum(['IaaS', 'PaaS', 'SaaS', 'FaaS', 'CaaS', 'STaa
 
 export const RoleSchema = z.enum(['customer', 'provider', 'auditor']);
 
-export const FrameworkModeSchema = z.enum(['eu_csf', 'c3a', 'csi_composite', 'cada']);
+export const FrameworkModeSchema = z.enum(['eu_csf', 'c3a', 'csi_composite', 'cada', 'lmic']);
 
 export const AssessmentSetupSchema = z.object({
   variant: VariantSchema,
@@ -187,10 +233,12 @@ export const AnswerValueSchema = z.enum(['yes', 'no', 'partial', 'planned', 'n/a
 
 export const AnswerSchema = z.object({
   question_id: z.string(),
-  tier: z.enum(['bloc', 'national', 'single']),
+  tier: z.enum(['bloc', 'national', 'single', 'ladder']),
   value: AnswerValueSchema,
   evidence_url: z.string().url().optional(),
   note: z.string().max(500).optional(),
+  evidence_status: z.enum(['demonstrated', 'documented', 'vendor_claim', 'unverified']).optional(),
+  tier_claimed: z.enum(['A', 'B', 'C']).optional(),
 });
 
 export const AnswerPatchSchema = z.object({
@@ -220,3 +268,5 @@ export type AnswerPatch = z.infer<typeof AnswerPatchSchema>;
 export type SubmitBody = z.infer<typeof SubmitBodySchema>;
 export type FrameworkMode = z.infer<typeof FrameworkModeSchema>;
 export type C3aTier = z.infer<typeof C3aTierSchema>;
+export type LmicAnchor = z.infer<typeof LmicAnchorSchema>;
+export type LadderRung = z.infer<typeof LadderRungSchema>;

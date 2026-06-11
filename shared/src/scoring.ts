@@ -1,10 +1,11 @@
-import type { CriteriaFile, Question } from './schema.js';
+import type { CriteriaFile, Question, LadderRung } from './schema.js';
 import type {
   AssessmentResult, EuCsfResult, EuCsfObjectiveResult,
   C3aResult, C3aObjectiveTierResult, C3aAttainmentBand, C3aQuestionResult,
   CsiCompositeResult, CsiObjectiveResult, CsiMaturityTier,
   CadaResult, CadaLevelResult, CadaGapItem,
   QuestionResult, GapItem, AnswerMap, FrameworkMode,
+  LmicAxes, LmicResult, EvidenceStatus,
 } from './types.js';
 
 // ── Global Sovereignty Score (EU-CSF v1.2.1 §5) ──────────────────────────────
@@ -24,6 +25,149 @@ export function computeSovereigntyScorePct(
   return weightBasis > 0
     ? Math.min(100, (weightedNormalized / weightBasis) * 100)
     : 0;
+}
+
+// ── LMIC scoring ──────────────────────────────────────────────────────────────
+
+// Local operating-staff floor for autonomy rungs, adopted from the World Bank
+// local labor participation requirement (30% of labor cost; PR 2025-07-18;
+// Procurement Regulations 7th ed. §5.54). Configurable per project because
+// §5.54 applies "unless otherwise agreed with the Bank" (DR-L9).
+export const LOCAL_STAFF_FLOOR_PCT = 30;
+
+const EVIDENCE_RANK: Record<EvidenceStatus, number> = {
+  demonstrated: 3, documented: 2, vendor_claim: 1, unverified: 0,
+};
+
+// Resolves a claimed ladder tier downward until its gate predicates are satisfied.
+// Gates NEVER accept vendor_claim or unverified (plan v3 locked decision 4).
+export function resolveLadderTier(
+  claimed: 'A' | 'B' | 'C',
+  gateOk: (qid: string) => boolean,
+  ladder: LadderRung[]
+): 'A' | 'B' | 'C' {
+  const order: Array<'A' | 'B' | 'C'> = ['A', 'B', 'C'];
+  for (const t of order.slice(order.indexOf(claimed))) {
+    const rung = ladder.find(r => r.tier === t)!;
+    if (!rung.gate_requires || rung.gate_requires.every(gateOk)) return t;
+  }
+  return 'C';
+}
+
+// Returns true when upper stack-autonomy rungs are eligible to contribute scores.
+// Requires all operational capability prerequisites to be demonstrated (DR-L3).
+export function autonomyRungsUnlocked(
+  yes: (id: string) => boolean,
+  staffPct: number
+): boolean {
+  return (
+    yes('SOV-6-12-LMIC') &&
+    yes('SOV-9-05-LMIC') &&
+    (yes('SOV-5-08-EV1') || yes('SOV-5-08-EV3')) &&
+    staffPct >= LOCAL_STAFF_FLOOR_PCT
+  );
+}
+
+// Two-axis LMIC scorer. Each axis is computed via computeSovereigntyScorePct
+// over questions tagged to that axis (or 'both'). These axes MUST NOT be
+// combined into a single scalar (plan v3 locked decision 2).
+export function scoreLmic(answers: AnswerMap, criteria: CriteriaFile): LmicAxes {
+  const lmicQuestions = criteria.objectives.flatMap(o =>
+    o.questions.filter(q => q.applies_to_lmic)
+  );
+
+  // Build gate predicate for ladder resolution
+  const qRequiredRank: Map<string, number> = new Map();
+  for (const q of lmicQuestions) {
+    const req = (q as { evidence_status_required?: string }).evidence_status_required ?? 'any';
+    const rank = req === 'demonstrated' ? 3 : req === 'documented' ? 2 : 2; // 'any' still needs >= documented for gates
+    qRequiredRank.set(q.id, rank);
+  }
+
+  const yesQ = (qid: string) => answers[qid]?.value === 'yes';
+
+  const gateOk = (qid: string): boolean => {
+    const ans = answers[qid];
+    if (!ans || ans.value !== 'yes') return false;
+    const evStatus = (ans.evidence_status ?? 'documented') as EvidenceStatus;
+    if (evStatus === 'vendor_claim' || evStatus === 'unverified') return false;
+    const reqRank = qRequiredRank.get(qid) ?? 2;
+    return EVIDENCE_RANK[evStatus] >= reqRank;
+  };
+
+  // Determine staff pct (SOV-1-12-LMIC yes = ≥30%)
+  const staffPct = yesQ('SOV-1-12-LMIC') ? LOCAL_STAFF_FLOOR_PCT : 0;
+  const runksUnlocked = autonomyRungsUnlocked(yesQ, staffPct);
+
+  // Rung-3/4 autonomy question IDs (excluded from scoring when locked)
+  const AUTONOMY_RUNG_IDS = new Set(['SOV-6-03', 'SOV-6-01', 'SOV-5-07-CADA']);
+
+  // Resolve the tiered_ladder question tier
+  const ladderQ = lmicQuestions.find(q => q.id === 'SOV-5-08-LMIC' && q.type === 'tiered_ladder');
+  let resolvedTier: 'A' | 'B' | 'C' | undefined;
+  if (ladderQ && ladderQ.type === 'tiered_ladder') {
+    const claimedTier = (answers['SOV-5-08-LMIC']?.tier_claimed ?? 'C') as 'A' | 'B' | 'C';
+    resolvedTier = resolveLadderTier(claimedTier, gateOk, ladderQ.ladder);
+    // SOV-5-09-LMIC clause (c) fail → cap at C (DR-L5)
+    if (answers['SOV-5-09-LMIC']?.value === 'no') {
+      resolvedTier = 'C';
+    }
+  }
+
+  // Group questions by pillar for axis computation
+  const byPillar = new Map<string, Array<{ q: typeof lmicQuestions[number]; points_earned: number; points_possible: number; axis: string }>>();
+
+  for (const q of lmicQuestions) {
+    const axis = q.lmic_axis ?? 'none';
+    if (axis === 'none') continue;
+
+    // Autonomy rung exclusion when locked
+    if (AUTONOMY_RUNG_IDS.has(q.id) && !runksUnlocked) continue;
+
+    const pillar = q.lmic_pillar ?? 'P0';
+    if (!byPillar.has(pillar)) byPillar.set(pillar, []);
+
+    let earned = 0;
+    let possible = 0;
+
+    if (q.type === 'tiered_ladder' && q.id === 'SOV-5-08-LMIC' && resolvedTier) {
+      const rung = q.ladder.find(r => r.tier === resolvedTier);
+      const maxRung = q.ladder.reduce((mx, r) => Math.max(mx, r.points), 0);
+      possible = maxRung;
+      earned = rung?.points ?? 0;
+    } else if (q.type === 'tiered_ladder') {
+      const maxPts = q.ladder.reduce((mx, r) => Math.max(mx, r.points), 0);
+      possible = maxPts;
+    } else {
+      const stored = answers[q.id];
+      const value = stored?.value;
+      const pts = (q as { points?: number }).points ?? 5;
+      possible = pts;
+      if (value === 'yes') earned = pts;
+      else if (value === 'partial') earned = pts * 0.5;
+    }
+
+    byPillar.get(pillar)!.push({ q, points_earned: earned, points_possible: possible, axis });
+  }
+
+  // Build per-axis pillar arrays for computeSovereigntyScorePct
+  const autonomyPillars: Array<{ raw_score: number; max_score: number; weight: number }> = [];
+  const assurancePillars: Array<{ raw_score: number; max_score: number; weight: number }> = [];
+
+  for (const [, items] of byPillar) {
+    let rawA = 0, maxA = 0, rawS = 0, maxS = 0;
+    for (const { points_earned, points_possible, axis } of items) {
+      if (axis === 'autonomy' || axis === 'both') { rawA += points_earned; maxA += points_possible; }
+      if (axis === 'assurance' || axis === 'both') { rawS += points_earned; maxS += points_possible; }
+    }
+    if (maxA > 0) autonomyPillars.push({ raw_score: rawA, max_score: maxA, weight: 1 });
+    if (maxS > 0) assurancePillars.push({ raw_score: rawS, max_score: maxS, weight: 1 });
+  }
+
+  return {
+    autonomyPct: computeSovereigntyScorePct(autonomyPillars),
+    assurancePct: computeSovereigntyScorePct(assurancePillars),
+  };
 }
 
 // ── SEAL/CSL weakest-link gate ────────────────────────────────────────────────
@@ -185,7 +329,9 @@ function scoreEuCsf(answers: AnswerMap, criteria: CriteriaFile): EuCsfResult {
   }
 
   const values = Object.values(perObjective);
-  const globalSeal = values.length > 0 ? Math.min(...values.map(o => o.seal)) : 0;
+  // Only include objectives with EU-CSF questions (max_score > 0) in the SEAL gate
+  const sealContributors = values.filter(o => o.max_score > 0);
+  const globalSeal = sealContributors.length > 0 ? Math.min(...sealContributors.map(o => o.seal)) : 0;
 
   const globalPct = computeSovereigntyScorePct(values);
 
@@ -434,7 +580,9 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile, variant: 
     const nextThreshold = CSI_TIER_THRESHOLDS[globalCsl + 1] ?? null;
     pct_to_next_tier = nextThreshold !== null ? Math.max(0, Math.round((nextThreshold - globalPctFraction) * 100)) : null;
   } else {
-    globalCsl = values.length > 0 ? Math.min(...values.map(o => o.csl)) : 0;
+    // Only include objectives with CSI questions (max_score > 0) in the CSL gate
+    const cslContributors = values.filter(o => o.max_score > 0);
+    globalCsl = cslContributors.length > 0 ? Math.min(...cslContributors.map(o => o.csl)) : 0;
     pct_to_next_tier = null;
   }
 

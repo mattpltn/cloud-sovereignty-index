@@ -1,0 +1,191 @@
+{
+  "register_version": "1.0.0",
+  "description": "Single source of truth for all frameworks cited in criteria.json. Every anchor framework field must resolve to a key in this register.",
+  "entries": [
+    {
+      "key": "eu-csf",
+      "name": "EU Cloud Sovereignty Framework v1.2.1",
+      "version_or_date": "v1.2.1 (2024)",
+      "issuer": "European Commission / Cloud Initiative",
+      "license_posture": "quotable",
+      "official_url": "https://digital-strategy.ec.europa.eu/en/library/eu-cloud-sovereignty-framework",
+      "vendored": null
+    },
+    {
+      "key": "eu-csf-calc",
+      "name": "EU-CSF Assessment Calculator (Annex XLSX)",
+      "version_or_date": "Cloud III DPS Annex — Sovereignty Assessment Calculator",
+      "issuer": "European Commission",
+      "license_posture": "quotable",
+      "official_url": null,
+      "vendored": "docs/sources/Annex - Sovereignty assessment calculator.xlsx"
+    },
+    {
+      "key": "c3a",
+      "name": "BSI C3A — Criteria Catalogue for Cloud Computing Autonomy",
+      "version_or_date": "v1.0 (2023)",
+      "issuer": "Bundesamt für Sicherheit in der Informationstechnik (BSI)",
+      "license_posture": "quotable",
+      "official_url": "https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/CloudComputing/C3A/C3A_Cloud_Computing_Autonomy.pdf",
+      "vendored": "docs/sources/C3A_Cloud_Computing_Autonomy.pdf"
+    },
+    {
+      "key": "cada",
+      "name": "Cloud and AI Development Act (COM(2026) 502) — Proposal",
+      "version_or_date": "COM(2026) 502/1 (proposal, not yet adopted law)",
+      "issuer": "European Commission",
+      "license_posture": "quotable",
+      "proposal_disclaimer": true,
+      "official_url": "https://digital-strategy.ec.europa.eu/en/library/cloud-and-ai-development-act",
+      "vendored": "docs/sources/COM_2026_502_1_EN_ACT_part1_v7.pdf"
+    },
+    {
+      "key": "eu-data-act",
+      "name": "Regulation (EU) 2023/2854 (Data Act)",
+      "version_or_date": "in force 11 Jan 2024; applicable 12 Sep 2025",
+      "issuer": "European Parliament and Council",
+      "license_posture": "quotable",
+      "official_url": "https://eur-lex.europa.eu/eli/reg/2023/2854/oj",
+      "vendored": null
+    },
+    {
+      "key": "dora",
+      "name": "Regulation (EU) 2022/2554 (DORA — Digital Operational Resilience Act)",
+      "version_or_date": "applicable 17 Jan 2025",
+      "issuer": "European Parliament and Council",
+      "license_posture": "quotable",
+      "official_url": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj",
+      "vendored": null
+    },
+    {
+      "key": "gdpr",
+      "name": "Regulation (EU) 2016/679 (GDPR)",
+      "version_or_date": "applicable 25 May 2018",
+      "issuer": "European Parliament and Council",
+      "license_posture": "quotable",
+      "official_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+      "vendored": null
+    },
+    {
+      "key": "eba-gl-2019-02",
+      "name": "EBA/GL/2019/02 — Guidelines on Outsourcing Arrangements",
+      "version_or_date": "25 Feb 2019; in force 30 Sep 2019",
+      "issuer": "European Banking Authority",
+      "license_posture": "quotable",
+      "official_url": "https://www.eba.europa.eu/regulation-and-policy/internal-governance/guidelines-on-outsourcing-arrangements",
+      "vendored": null
+    },
+    {
+      "key": "nist-sp-800-53-r5",
+      "name": "NIST Special Publication 800-53 Revision 5 — Security and Privacy Controls",
+      "version_or_date": "Rev. 5 (Sep 2020, updated Dec 2020)",
+      "issuer": "National Institute of Standards and Technology (NIST)",
+      "license_posture": "quotable",
+      "official_url": "https://doi.org/10.6028/NIST.SP.800-53r5",
+      "vendored": null
+    },
+    {
+      "key": "iso-27001",
+      "name": "ISO/IEC 27001:2022 — Information Security Management Systems",
+      "version_or_date": "2022",
+      "issuer": "International Organization for Standardization / IEC",
+      "license_posture": "cite-only",
+      "official_url": "https://www.iso.org/standard/27001",
+      "vendored": null
+    },
+    {
+      "key": "iso-27017",
+      "name": "ISO/IEC 27017:2015 — Security Controls for Cloud Services",
+      "version_or_date": "2015",
+      "issuer": "International Organization for Standardization / IEC",
+      "license_posture": "cite-only",
+      "official_url": "https://www.iso.org/standard/43757.html",
+      "vendored": null
+    },
+    {
+      "key": "iso-19086-1",
+      "name": "ISO/IEC 19086-1:2016 — Cloud SLA Framework",
+      "version_or_date": "2016",
+      "issuer": "International Organization for Standardization / IEC",
+      "license_posture": "cite-only",
+      "official_url": "https://www.iso.org/standard/67545.html",
+      "vendored": null
+    },
+    {
+      "key": "iso-19941",
+      "name": "ISO/IEC 19941:2017 — Cloud Computing Portability and Interoperability",
+      "version_or_date": "2017",
+      "issuer": "International Organization for Standardization / IEC",
+      "license_posture": "cite-only",
+      "official_url": "https://www.iso.org/standard/66639.html",
+      "vendored": null
+    },
+    {
+      "key": "iso-22301",
+      "name": "ISO 22301:2019 — Business Continuity Management Systems",
+      "version_or_date": "2019",
+      "issuer": "International Organization for Standardization",
+      "license_posture": "cite-only",
+      "official_url": "https://www.iso.org/standard/75106.html",
+      "vendored": null
+    },
+    {
+      "key": "swipo-iaas-v3",
+      "name": "SWIPO IaaS Code of Conduct v3.0",
+      "version_or_date": "v3.0",
+      "issuer": "SWIPO (Switching Cloud Providers and Porting Data)",
+      "license_posture": "quotable",
+      "official_url": "https://swipo.eu/download-section/copyrighted-downloads/",
+      "vendored": null,
+      "note": "Requirement IDs verified against the Code structure as reproduced in published CSP transparency statements. Vendor the Code PDF into docs/sources/ and re-point the cite at it."
+    },
+    {
+      "key": "swipo-saas-v2020",
+      "name": "SWIPO SaaS Code of Conduct (2020)",
+      "version_or_date": "2020",
+      "issuer": "SWIPO",
+      "license_posture": "quotable",
+      "official_url": "https://swipo.eu/download-section/copyrighted-downloads/",
+      "vendored": null
+    },
+    {
+      "key": "openinfra-interop",
+      "name": "OpenInfra Foundation — Interop Working Group / OpenStack Powered",
+      "version_or_date": "Board-approved guideline 2020.11 (latest as of June 2026; DR-L7)",
+      "issuer": "OpenInfra Foundation",
+      "license_posture": "quotable",
+      "official_url": "https://openinfra.dev/interop/",
+      "vendored": null,
+      "note": "Guideline cadence has slowed; 2020.11 is the latest board-approved version. Must-pass API capabilities are the portability surface Tier B relies on (DR-L7)."
+    },
+    {
+      "key": "world-bank-pr-7th",
+      "name": "World Bank Procurement Regulations for IPF Borrowers, 7th Edition",
+      "version_or_date": "7th ed. (Sep 2025)",
+      "issuer": "World Bank Group",
+      "license_posture": "quotable",
+      "official_url": "https://ppfdocuments.azureedge.net/e7a8987a-ee37-4aec-b8ff-e64440d45f52.pdf",
+      "vendored": null
+    },
+    {
+      "key": "world-bank-local-labor",
+      "name": "World Bank Procurement Guidance — Local Labor Participation",
+      "version_or_date": "Press release 2025-07-18; §5.54 of 7th ed. Procurement Regulations",
+      "issuer": "World Bank Group",
+      "license_posture": "quotable",
+      "official_url": "https://www.worldbank.org/en/news/press-release/2025/07/18/world-bank-strengthens-local-labor-requirements",
+      "vendored": null,
+      "note": "§5.54 applies to works contracts; cited by analogy for cloud operations staffing (DR-L6, DR-L9)."
+    },
+    {
+      "key": "csi",
+      "name": "Cloud Sovereignty Index (CSI) — this tool",
+      "version_or_date": "v3.0",
+      "issuer": "CSI project maintainers",
+      "license_posture": "quotable",
+      "official_url": null,
+      "vendored": null,
+      "note": "Used as anchor when LMIC questions adapt existing CSI questions by jurisdiction substitution."
+    }
+  ]
+}
