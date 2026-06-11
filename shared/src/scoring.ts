@@ -7,6 +7,25 @@ import type {
   QuestionResult, GapItem, AnswerMap, FrameworkMode,
 } from './types.js';
 
+// ── Global Sovereignty Score (EU-CSF v1.2.1 §5) ──────────────────────────────
+// SovereigntyScore = Σ_n [Score(SOV_n)/Max.Score(SOV_n)] × Weight(SOV_n)
+// Objectives with max_score = 0 are excluded; weight basis renormalized (DR-F1).
+export function computeSovereigntyScorePct(
+  objectives: Array<{ raw_score: number; max_score: number; weight: number }>
+): number {
+  let weightedNormalized = 0;
+  let weightBasis = 0;
+  for (const o of objectives) {
+    if (o.max_score > 0) {
+      weightedNormalized += (o.raw_score / o.max_score) * o.weight;
+      weightBasis += o.weight;
+    }
+  }
+  return weightBasis > 0
+    ? Math.min(100, (weightedNormalized / weightBasis) * 100)
+    : 0;
+}
+
 // ── SEAL/CSL weakest-link gate ────────────────────────────────────────────────
 
 function computeSealLevel(results: QuestionResult[]): number {
@@ -168,16 +187,7 @@ function scoreEuCsf(answers: AnswerMap, criteria: CriteriaFile): EuCsfResult {
   const values = Object.values(perObjective);
   const globalSeal = values.length > 0 ? Math.min(...values.map(o => o.seal)) : 0;
 
-  // Official formula: Σ(weight × raw_score) / Σ(weight × max_score) × 100
-  let weightedRaw = 0;
-  let weightedMax = 0;
-  for (const o of values) {
-    if (o.max_score > 0) {
-      weightedRaw += o.weight * o.raw_score;
-      weightedMax += o.weight * o.max_score;
-    }
-  }
-  const globalPct = weightedMax > 0 ? Math.min(100, (weightedRaw / weightedMax) * 100) : 0;
+  const globalPct = computeSovereigntyScorePct(values);
 
   return {
     per_objective: perObjective,
@@ -414,15 +424,7 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile, variant: 
 
   const values = Object.values(perObjective);
 
-  let overallNumerator = 0;
-  let weightSum = 0;
-  for (const o of values) {
-    if (o.max_score > 0) {
-      overallNumerator += (o.raw_score / o.max_score) * o.weight;
-      weightSum += o.weight;
-    }
-  }
-  const globalPct = weightSum > 0 ? Math.min(100, (overallNumerator / weightSum) * 100) : 0;
+  const globalPct = computeSovereigntyScorePct(values);
   const globalPctFraction = globalPct / 100;
 
   let globalCsl: number;
@@ -445,6 +447,21 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile, variant: 
     global: { csl: globalCsl, pct: globalPct, pct_to_next_tier, maturity_tier },
     gap_report: buildGapReport(values.map(o => ({ objective_id: o.objective_id, seal_level: o.csl, weight: o.weight, questions: o.questions }))),
   };
+}
+
+// ── CADA third-country-control gradient (Annex II L2(g)/L3(g)/L4(g), Act Art. 18) ──
+// EU_CONTROL  = SOV-1-03 yes
+// SAFEGUARDS  = SOV-2-05 (g(i)-(iii)) AND SOV-2-07-CADA (g(iv))  [DR-F4: g(i)-(iii) interim]
+// DEROGATION  = SOV-1-10-CADA (Art. 18 associated-third-countries list)
+// CODE_ACCESS = SOV-6-07-CADA (L3(g)(i) reasonable code access)
+export function controlGatePassesAtLevel(level: 2 | 3 | 4, yes: (id: string) => boolean): boolean {
+  if (yes('SOV-1-03')) return true;
+  const safeguards = yes('SOV-2-05') && yes('SOV-2-07-CADA');
+  switch (level) {
+    case 2: return safeguards;
+    case 3: return yes('SOV-1-10-CADA') && safeguards && yes('SOV-6-07-CADA');
+    case 4: return false; // L4(g): no derogation exists
+  }
 }
 
 // ── CADA mode ─────────────────────────────────────────────────────────────────

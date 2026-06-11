@@ -142,7 +142,7 @@
               }
             }
           },
-          "supplementary_info": "If the cloud service provider uses a subcontractor for the provision of services, such as operations, that subcontractor MUST also meet the criteria.",
+          "supplementary_info": "L1(a) requires the provider to be established in the Union. From L2(a) onward, the requirement extends to all subcontractors involved in provision of the service. Annex III §1 tests genuine and stable presence: registered office, central administration, main establishment, EU banking/accounting relationships. Mere registration without operational substance does not satisfy L2+(a).",
           "c3a_source_id": "SOV-1-02-C1",
           "seal_contribution_eu_csf": 1,
           "seal_contribution_csi": 1,
@@ -151,10 +151,13 @@
           "c3a_fidelity": "direct",
           "applies_to_cada": true,
           "cada_assurance_level": [
-            1
+            1,
+            2,
+            3,
+            4
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L1(a)"
+          "cada_annex_ref": "Annex II L1(a) (provider); L2+(a) (extends to subcontractors involved in provision)"
         },
         {
           "id": "SOV-1-03",
@@ -340,6 +343,34 @@
           ],
           "cada_fidelity": "direct",
           "cada_annex_ref": "Annex II L2(k)"
+        },
+        {
+          "id": "SOV-1-10-CADA",
+          "title": "Associated Third-Country Commission Listing",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "Is the third country (or country of the controlling legal entity) that exercises control over the cloud service provider included in the European Commission's published list of associated third countries adopted by implementing act for Union assurance level 3?",
+          "supplementary_info": "Only relevant where the provider is subject to third-country control. Art. 18(1) conditions for listing: GDPR adequacy decision; no measures conflicting with Data Act Art. 32(2)-(3) lawful-access requirements; no measures compelling service disruption or enforcement of third-country restrictive measures; no impediments to state-of-the-art service provision; open market to Union cloud services; reciprocal procurement access. Note: Annex II L3(g) cites 'Article 19' [sic — mechanism defined in Act Art. 18, 'Associated third countries'; see DR-F3].",
+          "seal_contribution": 3,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L3(g); Act Art. 18(3)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            3
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L3(g) (derogation chapeau; cites 'Article 19' [sic — mechanism defined in Act Art. 18, 'Associated third countries']); Art. 18(3) (Commission publishes the list on its website)",
+          "applicability_condition": {
+            "depends_on": "SOV-1-03",
+            "value": "no",
+            "when_unmet": "exclude"
+          }
         }
       ],
       "layer": "sovereignty"
@@ -521,7 +552,12 @@
             2
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(g)(i)-(iii)"
+          "cada_annex_ref": "Annex II L2(g)(i)-(iii)",
+          "applicability_condition": {
+            "depends_on": "SOV-1-03",
+            "value": "no",
+            "when_unmet": "exclude"
+          }
         },
         {
           "id": "SOV-2-05-CADA",
@@ -544,7 +580,12 @@
             1
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L1(g)"
+          "cada_annex_ref": "Annex II L1(g)",
+          "applicability_condition": {
+            "depends_on": "SOV-1-03",
+            "value": "no",
+            "when_unmet": "exclude"
+          }
         },
         {
           "id": "SOV-2-06-CADA",
@@ -590,18 +631,23 @@
           "applies_to_cada": true,
           "cada_assurance_level": [
             2,
-            3,
-            4
+            3
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(g)(iv), L3(g)(iv), L4(g)(iv)"
+          "cada_annex_ref": "Annex II L2(g)(iv); L3(g)(iv) (applies only under the Art. 18 associated-third-country derogation)",
+          "cada_applicability_note": "Binds only providers under third-country control (chapeau of L2(g)/L3(g)). At UAL 4 third-country control is prohibited outright (L4(g)), so this question is moot. Pending applicability_condition support, the question is shown at UAL 2–3 and excluded from the UAL 4 gate (DR-F5).",
+          "applicability_condition": {
+            "depends_on": "SOV-1-03",
+            "value": "no",
+            "when_unmet": "exclude"
+          }
         }
       ],
       "layer": "sovereignty"
     },
     {
       "id": "SOV-3",
-      "title": "Data Sovereignty",
+      "title": "Data & AI Sovereignty",
       "description": "Data sovereignty captures the degree to which cloud service customers retain control over where their data is stored, processed, and accessed, and whether they can independently manage encryption, identity, logging, and data flows without being dependent on the cloud service provider.",
       "weight": 0.1,
       "questions": [
@@ -1650,6 +1696,101 @@
           ],
           "cada_fidelity": "direct",
           "cada_annex_ref": "Annex II L1(b), L2(b)"
+        },
+        {
+          "id": "SOV-4-14",
+          "title": "Workload Migration Ease — Reversibility",
+          "type": "single",
+          "applies_to_eu_csf": true,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "Can workloads be migrated to, or integrated with, alternative {{BLOC}}-controlled solutions without vendor lock-in — demonstrated by a documented and tested workload migration path, export of data and configurations in open, documented formats, and the absence of contractual or technical egress barriers?",
+          "seal_contribution": 3,
+          "points": 10,
+          "source": {
+            "doc": "EU-CSF",
+            "clause": "EU-CSF v1.2.1 §4 SOV-4 contributing factor 1"
+          },
+          "supplementary_info": "EU-CSF §4 SOV-4 contributing factor 1: \"Ease of migrating workloads or integrating with alternative EU-controlled solutions without vendor lock-in.\" Evidence: documented migration runbook with tested execution, data export in open formats (e.g. OVF, CSV, SQL dump), configuration portability, and review of contract terms for absence of egress/termination lock-in clauses. Points and seal_contribution assigned as CSI editorial values; no point scale is defined in the source (DR-E27).",
+          "eu_csf_fidelity": "direct",
+          "eu_csf_source_factor": "EU-CSF v1.2.1 §4, SOV-4 contributing factor 1: Ease of migrating workloads or integrating with alternative EU-controlled solutions without vendor lock-in.",
+          "seal_contribution_eu_csf": 3,
+          "seal_contribution_csi": 3,
+          "csi_reversibility": true
+        },
+        {
+          "id": "SOV-4-15-CADA",
+          "title": "Migration Plan for Vendor Failure or Third-Country Restrictions",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "c3a_tier": "not_applicable",
+          "text": "For security-relevant software components provided, owned, or licensed by a legal entity established in a third country, does the provider maintain a documented migration plan covering vendor failure or third-country-imposed restrictions — including identified alternative solutions (open-source where possible) or a minimal-viable-functionality fallback, with implemented tests and a tested switchover plan?",
+          "seal_contribution": 3,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L2(i)(ii)"
+          },
+          "supplementary_info": "Evidence per Annex III §9(3)(b)-(c): identified alternative solutions including open-source equivalents, a documented minimal-viable-functionality fallback where no equivalent exists, and an implemented and tested switchover plan. This question cross-tags the CSI reversibility set.",
+          "csi_reversibility": true,
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2,
+            3
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L2(i)(ii), L3(i)(ii); evidence per Annex III §9(3)(b)-(c)"
+        },
+        {
+          "id": "SOV-4-16-CADA",
+          "title": "OSS Third-Country Acquisition Detection and Notice",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "Where open-source software is used in the provision of the service, does the provider operate mechanisms to detect, and provide timely notice to the customer, if that software is acquired by or comes under the control of a third country or a legal entity or foundation established in a third country?",
+          "seal_contribution": 3,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex III §10(3)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            2,
+            3,
+            4
+          ],
+          "cada_fidelity": "inferred",
+          "cada_annex_ref": "Annex III §10(3) (audit evidence under L2(j))",
+          "cada_fidelity_rationale": "The detection-and-notice mechanism appears in the Annex III audit-evidence catalogue for the open-source criterion, not in the L2(j) criterion text itself; tagged inferred accordingly."
+        },
+        {
+          "id": "SOV-4-17-CADA",
+          "title": "Support Personnel Residency — UAL 3 Increment",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "Is all support for the cloud service (including support initiated and performed within the Union under L2(h)) delivered by personnel who are Union residents, and by third parties that are not subject to the control of a third country?",
+          "seal_contribution": 3,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L3(h)"
+          },
+          "supplementary_info": "L2(h) requires support to be initiated and performed exclusively within the Union. L3(h) adds the personnel-residency and third-party-independence requirements. Both conditions must be met at UAL 3. Evidence: HR records or contractual confirmation of Union residency for all support staff, and supply-chain review confirming no third-country-controlled third parties deliver support.",
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            3
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L3(h)"
         }
       ],
       "layer": "resilience"
@@ -1658,7 +1799,7 @@
       "id": "SOV-5",
       "title": "Supply Chain Sovereignty",
       "description": "Supply chain sovereignty evaluates the extent to which the cloud service provider can identify, manage, and reduce dependencies on non-EU software, hardware, and external services, and maintain operational continuity in the event of supply chain disruptions.",
-      "weight": 0.20,
+      "weight": 0.2,
       "questions": [
         {
           "id": "SOV-5-01",
@@ -1884,6 +2025,28 @@
           ],
           "cada_fidelity": "direct",
           "cada_annex_ref": "Annex II L1(f)"
+        },
+        {
+          "id": "SOV-5-07-CADA",
+          "title": "Prohibition on Third-Country Control over Software Components",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "For software components or products used in the provision of the service, does the provider demonstrate that no third country or legal entity established in a third country holds or exercises effective control over their design, development, maintenance, and evolution — including the ability to materially influence technical evolution, maintenance priorities, security remediation, or long-term continuity of the component?",
+          "seal_contribution": 4,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L4(i)(ii)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            4
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L4(i)(ii)"
         }
       ],
       "layer": "resilience"
@@ -2104,15 +2267,42 @@
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
           "eu_csf_source_factor": "SOV-6 Q2 Open Standards Compliance"
+        },
+        {
+          "id": "SOV-6-07-CADA",
+          "title": "Reasonable Source-Code Access for UAL 3 Derogation",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": false,
+          "c3a_tier": "not_applicable",
+          "text": "Where the cloud service provider is subject to third-country control and relies on the Union assurance level 3 derogation, does the provider allow reasonable access to the source code of the audited service for verification purposes?",
+          "seal_contribution": 3,
+          "points": 10,
+          "source": {
+            "doc": "CADA",
+            "clause": "Annex II L3(g)(i)"
+          },
+          "applies_to_cada": true,
+          "cada_assurance_level": [
+            3
+          ],
+          "cada_fidelity": "direct",
+          "cada_annex_ref": "Annex II L3(g)(i), final sentence ('The audited provider should allow for reasonable access to the code')",
+          "applicability_condition": {
+            "depends_on": "SOV-1-03",
+            "value": "no",
+            "when_unmet": "exclude"
+          }
         }
       ],
       "layer": "operational_viability"
     },
     {
       "id": "SOV-7",
-      "title": "Security & Compliance",
+      "title": "Security & Compliance Sovereignty",
       "description": "Security and compliance sovereignty evaluates whether the cloud service provider maintains certifications, regulatory compliance, and security controls anchored in EU frameworks, including the capacity for independent auditing and enforcement of EU-based security standards.",
-      "weight": 0.10,
+      "weight": 0.1,
       "questions": [
         {
           "id": "SOV-7-01",

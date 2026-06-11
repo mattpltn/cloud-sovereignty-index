@@ -45,6 +45,12 @@ const QuestionBaseSchema = z.object({
   cada_annex_ref: z.string().optional(),
   cada_fidelity: z.enum(['direct', 'inferred', 'csi']).optional(),
   cada_fidelity_rationale: z.string().optional(),
+  cada_applicability_note: z.string().optional(),
+  applicability_condition: z.object({
+    depends_on: z.string(),
+    value: z.enum(['yes', 'no']),
+    when_unmet: z.literal('exclude'),
+  }).optional(),
 });
 
 const SingleQuestionSchema = QuestionBaseSchema.extend({

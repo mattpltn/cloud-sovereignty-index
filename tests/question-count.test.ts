@@ -35,7 +35,7 @@ const EU_CSF_KNOWN_GAPS = [
 
 const C3A_SOURCE_BASE_IDS = 45;  // from C3A PDF §2.x base criteria
 const C3A_SOURCE_AC_IDS = 15;    // from C3A PDF §2.x additional criteria
-const CADA_EXPECTED = 23; // 22 original + SOV-3-09-CADA (L2(f) direct) + SOV-2-07-CADA (L2(g)(iv) direct) - SOV-2-03 (CADA tag removed)
+const CADA_EXPECTED = 29; // 22 orig + SOV-3-09-CADA + SOV-2-07-CADA + SOV-1-10-CADA + SOV-6-07-CADA + SOV-5-07-CADA + SOV-4-15-CADA + SOV-4-16-CADA + SOV-4-17-CADA - SOV-2-03
 
 describe('Framework question count control loop', () => {
 

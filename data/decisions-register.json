@@ -1402,5 +1402,35 @@
       "created": "2026-05-29",
       "instrument_version": "2.2"
     }
-  ]
+  ],
+  "DR-F1": {
+    "id": "DR-F1",
+    "date": "2026-06-11",
+    "summary": "Global Sovereignty Score implements EU-CSF §5 verbatim. Objectives with no scorable questions are excluded and the weight basis renormalized; §5 is silent on this case. With all objectives present the computation is exactly §5 (weights sum to 1.0)."
+  },
+  "DR-F2": {
+    "id": "DR-F2",
+    "date": "2026-06-11",
+    "summary": "Commit b53d09c Σ(w·raw)/Σ(w·max) formula reverted: it re-weights objectives by question-point mass and diverges from §5 (worked example: 100% on SOV-5 → 12.8% instead of 20.0%). Corrected to Σ[(raw/max)·w] / Σ[w]."
+  },
+  "DR-F3": {
+    "id": "DR-F3",
+    "date": "2026-06-11",
+    "summary": "Annex II L3(g) cites \"an implementing act under Article 19\"; Article 19 of the Act is conformity self-assessment. The associated-third-countries implementing-act mechanism is Article 18. Cited throughout as Art. 19 [sic — Art. 18] pending corrigendum or co-legislator amendment."
+  },
+  "DR-F4": {
+    "id": "DR-F4",
+    "date": "2026-06-11",
+    "summary": "Interim: SOV-2-05 represents L2(g)(i)–(iii) as a single question; auditors assess them separately (Annex III §7.2). Splitting into three questions is planned as a follow-on patch."
+  },
+  "DR-F5": {
+    "id": "DR-F5",
+    "date": "2026-06-11",
+    "summary": "SOV-2-07-CADA excluded from UAL 4 gate: L4(g) prohibits third-country control outright and contains no safeguard sub-points. Question scoped to UAL 2–3 only."
+  },
+  "DR-E27": {
+    "id": "DR-E27",
+    "date": "2026-06-11",
+    "summary": "SOV-4-14 (workload migration ease): EU-CSF §4 SOV-4 contributing factor 1 assigns no point value or seal level. Assigned seal_contribution=3 and points=10 as CSI editorial values consistent with neighboring SOV-4 questions."
+  }
 }
