@@ -1,5 +1,31 @@
 import type ExcelJS from 'exceljs';
-import type { CriteriaFile } from '../../shared/src/schema.js';
+import type { CriteriaFile, Question } from '../../shared/src/schema.js';
+import { buildProvenance } from '../../shared/src/provenance.js';
+import { buildSheetRefs } from '../../shared/src/relevance.js';
+import sourceRegisterData from '../../data/source-register.json';
+import riskRegisterData from '../../data/risk-register.json';
+
+type FrameworkMode = 'eu_csf' | 'c3a' | 'cada' | 'lmic' | 'csi_composite';
+
+function questionPrimaryMode(q: Question): FrameworkMode {
+  if (q.applies_to_eu_csf) return 'eu_csf';
+  if (q.applies_to_c3a) return 'c3a';
+  if (q.applies_to_cada) return 'cada';
+  if (q.applies_to_lmic) return 'lmic';
+  return 'csi_composite';
+}
+
+// Questions that appear in the risk register, keyed by question_id
+const QUESTION_RISK_MAP: Map<string, string[]> = (() => {
+  const m = new Map<string, string[]>();
+  for (const risk of riskRegisterData.risks) {
+    for (const qid of risk.question_ids) {
+      if (!m.has(qid)) m.set(qid, []);
+      m.get(qid)!.push(risk.id);
+    }
+  }
+  return m;
+})();
 
 interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
 interface CountriesFile { EU: Country[]; EEA_non_EU: Country[]; non_EU: Country[] }
@@ -164,6 +190,12 @@ function addAssessmentSheet(
     { key: 'eu_csf_source_factor',   width: 40 },  // P
     { key: 'seal_contribution_eu_csf', width: 22 }, // Q
     { key: 'seal_contribution_csi',  width: 20 },  // R
+    { key: 'prov_framework',         width: 40 },  // S — Source framework
+    { key: 'prov_clause',            width: 40 },  // T — Source clause
+    { key: 'prov_fidelity',          width: 16 },  // U — Fidelity
+    { key: 'prov_basis',             width: 70 },  // V — Basis / rationale
+    { key: 'prov_relevant',          width: 18 },  // W — Relevant? (scope formula)
+    { key: 'prov_risks',             width: 30 },  // X — Risk(s) addressed
   ];
 
   // Hide metadata columns
@@ -177,6 +209,7 @@ function addAssessmentSheet(
     'applies_to_eu_csf', 'applies_to_c3a', 'applies_to_csi_composite',
     'evidence_expected', 'evidence_provided', 'evidence_type', 'answer', 'guidance',
     'c3a_source_id', 'eu_csf_source_factor', 'seal_contribution_eu_csf', 'seal_contribution_csi',
+    'source_framework', 'source_clause', 'fidelity', 'basis', 'relevant', 'risks_addressed',
   ]);
   header.font = { bold: true };
   header.fill = HEADER_FILL;
@@ -205,9 +238,10 @@ function addAssessmentSheet(
 
   ws.views = [{ state: 'frozen', ySplit: 1 }];
 
-  function applyDataRow(row: ExcelJS.Row, qid: string, text: string, fill: ExcelJS.Fill,
+  function applyDataRow(row: ExcelJS.Row, q: Question, text: string, fill: ExcelJS.Fill,
     c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean,
     guidance = '', c3aSourceId = '', euCsfFactor = '', sealEuCsf?: number, sealCsi?: number) {
+    const qid = q.id;
     row.fill = fill;
     row.getCell(6).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(3).value = c3aTier;
@@ -225,6 +259,31 @@ function addAssessmentSheet(
     if (sealEuCsf !== undefined) row.getCell(17).value = sealEuCsf;
     if (sealCsi !== undefined) row.getCell(18).value = sealCsi;
     row.height = Math.min(60, Math.ceil(text.length / 80) * 15 + 15);
+
+    // Provenance columns S-X (19-24)
+    const mode = questionPrimaryMode(q);
+    const prov = buildProvenance(q, mode);
+    const regEntry = sourceRegisterData.entries.find(e => e.key === prov.register_key);
+    const frameworkName = regEntry?.name ?? prov.register_key ?? '';
+    const isoClause = prov.source_text?.includes('not reproduced') ? prov.source_text : null;
+    const clauseText = isoClause ?? prov.source_text ?? '';
+
+    row.getCell(19).value = frameworkName;
+    row.getCell(19).font = { color: { argb: 'FF374151' } };
+    row.getCell(20).value = clauseText;
+    row.getCell(20).alignment = { wrapText: true, vertical: 'top' };
+    row.getCell(21).value = prov.fidelity_badge;
+    row.getCell(22).value = prov.origin_line;
+    row.getCell(22).alignment = { wrapText: true, vertical: 'top' };
+    // Relevant? — static "Yes" for all existing questions (no show_when predicates in criteria.json)
+    row.getCell(23).value = 'Yes';
+    row.getCell(23).font = { color: { argb: 'FF15803D' } };
+    // Risks addressed — comma-joined risk IDs from risk-register
+    const riskIds = QUESTION_RISK_MAP.get(qid) ?? [];
+    row.getCell(24).value = riskIds.join(', ');
+    if (riskIds.length > 0) {
+      row.getCell(24).font = { color: { argb: 'FFB45309' } };
+    }
   }
 
   let objIndex = 0;
@@ -248,12 +307,12 @@ function addAssessmentSheet(
           const euTitle  = q.title;
           const genTitle = q.title_generalized ?? q.title;
           const euRow  = ws.addRow([q.id, 'eu_csf',      c3aTier, obj.id, euTitle,  q.text,             '', '', '', '', '', '', '']);
-          applyDataRow(euRow,  q.id, q.text,             fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+          applyDataRow(euRow,  q, q.text,             fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
           const genRow = ws.addRow([q.id, 'generalized', c3aTier, obj.id, genTitle, q.text_generalized, '', '', '', '', '', '', '']);
-          applyDataRow(genRow, q.id, q.text_generalized, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+          applyDataRow(genRow, q, q.text_generalized, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
         } else {
           const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, q.text, '', '', '', '', '', '', '']);
-          applyDataRow(row, q.id, q.text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+          applyDataRow(row, q, q.text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
         }
       } else {
         // Always emit both bloc and national rows.
@@ -261,13 +320,13 @@ function addAssessmentSheet(
         const blocText = q.tiers.bloc.text;
         const blocC3aSrc = applyC3a ? (q.tiers.bloc.source.clause.split(' ').pop() ?? '') : '';
         const blocRow = ws.addRow([q.id, 'bloc', c3aTier, obj.id, q.title, blocText, '', '', '', '', '', '', '']);
-        applyDataRow(blocRow, q.id, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', blocC3aSrc, euFactor, sealEu, sealCsi);
+        applyDataRow(blocRow, q, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', blocC3aSrc, euFactor, sealEu, sealCsi);
 
         if (q.tiers.national) {
           const natText = q.tiers.national.text;
           const natC3aSrc = applyC3a ? (q.tiers.national.source.clause.split(' ').pop() ?? '') : '';
           const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
-          applyDataRow(natRow, q.id, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', natC3aSrc, euFactor, sealEu, sealCsi);
+          applyDataRow(natRow, q, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', natC3aSrc, euFactor, sealEu, sealCsi);
         }
       }
     }
@@ -281,7 +340,7 @@ function addAssessmentSheet(
   // Skipped for framework-specific templates — rows are already pre-filtered to that framework.
   if (!skipFrameworkGreying) {
     ws.addConditionalFormatting({
-      ref: 'A2:R500',
+      ref: 'A2:X500',
       rules: [{
         type: 'expression',
         priority: 1,
@@ -296,7 +355,7 @@ function addAssessmentSheet(
 
   // Rule 2: grey out EU-only rows (bloc, eu_csf) when a non-EU/EEA country is selected.
   ws.addConditionalFormatting({
-    ref: 'A2:R500',
+    ref: 'A2:X500',
     rules: [{
       type: 'expression',
       priority: 2,
@@ -310,7 +369,7 @@ function addAssessmentSheet(
 
   // Rule 3: grey out generalized rows when an EU/EEA country is selected.
   ws.addConditionalFormatting({
-    ref: 'A2:R500',
+    ref: 'A2:X500',
     rules: [{
       type: 'expression',
       priority: 3,
@@ -339,6 +398,98 @@ function addAssessmentSheet(
   });
 }
 
+function addScopeSheet(wb: ExcelJS.Workbook) {
+  const ws = wb.addWorksheet('Scope');
+  ws.columns = [
+    { key: 'layer', width: 8 },
+    { key: 'label', width: 22 },
+    { key: 'value', width: 26 },
+  ];
+
+  const headerRow = ws.addRow(['Layer', 'Facet', 'Value']);
+  headerRow.font = { bold: true };
+  headerRow.fill = HEADER_FILL;
+
+  const OWNERSHIP_OPTS = '"client,commercial_lessor,provider,mixed,na"';
+  const OPERATION_OPTS = '"client_staff,local_si,foreign_vendor,provider,na"';
+  const DEPENDENCY_OPTS = '"self_supported_oss,licensed_supported,licensed_no_support,proprietary_inaccessible,na"';
+  const LOCATION_OPTS   = '"in_country,regional_treaty,trusted_third,foreign,unknown"';
+
+  const sheetRefs = buildSheetRefs();
+  const layers = ['L1','L2','L3','L4','L5','L6'] as const;
+  const LAYER_NAMES: Record<string, string> = {
+    L1:'Facility', L2:'Hardware', L3:'Virtualization', L4:'Managed/PaaS', L5:'Operations', L6:'Consumption',
+  };
+  const facets: Array<{ key: string; label: string; opts: string }> = [
+    { key: 'ownership',  label: 'Ownership',  opts: OWNERSHIP_OPTS },
+    { key: 'operation',  label: 'Operation',  opts: OPERATION_OPTS },
+    { key: 'dependency', label: 'Dependency', opts: DEPENDENCY_OPTS },
+    { key: 'location',   label: 'Location',   opts: LOCATION_OPTS },
+  ];
+
+  for (const layer of layers) {
+    for (const facet of facets) {
+      const row = ws.addRow([`${layer} — ${LAYER_NAMES[layer]}`, facet.label, 'client']);
+      row.getCell(3).fill = INPUT_FILL;
+      row.getCell(3).dataValidation = {
+        type: 'list', allowBlank: false, formulae: [facet.opts],
+        showErrorMessage: true, errorStyle: 'stop', errorTitle: 'Invalid', error: `Select a value from the list`,
+      } as ExcelJS.DataValidation;
+      // Define named range so toExcelFormula() formulas can reference e.g. L3_dependency
+      const namedKey = `${layer}.${facet.key}`;
+      const rangeName = sheetRefs[namedKey]; // e.g. "L3_dependency"
+      if (rangeName) {
+        const cellAddr = `Scope!$C$${ws.rowCount}`;
+        wb.definedNames.add(cellAddr, rangeName);
+      }
+    }
+  }
+
+  ws.addRow([]);
+  const noteRow = ws.addRow(['', 'Fill the Value column to scope which questions are relevant for your control profile.', '']);
+  noteRow.getCell(2).font = { italic: true, color: { argb: 'FF6B7280' } };
+}
+
+function addSourcesSheet(wb: ExcelJS.Workbook) {
+  const ws = wb.addWorksheet('Sources');
+  ws.columns = [
+    { key: 'key',    width: 22 },
+    { key: 'name',   width: 55 },
+    { key: 'version', width: 30 },
+    { key: 'issuer', width: 40 },
+    { key: 'url',    width: 60 },
+  ];
+
+  const noteRow = ws.addRow(['Every question in this workbook is traceable to a published framework. See the Source framework / clause columns on the Assessment sheet and the full references here.']);
+  noteRow.getCell(1).font = { italic: true, color: { argb: 'FF374151' } };
+  noteRow.getCell(1).alignment = { wrapText: true };
+  ws.mergeCells(`A1:E1`);
+  ws.getRow(1).height = 28;
+
+  ws.addRow([]);
+
+  const header = ws.addRow(['Key', 'Framework name', 'Version / date', 'Issuer', 'Official URL']);
+  header.font = { bold: true };
+  header.fill = HEADER_FILL;
+
+  for (const entry of sourceRegisterData.entries) {
+    const row = ws.addRow([
+      entry.key,
+      entry.name,
+      entry.version_or_date,
+      entry.issuer,
+      (entry as Record<string, unknown>).official_url as string ?? '(no public URL)',
+    ]);
+    row.getCell(5).font = { color: { argb: 'FF1D4ED8' } };
+    if ((entry as Record<string, unknown>).proposal_disclaimer) {
+      row.getCell(2).font = { italic: true };
+      row.getCell(2).note = { texts: [{ text: 'Proposal — not yet adopted into law. Monitor for legislative developments.' }] };
+    }
+  }
+
+  ws.views = [{ state: 'frozen', ySplit: 3 }];
+}
+
 export async function buildTemplateXlsx(
   criteria: CriteriaFile,
   countries: CountriesFile,
@@ -350,7 +501,10 @@ export async function buildTemplateXlsx(
   wb.creator = 'Cloud Sovereignty Index';
   wb.created = new Date();
 
-  // ── Sheet 1: Setup ─────────────────────────────────────────────────────────
+  // ── Sheet 1: Scope (control-profile variables — named ranges for Excel formulas) ─
+  addScopeSheet(wb);
+
+  // ── Sheet 2: Setup ─────────────────────────────────────────────────────────
   const setup = wb.addWorksheet('Setup');
   setup.columns = [
     { width: 4 },   // A — spacer
@@ -476,10 +630,10 @@ export async function buildTemplateXlsx(
     result: 'EU-CSF',
   };
 
-  // ── Sheet 2: Assessment questions (single merged sheet) ─────────────────────
+  // ── Sheet 3: Assessment questions (single merged sheet) ─────────────────────
   addAssessmentSheet(wb, criteria, !!frameworkApiId);
 
-  // ── Sheet 4: Privacy ───────────────────────────────────────────────────────
+  // ── Sheet 4: Privacy ──────────────────────────────────────────────────────
   const privacy = wb.addWorksheet('Privacy');
   privacy.columns = [{ width: 4 }, { width: 90 }];
 
@@ -514,6 +668,9 @@ export async function buildTemplateXlsx(
     row.getCell(2).alignment = { wrapText: true };
     if (!text) row.height = 8;
   });
+
+  // ── Sheet N: Sources (full source-register.json — provenance travels with workbook) ─
+  addSourcesSheet(wb);
 
   // ── Serialize ───────────────────────────────────────────────────────────────
   const buffer = await wb.xlsx.writeBuffer();

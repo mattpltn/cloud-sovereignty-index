@@ -1,6 +1,6 @@
-import type { Variant, Scope, Role, AnswerValue, Country, FrameworkMode } from './schema.js';
+import type { Variant, Scope, Role, AnswerValue, Country, FrameworkMode, ControlProfile } from './schema.js';
 
-export type { Variant, Scope, Role, AnswerValue, Country, FrameworkMode };
+export type { Variant, Scope, Role, AnswerValue, Country, FrameworkMode, ControlProfile };
 
 // ── Per-question result (shared across modes) ─────────────────────────────────
 
@@ -174,6 +174,7 @@ export interface AssessmentResult {
   csi_composite?: CsiCompositeResult;
   cada?: CadaResult;
   lmic?: LmicResult;
+  control_profile?: ControlProfile;
 }
 
 // ── v1.x legacy result (stored in D1 for old assessments) ────────────────────

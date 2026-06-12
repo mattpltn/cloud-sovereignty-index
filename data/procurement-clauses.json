@@ -1,0 +1,203 @@
+{
+  "clauses_version": "1.0.0",
+  "description": "Procurement clause library for the layered control-matrix model. Each clause mitigates one or more risks in risk-register.json and cites ≥1 entry in source-register.json.",
+  "clauses": [
+
+    {
+      "id": "PC-L1-ACCESS",
+      "layer": "L1",
+      "clause_text": "The Provider shall grant the Customer at least 90 days written notice of any termination, expiry, or non-renewal of this Agreement. During that period the Customer shall retain unimpeded physical access to its hardware located at the Facility for the purpose of removal or migration. Access may not be conditional on outstanding charges.",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 30(2)(j): exit plans ensuring continuity including transfer of data and assets." }
+      ],
+      "realism_tag": "standard_market_term",
+      "applies_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+    },
+
+    {
+      "id": "PC-L1-NOTICE",
+      "layer": "L1",
+      "clause_text": "The Provider shall notify the Customer within 30 days of any change of ownership, management, or operational control of the Facility. If the incoming owner is a legal entity not incorporated or resident in the Customer's trusted jurisdiction, the Customer shall have the right to terminate this Agreement without penalty within 90 days of such notice.",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 30(2)(i): ICT contracts must include notification requirements for material changes, including subcontracting." }
+      ],
+      "realism_tag": "negotiable",
+      "applies_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+    },
+
+    {
+      "id": "PC-L1-JURISDICTION",
+      "layer": "L1",
+      "clause_text": "The Provider shall disclose to the Customer any government access request, demand, or order received from a jurisdiction other than the Customer's trusted jurisdiction, to the fullest extent permitted by applicable law. Where legal prohibition prevents disclosure, the Provider shall notify the Customer that a prohibition exists. The Provider shall resist unlawful government access requests and challenge them before the competent court before complying, except where immediate compliance is legally required.",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 32: cloud providers must take all reasonable measures to resist unlawful third-country government access and notify customers." },
+        { "register_key": "gdpr", "clause": "Art. 48: third-country government demands are only recognised if based on an international agreement." }
+      ],
+      "realism_tag": "standard_market_term",
+      "applies_when": "L1.location == 'foreign' OR L1.location == 'trusted_third'"
+    },
+
+    {
+      "id": "PC-L2-ASSETRETURN",
+      "layer": "L2",
+      "clause_text": "On termination or expiry, the Provider shall provide the Customer with a complete inventory of Customer-owned or Customer-licensed hardware and a migration procedure document within 30 days of the termination notice. The Customer shall have 60 days following the inventory delivery to migrate workloads before any hardware access is restricted.",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 25(2)(g): providers must offer structured switching assistance including documented migration procedures." },
+        { "register_key": "swipo-iaas-v3", "clause": "DP01: structured data portability procedure." }
+      ],
+      "realism_tag": "standard_market_term",
+      "applies_when": "L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider'"
+    },
+
+    {
+      "id": "PC-L2-DIVERSITY",
+      "layer": "L2",
+      "clause_text": "The Provider shall disclose the manufacturers, countries of manufacture, and current export-control status of hardware used to deliver the Service. Where a single manufacturer supplies more than 50% of any critical hardware category (compute, storage, or network), the Provider shall maintain a documented contingency plan for that category, including alternative sourcing or strategic inventory commitments.",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 30(2)(e): ICT contracts for critical functions must disclose concentration risks in the supply chain." },
+        { "register_key": "nist-sp-800-53-r5", "clause": "SR-6: supply-chain risk assessment covering acquisition and sourcing." }
+      ],
+      "realism_tag": "negotiable",
+      "applies_when": "L2.location == 'foreign'"
+    },
+
+    {
+      "id": "PC-L3-PRICEESCALATION",
+      "layer": "L3",
+      "clause_text": "The Provider's licence or subscription fees for the platform software shall not increase by more than [X]% per annum during the term. If the Provider restructures its licensing model in a way that would increase the Customer's costs beyond this cap, the Customer shall have the right to terminate without early-termination penalty within 90 days of the notice of restructure.",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 29: switching charges are controlled but ongoing subscription pricing restructures are not — this clause fills that gap." }
+      ],
+      "realism_tag": "negotiable",
+      "applies_when": "L3.dependency == 'licensed_supported'"
+    },
+
+    {
+      "id": "PC-L3-ESCROW",
+      "layer": "L3",
+      "clause_text": "The Provider shall place source code, configuration tooling, and operational runbooks for the platform software into escrow with a nationally incorporated trustee. The escrow shall be released to the Customer within 30 days of: (a) Provider insolvency, (b) discontinuation of support for the licensed version, or (c) a licensing restructure that triggers the Customer's termination right under this Agreement.",
+      "source_anchors": [
+        { "register_key": "c3a", "clause": "§2.5.1 (Source Code Backup): providers must maintain source code backups enabling independent development or operation." },
+        { "register_key": "iso-22301", "clause": "Cl. 8.4.3: continuity resource requirements include tooling and documentation." }
+      ],
+      "realism_tag": "negotiable",
+      "applies_when": "L3.dependency == 'licensed_supported' OR L3.dependency == 'proprietary_inaccessible'"
+    },
+
+    {
+      "id": "PC-L3-PORTABILITY",
+      "layer": "L3",
+      "clause_text": "The Provider shall export all Customer virtual machine images in OVF/OVA format and all Customer object-storage data in open-format archives within 30 days of a portability request. Export shall be at no additional charge beyond direct egress cost.",
+      "source_anchors": [
+        { "register_key": "swipo-iaas-v3", "clause": "DP06: open-standard artefact export obligation." },
+        { "register_key": "eu-data-act", "clause": "Art. 30(1): IaaS functional equivalence — the provider must support migration to a functionally equivalent platform." }
+      ],
+      "realism_tag": "standard_market_term",
+      "applies_when": "L3.ownership == 'provider' OR L3.dependency == 'proprietary_inaccessible'"
+    },
+
+    {
+      "id": "PC-L3-SKILLSCONTINUITY",
+      "layer": "L3",
+      "clause_text": "The Provider shall, during the term, offer annual knowledge-transfer sessions to the Customer's operations team covering platform architecture, routine maintenance procedures, and emergency recovery procedures. On termination, the Provider shall make available a run-book and architecture guide sufficient for the Customer or a third party to assume operations within 90 days.",
+      "source_anchors": [
+        { "register_key": "iso-22301", "clause": "Cl. 8.4.3: resource requirements include competent personnel and documented procedures for continuity." }
+      ],
+      "realism_tag": "negotiable",
+      "applies_when": "L3.dependency == 'self_supported_oss' AND L3.operation == 'client_staff'"
+    },
+
+    {
+      "id": "PC-L4-EQUIV",
+      "layer": "L4",
+      "clause_text": "The Provider shall, on Customer request, provide a functional-equivalence mapping of each proprietary managed service used by the Customer to an open-standard or independently implementable equivalent, including the APIs required for migration and a migration guide.",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 30(1): IaaS functional equivalence; Art. 30(2)-(4): open-interface obligation for PaaS/SaaS." }
+      ],
+      "realism_tag": "hard_ask",
+      "applies_when": "L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider'"
+    },
+
+    {
+      "id": "PC-L4-EXPORT",
+      "layer": "L4",
+      "clause_text": "The Provider shall export all Customer data held in proprietary managed services (managed databases, object stores, event streams, AI-inference artefacts) in open, documented formats within 30 days of a portability request. Where a fully open format is not technically available, the Provider shall supply a documented schema or API specification enabling re-ingestion by a third party.",
+      "source_anchors": [
+        { "register_key": "swipo-iaas-v3", "clause": "DP01: structured portability procedure covering all customer data." },
+        { "register_key": "eu-data-act", "clause": "Art. 25(2)(g): switching assistance including data export." }
+      ],
+      "realism_tag": "standard_market_term",
+      "applies_when": "L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider'"
+    },
+
+    {
+      "id": "PC-L4-EGRESS",
+      "layer": "L4",
+      "clause_text": "The Provider shall not impose data-egress or switching charges for the export of Customer data and digital assets in connection with termination or switching; any charges for parallel/multi-cloud egress shall not exceed directly incurred cost.",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 29(1); Art. 34(2)." }
+      ],
+      "realism_tag": "standard_market_term",
+      "applies_when": "L4.ownership == 'provider'"
+    },
+
+    {
+      "id": "PC-L4-TERM",
+      "layer": "L4",
+      "clause_text": "Early-termination penalties under this Agreement shall be proportionate to the Provider's directly incurred costs resulting from early termination and shall not include loss-of-profit components. The Customer's right to terminate on 2 months' notice shall not be subject to a penalty in the final 12 months of any committed term.",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 25(1): right to terminate on max 2-month notice; Art. 2(36): penalties must be proportionate." }
+      ],
+      "realism_tag": "standard_market_term",
+      "applies_when": "L4.ownership == 'provider'"
+    },
+
+    {
+      "id": "PC-L5-ACCESSRESTRICTION",
+      "layer": "L5",
+      "clause_text": "All personnel performing privileged access to Customer systems shall be resident in and subject to the laws of the Customer's trusted jurisdiction. The Provider shall maintain and make available on request a list of personnel with privileged access, their nationalities, and their place of residence. Remote privileged access from outside the trusted jurisdiction shall be prohibited except with prior written Customer consent.",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 30(2)(c): location of service provision and data processing must be specified in ICT contracts for critical functions." },
+        { "register_key": "c3a", "clause": "§2.4: privileged-access restriction to trusted-jurisdiction personnel is a scored criterion." }
+      ],
+      "realism_tag": "negotiable",
+      "applies_when": "L5.operation == 'foreign_vendor'"
+    },
+
+    {
+      "id": "PC-L5-SOCREQUIREMENT",
+      "layer": "L5",
+      "clause_text": "The Customer's national supervisory authority shall have the right to conduct on-site inspections of the Operations Centre(s) used to deliver the Service, including access to personnel, systems, and logs relevant to the Service. The Provider shall ensure that Operations Centre locations are in jurisdictions where this right can be exercised without bilateral treaty requirement. The Provider shall notify the Customer at least 60 days before relocating any Operations Centre to a new jurisdiction.",
+      "source_anchors": [
+        { "register_key": "eba-gl-2019-02", "clause": "§75-76: on-site inspection rights for critical outsourcing." },
+        { "register_key": "dora", "clause": "Art. 30(2)(c), (l): service location and supervisory inspection rights." }
+      ],
+      "realism_tag": "negotiable",
+      "applies_when": "L5.location == 'foreign' OR L5.operation == 'foreign_vendor'"
+    },
+
+    {
+      "id": "PC-L6-EXITDRILL",
+      "layer": "L6",
+      "clause_text": "The Customer shall conduct an annual exit drill for workloads classified as critical. The Provider shall cooperate with such drills by providing: (a) a data export in the agreed portability format, (b) a functional-equivalence mapping for any proprietary services used, and (c) technical staff available to support the drill for up to 5 business days per drill event. The Provider may charge only directly incurred costs for this cooperation.",
+      "source_anchors": [
+        { "register_key": "iso-22301", "clause": "Cl. 8.5: periodic testing and exercise of business continuity plans." },
+        { "register_key": "eu-data-act", "clause": "Art. 25(1): the right to switch must be practically realisable, not merely contractually acknowledged." }
+      ],
+      "realism_tag": "negotiable",
+      "applies_when": "L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'"
+    },
+
+    {
+      "id": "PC-L6-CRITICALITY",
+      "layer": "L6",
+      "clause_text": "At contract inception and annually thereafter, the Provider shall supply a service criticality and impact disclosure document, identifying the data categories, process dependencies, and regulatory regimes applicable to the Customer's workloads on the Service. The Customer's criticality classification of each workload shall be recorded in the contract schedule and may be updated by the Customer at any time without Provider consent.",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 28(2): ICT third-party register must include criticality assessment." },
+        { "register_key": "eba-gl-2019-02", "clause": "§67: materiality assessment as prerequisite for outsourcing controls." }
+      ],
+      "realism_tag": "standard_market_term",
+      "applies_when": "L6.ownership == 'provider' OR L6.dependency == 'proprietary_inaccessible'"
+    }
+  ]
+}

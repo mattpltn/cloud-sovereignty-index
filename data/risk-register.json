@@ -1,0 +1,214 @@
+{
+  "register_version": "1.0.0",
+  "description": "Sourced risk register for the layered control-matrix model. Every risk is triggered by a control-profile predicate and cites ≥1 entry in source-register.json.",
+  "risks": [
+
+    {
+      "id": "RISK-L1-ACCESS-01",
+      "layer": "L1",
+      "title": "Co-location facility access revocation",
+      "description": "When the facility is owned or leased by a commercial third party or provider, the client's physical access can be revoked on contract termination or provider insolvency, with no legally guaranteed transition period for equipment removal.",
+      "triggers": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 30(2)(j): ICT third-party contracts for critical functions must include exit plans ensuring continuity of service, including transfer of assets and data to the client." },
+        { "register_key": "eu-data-act", "clause": "Art. 25(2)(g): switching assistance obligation; clients must retain the right to migrate data and workloads within an agreed transition period." }
+      ],
+      "question_ids": ["SOV-3-01", "SOV-2-03"],
+      "procurement_clause_ids": ["PC-L1-ACCESS", "PC-L1-NOTICE"],
+      "severity_basis": "DORA Art. 30(2)(j) treats the absence of a documented exit plan for critical ICT dependencies as a gap in the ICT risk management framework; facility exit without an agreed procedure creates immediate service disruption risk — the client has no guaranteed right of continued access to their own hardware during a dispute."
+    },
+
+    {
+      "id": "RISK-L1-JURISDICTION-01",
+      "layer": "L1",
+      "title": "Facility under foreign jurisdiction — covert access demand",
+      "description": "A facility physically located in a foreign jurisdiction is accessible to that jurisdiction's law-enforcement and intelligence authorities under local law, regardless of the governing law of the service contract. Covert access demands need not be disclosed to the customer.",
+      "triggers": "L1.location == 'foreign' OR L1.location == 'trusted_third'",
+      "source_anchors": [
+        { "register_key": "gdpr", "clause": "Art. 48: third-country judgments or orders requiring transfer of personal data are only recognised if based on an international agreement; unilateral foreign authority demands are not a lawful basis." },
+        { "register_key": "eu-data-act", "clause": "Art. 32: cloud service providers must resist unlawful third-country government access requests and notify the customer (where legally permitted)." }
+      ],
+      "question_ids": ["SOV-2-01", "SOV-2-03"],
+      "procurement_clause_ids": ["PC-L1-JURISDICTION"],
+      "severity_basis": "GDPR Art. 48 and Data Act Art. 32 establish that foreign government access demands are only permitted via international agreement; a facility in a foreign jurisdiction is physically accessible to that jurisdiction's authorities independently of any contractual term — the risk cannot be contractually eliminated, only disclosed and monitored."
+    },
+
+    {
+      "id": "RISK-L2-ASSET-01",
+      "layer": "L2",
+      "title": "Hardware asset recovery on contract termination",
+      "description": "Where the client does not own the physical hardware, the hardware reverts to the lessor or provider on contract end. Without a tested migration plan, the client cannot recover workloads before hardware access is revoked.",
+      "triggers": "L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider'",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 25(2)(g): provider must offer structured switching assistance including documented procedures for transfer of assets." },
+        { "register_key": "swipo-iaas-v3", "clause": "DP01: the provider must document and publish a structured data portability procedure covering all customer data, configurations, and virtual assets." }
+      ],
+      "question_ids": ["SOV-5-02", "SOV-5-04"],
+      "procurement_clause_ids": ["PC-L2-ASSETRETURN"],
+      "severity_basis": "SWIPO IaaS DP01 requires a structured portability procedure; hardware returned to the lessor without a tested migration path eliminates the client's ability to recover services from that infrastructure — the asset-recovery right belongs to the hardware owner, not the service customer."
+    },
+
+    {
+      "id": "RISK-L2-SUPPLYCHAIN-01",
+      "layer": "L2",
+      "title": "Foreign-manufacturer hardware supply-chain cut-off",
+      "description": "Hardware sourced from a single foreign manufacturer is exposed to export controls, sanctions, or supply-chain disruption from that manufacturer's jurisdiction, potentially preventing replacement or repair of critical components.",
+      "triggers": "L2.location == 'foreign'",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 30(2)(e): ICT contracts for critical functions must disclose ICT supply-chain concentration risks and, where relevant, the difficulty of replacing the ICT third-party service provider." },
+        { "register_key": "nist-sp-800-53-r5", "clause": "SR-6: supply-chain risk assessment — organisations shall assess supply chain risks associated with the development, acquisition, maintenance, and disposal of systems, components, and services." }
+      ],
+      "question_ids": ["SOV-5-02", "SOV-6-04"],
+      "procurement_clause_ids": ["PC-L2-DIVERSITY"],
+      "severity_basis": "DORA Art. 30(2)(e) treats supply-chain concentration as a disclosable risk in ICT contracts; NIST SP 800-53 SR-6 formalises the risk-assessment obligation — a single foreign manufacturer for critical compute or network hardware creates a cut-off risk that is unmitigable by contractual means alone once the disruption occurs."
+    },
+
+    {
+      "id": "RISK-L3-LICENSING-01",
+      "layer": "L3",
+      "title": "Hypervisor licensing shock — unilateral pricing restructure",
+      "description": "Where the virtualization layer depends on a licensed, vendor-supported platform (e.g. VMware/Broadcom post-2024), the vendor can unilaterally restructure licensing terms, remove perpetual licences, or mandate subscription upgrades, increasing costs by multiples with short contractual notice.",
+      "triggers": "L3.dependency == 'licensed_supported'",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 29: switching-charge controls apply at contract end — they do not constrain ongoing-subscription pricing changes or mid-term licensing restructures." },
+        { "register_key": "swipo-iaas-v3", "clause": "SP03: providers should publish transparent and predictable pricing for portability-related services; the gap between this and locked hypervisor licensing is the exposure." }
+      ],
+      "question_ids": ["SOV-6-02", "SOV-6-02-AC"],
+      "procurement_clause_ids": ["PC-L3-PRICEESCALATION", "PC-L3-ESCROW"],
+      "severity_basis": "The 2024 Broadcom/VMware licensing restructuring raised costs by 5–10× for many enterprise customers with short contractual notice; Data Act Art. 29 switching-charge controls do not reach ongoing-subscription pricing changes, leaving clients without regulatory protection against mid-term restructures — the risk is confirmed by an industry-wide incident, not a theoretical scenario."
+    },
+
+    {
+      "id": "RISK-L3-SKILLS-01",
+      "layer": "L3",
+      "title": "Self-managed OSS stack — in-house skills concentration",
+      "description": "Operating a self-supported open-source virtualization stack (e.g. OpenStack) concentrates platform continuity on in-house engineering skills. Loss of key personnel or inability to apply security patches independently can render the platform unoperatable.",
+      "triggers": "L3.dependency == 'self_supported_oss' AND L3.operation == 'client_staff'",
+      "source_anchors": [
+        { "register_key": "iso-22301", "clause": "Cl. 8.4.3: resource requirements for business continuity procedures must include competent personnel — skills availability is a continuity resource." },
+        { "register_key": "c3a", "clause": "§2.3 (Operational Substitutability): assesses whether the client has the internal capability to operate and maintain the platform without vendor support." }
+      ],
+      "question_ids": ["SOV-6-03", "SOV-5-01"],
+      "procurement_clause_ids": ["PC-L3-SKILLSCONTINUITY"],
+      "severity_basis": "ISO 22301 cl. 8.4.3 requires resource-availability analysis including human resources; C3A §2.3 treats operational substitutability as a scored criterion — self-managed OSS that cannot be patched or recovered by in-house staff is operationally equivalent to a failed dependency, regardless of its open-source status."
+    },
+
+    {
+      "id": "RISK-L3-HYPERSCALER-01",
+      "layer": "L3",
+      "title": "Proprietary IaaS fabric lock-in — migration infeasible",
+      "description": "Where the IaaS layer uses a provider's proprietary fabric (e.g. hyperscaler-native networking, storage, compute APIs), workloads cannot be migrated to an equivalent platform without re-architecture, regardless of data portability.",
+      "triggers": "L3.ownership == 'provider' AND L3.dependency == 'proprietary_inaccessible'",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 23 & 30(1): IaaS providers are subject to functional-equivalence obligations; the distinction from PaaS/SaaS is deliberate — the Act signals IaaS portability is achievable and mandates it." },
+        { "register_key": "swipo-iaas-v3", "clause": "DP06: providers must support open-standard artefact export (VM images in OVF, storage in standard formats); proprietary fabrics often cannot satisfy this requirement." }
+      ],
+      "question_ids": ["SOV-6-01", "SOV-6-01-FB2"],
+      "procurement_clause_ids": ["PC-L3-PORTABILITY", "PC-L3-ESCROW"],
+      "severity_basis": "Data Act Art. 30(1) imposes functional-equivalence obligations specifically on IaaS, signalling that the EU legislature regards IaaS portability as achievable; SWIPO IaaS DP06 provides the technical standard — a proprietary fabric that cannot satisfy DP06 is in confirmed violation of the intended regulatory outcome."
+    },
+
+    {
+      "id": "RISK-L4-LOCKIN-01",
+      "layer": "L4",
+      "title": "Proprietary managed-service lock-in",
+      "description": "Workloads built on the provider's proprietary managed services (serverless, managed databases, AI services) cannot be moved without re-architecture, regardless of data portability.",
+      "triggers": "L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider'",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 23 & 30(1): IaaS functional-equivalence duty applies to infra; PaaS/SaaS get only 'open interfaces' (Art. 30(2)-(4)) — the Act itself marks managed services as the harder-to-switch tier." },
+        { "register_key": "swipo-iaas-v3", "clause": "DP01/DP06 (structured, open-standard artefact export) — gap-tested against proprietary services." }
+      ],
+      "question_ids": ["SOV-4-15-CADA", "SOV-6-09-LMIC", "SOV-6-11-LMIC"],
+      "procurement_clause_ids": ["PC-L4-EQUIV", "PC-L4-EXPORT"],
+      "severity_basis": "Data Act distinguishes IaaS functional equivalence (Art. 30(1)) from the weaker open-interface duty for PaaS/SaaS — i.e. EU law itself treats this layer as higher switching risk."
+    },
+
+    {
+      "id": "RISK-L4-EGRESS-01",
+      "layer": "L4",
+      "title": "Switching/egress charges as an exit barrier",
+      "description": "Data-egress and switching charges can make exit economically prohibitive, locking the client in by cost rather than technology.",
+      "triggers": "L4.ownership == 'provider' OR L3.ownership == 'provider'",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 29(2)-(3): switching charges cost-capped to 12 Jan 2027; Art. 29(1): fully prohibited from 12 Jan 2027; Art. 2(36): definition includes data egress charges. Note: Art. 34(2) still permits cost-based egress for parallel/multi-cloud use (not switching)." }
+      ],
+      "question_ids": ["SOV-6-10-LMIC"],
+      "procurement_clause_ids": ["PC-L4-EGRESS"],
+      "severity_basis": "EU law moved to prohibit these charges entirely (Art. 29(1), from 12 Jan 2027), and the three largest hyperscalers introduced free-switching programmes in 2024 — strong evidence the charge is an avoidable barrier, not an intrinsic cost."
+    },
+
+    {
+      "id": "RISK-L4-TERMINATION-01",
+      "layer": "L4",
+      "title": "Disproportionate early-termination penalties",
+      "description": "Exit is deterred by termination fees disconnected from actual cost, distinct from (now-restricted) switching charges.",
+      "triggers": "L4.ownership == 'provider'",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 2(36) excludes 'early termination penalties' from the switching-charge ban; Art. 25 right to terminate on max 2-month notice; penalties must be 'proportionate', assessed under national contract/unfair-terms law (no Union-wide methodology)." }
+      ],
+      "question_ids": ["SOV-6-08-LMIC"],
+      "procurement_clause_ids": ["PC-L4-TERM"],
+      "severity_basis": "Termination penalties are the residual lock-in lever the Data Act leaves to national-law proportionality review — explicitly the grey zone, hence flagged for contractual control."
+    },
+
+    {
+      "id": "RISK-L5-ROOTACCESS-01",
+      "layer": "L5",
+      "title": "Foreign vendor holds privileged root access",
+      "description": "When operations are performed by a foreign vendor, that vendor's staff hold privileged access to the client's infrastructure. The vendor's personnel are subject to the laws and orders of their home jurisdiction, not the client's. Foreign government requests may compel access without customer notification.",
+      "triggers": "L5.operation == 'foreign_vendor'",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 30(2)(c): ICT contracts for critical functions must specify the location where services are provided and data processed, including processing by subcontractors." },
+        { "register_key": "c3a", "clause": "§2.4 (Personnel Security and Jurisdiction): assesses whether privileged-access roles are restricted to personnel in the trusted jurisdiction — a foreign vendor holding root access fails this criterion." }
+      ],
+      "question_ids": ["SOV-4-01", "SOV-4-02"],
+      "procurement_clause_ids": ["PC-L5-ACCESSRESTRICTION"],
+      "severity_basis": "DORA Art. 30(2)(c) requires specification of service-delivery and data-processing locations for critical ICT contracts; C3A §2.4 treats foreign privileged access as a direct scoring deduction — the risk is not mitigable by contractual assurance alone, because the foreign jurisdiction's legal orders supersede the contract."
+    },
+
+    {
+      "id": "RISK-L5-SOC-01",
+      "layer": "L5",
+      "title": "NOC/SOC under foreign jurisdiction — on-site inspection infeasible",
+      "description": "A Network or Security Operations Centre located in a foreign jurisdiction is practically inaccessible to the client's national supervisory authority for on-site inspection, undermining the enforceability of contractual security obligations.",
+      "triggers": "L5.location == 'foreign' OR L5.operation == 'foreign_vendor'",
+      "source_anchors": [
+        { "register_key": "eba-gl-2019-02", "clause": "§75-76: outsourcing of critical or important functions must grant the competent authority the right to conduct on-site inspections — a foreign-located SOC makes this right practically unenforceable without bilateral MOU." },
+        { "register_key": "dora", "clause": "Art. 30(2)(c): location of services must be specified; Art. 30(2)(l): ICT contracts must include rights of access, inspection, and audit by competent authorities." }
+      ],
+      "question_ids": ["SOV-4-04", "SOV-4-17-LMIC"],
+      "procurement_clause_ids": ["PC-L5-SOCREQUIREMENT"],
+      "severity_basis": "EBA/GL/2019/02 §75 requires on-site inspection rights for critical outsourcing — a foreign SOC location makes this a paper right, not a real one; DORA Art. 30(2)(l) codifies the same requirement into law for financial-sector entities."
+    },
+
+    {
+      "id": "RISK-L6-EXITDRILL-01",
+      "layer": "L6",
+      "title": "No tested exit path for critical workloads",
+      "description": "Workloads running on proprietary managed services or provider-owned infrastructure require a tested exit procedure to validate that migration is feasible within the recovery-time objectives. An untested exit plan is a theoretical control, not a real one.",
+      "triggers": "L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'",
+      "source_anchors": [
+        { "register_key": "eu-data-act", "clause": "Art. 25(1): clients have the right to switch to a different cloud service provider; this right is meaningless without a tested migration procedure that proves technical feasibility." },
+        { "register_key": "iso-22301", "clause": "Cl. 8.5: business continuity plans must be subject to periodic testing and exercises; an untested exit path from a provider dependency does not meet this requirement." }
+      ],
+      "question_ids": ["SOV-6-01-FB2", "SOV-6-13-LMIC"],
+      "procurement_clause_ids": ["PC-L6-EXITDRILL"],
+      "severity_basis": "ISO 22301 cl. 8.5 requires periodic testing of continuity plans; Data Act Art. 25 makes switching a legal right — an untested exit path is a documented-but-unverified control, which is the weakest evidence category in any assurance framework."
+    },
+
+    {
+      "id": "RISK-L6-CRITICALITY-01",
+      "layer": "L6",
+      "title": "Underclassified criticality — risk posture sized against wrong threat surface",
+      "description": "When workload criticality has not been formally assessed, risk controls are sized against an underestimated threat surface. A workload classified as non-critical that is actually on the critical path for national-level services creates an invisible single point of failure.",
+      "triggers": "L6.ownership == 'provider' OR L6.dependency == 'proprietary_inaccessible'",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 28(2): financial entities must maintain a register of ICT third-party service agreements including a criticality and importance assessment for each." },
+        { "register_key": "eba-gl-2019-02", "clause": "§67: the materiality assessment is a prerequisite for selecting the appropriate level of outsourcing controls — without it, controls cannot be calibrated correctly." }
+      ],
+      "question_ids": ["SOV-7-04", "SOV-7-03"],
+      "procurement_clause_ids": ["PC-L6-CRITICALITY"],
+      "severity_basis": "DORA Art. 28(2) and EBA/GL/2019/02 §67 both establish criticality assessment as a regulatory prerequisite, not an optional step — the risk is the absence of this assessment, which makes all other risk controls potentially miscalibrated."
+    }
+  ]
+}

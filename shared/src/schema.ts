@@ -266,6 +266,32 @@ export const SubmitBodySchema = z.object({
   corpus_opt_in: z.boolean(),
 });
 
+// ── Control-profile model (posture-first layered assessment) ─────────────────
+
+export const LayerOwnershipSchema = z.enum(['client', 'commercial_lessor', 'provider', 'mixed', 'na']);
+export const LayerOperationSchema = z.enum(['client_staff', 'local_si', 'foreign_vendor', 'provider', 'na']);
+export const LayerDependencySchema = z.enum(['self_supported_oss', 'licensed_supported', 'licensed_no_support', 'proprietary_inaccessible', 'na']);
+export const LayerLocationSchema = z.enum(['in_country', 'regional_treaty', 'trusted_third', 'foreign', 'unknown']);
+
+export const LayerControlSchema = z.object({
+  ownership:  LayerOwnershipSchema,
+  operation:  LayerOperationSchema,
+  dependency: LayerDependencySchema,
+  location:   LayerLocationSchema,
+});
+
+export const ControlProfileSchema = z.object({
+  L1: LayerControlSchema,
+  L2: LayerControlSchema,
+  L3: LayerControlSchema,
+  L4: LayerControlSchema,
+  L5: LayerControlSchema,
+  L6: LayerControlSchema,
+});
+
+export type LayerControl = z.infer<typeof LayerControlSchema>;
+export type ControlProfile = z.infer<typeof ControlProfileSchema>;
+
 // ── Types derived from schemas ────────────────────────────────────────────────
 
 export type SourceRef = z.infer<typeof SourceRefSchema>;
