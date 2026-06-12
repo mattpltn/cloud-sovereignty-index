@@ -65,6 +65,22 @@ const QuestionBaseSchema = z.object({
   lmic_rationale: z.string().optional(),
   lmic_axis: z.enum(['autonomy', 'assurance', 'both', 'none']).optional(),
   evidence_status_required: z.enum(['demonstrated', 'documented', 'any']).optional(),
+  // Presentation layer (CSI/LMIC mode only — EU-CSF/C3A/CADA modes ignore this field)
+  csi_presentation: z.object({
+    title: z.string(),
+    variants: z.object({
+      non_eu: z.object({
+        text: z.string(),
+        shown: z.boolean(),
+        exclude_reason: z.string().optional(),
+      }),
+      eu: z.object({
+        text: z.string(),
+        shown: z.boolean(),
+      }),
+    }),
+    treatment: z.enum(['clean_adapt', 're_aim', 'exclude_non_eu', 'correctly_eu']),
+  }).optional(),
 });
 
 const SingleQuestionSchema = QuestionBaseSchema.extend({
@@ -151,6 +167,22 @@ export const CriteriaFileSchema = z.object({
       }
       if (q.lmic_sourcing === 'grounded-new' && (!q.lmic_anchors || q.lmic_anchors.length === 0)) {
         ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${q.id}: lmic_sourcing grounded-new requires lmic_anchors` });
+      }
+      if (q.csi_presentation) {
+        const { treatment, variants } = q.csi_presentation;
+        if (treatment === 'exclude_non_eu') {
+          if (variants.non_eu.shown !== false) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${q.id}: exclude_non_eu requires non_eu.shown === false` });
+          }
+          if (!variants.non_eu.exclude_reason) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${q.id}: exclude_non_eu requires non_eu.exclude_reason` });
+          }
+        }
+        if (treatment === 'clean_adapt' || treatment === 're_aim') {
+          if (variants.non_eu.shown !== true) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: `${q.id}: ${treatment} requires non_eu.shown === true` });
+          }
+        }
       }
     }
   }

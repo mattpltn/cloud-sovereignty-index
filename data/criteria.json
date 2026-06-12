@@ -244,7 +244,22 @@
           },
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "csi_presentation": {
+            "title": "Domestic Financing Anchoring",
+            "treatment": "exclude_non_eu",
+            "variants": {
+              "non_eu": {
+                "shown": false,
+                "exclude_reason": "EU-sourced financing is an EU-industrial-policy criterion with no sovereignty-meaningful analog for a non-EU buyer; local financing of a CSP does not by itself increase the buyer's sovereignty. Excluded from non-EU mode.",
+                "text": ""
+              },
+              "eu": {
+                "shown": true,
+                "text": "Does the provider rely predominantly on EU-sourced financing and demonstrate material EU investment, EU-based jobs, and EU value creation?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-1-06",
@@ -265,7 +280,22 @@
           },
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "csi_presentation": {
+            "title": "Strategic Initiative Alignment",
+            "treatment": "exclude_non_eu",
+            "variants": {
+              "non_eu": {
+                "shown": false,
+                "exclude_reason": "Gaia-X and IPCEI participation are EU-specific industrial-policy programmes with no equivalent in non-EU jurisdictions. Alignment with these initiatives carries no sovereignty signal for a non-EU buyer. Excluded from non-EU mode.",
+                "text": ""
+              },
+              "eu": {
+                "shown": true,
+                "text": "Does the provider participate in or align with EU strategic cloud initiatives such as Gaia-X or IPCEI-CIS, demonstrating commitment to European digital sovereignty objectives?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-1-07",
@@ -319,7 +349,21 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
-          "eu_csf_source_factor": "SOV-1 Q3 Control Over Roadmap"
+          "eu_csf_source_factor": "SOV-1 Q3 Control Over Roadmap",
+          "csi_presentation": {
+            "title": "Customer Influence Over Provider Roadmap",
+            "treatment": "re_aim",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Can {country}'s government or its public-sector customers exercise documented, meaningful influence over the provider's technology roadmap and service evolution — through governance bodies, customer councils, or binding contractual commitments — for matters affecting their workloads?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Do EU stakeholders participate in formal governance bodies that provide meaningful, documented influence over the provider's technology roadmap and service evolution?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-1-09-CADA",
@@ -342,7 +386,21 @@
             2
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(k)"
+          "cada_annex_ref": "Annex II L2(k)",
+          "csi_presentation": {
+            "title": "Foreign Affiliate Legal Separation",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Where the provider has subsidiaries or affiliates in foreign jurisdictions, does it maintain documented and enforced legal, technical, and organisational separation ensuring that {country} operations, customer data, and service continuity cannot be directed, accessed, or disrupted by a foreign parent, sibling, or affiliate entity?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Where the provider has third-country subsidiaries or affiliates, does it maintain enforced legal, technical, and organisational separation ensuring EU operations, EU customer data, and EU service continuity cannot be directed, accessed, or disrupted by third-country entities?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-1-10-CADA",
@@ -459,10 +517,26 @@
           "seal_contribution": 0,
           "tiers_note": "ADOPTED-FROM: World Bank Procurement Regulations 7th ed. (Sep 2025) §5.54 (30% local labor participation floor; applies to works contracts; cited by analogy for cloud operations staffing). Bands 30-50/50-75/>75 are above-floor CSI progression (DR-L9). Where a project’s SPD/PPSD establishes a different percentage, that figure governs.",
           "ladder": [
-            { "tier": "lt30",   "label": "< 30% local staff",   "points": 0 },
-            { "tier": "b30_50", "label": "30 – 50% local staff", "points": 5 },
-            { "tier": "b50_75", "label": "50 – 75% local staff", "points": 7 },
-            { "tier": "gt75",   "label": "> 75% local staff",    "points": 10 }
+            {
+              "tier": "lt30",
+              "label": "< 30% local staff",
+              "points": 0
+            },
+            {
+              "tier": "b30_50",
+              "label": "30 – 50% local staff",
+              "points": 5
+            },
+            {
+              "tier": "b50_75",
+              "label": "50 – 75% local staff",
+              "points": 7
+            },
+            {
+              "tier": "gt75",
+              "label": "> 75% local staff",
+              "points": 10
+            }
           ],
           "lmic_anchors": [
             {
@@ -626,7 +700,21 @@
           },
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "csi_presentation": {
+            "title": "Intellectual Property Jurisdiction",
+            "treatment": "re_aim",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Is the intellectual property underpinning the cloud service governed under a legal regime that does not allow a foreign jurisdiction to restrict, revoke, or compel transfer of {country}'s access to it — through licensing terms, export controls, or government orders on the IP holder?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Is the intellectual property underpinning the cloud service created, registered, and governed under EU jurisdiction, free from non-EU legal claims that could restrict or revoke EU access?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-2-05",
@@ -662,6 +750,20 @@
             "depends_on": "SOV-1-03",
             "value": "no",
             "when_unmet": "exclude"
+          },
+          "csi_presentation": {
+            "title": "Protection Against Foreign Compelled Access",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Has the provider implemented and demonstrated legal, technical, and organisational measures that prevent authorities outside {country}'s jurisdiction from compelling access to customer data or systems through any channel — with such requests rejected and customers notified of any attempt?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Has the provider implemented and demonstrated measures that prevent non-EU authorities from compelling access to customer data or systems through any channel — with such requests rejected and customers notified?"
+              }
+            }
           }
         },
         {
@@ -690,6 +792,20 @@
             "depends_on": "SOV-1-03",
             "value": "no",
             "when_unmet": "exclude"
+          },
+          "csi_presentation": {
+            "title": "Vulnerability Disclosure — Foreign Jurisdiction Prohibition",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Does the provider contractually commit that it will not be required — by any foreign jurisdiction — to withhold, delay, or modify vulnerability disclosures to {country} customers, and that any such foreign legal requirement would be disclosed immediately?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Does the provider contractually commit that it will not be required by any third-country jurisdiction to withhold or modify vulnerability disclosures to EU customers, with immediate disclosure of any such demand?"
+              }
+            }
           }
         },
         {
@@ -890,7 +1006,21 @@
           "seal_contribution_eu_csf": 1,
           "seal_contribution_csi": 1,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "csi_presentation": {
+            "title": "Residency of Derived & Account Data",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Does the provider offer a service option where derived data (telemetry, metadata, logs) and account data are stored and processed exclusively within {country}, or within {trusted_jurisdiction} where in-country is not available?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Does the provider offer a service option where cloud service derived data and account data are exclusively stored and processed within the Union?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-3-01-C5",
@@ -1376,7 +1506,21 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-01-C3",
           "seal_contribution_csi": 4,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "csi_presentation": {
+            "title": "Operating Organisation — In-Country Legal Establishment",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Is the entity operating and supporting the cloud service for this customer established as a standalone organisation in {country} or {trusted_jurisdiction}, without operational dependence on a foreign parent entity for day-to-day service delivery?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Is the cloud service operated by a standalone organisation established within the Union, without operational dependence on non-EU entities for day-to-day service delivery?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-4-01-FB",
@@ -1832,7 +1976,21 @@
             2
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L1(b), L2(b)"
+          "cada_annex_ref": "Annex II L1(b), L2(b)",
+          "csi_presentation": {
+            "title": "Infrastructure & Assets Location",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Are all infrastructure and assets used to provide the service — including those of subcontractors directly involved in delivery — physically located within {country} or {trusted_jurisdiction}, with no routing of operations through data centres outside agreed jurisdictions?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Are all infrastructure and assets used to provide the service, including subcontractors directly involved in delivery, physically located within the Union, with no routing through non-EU infrastructure?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-4-14",
@@ -1879,7 +2037,21 @@
             3
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(i)(ii), L3(i)(ii); evidence per Annex III §9(3)(b)-(c)"
+          "cada_annex_ref": "Annex II L2(i)(ii), L3(i)(ii); evidence per Annex III §9(3)(b)-(c)",
+          "csi_presentation": {
+            "title": "Migration Plan — Provider Failure or Foreign Jurisdiction Risk",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Does the provider maintain and annually test a documented migration plan covering scenarios where the provider becomes insolvent, is acquired by a foreign entity, or is subject to a foreign jurisdiction action that would impair service delivery to {country} customers?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Does the provider maintain and annually test a documented migration plan covering scenarios of provider insolvency, foreign acquisition, or third-country government action that would impair service delivery to EU customers?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-4-16-CADA",
@@ -2197,7 +2369,21 @@
             1
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L1(f)"
+          "cada_annex_ref": "Annex II L1(f)",
+          "csi_presentation": {
+            "title": "Subcontractor Transparency & Due Diligence",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Does the provider maintain a complete, current list of all subcontractors with access to customer data or the service delivery infrastructure, and conduct documented sovereignty due diligence — covering jurisdiction of incorporation, beneficial ownership, and foreign-law exposure — on each?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Does the provider maintain a complete, current subcontractor list with access to customer data or service infrastructure, and conduct documented sovereignty due diligence covering jurisdiction, beneficial ownership, and non-EU law exposure on each?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-5-07-CADA",
@@ -2277,7 +2463,21 @@
               "ref": "SOV-6-02/-02-AC (C3A vendor-loss continuity)"
             }
           ],
-          "lmic_rationale": "Substitutability of critical providers is a named supervisory requirement (DORA Art. 29; EBA §12.2), not an invention. The three tiers encode the empirical structure of the market: identical-stack takeover support is rare even for open platforms; what open standards genuinely deliver is workload/data portability across distributions (anchored by the OpenInfra interoperability certification — guideline 2020.11, validated via RefStack), which is Tier B; proprietary platforms whose exit means re-platforming workloads are Tier C. The Tier B gate (exercised rebuild runbook) prevents paper reversibility: a portable data plane without a tested control-plane rebuild path is Tier C in any real crisis. DR-L7 records the OpenStack Powered guideline vintage 2020.11."
+          "lmic_rationale": "Substitutability of critical providers is a named supervisory requirement (DORA Art. 29; EBA §12.2), not an invention. The three tiers encode the empirical structure of the market: identical-stack takeover support is rare even for open platforms; what open standards genuinely deliver is workload/data portability across distributions (anchored by the OpenInfra interoperability certification — guideline 2020.11, validated via RefStack), which is Tier B; proprietary platforms whose exit means re-platforming workloads are Tier C. The Tier B gate (exercised rebuild runbook) prevents paper reversibility: a portable data plane without a tested control-plane rebuild path is Tier C in any real crisis. DR-L7 records the OpenStack Powered guideline vintage 2020.11.",
+          "csi_presentation": {
+            "title": "Support Substitutability Ladder",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "What is the highest tier of support substitutability the provider can demonstrate for the cloud service — from same-stack operational takeover (Tier A), through rebuild from open standards with a documented and exercised runbook (Tier B), to re-platforming required (Tier C)?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "What is the highest tier of support substitutability the provider can demonstrate, covering operational takeover, standards-based rebuild, and portability under foreign-jurisdiction exit scenarios?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-5-08-EV1",
@@ -2572,7 +2772,21 @@
           },
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "csi_presentation": {
+            "title": "Independence from Foreign HPC Supply Chain",
+            "treatment": "re_aim",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Does the provider demonstrate that its high-performance computing capacity — or its critical path dependency on HPC for the services delivered — is not concentrated in a single foreign supply chain that could unilaterally restrict access through export controls, sanctions, or commercial terms?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Does the provider demonstrate independence from non-EU high-performance computing supply chains, with EU-sovereign HPC capacity available as an alternative for workloads where HPC is critical?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-6-05",
@@ -3055,7 +3269,21 @@
           ],
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "csi_presentation": {
+            "title": "Independent Audit Capacity",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Does the provider enable and cooperate with audits by an auditor acceptable to {country}'s contracting authority — independent of the provider's foreign affiliates — covering all systems and data within scope of this contract?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Does the provider enable and cooperate with audits by a {{BLOC}}-based auditor, independent of the provider and its non-EU affiliates, covering all systems and data within scope?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-7-08",
@@ -3089,7 +3317,21 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "eu_csf_source_factor": "SOV-7 Q5 Incident Disclosure"
+          "eu_csf_source_factor": "SOV-7 Q5 Incident Disclosure",
+          "csi_presentation": {
+            "title": "Incident Disclosure & National CSIRT Cooperation",
+            "treatment": "clean_adapt",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "Does the provider have a documented, operational incident-disclosure process with defined timelines, contractual readiness to support investigations by {country}'s authorities, and the capability to cooperate with {national_csirt}?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "Does the provider have a documented incident-disclosure process aligned with GDPR/NIS2 timelines, with readiness to support EU-directed investigations and CSIRT cooperation?"
+              }
+            }
+          }
         },
         {
           "id": "SOV-7-03-CADA",

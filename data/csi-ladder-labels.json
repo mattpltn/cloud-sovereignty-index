@@ -1,0 +1,30 @@
+{
+  "description": "CSI-native labels for SEAL 0–4. Used in CSI/LMIC display only; EU-CSF mode uses 'SEAL'. The numeric mapping to SEAL is 1:1; only the label changes. Per DR-P0.",
+  "labels": [
+    {
+      "seal": 0,
+      "csi_label": "Exposed",
+      "description": "No meaningful sovereignty controls demonstrated."
+    },
+    {
+      "seal": 1,
+      "csi_label": "Jurisdictional",
+      "description": "Foundational jurisdictional anchoring achieved — provider and data governed under an acceptable legal framework."
+    },
+    {
+      "seal": 2,
+      "csi_label": "Managed",
+      "description": "Data sovereignty and access controls in place — residency, compelled-access protection, and personnel controls met."
+    },
+    {
+      "seal": 3,
+      "csi_label": "Resilient",
+      "description": "Digital resilience and operational independence — supply chain, reversibility, and incident response controls met."
+    },
+    {
+      "seal": 4,
+      "csi_label": "Autonomous",
+      "description": "Full digital sovereignty posture — all controls met including additional criteria."
+    }
+  ]
+}

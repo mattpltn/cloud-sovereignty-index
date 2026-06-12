@@ -1,7 +1,7 @@
 {
   "instrument_version": "2.2",
   "register_version": "1.0",
-  "last_updated": "2026-06-11",
+  "last_updated": "2026-06-12",
   "project_name": "Cloud Sovereignty Index",
   "project_url": "https://cloudsovereigntyindex.org",
   "review_contact": "methodology@cloudsovereigntyindex.org",
@@ -1495,6 +1495,142 @@
       "rationale": "Absent evidence_status on a gate-feeding answer ranks as 'unverified' by design. A bare yes answer (evidence_status field omitted) cannot satisfy any gate. This enforces locked decision 4 (gates never pass on unestablished evidence) at the data layer: the omission of evidence_status is treated as the weakest possible evidence rank, not as a documented default. The UI must require the evidence selector for gate-feeding questions with helper text 'select how this is evidenced — unverified answers cannot satisfy gates.'",
       "authority": "Punch-list item 3; maintainer decision 2026-06-12",
       "alternatives_considered": "Default to 'documented' (rejected: allows bare yes to pass gates — violates locked decision 4)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P0",
+      "category": "adaptation",
+      "rationale": "SEAL levels 1–4 are relabeled as 'Jurisdictional / Managed / Resilient / Autonomous' in CSI/LMIC display mode. The numeric mapping is 1:1; only the label changes. The EU term 'SEAL' is preserved in provenance links (the collapsible 'where this comes from' reference) so the mapping remains transparent and auditors can trace back to the EU-CSF source without seeing the EU term in the buyer-facing headline. For LMIC mode specifically, the Autonomy/Assurance axes are the primary output; the posture ladder is secondary and a single blended SEAL-like number is never surfaced (no-blend rule, DR-L2).",
+      "authority": "csi-presentation-layer-spec.md §4; maintainer decision 2026-06-12",
+      "alternatives_considered": "Keep SEAL label in CSI mode (rejected: EU-specific term confuses non-EU buyers); Rename SEAL globally (rejected: breaks traceability to EU-CSF source).",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P1",
+      "category": "exclusion",
+      "rationale": "SOV-1-05 (EU Financing & Investment Anchoring) excluded from non-EU CSI/LMIC mode. EU-sourced financing is an EU-industrial-policy criterion — local financing of a CSP does not by itself increase a non-EU buyer's sovereignty. No meaningful non-EU analog exists. treatment: exclude_non_eu.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "Re-aim to domestic financing (rejected: domestic financing of a cloud provider carries no sovereignty signal for the buyer)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P2",
+      "category": "exclusion",
+      "rationale": "SOV-1-06 (EU Strategic Initiative Alignment) excluded from non-EU CSI/LMIC mode. Gaia-X and IPCEI-CIS are EU-specific industrial programmes with no non-EU equivalent. Participation signals alignment with EU sovereignty objectives, not sovereignty for a non-EU buyer. treatment: exclude_non_eu.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "Re-aim to national digital sovereignty initiatives (rejected: no sufficiently analogous programme exists across LMIC jurisdictions to define a question)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P3",
+      "category": "adaptation",
+      "rationale": "SOV-1-08 (Roadmap Influence — EU Stakeholder Governance) re-aimed for non-EU mode. The original asks whether EU stakeholders exercise determinative influence over the provider roadmap — meaningless for a non-EU buyer. Re-aimed to contractual or governance-body influence by the customer country's government or public-sector customers. Same sovereignty concern (external control over roadmap), different anchor. treatment: re_aim.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "Exclude (rejected: the underlying concern — buyer locked out of roadmap decisions — is valid in any jurisdiction)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P4",
+      "category": "adaptation",
+      "rationale": "SOV-1-09-CADA (Third-Country Subsidiary Legal Separation) adapted for non-EU mode: 'EU operations/data' → '{country} operations/data'; 'third-country' → 'foreign'. Control objective (legal separation from foreign affiliates) is jurisdiction-neutral. treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "No alternatives — clean jurisdiction substitution, no loss of control intent.",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P5",
+      "category": "adaptation",
+      "rationale": "SOV-2-04 (IP Jurisdiction) re-aimed for non-EU mode. 'IP created/registered in EU' has no non-EU analog that means sovereignty. Re-aimed to: IP not subject to a foreign jurisdiction that could restrict the country's use through licensing terms, export controls, or government orders on the IP holder. treatment: re_aim.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "Exclude (rejected: IP jurisdiction risk is real in LMIC procurement — US export controls and FRAND disputes demonstrate the exposure)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P6",
+      "category": "adaptation",
+      "rationale": "SOV-2-05 (Data Access — Non-EU Authority Compelled Access) adapted: 'non-EU authorities' → 'authorities outside {country}'s jurisdiction'. Control objective (protection from extraterritorial compelled access) is jurisdiction-neutral. treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "No alternatives — straightforward jurisdiction substitution.",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P7",
+      "category": "adaptation",
+      "rationale": "SOV-2-05-CADA (Third-Country Vulnerability Disclosure Prohibition) adapted: 'third country' → 'any foreign jurisdiction'. Control objective is jurisdiction-neutral. treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "No alternatives — minimal jurisdiction substitution.",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P8",
+      "category": "adaptation",
+      "rationale": "SOV-3-01-C2 (Data Residence — Derived & Account Data in EU) adapted: '{{BLOC}}' → jurisdiction ladder ({country} → {trusted_jurisdiction}). The jurisdiction ladder is the appropriate substitute — in-country preferred, regional/treaty trusted jurisdiction as fallback. treatment: clean_adapt. This is the template-defining worked example for the presentation layer.",
+      "authority": "csi-presentation-layer-spec.md §3; maintainer decision 2026-06-12",
+      "alternatives_considered": "No alternatives — jurisdiction ladder is the defined substitution mechanism for {{BLOC}}.",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P9",
+      "category": "adaptation",
+      "rationale": "SOV-4-01-C3 (Operating Personnel — Standalone European Organisation) adapted: 'standalone European organisation' → 'standalone organisation established in {country} or {trusted_jurisdiction}'. Same operational-independence control, jurisdiction substituted. treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "No alternatives — clean jurisdiction substitution.",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P10",
+      "category": "adaptation",
+      "rationale": "SOV-4-13-CADA (Infrastructure & Assets Located in EU) adapted: 'Union' → '{country} or {trusted_jurisdiction}'; 'non-EU infrastructure' → 'outside agreed jurisdictions'. Control objective (physical asset location) is jurisdiction-neutral. treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "No alternatives — clean jurisdiction substitution.",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P11",
+      "category": "adaptation",
+      "rationale": "SOV-4-15-CADA (Migration Plan — Vendor Failure/Third-Country) adapted: 'third-country' → 'foreign jurisdiction'; 'EU customers' → '{country} customers'. Control objective (contingency planning for provider failure or foreign takeover) is jurisdiction-neutral. treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "No alternatives — light-touch jurisdiction substitution.",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P12",
+      "category": "adaptation",
+      "rationale": "SOV-5-06-CADA (Subcontractor Transparency & Due Diligence) adapted: EU phrasing dropped from title/description; control is jurisdiction-neutral (sovereignty due diligence on subcontractors covers jurisdiction, beneficial ownership, and foreign-law exposure in any context). treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "No alternatives — control objective is already jurisdiction-neutral.",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P13",
+      "category": "adaptation",
+      "rationale": "SOV-5-08-LMIC (Support Substitutability Ladder) adapted: 'third-country' references in ladder text replaced with 'foreign-jurisdiction'. Question is already LMIC-native; presentation block added for consistency and to surface the provenance link. treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "No block needed (rejected: consistency with other CSI/LMIC questions; enables provenance link rendering).",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P14",
+      "category": "adaptation",
+      "rationale": "SOV-6-04 (EU HPC Independence) re-aimed for non-EU mode. 'EU HPC independence' is an EU-industrial-policy framing. Re-aimed to independence from any single foreign HPC supply chain — the underlying sovereignty concern (concentrated foreign dependency that can be unilaterally restricted) is valid in any jurisdiction. treatment: re_aim.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "Exclude (rejected: foreign HPC concentration risk is real in LMIC procurement; US export controls on Nvidia H100 demonstrate the exposure)",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P15",
+      "category": "adaptation",
+      "rationale": "SOV-7-07 (Independent EU Audit Capacity) adapted: '{{BLOC}}-based auditor' → 'auditor acceptable to the contracting authority, independent of the provider's foreign affiliates'. The control objective (independent audit access) is jurisdiction-neutral; what matters is independence from the provider's foreign affiliates, not the auditor's domicile. treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "In-country auditor requirement (rejected: severely constrains audit options in LMIC markets with limited qualified auditors).",
+      "review_status": "stable"
+    },
+    {
+      "id": "DR-P16",
+      "category": "adaptation",
+      "rationale": "SOV-7-08 (Incident Disclosure & CSIRT Cooperation) adapted: 'GDPR/NIS2' → defined timelines; 'CSIRT' → '{national_csirt}' (resolved from country profile). Control objective (incident disclosure and national authority cooperation) is jurisdiction-neutral. treatment: clean_adapt.",
+      "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
+      "alternatives_considered": "No alternatives — clean jurisdiction and CSIRT substitution.",
       "review_status": "stable"
     }
   ],
