@@ -2,12 +2,14 @@ import { describe, test, expect } from 'vitest';
 import criteriaJson from '../data/criteria.json';
 import sourceRegisterJson from '../data/source-register.json';
 import type { CriteriaFile, FrameworkMode } from '../shared/src/schema';
-import { buildProvenance } from '@shared/provenance';
+import { buildProvenance, resolveRegisterKey } from '@shared/provenance';
 
 const criteria = criteriaJson as unknown as CriteriaFile;
 const sourceRegister = sourceRegisterJson as {
   entries: Array<{ key: string; license_posture: string; proposal_disclaimer?: boolean }>;
 };
+
+const registerKeys = new Set(sourceRegister.entries.map(e => e.key));
 
 const MODES: FrameworkMode[] = ['eu_csf', 'c3a', 'csi_composite', 'cada', 'lmic'];
 
@@ -93,6 +95,18 @@ describe('provenance-guards', () => {
           const sb = buildProvenance(q, mode);
           const hasSource = sb.source_text !== null || sb.register_key !== null;
           expect(hasSource, `${q.id} (${mode}, ${fidelity}): missing both source_text and register_key`).toBe(true);
+        }
+      }
+    }
+  });
+
+  test('every lmic_anchor framework string resolves to a register key', () => {
+    for (const obj of criteria.objectives) {
+      for (const q of obj.questions) {
+        for (const a of (q as any).lmic_anchors ?? []) {
+          const key = resolveRegisterKey(a.framework);
+          expect(key, `unresolved anchor framework "${a.framework}" on ${q.id}`).not.toBeNull();
+          expect(registerKeys.has(key!), `register key "${key}" missing from source-register.json (${q.id})`).toBe(true);
         }
       }
     }

@@ -86,21 +86,6 @@ const TieredQuestionSchema = QuestionBaseSchema.extend({
   }),
 });
 
-// EU-CSF faithful: 5-level Likert scale per official XLSX
-const EuCsfOptionSchema = z.object({
-  text: z.string(),
-  value: z.number(),  // raw point value (0–200 depending on question)
-  seal: z.number().int().min(0).max(4),
-});
-
-const EuCsfQuestionSchema = QuestionBaseSchema.extend({
-  type: z.literal('eu_csf'),
-  eu_csf_id: z.string(),          // official EU-CSF question ID e.g. "SOV-1-01"
-  seal_contribution: z.number().int().min(0).max(4),  // max SEAL this question can achieve
-  max_score: z.number(),           // max point value (highest option)
-  eu_csf_options: z.array(EuCsfOptionSchema).min(2).max(6),
-});
-
 const LadderRungSchema = z.object({
   tier: z.string(),
   label: z.string(),
@@ -114,12 +99,12 @@ const TieredLadderQuestionSchema = QuestionBaseSchema.extend({
   ladder: z.array(LadderRungSchema).min(2),
   seal_contribution: z.number().int().min(0).max(4).optional(),
   source: SourceRefSchema.optional(),
+  tiers_note: z.string().optional(),
 });
 
 export const QuestionSchema = z.discriminatedUnion('type', [
   SingleQuestionSchema,
   TieredQuestionSchema,
-  EuCsfQuestionSchema,
   TieredLadderQuestionSchema,
 ]);
 
@@ -238,7 +223,7 @@ export const AnswerSchema = z.object({
   evidence_url: z.string().url().optional(),
   note: z.string().max(500).optional(),
   evidence_status: z.enum(['demonstrated', 'documented', 'vendor_claim', 'unverified']).optional(),
-  tier_claimed: z.enum(['A', 'B', 'C']).optional(),
+  tier_claimed: z.string().optional(),
 });
 
 export const AnswerPatchSchema = z.object({

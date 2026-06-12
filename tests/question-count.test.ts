@@ -131,7 +131,7 @@ describe('Framework question count control loop', () => {
   });
 
   test('All questions have a valid type', () => {
-    const validTypes = ['single', 'tiered', 'eu_csf', 'tiered_ladder'];
+    const validTypes = ['single', 'tiered', 'tiered_ladder'];
     for (const obj of criteria.objectives) {
       for (const q of obj.questions) {
         expect(validTypes, `${q.id} has invalid type`).toContain(q.type);

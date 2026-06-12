@@ -41,7 +41,7 @@ const FRAMEWORK_KEY_MAP: Record<string, string> = {
   'CSI': 'csi',
 };
 
-function resolveRegisterKey(framework: string): string | null {
+export function resolveRegisterKey(framework: string): string | null {
   return FRAMEWORK_KEY_MAP[framework] ?? null;
 }
 

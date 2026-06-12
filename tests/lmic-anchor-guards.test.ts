@@ -64,13 +64,25 @@ describe('LMIC anchor guards', () => {
     }
   });
 
-  test('tiered_ladder questions have ≥2 ladder rungs and tier IDs A/B/C', () => {
+  test('tiered_ladder questions have ≥2 ladder rungs and a defined default tier', () => {
+    // SOV-5-08-LMIC uses A/B/C tiers; SOV-1-12-LMIC uses band labels (lt30/b30_50/b50_75/gt75)
+    const BAND_LADDER_IDS = new Set(['SOV-1-12-LMIC']);
+    const STAFF_BAND_TIERS = ['lt30', 'b30_50', 'b50_75', 'gt75'];
     for (const obj of criteria.objectives) {
       for (const q of obj.questions) {
         if (q.type !== 'tiered_ladder') continue;
         expect(q.ladder.length, `${q.id} ladder must have ≥2 rungs`).toBeGreaterThanOrEqual(2);
         const tiers = q.ladder.map(r => r.tier);
-        expect(tiers, `${q.id} ladder must include tier C (default)`).toContain('C');
+        if (BAND_LADDER_IDS.has(q.id)) {
+          // Band-based ladders must include the floor band (lt30 = no credit, the default)
+          expect(tiers, `${q.id} band ladder must include lt30`).toContain('lt30');
+          for (const t of tiers) {
+            expect(STAFF_BAND_TIERS, `${q.id} unknown band tier "${t}"`).toContain(t);
+          }
+        } else {
+          // A/B/C ladders must include C as the default fallback tier
+          expect(tiers, `${q.id} ladder must include tier C (default)`).toContain('C');
+        }
       }
     }
   });

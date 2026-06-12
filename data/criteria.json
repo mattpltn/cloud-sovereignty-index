@@ -445,7 +445,7 @@
         {
           "id": "SOV-1-12-LMIC",
           "title": "Local Operating Staff Ratio (LMIC)",
-          "type": "single",
+          "type": "tiered_ladder",
           "applies_to_eu_csf": false,
           "applies_to_c3a": false,
           "applies_to_csi_composite": false,
@@ -455,30 +455,27 @@
           "lmic_pillar": "P1",
           "lmic_axis": "assurance",
           "lmic_sourcing": "adapt",
-          "supplementary_info": "Answer yes if at least 30% of the personnel operating, supporting, and maintaining the service for this country’s customers are nationals or long-term residents of that country. Band boundaries: <30% / 30-50% / 50-75% / >75%. The 30% boundary is adopted from the World Bank’s local labor participation requirement (30% of total labor cost, effective 1 Sep 2025). The 50% and 75% boundaries are progression bands above the Bank floor (DR-L9). ADOPTED-FROM: World Bank Procurement Regulations 7th ed. (Sep 2025) §5.54.",
           "text": "What proportion of the personnel operating, supporting, and maintaining the service for this country’s customers are nationals or long-term residents of that country?",
           "seal_contribution": 0,
-          "points": 5,
-          "source": {
-            "doc": "EU-CSF v1.2.1",
-            "clause": "§4 SOV-4 contributing factor 3 (‘EU-based talent pool with expertise to operate and sustain the service’ — jurisdiction substituted)"
-          },
+          "tiers_note": "ADOPTED-FROM: World Bank Procurement Regulations 7th ed. (Sep 2025) §5.54 (30% local labor participation floor; applies to works contracts; cited by analogy for cloud operations staffing). Bands 30-50/50-75/>75 are above-floor CSI progression (DR-L9). Where a project’s SPD/PPSD establishes a different percentage, that figure governs.",
+          "ladder": [
+            { "tier": "lt30",   "label": "< 30% local staff",   "points": 0 },
+            { "tier": "b30_50", "label": "30 – 50% local staff", "points": 5 },
+            { "tier": "b50_75", "label": "50 – 75% local staff", "points": 7 },
+            { "tier": "gt75",   "label": "> 75% local staff",    "points": 10 }
+          ],
           "lmic_anchors": [
+            {
+              "framework": "World Bank Procurement Regulations for IPF Borrowers, 7th ed. (Sep 2025)",
+              "ref": "§5.54 (local labor participation minimum)",
+              "note": "Applied by analogy from works contracts to cloud operations staffing — see DR-L6."
+            },
             {
               "framework": "EU-CSF v1.2.1",
               "ref": "§4 SOV-4 contributing factor 3 (‘EU-based talent pool with expertise to operate and sustain the service’ — jurisdiction substituted)"
-            },
-            {
-              "framework": "C3A",
-              "ref": "SOV-4-01 personnel family (location/clearance of operating personnel)"
-            },
-            {
-              "framework": "World Bank Procurement Regulations for IPF Borrowers, 7th ed. (Sep 2025)",
-              "ref": "§5.54 (local labor participation requirement — 30% of total labor cost; applies to works contracts; cited by analogy for cloud operations staffing)",
-              "note": "§5.54 formally applies to works contracts; the 30% threshold is adopted here for cloud operations staffing. Where a project’s SPD/PPSD establishes a different percentage, that figure governs (DR-L9). The Bank’s own Regulations (7th ed., §5.54) impose a local-labor minimum and contemplate Rated Criteria for skills development in works procurement; this question applies the same Bank-endorsed mechanism to cloud services."
             }
           ],
-          "lmic_rationale": "The criterion (local operating talent) is EU-CSF CF SOV-4-3 and the C3A personnel family with the jurisdiction substituted; the Bank’s 7th-edition local-labor requirement (§5.54) shows the same expectation in Bank procurement itself. Only the percentage bands are editorial — they are scoring thresholds, registered as such (DR-L9), and adjustable per country profile. The 30% boundary is not set by this tool: it is the World Bank’s own local labor participation floor for internationally procured works contracts, adopted here by analogy for cloud operations staffing. Where a project’s SPD/PPSD establishes a different percentage, that figure governs. §5.54 formally covers works contracts; applied by analogy with that scope disclosed."
+          "lmic_rationale": "Four progressive bands above/below the World Bank 30% floor instead of a binary yes/no. The 30% boundary is adopted from WB PR 7th ed. §5.54; bands 30-50/50-75/>75 are CSI editorial progression. The 30% floor behavior of autonomyRungsUnlocked is unchanged — band b30_50 maps to staffPct=30 and satisfies the floor. DR-L9."
         }
       ],
       "layer": "sovereignty"

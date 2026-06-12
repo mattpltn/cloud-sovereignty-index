@@ -1,0 +1,99 @@
+{
+  "description": "Three-candidate demo encoding the autonomy/assurance trade-off discussion. Also the D1 demo dataset.",
+  "candidates": [
+    {
+      "name": "Candidate A — VMware-based regional CSP with vendor support",
+      "archetype": "regional_csp",
+      "expectations": {
+        "resolved_tier": "C",
+        "quadrant": "assured_but_dependent",
+        "rungs_unlocked": false
+      },
+      "answers": {
+        "SOV-1-04-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-1-11-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-1-12-LMIC":  { "tier": "ladder", "value": "yes", "tier_claimed": "b30_50" },
+        "SOV-2-08-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-4-17-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-5-08-LMIC":  { "tier": "ladder", "value": "yes", "tier_claimed": "B" },
+        "SOV-5-08-EV1":   { "tier": "single", "value": "no" },
+        "SOV-5-08-EV2":   { "tier": "single", "value": "no" },
+        "SOV-5-09-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-08-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-6-09-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-6-10-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-6-11-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-6-12-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-13-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-9-01-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-02-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-03-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-04-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-05-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" }
+      }
+    },
+    {
+      "name": "Candidate B — local sovereign CSP on supported OpenStack, exercised rebuild",
+      "archetype": "local_sovereign_csp",
+      "expectations": {
+        "resolved_tier": "B",
+        "quadrant": "sovereign_and_supported",
+        "rungs_unlocked": true
+      },
+      "answers": {
+        "SOV-1-04-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-1-11-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-1-12-LMIC":  { "tier": "ladder", "value": "yes", "tier_claimed": "b50_75" },
+        "SOV-2-08-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-4-17-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-5-08-LMIC":  { "tier": "ladder", "value": "yes", "tier_claimed": "B" },
+        "SOV-5-08-EV1":   { "tier": "single", "value": "no" },
+        "SOV-5-08-EV2":   { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-5-08-EV3":   { "tier": "single", "value": "yes", "evidence_status": "demonstrated" },
+        "SOV-5-09-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-08-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-09-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-10-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-11-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-12-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-13-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-01-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-02-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-03-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-04-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-05-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" }
+      }
+    },
+    {
+      "name": "Candidate C — self-run OpenStack, no exercised rebuild runbook",
+      "archetype": "local_sovereign_csp",
+      "expectations": {
+        "resolved_tier": "C",
+        "quadrant": "autonomous_but_fragile",
+        "rungs_unlocked": false
+      },
+      "answers": {
+        "SOV-1-04-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-1-11-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-1-12-LMIC":  { "tier": "ladder", "value": "yes", "tier_claimed": "b30_50" },
+        "SOV-2-08-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-4-17-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-5-08-LMIC":  { "tier": "ladder", "value": "yes", "tier_claimed": "B" },
+        "SOV-5-08-EV1":   { "tier": "single", "value": "yes" },
+        "SOV-5-08-EV2":   { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-5-09-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-08-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-09-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-10-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-11-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-6-12-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-6-13-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" },
+        "SOV-9-01-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-9-02-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-9-03-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-9-04-LMIC":  { "tier": "single", "value": "no" },
+        "SOV-9-05-LMIC":  { "tier": "single", "value": "yes", "evidence_status": "documented" }
+      }
+    }
+  ]
+}

@@ -89,14 +89,16 @@ export function scoreLmic(answers: AnswerMap, criteria: CriteriaFile): LmicAxes 
   const gateOk = (qid: string): boolean => {
     const ans = answers[qid];
     if (!ans || ans.value !== 'yes') return false;
-    const evStatus = (ans.evidence_status ?? 'documented') as EvidenceStatus;
+    const evStatus = (ans.evidence_status ?? 'unverified') as EvidenceStatus;
     if (evStatus === 'vendor_claim' || evStatus === 'unverified') return false;
     const reqRank = qRequiredRank.get(qid) ?? 2;
     return EVIDENCE_RANK[evStatus] >= reqRank;
   };
 
-  // Determine staff pct (SOV-1-12-LMIC yes = ≥30%)
-  const staffPct = yesQ('SOV-1-12-LMIC') ? LOCAL_STAFF_FLOOR_PCT : 0;
+  // Derive staffPct from SOV-1-12-LMIC band selection (DR-L9)
+  const STAFF_BAND_LOWER: Record<string, number> = { lt30: 0, b30_50: 30, b50_75: 50, gt75: 75 };
+  const staffBand = (answers['SOV-1-12-LMIC']?.tier_claimed as string) ?? 'lt30';
+  const staffPct = STAFF_BAND_LOWER[staffBand] ?? 0;
   const runksUnlocked = autonomyRungsUnlocked(yesQ, staffPct);
 
   // Rung-3/4 autonomy question IDs (excluded from scoring when locked)
@@ -138,6 +140,9 @@ export function scoreLmic(answers: AnswerMap, criteria: CriteriaFile): LmicAxes 
     } else if (q.type === 'tiered_ladder') {
       const maxPts = q.ladder.reduce((mx, r) => Math.max(mx, r.points), 0);
       possible = maxPts;
+      const claimedBand = answers[q.id]?.tier_claimed as string | undefined;
+      const rung = claimedBand ? q.ladder.find(r => r.tier === claimedBand) : undefined;
+      earned = rung?.points ?? 0;
     } else {
       const stored = answers[q.id];
       const value = stored?.value;
@@ -283,28 +288,6 @@ function scoreEuCsf(answers: AnswerMap, criteria: CriteriaFile): EuCsfResult {
 
     for (const q of obj.questions) {
       if (!q.applies_to_eu_csf) continue;
-
-      // EU-CSF faithful Likert questions: exact official XLSX scoring
-      if (q.type === 'eu_csf') {
-        const stored = answers[q.id];
-        const optIdx = stored?.eu_csf_option;
-        const opt = optIdx != null ? q.eu_csf_options[optIdx] : undefined;
-        const earned = opt ? opt.value : 0;
-        const seal = opt ? opt.seal : 0;
-        questionResults.push({
-          question_id: q.id,
-          tier: 'single',
-          value: opt ? 'yes' : 'no',  // synthetic value for display compatibility
-          points_earned: earned,
-          points_possible: q.max_score,
-          seal_contribution: seal,
-          counts_toward_seal: opt != null,
-          flagged_unsupported: false,
-        });
-        raw += earned;
-        max += q.max_score;
-        continue;
-      }
 
       let results: QuestionResult[];
       if (q.type === 'tiered') {

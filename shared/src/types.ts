@@ -235,14 +235,12 @@ export type EvidenceLevel = 'self_declared' | 'documented' | 'audited' | 'operat
 
 export type EvidenceStatus = 'demonstrated' | 'documented' | 'vendor_claim' | 'unverified';
 
-// eu_csf_option: 0-based index into the question's eu_csf_options array (EU-CSF Likert questions only)
 export type AnswerMap = Record<string, {
   tier: string;
   value: AnswerValue;
   evidence_url?: string;
   note?: string;
   evidence_level?: EvidenceLevel;
-  eu_csf_option?: number;
   evidence_status?: EvidenceStatus;
-  tier_claimed?: 'A' | 'B' | 'C';
+  tier_claimed?: string;
 }>;

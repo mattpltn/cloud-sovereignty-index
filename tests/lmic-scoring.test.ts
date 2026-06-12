@@ -35,7 +35,7 @@ function makeGateOk(
     const ans = answers[qid];
     if (!ans || ans.value !== 'yes') return false;
     // Gates NEVER accept vendor_claim or unverified (plan v3 §3.1 locked decision 4)
-    const evStatus = (ans.evidence_status ?? 'documented') as EvidenceStatus;
+    const evStatus = (ans.evidence_status ?? 'unverified') as EvidenceStatus;
     if (evStatus === 'vendor_claim' || evStatus === 'unverified') return false;
     // Check evidence_status_required on the question
     const q = qMap.get(qid);
@@ -116,6 +116,17 @@ describe('autonomyRungsUnlocked', () => {
 
   it('LOCAL_STAFF_FLOOR_PCT is exactly 30', () => {
     expect(LOCAL_STAFF_FLOOR_PCT).toBe(30);
+  });
+});
+
+describe('evidence default gate regression (DR-L11)', () => {
+  it('bare-yes EV1 (no evidence_status) must NOT satisfy Tier A gate', () => {
+    const answers: AnswerMap = {
+      'SOV-5-08-EV1': { tier: 'single', value: 'yes' }, // NO evidence_status field
+    };
+    const gateOk = makeGateOk(answers, allLmicQuestions);
+    const resolved = resolveLadderTier('A', gateOk, sov508Ladder);
+    expect(resolved, 'bare yes without evidence_status must not satisfy the EV1 gate').not.toBe('A');
   });
 });
 
