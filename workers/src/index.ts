@@ -132,6 +132,7 @@ const PatchSchema = z.object({
   answers: z.record(z.unknown()).optional(),
   share_publicly: z.boolean().optional(),
   company_name: z.string().optional(),
+  control_profile: z.record(z.unknown()).optional(),
 });
 
 app.patch('/api/assessments/:id', async (c) => {
@@ -158,6 +159,7 @@ app.patch('/api/assessments/:id', async (c) => {
   if (data.answers !== undefined) { sets.push('answers = ?'); vals.push(JSON.stringify(data.answers)); }
   if (data.share_publicly !== undefined) { sets.push('share_publicly = ?'); vals.push(data.share_publicly ? 1 : 0); }
   if (data.company_name !== undefined) { sets.push('company_name = ?'); vals.push(data.company_name); }
+  if (data.control_profile !== undefined) { sets.push('control_profile = ?'); vals.push(JSON.stringify(data.control_profile)); }
 
   vals.push(id);
   await c.env.DB.prepare(`UPDATE assessments SET ${sets.join(', ')} WHERE id = ?`).bind(...vals).run();

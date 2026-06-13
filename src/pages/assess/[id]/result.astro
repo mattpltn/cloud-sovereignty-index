@@ -5,10 +5,12 @@ import ExportAnswers from '../../../components/ExportAnswers';
 import ObjectiveAccordion from '../../../components/ObjectiveAccordion';
 import C3aObjectiveAccordion from '../../../components/C3aObjectiveAccordion';
 import PdfExportButton from '../../../components/PdfExportButton';
+import { ControlMatrixReport } from '../../../components/ControlMatrixReport';
 import criteriaJson from '../../../../data/criteria.json';
 import countriesJson from '../../../../data/countries.json';
-import type { CriteriaFile } from '../../../../shared/src/schema';
-import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult, C3aResult, CadaResult } from '../../../../shared/src/types';
+import type { CriteriaFile, ControlProfile } from '../../../../shared/src/schema';
+import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult, C3aResult, CadaResult, AnswerMap } from '../../../../shared/src/types';
+import { buildReport } from '../../../../shared/src/report';
 export const prerender = false;
 
 const criteria = criteriaJson as unknown as CriteriaFile;
@@ -66,6 +68,17 @@ try {
 } catch {
   // Workers not available
 }
+
+// ── Control-matrix report ────────────────────────────────────────────────────
+const rawControlProfile = record?.control_profile
+  ? (typeof record.control_profile === 'string' ? JSON.parse(record.control_profile as string) : record.control_profile)
+  : null;
+const rawAnswers = record?.answers
+  ? (typeof record.answers === 'string' ? JSON.parse(record.answers as string) : record.answers)
+  : {};
+const controlMatrixRows = rawControlProfile
+  ? buildReport(rawControlProfile as ControlProfile, rawAnswers as AnswerMap)
+  : [];
 
 const variant = (record?.variant as string) ?? 'EU-CSF';
 const instrumentVersion = (record?.instrument_version as string) ?? '2.0';
@@ -231,6 +244,21 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
           <p class="text-xs text-gray-400 text-center -mt-3 mb-4">
             Submitted {assessedAt}
           </p>
+        )}
+
+        {/* ── Control-matrix posture report ─────────────────────────────────── */}
+        {controlMatrixRows.length > 0 && (
+          <section class="mt-8">
+            <h2 class="font-semibold text-base mb-1">
+              Layered control posture
+              <span class="text-xs font-normal text-gray-400 ml-2">posture-first — framework scores below</span>
+            </h2>
+            <p class="text-sm text-gray-500 mb-4">
+              Each infrastructure layer is mapped across two independent channels: who holds control
+              and how well it is managed. Expand a layer to see triggered risks and procurement bridges.
+            </p>
+            <ControlMatrixReport client:load rows={controlMatrixRows} />
+          </section>
         )}
 
         {/* ── EU-CSF section ────────────────────────────────────────────────── */}
