@@ -3,7 +3,7 @@ import '../../../styles/global.css';
 import Questionnaire from '../../../components/Questionnaire';
 import criteriaJson from '../../../../data/criteria.json';
 import countriesJson from '../../../../data/countries.json';
-import type { CriteriaFile } from '../../../../shared/src/schema';
+import type { CriteriaFile, ControlProfile } from '../../../../shared/src/schema';
 
 export const prerender = false;
 
@@ -25,6 +25,7 @@ let country;
 let selectedFrameworks: string[] = ['csi_composite'];
 let customerSelectedAcIds: string[] = [];
 let selectedObjectives: string[] = [];
+let rawControlProfile: unknown = null;
 
 try {
   const apiBase = new URL('/api', Astro.request.url).toString();
@@ -36,15 +37,25 @@ try {
       selected_frameworks?: string;
       customer_selected_ac_ids?: string;
       selected_objectives?: string;
+      control_profile?: unknown;
     };
     variant = data.variant as 'EU-CSF' | 'Generalized';
     countryCode = data.national_country ?? undefined;
     if (data.selected_frameworks) selectedFrameworks = JSON.parse(data.selected_frameworks);
     if (data.customer_selected_ac_ids) customerSelectedAcIds = JSON.parse(data.customer_selected_ac_ids);
     if (data.selected_objectives) selectedObjectives = JSON.parse(data.selected_objectives);
+    rawControlProfile = data.control_profile
+      ? (typeof data.control_profile === 'string' ? JSON.parse(data.control_profile as string) : data.control_profile)
+      : null;
   }
 } catch {
   // Workers not running — continue without country data
+}
+
+// CSI assessments must pass through scope.astro first to set a control profile
+const isCsiAssessment = selectedFrameworks.includes('csi_composite');
+if (isCsiAssessment && !rawControlProfile) {
+  return Astro.redirect(`/assess/${id}/scope`);
 }
 
 if (countryCode) {
@@ -140,6 +151,7 @@ const methodologyHref = selectedFrameworks.length === 1 && FW_SLUG[selectedFrame
       allObjectiveIds={finalObjectiveIds}
       selectedFrameworks={selectedFrameworks}
       customerSelectedAcIds={customerSelectedAcIds}
+      controlProfile={rawControlProfile as ControlProfile | undefined ?? undefined}
     />
   </main>
 

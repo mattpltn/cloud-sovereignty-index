@@ -1,7 +1,7 @@
 import type ExcelJS from 'exceljs';
 import type { CriteriaFile, Question } from '../../shared/src/schema.js';
 import { buildProvenance } from '../../shared/src/provenance.js';
-import { buildSheetRefs } from '../../shared/src/relevance.js';
+import { buildSheetRefs, toExcelFormula } from '../../shared/src/relevance.js';
 import sourceRegisterData from '../../data/source-register.json';
 import riskRegisterData from '../../data/risk-register.json';
 
@@ -275,8 +275,14 @@ function addAssessmentSheet(
     row.getCell(21).value = prov.fidelity_badge;
     row.getCell(22).value = prov.origin_line;
     row.getCell(22).alignment = { wrapText: true, vertical: 'top' };
-    // Relevant? — static "Yes" for all existing questions (no show_when predicates in criteria.json)
-    row.getCell(23).value = 'Yes';
+    // Relevant? — formula from show_when predicate if present, else static "Yes"
+    const showWhen = (q as Record<string, unknown> & { relevance?: { show_when?: string } }).relevance?.show_when;
+    if (showWhen) {
+      const formula = toExcelFormula(showWhen, buildSheetRefs());
+      row.getCell(23).value = { formula: `IF(${formula},"Yes","Hidden by scope")` };
+    } else {
+      row.getCell(23).value = 'Yes';
+    }
     row.getCell(23).font = { color: { argb: 'FF15803D' } };
     // Risks addressed — comma-joined risk IDs from risk-register
     const riskIds = QUESTION_RISK_MAP.get(qid) ?? [];

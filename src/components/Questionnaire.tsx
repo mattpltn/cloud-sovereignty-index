@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
-import type { CriteriaFile, Country, Question } from '../../shared/src/schema.js';
+import type { CriteriaFile, Country, Question, ControlProfile } from '../../shared/src/schema.js';
 import type { AnswerMap, EvidenceLevel } from '../../shared/src/types.js';
 import { setAnswer, flushNow, readCache, writeCache } from '../lib/local-cache.js';
+import { evaluate } from '../../shared/src/relevance.js';
 
 const EVIDENCE_LEVEL_LABELS: Record<EvidenceLevel, string> = {
   self_declared: 'Self-declared',
@@ -71,6 +72,7 @@ interface Props {
   allObjectiveIds: string[];
   selectedFrameworks?: string[];
   customerSelectedAcIds?: string[];
+  controlProfile?: ControlProfile;
 }
 
 type AnswerValue = 'yes' | 'no' | 'partial' | 'planned' | 'n/a';
@@ -140,7 +142,7 @@ function sourceLabel(q: Question, fw: Set<string>, clauseDoc: string, clauseRef:
   return fwTag || clause;
 }
 
-export default function Questionnaire({ id, objectiveId, criteria, country, variant, allObjectiveIds, selectedFrameworks = ['csi_composite'], customerSelectedAcIds = [] }: Props) {
+export default function Questionnaire({ id, objectiveId, criteria, country, variant, allObjectiveIds, selectedFrameworks = ['csi_composite'], customerSelectedAcIds = [], controlProfile }: Props) {
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
@@ -162,6 +164,12 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
            (fw.has('csi_composite') && q.applies_to_csi_composite) ||
            (fw.has('cada') && (q as any).applies_to_cada);
     if (!frameworkCheck) return false;
+    // Control-profile gate: CSI/LMIC questions with show_when hide when predicate is false
+    const isCsiMode = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
+    const showWhen: string | undefined = (q as any).relevance?.show_when;
+    if (isCsiMode && showWhen && controlProfile) {
+      if (!evaluate(showWhen, controlProfile)) return false;
+    }
     // Fallback questions (parent_criterion_id set) only appear when parent is answered 'no'
     if (q.parent_criterion_id) {
       const parentId = q.parent_criterion_id;
@@ -240,6 +248,15 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   if (!objective) return <div className="text-red-600">Objective {objectiveId} not found</div>;
 
   const visibleQuestions = objective.questions.filter(isQuestionVisible);
+
+  // Questions hidden by control-profile scope (CSI mode only)
+  const isCsiMode = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
+  const scopeHiddenQuestions = isCsiMode && controlProfile
+    ? objective.questions.filter(q => {
+        const showWhen: string | undefined = (q as any).relevance?.show_when;
+        return showWhen ? !evaluate(showWhen, controlProfile) : false;
+      })
+    : [];
 
   // Count answered: each tiered question needs at least the national (or bloc) answered
   const answeredCount = visibleQuestions.filter(q => {
@@ -417,6 +434,25 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
           </div>
         );
       })}
+
+      {scopeHiddenQuestions.length > 0 && (
+        <details className="border border-gray-100 rounded-lg p-3 text-xs text-gray-400">
+          <summary className="cursor-pointer select-none font-medium">
+            {scopeHiddenQuestions.length} question{scopeHiddenQuestions.length !== 1 ? 's' : ''} hidden by your control profile
+          </summary>
+          <ul className="mt-2 space-y-1 list-disc list-inside">
+            {scopeHiddenQuestions.map(q => (
+              <li key={q.id}>
+                <span className="font-mono mr-1">{q.id}</span>{q.title}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-gray-400">
+            These questions are not relevant to your declared infrastructure configuration.
+            <a href={`/assess/${id}/scope`} className="ml-1 text-blue-500 hover:underline">Change profile</a>
+          </p>
+        </details>
+      )}
 
       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
         <button onClick={handleBack} className="text-sm text-gray-600 hover:text-gray-900">← Back</button>

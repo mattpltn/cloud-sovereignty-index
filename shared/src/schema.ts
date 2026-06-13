@@ -65,6 +65,12 @@ const QuestionBaseSchema = z.object({
   lmic_rationale: z.string().optional(),
   lmic_axis: z.enum(['autonomy', 'assurance', 'both', 'none']).optional(),
   evidence_status_required: z.enum(['demonstrated', 'documented', 'any']).optional(),
+  // Relevance layer (CSI/LMIC mode only — controls show/hide per control profile)
+  relevance: z.object({
+    layer: z.enum(['L1', 'L2', 'L3', 'L4', 'L5', 'L6']).optional(),
+    pattern: z.enum(['vanish', 're-aim', 'sharpen', 'agnostic']),
+    show_when: z.string().optional(),
+  }).optional(),
   // Presentation layer (CSI/LMIC mode only — EU-CSF/C3A/CADA modes ignore this field)
   csi_presentation: z.object({
     title: z.string(),

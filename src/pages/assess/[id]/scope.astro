@@ -1,0 +1,104 @@
+---
+import '../../../styles/global.css';
+import { ScopingMatrixWidget } from '../../../components/ScopingMatrixWidget';
+export const prerender = false;
+
+const { id } = Astro.params;
+
+// Fetch assessment to check framework selection
+let selectedFrameworks: string[] = [];
+try {
+  const apiBase = new URL('/api', Astro.request.url).toString();
+  const res = await fetch(`${apiBase}/assessments/${id}`);
+  if (res.ok) {
+    const data = await res.json() as { selected_frameworks?: string };
+    if (data.selected_frameworks) selectedFrameworks = JSON.parse(data.selected_frameworks);
+  }
+} catch {
+  // Workers not available — proceed without redirect guard
+}
+
+// Only CSI/LMIC assessments need the scoping step
+if (selectedFrameworks.length > 0 && !selectedFrameworks.includes('csi_composite')) {
+  return Astro.redirect(`/assess/${id}/SOV-1`);
+}
+
+// Minimal all-client default used by the "skip" path
+const DEFAULT_PROFILE = JSON.stringify({
+  L1: { ownership: 'client', operation: 'client_staff', dependency: 'self_supported_oss', location: 'in_country' },
+  L2: { ownership: 'client', operation: 'client_staff', dependency: 'self_supported_oss', location: 'in_country' },
+  L3: { ownership: 'client', operation: 'client_staff', dependency: 'self_supported_oss', location: 'in_country' },
+  L4: { ownership: 'client', operation: 'client_staff', dependency: 'self_supported_oss', location: 'in_country' },
+  L5: { ownership: 'client', operation: 'client_staff', dependency: 'self_supported_oss', location: 'in_country' },
+  L6: { ownership: 'client', operation: 'client_staff', dependency: 'self_supported_oss', location: 'in_country' },
+});
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control scope — Cloud Sovereignty Index</title>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+  <header class="border-b border-gray-200 px-6 py-4">
+    <a href="/" class="font-semibold text-lg tracking-tight">Cloud Sovereignty Index</a>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-10">
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold mb-2">Infrastructure control profile</h1>
+      <p class="text-gray-600 text-sm max-w-2xl">
+        Place each infrastructure layer in the zone that reflects who owns and operates it.
+        This profile filters the questionnaire to questions relevant to your configuration
+        and drives the posture report on the results page.
+      </p>
+    </div>
+
+    <ScopingMatrixWidget client:load assessmentId={id!} />
+
+    <div class="mt-8 flex items-center gap-4">
+      <button id="continue-btn"
+        class="bg-gray-900 text-white rounded-lg px-5 py-2.5 text-sm font-medium hover:bg-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+        Continue to assessment
+      </button>
+      <button id="skip-btn"
+        class="text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2">
+        Skip — use fully sovereign defaults
+      </button>
+    </div>
+    <p id="error-msg" class="text-red-600 text-sm mt-3 hidden"></p>
+  </main>
+
+  <script define:vars={{ id, DEFAULT_PROFILE }}>
+    async function saveProfileAndContinue(profileJson) {
+      const btn = document.getElementById('continue-btn');
+      const errMsg = document.getElementById('error-msg');
+      if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+      errMsg?.classList.add('hidden');
+      try {
+        const res = await fetch(`/api/assessments/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ control_profile: JSON.parse(profileJson) }),
+        });
+        if (!res.ok) throw new Error('Failed to save control profile');
+        window.location.href = `/assess/${id}/SOV-1`;
+      } catch (err) {
+        if (errMsg) { errMsg.textContent = String(err); errMsg.classList.remove('hidden'); }
+        if (btn) { btn.disabled = false; btn.textContent = 'Continue to assessment'; }
+      }
+    }
+
+    document.getElementById('continue-btn')?.addEventListener('click', () => {
+      const profileJson = localStorage.getItem(`csi:${id}:profile`) ?? DEFAULT_PROFILE;
+      saveProfileAndContinue(profileJson);
+    });
+
+    document.getElementById('skip-btn')?.addEventListener('click', () => {
+      localStorage.setItem(`csi:${id}:profile`, DEFAULT_PROFILE);
+      saveProfileAndContinue(DEFAULT_PROFILE);
+    });
+  </script>
+</body>
+</html>

@@ -112,7 +112,10 @@
           "seal_contribution_eu_csf": 1,
           "seal_contribution_csi": 1,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-1-02",
@@ -157,7 +160,10 @@
             4
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L1(a) (provider); L2+(a) (extends to subcontractors involved in provision)"
+          "cada_annex_ref": "Annex II L1(a) (provider); L2+(a) (extends to subcontractors involved in provision)",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-1-03",
@@ -200,7 +206,10 @@
             4
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(g), L3(g)"
+          "cada_annex_ref": "Annex II L2(g), L3(g)",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-1-04",
@@ -223,7 +232,10 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-1-05",
@@ -259,6 +271,9 @@
                 "text": "Does the provider rely predominantly on EU-sourced financing and demonstrate material EU investment, EU-based jobs, and EU value creation?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -295,6 +310,9 @@
                 "text": "Does the provider participate in or align with EU strategic cloud initiatives such as Gaia-X or IPCEI-CIS, demonstrating commitment to European digital sovereignty objectives?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -315,7 +333,10 @@
           },
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-1-08",
@@ -363,6 +384,9 @@
                 "text": "Do EU stakeholders participate in formal governance bodies that provide meaningful, documented influence over the provider's technology roadmap and service evolution?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -400,6 +424,9 @@
                 "text": "Where the provider has third-country subsidiaries or affiliates, does it maintain enforced legal, technical, and organisational separation ensuring EU operations, EU customer data, and EU service continuity cannot be directed, accessed, or disrupted by third-country entities?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -465,7 +492,10 @@
               "note": "Requirement IDs verified against the Code structure as reproduced in published CSP transparency statements."
             }
           ],
-          "lmic_rationale": "The Broadcom/VMware licensing upheaval demonstrated that a licensing-model change at a stack vendor propagates to sovereign-cloud customers exactly like a change of control: costs escalate, portability degrades, and exit becomes expensive at the worst moment. EU-CSF CF SOV-1-2 already scores ‘assurances against change of control’; SWIPO TR05 provides verbatim industry-code language for the notice + termination right. This question extends both to cover licensing-model changes specifically."
+          "lmic_rationale": "The Broadcom/VMware licensing upheaval demonstrated that a licensing-model change at a stack vendor propagates to sovereign-cloud customers exactly like a change of control: costs escalate, portability degrades, and exit becomes expensive at the worst moment. EU-CSF CF SOV-1-2 already scores ‘assurances against change of control’; SWIPO TR05 provides verbatim industry-code language for the notice + termination right. This question extends both to cover licensing-model changes specifically.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-1-11-LMIC",
@@ -498,7 +528,10 @@
               "note": "§5.54 formally applies to works contracts; cited as the Bank-native pattern extended by analogy to cloud services, with EU-CSF §4 SOV-4 CF-3 as the primary criterion source."
             }
           ],
-          "lmic_rationale": "Verbatim EU-CSF contributing factor with the bloc substituted — the EU scores exactly this for itself — now reinforced by the World Bank’s own procurement framework (7th ed. §5.54) adding a local labor participation requirement. The Bank’s Regulations (7th ed., §5.54) impose a local-labor minimum and contemplate Rated Criteria for skills development in works procurement; this question applies the same Bank-endorsed mechanism to cloud services, where the primary source remains EU-CSF’s talent-pool contributing factor. §5.54 formally covers works contracts; cited here by analogy to cloud operations with that scope noted."
+          "lmic_rationale": "Verbatim EU-CSF contributing factor with the bloc substituted — the EU scores exactly this for itself — now reinforced by the World Bank’s own procurement framework (7th ed. §5.54) adding a local labor participation requirement. The Bank’s Regulations (7th ed., §5.54) impose a local-labor minimum and contemplate Rated Criteria for skills development in works procurement; this question applies the same Bank-endorsed mechanism to cloud services, where the primary source remains EU-CSF’s talent-pool contributing factor. §5.54 formally covers works contracts; cited here by analogy to cloud operations with that scope noted.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-1-12-LMIC",
@@ -549,7 +582,10 @@
               "ref": "§4 SOV-4 contributing factor 3 (‘EU-based talent pool with expertise to operate and sustain the service’ — jurisdiction substituted)"
             }
           ],
-          "lmic_rationale": "Four progressive bands above/below the World Bank 30% floor instead of a binary yes/no. The 30% boundary is adopted from WB PR 7th ed. §5.54; bands 30-50/50-75/>75 are CSI editorial progression. The 30% floor behavior of autonomyRungsUnlocked is unchanged — band b30_50 maps to staffPct=30 and satisfies the floor. DR-L9."
+          "lmic_rationale": "Four progressive bands above/below the World Bank 30% floor instead of a binary yes/no. The 30% boundary is adopted from WB PR 7th ed. §5.54; bands 30-50/50-75/>75 are CSI editorial progression. The 30% floor behavior of autonomyRungsUnlocked is unchanged — band b30_50 maps to staffPct=30 and satisfies the floor. DR-L9.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         }
       ],
       "layer": "sovereignty"
@@ -579,7 +615,12 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "L1.location == 'foreign' OR L1.location == 'trusted_third'"
+          }
         },
         {
           "id": "SOV-2-02",
@@ -624,7 +665,12 @@
           ],
           "cada_fidelity": "inferred",
           "cada_annex_ref": "Annex III §7",
-          "cada_fidelity_rationale": "CADA Annex III §7 mandates detailed ownership/control evidence that operationalizes audit rights for sovereignty assessment."
+          "cada_fidelity_rationale": "CADA Annex III §7 mandates detailed ownership/control evidence that operationalizes audit rights for sovereignty assessment.",
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "L1.location == 'foreign' OR L2.location == 'foreign'"
+          }
         },
         {
           "id": "SOV-2-03",
@@ -660,7 +706,12 @@
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-2 CF: 'Applicability of international regimes, which may restrict usage or transfer' and SOV-1 CF: 'Ability to sustain secure operations against requests to cease or suspend the service.' The state-of-defense takeover question operationalizes the most extreme legal-regime case. EU-CSF names the principle; C3A defines the specific constitutional trigger (state of defense).",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "(L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider') OR (L1.location == 'foreign' OR L1.location == 'trusted_third')"
+          }
         },
         {
           "id": "SOV-2-03-CSI",
@@ -679,7 +730,12 @@
           },
           "supplementary_info": "This is the CSI-Composite-Generalized equivalent of C3A SOV-2-03 (\"state of defense\"), which is bound to specific EU constitutional concepts. Many LMIC constitutions provide for declared states of emergency, exception, or public calamity rather than \"state of defense.\" This question generalizes the underlying control objective — sovereign takeover readiness — to those analogous regimes. Activated only in non-EU (Generalized) variant.",
           "review_status": "pending-external-review",
-          "seal_contribution_csi": 3
+          "seal_contribution_csi": 3,
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "L1.location == 'foreign' OR L1.location == 'trusted_third'"
+          }
         },
         {
           "id": "SOV-2-04",
@@ -714,6 +770,9 @@
                 "text": "Is the intellectual property underpinning the cloud service created, registered, and governed under EU jurisdiction, free from non-EU legal claims that could restrict or revoke EU access?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -764,6 +823,11 @@
                 "text": "Has the provider implemented and demonstrated measures that prevent non-EU authorities from compelling access to customer data or systems through any channel — with such requests rejected and customers notified?"
               }
             }
+          },
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "L1.location == 'foreign' OR L1.location == 'trusted_third'"
           }
         },
         {
@@ -806,6 +870,11 @@
                 "text": "Does the provider contractually commit that it will not be required by any third-country jurisdiction to withhold or modify vulnerability disclosures to EU customers, with immediate disclosure of any such demand?"
               }
             }
+          },
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "L1.location == 'foreign' OR L1.location == 'trusted_third'"
           }
         },
         {
@@ -893,7 +962,10 @@
               "ref": "§12.2 (due diligence on the contracting counterparty)"
             }
           ],
-          "lmic_rationale": "The indicia of ‘genuine and stable establishment’ are CADA’s own audit-evidence catalogue (Annex III §1), ported with one substitution: the jurisdiction. Enforceability is the LMIC analog of EU establishment — a sovereignty assessment that ignores whether the contract can actually be enforced locally measures paper rights."
+          "lmic_rationale": "The indicia of ‘genuine and stable establishment’ are CADA’s own audit-evidence catalogue (Annex III §1), ported with one substitution: the jurisdiction. Enforceability is the LMIC analog of EU establishment — a sovereignty assessment that ignores whether the contract can actually be enforced locally measures paper rights.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         }
       ],
       "layer": "sovereignty"
@@ -949,7 +1021,12 @@
             2
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L1(c), L2(c)"
+          "cada_annex_ref": "Annex II L1(c), L2(c)",
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-3-01-C1",
@@ -981,7 +1058,12 @@
           ],
           "cada_fidelity": "inferred",
           "cada_annex_ref": "Annex III §3",
-          "cada_fidelity_rationale": "CADA Annex III §3 requires detailed data flow diagrams demonstrating exclusive EU data storage and processing."
+          "cada_fidelity_rationale": "CADA Annex III §3 requires detailed data flow diagrams demonstrating exclusive EU data storage and processing.",
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-3-01-C2",
@@ -1020,6 +1102,11 @@
                 "text": "Does the provider offer a service option where cloud service derived data and account data are exclusively stored and processed within the Union?"
               }
             }
+          },
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
           }
         },
         {
@@ -1044,7 +1131,12 @@
           "supplementary_info": "Cloud service provider data covers configuration and utilization information of system components, storage and network resource allocations, physical and virtual resource failure rates, operational costs, etc. (C3A §1.5). It is under the control of the cloud service provider, distinct from customer data and derived data. Often overlooked because it is operational metadata, but its location can be a sovereignty exposure.",
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Strict confinement of storage and processing to European jurisdictions.' Provider-operational data (configuration, telemetry, resource allocations) is not named explicitly in the CF, but is subject to the same confinement principle. Provider data can contain sovereignty-sensitive operational intelligence about infrastructure and capacity.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L1",
+            "pattern": "vanish",
+            "show_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-3-02-C",
@@ -1065,7 +1157,10 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-02-AC",
@@ -1087,7 +1182,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-02-AC",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-03-C",
@@ -1108,7 +1206,10 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "csi",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-03-AC1",
@@ -1129,7 +1230,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-03-AC1",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-03-AC2",
@@ -1150,7 +1254,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-03-AC2",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-03-AC3",
@@ -1171,7 +1278,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-03-AC3",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-04-C",
@@ -1192,7 +1302,10 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-04-AC1",
@@ -1213,7 +1326,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-04-AC1",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-04-AC2",
@@ -1234,7 +1350,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-3-04-AC2",
           "seal_contribution_csi": 2,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-05-C",
@@ -1255,7 +1374,10 @@
           "seal_contribution_eu_csf": 4,
           "seal_contribution_csi": 4,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-AI-01-AC",
@@ -1285,7 +1407,10 @@
           ],
           "cada_fidelity": "inferred",
           "cada_annex_ref": "Annex III §6",
-          "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and prohibits any transfer outside the Union. This question asks only for training-data jurisdiction disclosure, which is weaker than the flat prohibition. It is inferred evidence under Annex III §6 (model cards / training-source records), not a direct mapping to L2(f)."
+          "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and prohibits any transfer outside the Union. This question asks only for training-data jurisdiction disclosure, which is weaker than the flat prohibition. It is inferred evidence under Annex III §6 (model cards / training-source records), not a direct mapping to L2(f).",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-AI-02-AC",
@@ -1315,7 +1440,10 @@
           ],
           "cada_fidelity": "inferred",
           "cada_annex_ref": "Annex II L2(c)",
-          "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and transfer outside the Union. This question addresses inference location (processing of customer data), which maps more naturally to L2(c)'s processing-localisation requirement. Re-tagged inferred from L2(c) rather than a direct mapping to L2(f)."
+          "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and transfer outside the Union. This question addresses inference location (processing of customer data), which maps more naturally to L2(c)'s processing-localisation requirement. Re-tagged inferred from L2(c) rather than a direct mapping to L2(f).",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-AI-03-AC",
@@ -1338,7 +1466,10 @@
           "supplementary_info": "This is the LMIC-relevant analogue of the EU AI Act's training-data provisions. In sovereign procurement, the risk is that customer data — even derived telemetry — becomes part of a global model, exporting national knowledge into a foreign-jurisdiction artefact.",
           "review_status": "pending-external-review",
           "eu_csf_fidelity": "inferred",
-          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models governed under EU control, minimizing dependency on non-EU technology stacks.' Customer opt-out from training data use is a governance control ensuring the customer retains sovereignty over how their data shapes model behaviour — the CF implies governance control but does not specify this mechanism."
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models governed under EU control, minimizing dependency on non-EU technology stacks.' Customer opt-out from training data use is a governance control ensuring the customer retains sovereignty over how their data shapes model behaviour — the CF implies governance control but does not specify this mechanism.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-09-CADA",
@@ -1386,7 +1517,10 @@
           "supplementary_info": "Extends C3A SOV-5 (supply chain) into the AI layer. The model provider is a critical upstream dependency that can change behaviour, licensing, or availability through unilateral action. SOV-1-style effective-control analysis applied to model providers.",
           "review_status": "pending-external-review",
           "eu_csf_fidelity": "inferred",
-          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Minimizing dependency on non-EU technology stacks.' Knowing the model provider's jurisdiction, ownership, and control chain is the prerequisite for assessing whether a dependency constitutes a non-EU technology stack risk. EU-CSF names the risk category; this question operationalizes the supply-chain disclosure needed to assess it."
+          "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Minimizing dependency on non-EU technology stacks.' Knowing the model provider's jurisdiction, ownership, and control chain is the prerequisite for assessing whether a dependency constitutes a non-EU technology stack risk. EU-CSF names the risk category; this question operationalizes the supply-chain disclosure needed to assess it.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-06",
@@ -1406,7 +1540,10 @@
           },
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-3-08-CADA",
@@ -1485,7 +1622,12 @@
             3
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(b), L3(d)"
+          "cada_annex_ref": "Annex II L2(b), L3(d)",
+          "relevance": {
+            "layer": "L5",
+            "pattern": "vanish",
+            "show_when": "L5.operation == 'foreign_vendor'"
+          }
         },
         {
           "id": "SOV-4-01-C3",
@@ -1520,6 +1662,11 @@
                 "text": "Is the cloud service operated by a standalone organisation established within the Union, without operational dependence on non-EU entities for day-to-day service delivery?"
               }
             }
+          },
+          "relevance": {
+            "layer": "L5",
+            "pattern": "vanish",
+            "show_when": "L5.operation == 'foreign_vendor'"
           }
         },
         {
@@ -1538,7 +1685,12 @@
             "doc": "CSI Editorial",
             "clause": "SOV-4 fallback"
           },
-          "supplementary_info": "This fallback question applies when the parent criterion (SOV-4-01) cannot be met. It provides partial credit for providers that maintain equivalent controls through national security clearance and residency requirements binding operating personnel to confidentiality under local law."
+          "supplementary_info": "This fallback question applies when the parent criterion (SOV-4-01) cannot be met. It provides partial credit for providers that maintain equivalent controls through national security clearance and residency requirements binding operating personnel to confidentiality under local law.",
+          "relevance": {
+            "layer": "L5",
+            "pattern": "vanish",
+            "show_when": "L5.operation == 'foreign_vendor'"
+          }
         },
         {
           "id": "SOV-4-02",
@@ -1578,7 +1730,12 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L5",
+            "pattern": "vanish",
+            "show_when": "L5.operation == 'foreign_vendor'"
+          }
         },
         {
           "id": "SOV-4-03",
@@ -1600,7 +1757,10 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage, maintain, and support the technology without requiring non-EU vendor involvement.' Redundant independent connectivity is the network infrastructure prerequisite for continuous EU-controlled operations — single-provider failure would collapse operational sovereignty regardless of personnel or process controls. Not named as a contributing factor in EU-CSF SOV-4.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-03-AC",
@@ -1621,7 +1781,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-03-AC",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-03-FB",
@@ -1640,7 +1803,10 @@
             "clause": "SOV-4 / resilient connectivity under market constraints"
           },
           "supplementary_info": "Fallback for SOV-4-03 in markets where multiple commercially-independent national tier-1 ISPs do not exist. Multi-homing at the BGP layer is the underlying control objective the C3A criterion is reaching for — this fallback rewards providers that achieve it through architectural means even where the carrier market is concentrated. Activated only when the parent SOV-4-03 is answered No.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-04",
@@ -1688,7 +1854,12 @@
             3
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(h)"
+          "cada_annex_ref": "Annex II L2(h)",
+          "relevance": {
+            "layer": "L5",
+            "pattern": "vanish",
+            "show_when": "L5.location == 'foreign' OR L5.operation == 'foreign_vendor'"
+          }
         },
         {
           "id": "SOV-4-05",
@@ -1710,7 +1881,10 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage without requiring non-EU vendor involvement.' Ingress data control gateways are the network-layer enforcement mechanism for EU-bounded operations — without controlled ingress, external actors can bypass EU operational controls.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-05-AC1",
@@ -1731,7 +1905,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-05-AC1",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-05-AC2",
@@ -1753,7 +1930,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-05-AC2",
           "seal_contribution_csi": 2,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-06",
@@ -1782,7 +1962,10 @@
           ],
           "cada_fidelity": "inferred",
           "cada_annex_ref": "Annex II L2(i)(ii)",
-          "cada_fidelity_rationale": "CADA L2(i)(ii) mandates controls to block remote tampering features and source code audits for 3rd-country software components."
+          "cada_fidelity_rationale": "CADA L2(i)(ii) mandates controls to block remote tampering features and source code audits for 3rd-country software components.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-07",
@@ -1804,7 +1987,10 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Assurance that operational support is delivered from within the EU.' Data exchange monitoring provides runtime verification that EU-bounded operations remain bounded — without monitoring, EU operational sovereignty is an unverifiable claim.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-08",
@@ -1826,7 +2012,10 @@
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage without requiring non-EU vendor involvement.' Data exchange gateways are the physical control points ensuring cross-boundary data flows remain under EU authority.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-08-AC",
@@ -1847,7 +2036,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-08-AC",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-09",
@@ -1868,7 +2060,10 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-09-AC",
@@ -1890,7 +2085,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-4-09-AC",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-09-FB",
@@ -1908,7 +2106,10 @@
             "doc": "CSI Editorial",
             "clause": "SOV-4 fallback"
           },
-          "supplementary_info": "This fallback question provides partial credit for providers that cannot yet demonstrate a fully operational disconnect/reconnect capability but have documented procedures and evidence of tabletop testing."
+          "supplementary_info": "This fallback question provides partial credit for providers that cannot yet demonstrate a fully operational disconnect/reconnect capability but have documented procedures and evidence of tabletop testing.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-10",
@@ -1929,7 +2130,10 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-11-CADA",
@@ -1952,7 +2156,10 @@
             2
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(j)"
+          "cada_annex_ref": "Annex II L2(j)",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-4-13-CADA",
@@ -1990,6 +2197,9 @@
                 "text": "Are all infrastructure and assets used to provide the service, including subcontractors directly involved in delivery, physically located within the Union, with no routing through non-EU infrastructure?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -2012,7 +2222,11 @@
           "eu_csf_source_factor": "EU-CSF v1.2.1 §4, SOV-4 contributing factor 1: Ease of migrating workloads or integrating with alternative EU-controlled solutions without vendor lock-in.",
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
-          "csi_reversibility": true
+          "csi_reversibility": true,
+          "relevance": {
+            "layer": "L3",
+            "pattern": "sharpen"
+          }
         },
         {
           "id": "SOV-4-15-CADA",
@@ -2051,6 +2265,11 @@
                 "text": "Does the provider maintain and annually test a documented migration plan covering scenarios of provider insolvency, foreign acquisition, or third-country government action that would impair service delivery to EU customers?"
               }
             }
+          },
+          "relevance": {
+            "layer": "L4",
+            "pattern": "vanish",
+            "show_when": "L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider'"
           }
         },
         {
@@ -2135,7 +2354,12 @@
               "ref": "SOV-6-02 / SOV-6-02-AC (C3A vendor-loss continuity pattern)"
             }
           ],
-          "lmic_rationale": "BIA-driven tolerable-disruption targets are the textbook ISO 22301 mechanism and public-domain NIST CP controls; C3A already applies the same logic to vendor loss (SOV-6-02). The question changes only the disruption scenario to the one LMICs face most concretely: subsea-cable or international-connectivity loss."
+          "lmic_rationale": "BIA-driven tolerable-disruption targets are the textbook ISO 22301 mechanism and public-domain NIST CP controls; C3A already applies the same logic to vendor loss (SOV-6-02). The question changes only the disruption scenario to the one LMICs face most concretely: subsea-cable or international-connectivity loss.",
+          "relevance": {
+            "layer": "L5",
+            "pattern": "vanish",
+            "show_when": "L5.location == 'foreign' OR L5.operation == 'foreign_vendor'"
+          }
         }
       ],
       "layer": "resilience"
@@ -2171,7 +2395,11 @@
             2
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(i)"
+          "cada_annex_ref": "Annex II L2(i)",
+          "relevance": {
+            "layer": "L3",
+            "pattern": "sharpen"
+          }
         },
         {
           "id": "SOV-5-01-AC",
@@ -2193,7 +2421,11 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-5-01-AC",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L3",
+            "pattern": "sharpen"
+          }
         },
         {
           "id": "SOV-5-02",
@@ -2214,7 +2446,12 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L2",
+            "pattern": "vanish",
+            "show_when": "L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider' OR L2.location == 'foreign'"
+          }
         },
         {
           "id": "SOV-5-02-AC",
@@ -2235,7 +2472,12 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-5-02-AC",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L2",
+            "pattern": "vanish",
+            "show_when": "L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider' OR L2.location == 'foreign'"
+          }
         },
         {
           "id": "SOV-5-03",
@@ -2256,7 +2498,10 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-5-03-AC",
@@ -2278,7 +2523,10 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-5-03-AC",
           "seal_contribution_csi": 3,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-5-04",
@@ -2300,7 +2548,12 @@
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-2 CF: 'Applicability of international regimes, which may restrict usage or transfer.' Export restrictions are supply-chain continuity risks classified under SOV-5 following C3A §2.5.4, where they appear as supply chain risks rather than legal/jurisdictional risks.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L2",
+            "pattern": "vanish",
+            "show_when": "L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-5-05",
@@ -2346,7 +2599,10 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage, maintain, and support the technology.' Capacity management performed within the EU ensures that scaling decisions and resource allocation remain under EU-controlled operations. Placed under SOV-5 following C3A §2.5.5, which classifies it as a supply-chain capacity control.",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-5-06-CADA",
@@ -2383,6 +2639,9 @@
                 "text": "Does the provider maintain a complete, current subcontractor list with access to customer data or service infrastructure, and conduct documented sovereignty due diligence covering jurisdiction, beneficial ownership, and non-EU law exposure on each?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -2477,6 +2736,9 @@
                 "text": "What is the highest tier of support substitutability the provider can demonstrate, covering operational takeover, standards-based rebuild, and portability under foreign-jurisdiction exit scenarios?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -2510,7 +2772,10 @@
               "ref": "SA-9, SR-6 (external services and supplier review — public domain, quotable)"
             }
           ],
-          "lmic_rationale": "Tier A is only credible against a written arrangement; a sales-deck assurance is a vendor claim and cannot satisfy a gate (locked design decision 4)."
+          "lmic_rationale": "Tier A is only credible against a written arrangement; a sales-deck assurance is a vendor claim and cannot satisfy a gate (locked design decision 4).",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-5-08-EV2",
@@ -2547,7 +2812,10 @@
               "ref": "Art. 30 (technical aspects of switching — the pattern for standards-based portability evidence)"
             }
           ],
-          "lmic_rationale": "Distinguishes genuine API-level portability from marketing claims of openness; conformance certification (OpenStack Powered guideline 2020.11 via RefStack) is the citable instrument for exactly this. DR-L7 records the guideline vintage."
+          "lmic_rationale": "Distinguishes genuine API-level portability from marketing claims of openness; conformance certification (OpenStack Powered guideline 2020.11 via RefStack) is the citable instrument for exactly this. DR-L7 records the guideline vintage.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-5-08-EV3",
@@ -2584,7 +2852,10 @@
               "ref": "SOV-6-12-LMIC / SOV-4-15-CADA tested-switchover pattern (CADA Annex III §9(3)(b)-(c))"
             }
           ],
-          "lmic_rationale": "MAINTAINER-LOCKED GATE: an unexercised runbook is paper reversibility. Same tested-switchover standard CADA’s audit evidence demands and EBA/DORA expect for critical exits; only the application point (control plane) is specific."
+          "lmic_rationale": "MAINTAINER-LOCKED GATE: an unexercised runbook is paper reversibility. Same tested-switchover standard CADA’s audit evidence demands and EBA/DORA expect for critical exits; only the application point (control plane) is specific.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-5-09-LMIC",
@@ -2620,7 +2891,10 @@
               "ref": "Annex III §10(2)(b) (up-to-date OSS applied without undue delay)"
             }
           ],
-          "lmic_rationale": "A heavily forked ‘open’ platform that only its builders understand has the reversibility profile of proprietary software with none of the support. Baseline/change control is verbatim NIST CM territory and OSS-currency risk is in CADA’s own audit evidence; the question composes the two. Failing clause (c) degrades the SOV-5-08 ladder answer: deviations breaking API conformance invalidate the Tier B portability premise."
+          "lmic_rationale": "A heavily forked ‘open’ platform that only its builders understand has the reversibility profile of proprietary software with none of the support. Baseline/change control is verbatim NIST CM territory and OSS-currency risk is in CADA’s own audit evidence; the question composes the two. Failing clause (c) degrades the SOV-5-08 ladder answer: deviations breaking API conformance invalidate the Tier B portability premise.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         }
       ],
       "layer": "resilience"
@@ -2650,7 +2924,12 @@
           "seal_contribution_eu_csf": 4,
           "seal_contribution_csi": 4,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L3",
+            "pattern": "vanish",
+            "show_when": "(L3.ownership == 'provider' AND L3.dependency == 'proprietary_inaccessible') OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-6-01-FB1",
@@ -2669,7 +2948,12 @@
             "clause": "SOV-6 / operational independence"
           },
           "supplementary_info": "Fallback for SOV-6-01 where holding a local source code backup is infeasible (e.g. resold hyperscaler service). This rewards providers that have invested in the operational capability to build and deploy the service from source — even if the source itself originates abroad. The 90-day window aligns with C3A SOV-4-10 (reconnect window).",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "relevance": {
+            "layer": "L3",
+            "pattern": "vanish",
+            "show_when": "(L3.ownership == 'provider' AND L3.dependency == 'proprietary_inaccessible') OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-6-01-FB2",
@@ -2688,7 +2972,12 @@
             "clause": "SOV-6 / customer exit portability"
           },
           "supplementary_info": "Customer-side reversibility fallback for SOV-6-01. Consistent with the reversibility dimension of the CSI methodology. Where the provider cannot demonstrate operational independence, tested portability ensures the customer is not stranded.",
-          "review_status": "pending-external-review"
+          "review_status": "pending-external-review",
+          "relevance": {
+            "layer": "L3",
+            "pattern": "vanish",
+            "show_when": "(L3.ownership == 'provider' AND L3.dependency == 'proprietary_inaccessible') OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-6-02",
@@ -2709,7 +2998,12 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L3",
+            "pattern": "vanish",
+            "show_when": "L3.dependency == 'licensed_supported'"
+          }
         },
         {
           "id": "SOV-6-02-AC",
@@ -2730,7 +3024,12 @@
           "review_status": "pending-external-review",
           "c3a_source_id": "SOV-6-02-AC",
           "seal_contribution_csi": 4,
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L3",
+            "pattern": "vanish",
+            "show_when": "L3.dependency == 'licensed_supported'"
+          }
         },
         {
           "id": "SOV-6-03",
@@ -2751,7 +3050,12 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
-          "c3a_fidelity": "direct"
+          "c3a_fidelity": "direct",
+          "relevance": {
+            "layer": "L3",
+            "pattern": "vanish",
+            "show_when": "L3.dependency == 'self_supported_oss' AND L3.operation == 'client_staff'"
+          }
         },
         {
           "id": "SOV-6-04",
@@ -2786,6 +3090,11 @@
                 "text": "Does the provider demonstrate independence from non-EU high-performance computing supply chains, with EU-sovereign HPC capacity available as an alternative for workloads where HPC is critical?"
               }
             }
+          },
+          "relevance": {
+            "layer": "L2",
+            "pattern": "vanish",
+            "show_when": "L2.location == 'foreign'"
           }
         },
         {
@@ -2820,7 +3129,10 @@
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
-          "eu_csf_source_factor": "SOV-6 Q1 Interoperability & Open Interfaces"
+          "eu_csf_source_factor": "SOV-6 Q1 Interoperability & Open Interfaces",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-6-06",
@@ -2854,7 +3166,10 @@
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
-          "eu_csf_source_factor": "SOV-6 Q2 Open Standards Compliance"
+          "eu_csf_source_factor": "SOV-6 Q2 Open Standards Compliance",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-6-07-CADA",
@@ -2922,7 +3237,12 @@
               "note": "Requirement IDs verified against the Code structure as reproduced in published CSP transparency statements; vendor the Code PDF into docs/sources/."
             }
           ],
-          "lmic_rationale": "Every parameter in this question — the 2-month notice ceiling, 30-day transition, 30-day retrieval floor, erasure guarantee — is copied from the mandatory contractual terms that Regulation (EU) 2023/2854 Art. 25 imposes on every cloud contract in the EU since 12 September 2025. Nothing is invented: the question asks whether the provider will give an LMIC public buyer the same contractual baseline EU law already obliges it to give any European customer. A provider arguing these terms are unreasonable is arguing against its own EU standard terms."
+          "lmic_rationale": "Every parameter in this question — the 2-month notice ceiling, 30-day transition, 30-day retrieval floor, erasure guarantee — is copied from the mandatory contractual terms that Regulation (EU) 2023/2854 Art. 25 imposes on every cloud contract in the EU since 12 September 2025. Nothing is invented: the question asks whether the provider will give an LMIC public buyer the same contractual baseline EU law already obliges it to give any European customer. A provider arguing these terms are unreasonable is arguing against its own EU standard terms.",
+          "relevance": {
+            "layer": "L4",
+            "pattern": "vanish",
+            "show_when": "L4.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-6-09-LMIC",
@@ -2959,7 +3279,12 @@
               "ref": "cloud portability — syntactic/semantic data portability (cite clause only)"
             }
           ],
-          "lmic_rationale": "The ‘exhaustive specification of exportable categories’ requirement is verbatim Data Act Art. 25(2)(e); open machine-readable formats via documented interfaces is the Art. 30 mechanism; SWIPO DP01/DP06/DP08 and ISO/IEC 19941 supply the industry-standard vocabulary. The question composes three citable sources and adds no criterion of its own."
+          "lmic_rationale": "The ‘exhaustive specification of exportable categories’ requirement is verbatim Data Act Art. 25(2)(e); open machine-readable formats via documented interfaces is the Art. 30 mechanism; SWIPO DP01/DP06/DP08 and ISO/IEC 19941 supply the industry-standard vocabulary. The question composes three citable sources and adds no criterion of its own.",
+          "relevance": {
+            "layer": "L4",
+            "pattern": "vanish",
+            "show_when": "L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-6-10-LMIC",
@@ -2987,7 +3312,12 @@
               "ref": "Art. 29(1) (no switching charges from 12 Jan 2027); Art. 29(2)-(3) (cost-cap until then); Art. 29(4) (pre-contract disclosure); Art. 2(36) (definition includes data egress charges)"
             }
           ],
-          "lmic_rationale": "This question asks the provider to match, contractually, the exact regime Art. 29 makes mandatory in the EU: disclosure up front, cost-based cap, zero switching charges. A provider already operating this regime for EU customers cannot credibly claim it is unreasonable for an LMIC government. Single binding-law anchor; qualifies under the one-binding-law rule."
+          "lmic_rationale": "This question asks the provider to match, contractually, the exact regime Art. 29 makes mandatory in the EU: disclosure up front, cost-based cap, zero switching charges. A provider already operating this regime for EU customers cannot credibly claim it is unreasonable for an LMIC government. Single binding-law anchor; qualifies under the one-binding-law rule.",
+          "relevance": {
+            "layer": "L4",
+            "pattern": "vanish",
+            "show_when": "L4.ownership == 'provider' OR L3.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-6-11-LMIC",
@@ -3015,7 +3345,12 @@
               "ref": "Art. 23; Art. 30(1) (functional equivalence obligation for IaaS)"
             }
           ],
-          "lmic_rationale": "Wording tracks Art. 30(1) almost verbatim, including the ‘all reasonable measures’ standard and the documentation/capabilities/support triad. No editorial content."
+          "lmic_rationale": "Wording tracks Art. 30(1) almost verbatim, including the ‘all reasonable measures’ standard and the documentation/capabilities/support triad. No editorial content.",
+          "relevance": {
+            "layer": "L4",
+            "pattern": "vanish",
+            "show_when": "L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider'"
+          }
         },
         {
           "id": "SOV-6-12-LMIC",
@@ -3056,7 +3391,10 @@
               "ref": "SOV-4-15-CADA tested-switchover language (CADA Annex III §9(3)(b)-(c))"
             }
           ],
-          "lmic_rationale": "Documented-and-tested exit strategies for critical outsourced functions are the established supervisory standard in EU financial regulation (EBA §15, DORA Art. 28(8)) and appear in CADA’s audit-evidence catalogue as ‘tests… and a switchover plan’. SWIPO PLR01 adds an industry-code basis for testing exit mechanisms. The 24-month cadence is the only editorial parameter; it is a scoring threshold, not a criterion, and is recorded in the decisions register."
+          "lmic_rationale": "Documented-and-tested exit strategies for critical outsourced functions are the established supervisory standard in EU financial regulation (EBA §15, DORA Art. 28(8)) and appear in CADA’s audit-evidence catalogue as ‘tests… and a switchover plan’. SWIPO PLR01 adds an industry-code basis for testing exit mechanisms. The 24-month cadence is the only editorial parameter; it is a scoring threshold, not a criterion, and is recorded in the decisions register.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-6-13-LMIC",
@@ -3089,7 +3427,12 @@
               "ref": "portability practice"
             }
           ],
-          "lmic_rationale": "No source framework contains a verbatim IaC control; this question operationalizes ISO/IEC 19941 portability concepts. It is scored but never gated, and is labeled editorial. Providers that deploy via IaC reduce exit friction regardless of contractual terms; the question captures this empirical fact."
+          "lmic_rationale": "No source framework contains a verbatim IaC control; this question operationalizes ISO/IEC 19941 portability concepts. It is scored but never gated, and is labeled editorial. Providers that deploy via IaC reduce exit friction regardless of contractual terms; the question captures this empirical fact.",
+          "relevance": {
+            "layer": "L6",
+            "pattern": "vanish",
+            "show_when": "L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'"
+          }
         }
       ],
       "layer": "operational_viability"
@@ -3128,7 +3471,10 @@
             4
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(e), L4(e)"
+          "cada_annex_ref": "Annex II L2(e), L4(e)",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-7-02",
@@ -3152,7 +3498,10 @@
           ],
           "seal_contribution_eu_csf": 1,
           "seal_contribution_csi": 1,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-7-03",
@@ -3177,7 +3526,12 @@
           ],
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "layer": "L6",
+            "pattern": "vanish",
+            "show_when": "L6.ownership == 'provider' OR L6.dependency == 'proprietary_inaccessible'"
+          }
         },
         {
           "id": "SOV-7-04",
@@ -3202,7 +3556,12 @@
           ],
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "layer": "L6",
+            "pattern": "vanish",
+            "show_when": "L6.ownership == 'provider' OR L6.dependency == 'proprietary_inaccessible'"
+          }
         },
         {
           "id": "SOV-7-05",
@@ -3224,7 +3583,10 @@
           ],
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-7-06",
@@ -3246,7 +3608,10 @@
           ],
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-7-07",
@@ -3283,6 +3648,9 @@
                 "text": "Does the provider enable and cooperate with audits by a {{BLOC}}-based auditor, independent of the provider and its non-EU affiliates, covering all systems and data within scope?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -3331,6 +3699,9 @@
                 "text": "Does the provider have a documented incident-disclosure process aligned with GDPR/NIS2 timelines, with readiness to support EU-directed investigations and CSIRT cooperation?"
               }
             }
+          },
+          "relevance": {
+            "pattern": "agnostic"
           }
         },
         {
@@ -3385,7 +3756,10 @@
           ],
           "seal_contribution_eu_csf": 1,
           "seal_contribution_csi": 1,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-8-02",
@@ -3407,7 +3781,10 @@
           ],
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-8-03",
@@ -3429,7 +3806,10 @@
           ],
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-8-04",
@@ -3451,7 +3831,10 @@
           ],
           "seal_contribution_eu_csf": 2,
           "seal_contribution_csi": 2,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-8-05",
@@ -3473,7 +3856,10 @@
           ],
           "seal_contribution_eu_csf": 3,
           "seal_contribution_csi": 3,
-          "eu_csf_fidelity": "direct"
+          "eu_csf_fidelity": "direct",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         }
       ],
       "layer": "operational_viability"
@@ -3515,7 +3901,10 @@
               "ref": "§12.2 (due diligence on service-delivery dependencies)"
             }
           ],
-          "lmic_rationale": "Local-currency payment is not a novel demand: World Bank procurement rules (7th ed. §§5.55-5.56) provide for bids priced and paid in the borrower’s currency, and most Bank-financed contracts operate this way. The question extends a standard procurement provision to the cloud billing relationship. The card-network clause addresses a documented failure mode: customers in sanctioned or de-risked economies losing cloud access not by provider decision but because their payment instrument fails."
+          "lmic_rationale": "Local-currency payment is not a novel demand: World Bank procurement rules (7th ed. §§5.55-5.56) provide for bids priced and paid in the borrower’s currency, and most Bank-financed contracts operate this way. The question extends a standard procurement provision to the cloud billing relationship. The card-network clause addresses a documented failure mode: customers in sanctioned or de-risked economies losing cloud access not by provider decision but because their payment instrument fails.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-9-02-LMIC",
@@ -3551,7 +3940,10 @@
               "ref": "SOV-2-05 demonstrated-measures pattern (CADA L2(g)(iii): prevention of service disruption originating from third-country measures)"
             }
           ],
-          "lmic_rationale": "EU financial regulation already treats abrupt termination of a critical ICT service as a harm to be managed (DORA Art. 28), and CADA L2(g)(iii) treats third-country-originated service disruption as a sovereignty failure. This question applies the same logic to the disruption vector LMICs actually face — payment-rail failure — without prescribing commercial terms: it asks only that the failure mode be contractually defined rather than left to default suspension clauses."
+          "lmic_rationale": "EU financial regulation already treats abrupt termination of a critical ICT service as a harm to be managed (DORA Art. 28), and CADA L2(g)(iii) treats third-country-originated service disruption as a sovereignty failure. This question applies the same logic to the disruption vector LMICs actually face — payment-rail failure — without prescribing commercial terms: it asks only that the failure mode be contractually defined rather than left to default suspension clauses.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-9-03-LMIC",
@@ -3592,7 +3984,10 @@
               "ref": "SOV-2-07-CADA (provider not enforcing third-country restrictive measures; CADA L2(g)(iv))"
             }
           ],
-          "lmic_rationale": "The 30-day retrieval-before-erasure mechanism is lifted directly from Data Act Art. 25(2)(g)-(h); the question extends its trigger from voluntary switching to involuntary payment failure. CADA L2(g)(iv) — already in this tool as SOV-2-07-CADA — establishes that a provider should not give effect to third-country restrictive measures against its customer, and holding a government’s data hostage to a bill it is legally unable to pay would do exactly that. This is the Myanmar clause: data return must survive payment failure."
+          "lmic_rationale": "The 30-day retrieval-before-erasure mechanism is lifted directly from Data Act Art. 25(2)(g)-(h); the question extends its trigger from voluntary switching to involuntary payment failure. CADA L2(g)(iv) — already in this tool as SOV-2-07-CADA — establishes that a provider should not give effect to third-country restrictive measures against its customer, and holding a government’s data hostage to a bill it is legally unable to pay would do exactly that. This is the Myanmar clause: data return must survive payment failure.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-9-04-LMIC",
@@ -3624,7 +4019,10 @@
               "ref": "Art. 29(4) (pre-contract disclosure of fees and charges — the transparency pattern)"
             }
           ],
-          "lmic_rationale": "Price-adjustment and currency provisions are standard architecture in World Bank procurement documents (§5.57, §§5.55-5.56); this question asks whether the provider’s commercial terms can plug into that architecture. For a budget denominated in a volatile currency, an FX move is functionally a service-continuity event — the bill doubles, the budget doesn’t. The question prescribes no specific instrument; it asks which of the standard mitigations the provider supports."
+          "lmic_rationale": "Price-adjustment and currency provisions are standard architecture in World Bank procurement documents (§5.57, §§5.55-5.56); this question asks whether the provider’s commercial terms can plug into that architecture. For a budget denominated in a volatile currency, an FX move is functionally a service-continuity event — the bill doubles, the budget doesn’t. The question prescribes no specific instrument; it asks which of the standard mitigations the provider supports.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         },
         {
           "id": "SOV-9-05-LMIC",
@@ -3661,7 +4059,10 @@
               "ref": "SR-6 (supplier assessments and reviews); SA-9 (external system services)"
             }
           ],
-          "lmic_rationale": "Financial due diligence on critical service providers is a verbatim supervisory expectation (EBA §12.2) and a public-domain NIST control (SR-6, SA-9). SWIPO TR03(f) adds an industry-code basis for bankruptcy/acquisition continuity. Especially material when the candidate is a young local CSP: the framework takes local providers seriously by applying viability scrutiny to them, not by exempting them."
+          "lmic_rationale": "Financial due diligence on critical service providers is a verbatim supervisory expectation (EBA §12.2) and a public-domain NIST control (SR-6, SA-9). SWIPO TR03(f) adds an industry-code basis for bankruptcy/acquisition continuity. Especially material when the candidate is a young local CSP: the framework takes local providers seriously by applying viability scrutiny to them, not by exempting them.",
+          "relevance": {
+            "pattern": "agnostic"
+          }
         }
       ]
     }
