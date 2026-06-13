@@ -56,6 +56,7 @@ async function ensureSchema(db: D1Database): Promise<void> {
   await db.prepare('ALTER TABLE assessments ADD COLUMN selected_frameworks TEXT DEFAULT \'["csi_composite"]\'').run().catch(() => {});
   await db.prepare('ALTER TABLE assessments ADD COLUMN customer_selected_ac_ids TEXT DEFAULT \'[]\'').run().catch(() => {});
   await db.prepare('ALTER TABLE assessments ADD COLUMN selected_objectives TEXT DEFAULT \'[]\'').run().catch(() => {});
+  await db.prepare('ALTER TABLE assessments ADD COLUMN control_profile TEXT').run().catch(() => {});
 }
 
 // ── POST /api/assessments ─────────────────────────────────────────────────────
