@@ -57,6 +57,8 @@ async function ensureSchema(db: D1Database): Promise<void> {
   await db.prepare('ALTER TABLE assessments ADD COLUMN customer_selected_ac_ids TEXT DEFAULT \'[]\'').run().catch(() => {});
   await db.prepare('ALTER TABLE assessments ADD COLUMN selected_objectives TEXT DEFAULT \'[]\'').run().catch(() => {});
   await db.prepare('ALTER TABLE assessments ADD COLUMN control_profile TEXT').run().catch(() => {});
+  await db.prepare('ALTER TABLE assessments ADD COLUMN scoping_scenario TEXT').run().catch(() => {});
+  await db.prepare('ALTER TABLE assessments ADD COLUMN platform_meta TEXT').run().catch(() => {});
 }
 
 // ── POST /api/assessments ─────────────────────────────────────────────────────
@@ -134,6 +136,8 @@ const PatchSchema = z.object({
   share_publicly: z.boolean().optional(),
   company_name: z.string().optional(),
   control_profile: z.record(z.unknown()).optional(),
+  scoping_scenario: z.string().optional(),
+  platform_meta: z.record(z.unknown()).optional(),
 });
 
 app.patch('/api/assessments/:id', async (c) => {
@@ -161,6 +165,8 @@ app.patch('/api/assessments/:id', async (c) => {
   if (data.share_publicly !== undefined) { sets.push('share_publicly = ?'); vals.push(data.share_publicly ? 1 : 0); }
   if (data.company_name !== undefined) { sets.push('company_name = ?'); vals.push(data.company_name); }
   if (data.control_profile !== undefined) { sets.push('control_profile = ?'); vals.push(JSON.stringify(data.control_profile)); }
+  if (data.scoping_scenario !== undefined) { sets.push('scoping_scenario = ?'); vals.push(data.scoping_scenario); }
+  if (data.platform_meta !== undefined) { sets.push('platform_meta = ?'); vals.push(JSON.stringify(data.platform_meta)); }
 
   vals.push(id);
   await c.env.DB.prepare(`UPDATE assessments SET ${sets.join(', ')} WHERE id = ?`).bind(...vals).run();

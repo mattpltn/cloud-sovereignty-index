@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "purpose": "Per-scenario pre-fill for the scoping refine table. Each cell is the most common real configuration; _note marks cells that commonly vary and must be flagged for user confirmation in Step 2.",
+    "derivation_reminder": "owned=3p + operated=client → ownership:commercial_lessor (landlord). owned=3p + operated=3p → ownership:provider (service operator). owned=client + operated=3p → ownership:client, operation:foreign_vendor (managed-on-own-asset)."
+  },
+
+  "hyperscaler": {
+    "_label": "Global cloud provider (AWS, Azure, Google, Huawei, etc.)",
+    "L1": {"owned":"3p","operated":"3p","supported":"3p","location":"foreign"},
+    "L2": {"owned":"3p","operated":"3p","supported":"3p","location":"foreign"},
+    "L3": {"owned":"3p","operated":"3p","supported":"3p","location":"foreign","support_nature":"proprietary_inaccessible",
+           "_note":"On a hyperscaler you consume IaaS (VMs/storage), and often PaaS and SaaS on top. Confirm how deep you go: plain IaaS is far more reversible than a stack built on proprietary managed services. Your answer here and on the Managed/PaaS layer drives your lock-in assessment."},
+    "L4": {"owned":"3p","operated":"client","supported":"3p","location":"foreign","support_nature":"proprietary_inaccessible",
+           "_note":"Declare how much of the provider's proprietary managed-services/PaaS layer you actually use (managed DBs, serverless, AI services). Heavy use here is the deepest reversibility risk in the whole model. Also confirm who operates it — your own team or an integrator."},
+    "L5": {"owned":"3p","operated":"3p","supported":"3p","location":"foreign"},
+    "L6": {"owned":"client","operated":"client","supported":"client","location":"in_country",
+           "_note":"Workloads and data are the customer's. If a third party manages your applications, flip operated to third party."}
+  },
+
+  "regional_csp": {
+    "_label": "Local or regional cloud provider (national telco/SI cloud)",
+    "L1": {"owned":"3p","operated":"3p","supported":"3p","location":"in_country",
+           "_note":"Confirm the provider's datacenter is actually in-country and not a regional hub in a neighbouring jurisdiction."},
+    "L2": {"owned":"3p","operated":"3p","supported":"3p","location":"in_country"},
+    "L3": {"owned":"3p","operated":"3p","supported":"3p","location":"in_country","support_nature":"licensed_supported",
+           "_note":"Regional CSPs frequently run a commercial stack (VMware/Nutanix/Huawei) — confirm the platform and its support, as foreign-vendor licensing risk still applies even with an in-country provider."},
+    "L4": {"owned":"3p","operated":"client","supported":"3p","location":"in_country","support_nature":"licensed_supported",
+           "_note":"Confirm who operates the managed-services layer."},
+    "L5": {"owned":"3p","operated":"3p","supported":"3p","location":"in_country",
+           "_note":"Confirm operations are performed in-country and not remotely from a foreign parent/affiliate."},
+    "L6": {"owned":"client","operated":"client","supported":"client","location":"in_country"}
+  },
+
+  "colocation": {
+    "_label": "Our cloud in rented datacenter space",
+    "L1": {"owned":"3p","operated":"3p","supported":"3p","location":"in_country",
+           "_note":"The datacenter is the colo's — a landlord, not a service operator. Confirm its location and ownership/jurisdiction."},
+    "L2": {"owned":"client","operated":"client","supported":"client","location":"in_country",
+           "_note":"Sometimes hardware is leased rather than owned — if so, flip owned to third party."},
+    "L3": {"owned":"client","operated":"client","supported":"3p","location":"in_country","support_nature":"licensed_supported",
+           "_note":"Default assumes OpenStack under a commercial support subscription (open-source platform, paid third-party support) — the common government colocation choice and a more reversible posture than a proprietary stack, because the software is forkable and support is substitutable. If instead you run a proprietary commercial platform (VMware/Nutanix/Huawei), keep supported as third party but note the heavier vendor lock-in; if fully self-supported OpenStack with no vendor, set supported to client."},
+    "L4": {"owned":"client","operated":"client","supported":"client","location":"in_country",
+           "_note":"If you run managed-service equivalents on a commercial product, set supported to third party."},
+    "L5": {"owned":"client","operated":"client","supported":"client","location":"in_country",
+           "_note":"If a vendor remotely operates the cluster, flip operated to third party — owning the hardware does not by itself give operational control."},
+    "L6": {"owned":"client","operated":"client","supported":"client","location":"in_country"}
+  },
+
+  "own_datacenter": {
+    "_label": "Our own datacenter, self-run",
+    "L1": {"owned":"client","operated":"client","supported":"client","location":"in_country"},
+    "L2": {"owned":"client","operated":"client","supported":"client","location":"in_country"},
+    "L3": {"owned":"client","operated":"client","supported":"client","location":"in_country","support_nature":"self_supported_oss",
+           "_note":"If the platform is commercially licensed (VMware/Nutanix/Huawei) rather than self-supported open source, set supported to third party and pick the support nature — this is your main residual dependency."},
+    "L4": {"owned":"client","operated":"client","supported":"client","location":"in_country",
+           "_note":"If you rely on a commercial managed-services product, set supported to third party."},
+    "L5": {"owned":"client","operated":"client","supported":"client","location":"in_country",
+           "_note":"If a vendor provides operational or maintenance support (even part-time), flip supported or operated accordingly."},
+    "L6": {"owned":"client","operated":"client","supported":"client","location":"in_country"}
+  },
+
+  "managed_service": {
+    "_label": "Vendor builds and/or operates our cloud for us",
+    "L1": {"owned":"client","operated":"3p","supported":"3p","location":"in_country",
+           "_note":"Facility ownership varies most here — your building, a colo, or the vendor's. Confirm owned-by and location."},
+    "L2": {"owned":"client","operated":"3p","supported":"3p","location":"in_country",
+           "_note":"Hardware is often the customer's but vendor-operated (the key sovereign-washing case: you own it, they hold the keys). Confirm owned-by; if vendor-owned, flip it."},
+    "L3": {"owned":"client","operated":"3p","supported":"3p","location":"in_country","support_nature":"licensed_supported",
+           "_note":"Confirm platform and support nature; the operating vendor's jurisdiction matters — set location to where the vendor operates from."},
+    "L4": {"owned":"client","operated":"3p","supported":"3p","location":"in_country","support_nature":"licensed_supported"},
+    "L5": {"owned":"client","operated":"3p","supported":"3p","location":"in_country",
+           "_note":"Operations is the defining third-party layer for this scenario — confirm where the operating staff are and whose jurisdiction governs them. This is the layer that most affects your sovereignty here."},
+    "L6": {"owned":"client","operated":"client","supported":"client","location":"in_country",
+           "_note":"If the vendor also manages your applications/data, flip operated to third party."}
+  }
+}

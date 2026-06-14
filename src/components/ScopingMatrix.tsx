@@ -106,18 +106,19 @@ interface LayerCardProps {
   dragging: boolean;
   onChange: (s: LayerState) => void;
   onDragStart: () => void;
+  readonly?: boolean;
 }
 
-function LayerCard({ layerId, state, dragging, onChange, onDragStart }: LayerCardProps) {
+function LayerCard({ layerId, state, dragging, onChange, onDragStart, readonly }: LayerCardProps) {
   const info = LAYER_LABELS[layerId];
   const showOp = showOperation(layerId, state);
   const showDep = showDependency(layerId);
 
   return (
     <div
-      draggable
-      onDragStart={onDragStart}
-      className={`border rounded-lg p-3 bg-white cursor-grab active:cursor-grabbing shadow-sm select-none ${dragging ? 'opacity-50 ring-2 ring-blue-400' : ''}`}
+      draggable={!readonly}
+      onDragStart={readonly ? undefined : onDragStart}
+      className={`border rounded-lg p-3 bg-white shadow-sm select-none ${readonly ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'} ${dragging ? 'opacity-50 ring-2 ring-blue-400' : ''}`}
     >
       <div className="flex items-start justify-between gap-2">
         <div>
@@ -137,6 +138,7 @@ function LayerCard({ layerId, state, dragging, onChange, onDragStart }: LayerCar
               className="flex-1 text-xs border border-gray-200 rounded px-1.5 py-0.5 bg-white"
               value={state.operation}
               onChange={e => onChange({ ...state, operation: e.target.value as Operation })}
+              disabled={readonly}
             >
               {OPERATION_OPTIONS.map(o => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -152,6 +154,7 @@ function LayerCard({ layerId, state, dragging, onChange, onDragStart }: LayerCar
               className="flex-1 text-xs border border-gray-200 rounded px-1.5 py-0.5 bg-white"
               value={state.dependency}
               onChange={e => onChange({ ...state, dependency: e.target.value as Dependency })}
+              disabled={readonly}
             >
               {DEPENDENCY_OPTIONS.map(o => (
                 <option key={o.value} value={o.value}>{o.label}</option>
@@ -166,6 +169,7 @@ function LayerCard({ layerId, state, dragging, onChange, onDragStart }: LayerCar
             className="flex-1 text-xs border border-gray-200 rounded px-1.5 py-0.5 bg-white"
             value={state.location}
             onChange={e => onChange({ ...state, location: e.target.value as Location })}
+            disabled={readonly}
           >
             {LOCATION_OPTIONS.map(o => (
               <option key={o.value} value={o.value}>{o.label}</option>
@@ -185,9 +189,10 @@ interface DropZoneProps {
   onDrop: (zone: OwnershipZone) => void;
   onLayerChange: (layerId: LayerId, s: LayerState) => void;
   onDragStart: (layerId: LayerId) => void;
+  readonly?: boolean;
 }
 
-function DropZone({ zone, layers, states, draggingLayer, onDrop, onLayerChange, onDragStart }: DropZoneProps) {
+function DropZone({ zone, layers, states, draggingLayer, onDrop, onLayerChange, onDragStart, readonly }: DropZoneProps) {
   const [dragOver, setDragOver] = useState(false);
   const colors = ZONE_COLORS[zone];
   const headerColors = ZONE_HEADER_COLORS[zone];
@@ -195,9 +200,9 @@ function DropZone({ zone, layers, states, draggingLayer, onDrop, onLayerChange, 
   return (
     <div
       className={`flex-1 border-2 rounded-xl p-3 min-h-48 transition-colors ${colors} ${dragOver ? 'ring-2 ring-blue-400 ring-offset-1' : ''}`}
-      onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-      onDragLeave={() => setDragOver(false)}
-      onDrop={() => { setDragOver(false); onDrop(zone); }}
+      onDragOver={readonly ? undefined : e => { e.preventDefault(); setDragOver(true); }}
+      onDragLeave={readonly ? undefined : () => setDragOver(false)}
+      onDrop={readonly ? undefined : () => { setDragOver(false); onDrop(zone); }}
     >
       <div className={`text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded mb-2 ${headerColors}`}>
         {ZONE_LABELS[zone]}
@@ -211,6 +216,7 @@ function DropZone({ zone, layers, states, draggingLayer, onDrop, onLayerChange, 
             dragging={draggingLayer === layerId}
             onChange={s => onLayerChange(layerId, s)}
             onDragStart={() => onDragStart(layerId)}
+            readonly={readonly}
           />
         ))}
       </div>
@@ -221,11 +227,12 @@ function DropZone({ zone, layers, states, draggingLayer, onDrop, onLayerChange, 
 interface Props {
   initialProfile?: Partial<ControlProfile>;
   onProfileChange: (profile: ControlProfile) => void;
+  readonly?: boolean;
 }
 
 const LAYERS: LayerId[] = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6'];
 
-export function ScopingMatrix({ initialProfile, onProfileChange }: Props) {
+export function ScopingMatrix({ initialProfile, onProfileChange, readonly }: Props) {
   const [states, setStates] = useState<Record<LayerId, LayerState>>(() => {
     const init: Record<LayerId, LayerState> = {} as Record<LayerId, LayerState>;
     for (const id of LAYERS) {
@@ -279,6 +286,7 @@ export function ScopingMatrix({ initialProfile, onProfileChange }: Props) {
             onDrop={handleDrop}
             onLayerChange={updateState}
             onDragStart={setDraggingLayer}
+            readonly={readonly}
           />
         ))}
       </div>
