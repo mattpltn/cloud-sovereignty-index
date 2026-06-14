@@ -682,7 +682,7 @@
           "c3a_tier": "base",
           "tiers": {
             "bloc": {
-              "text": "If a {{BLOC}} member state declares a state of defense, can the cloud service provider enable that state to take over the capabilities required to operate the cloud (including physical assets and personnel) within the framework of legal possibilities?",
+              "text": "If a {{BLOC}} member state declares a state of defense, can the provider enable that state to take over the capabilities required to operate the cloud (including physical assets and personnel) within the framework of legal possibilities?",
               "seal_contribution": 3,
               "points": 10,
               "source": {
@@ -691,7 +691,7 @@
               }
             },
             "national": {
-              "text": "If {{COUNTRY}} declares a state of defense, can the cloud service provider enable {{NATIONAL_ADMIN}} to take over the capabilities required to operate the cloud (including material assets and personnel) within the framework of legal possibilities?",
+              "text": "If {{COUNTRY}} declares a state of defense, can the provider enable {{NATIONAL_ADMIN}} to take over the capabilities required to operate the cloud (including material assets and personnel) within the framework of legal possibilities?",
               "seal_contribution": 4,
               "points": 10,
               "source": {
@@ -710,7 +710,7 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "(L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider') OR (L1.location == 'foreign' OR L1.location == 'trusted_third')"
+            "show_when": "(L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider' OR L1.location == 'foreign' OR L1.location == 'trusted_third') AND (L3.ownership == 'provider' OR L4.ownership == 'provider' OR L5.ownership == 'provider')"
           }
         },
         {
@@ -1159,7 +1159,9 @@
           "eu_csf_fidelity": "direct",
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1184,7 +1186,9 @@
           "seal_contribution_csi": 3,
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1208,7 +1212,9 @@
           "eu_csf_fidelity": "csi",
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1232,7 +1238,9 @@
           "seal_contribution_csi": 3,
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1256,7 +1264,9 @@
           "seal_contribution_csi": 3,
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1280,7 +1290,9 @@
           "seal_contribution_csi": 3,
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1304,7 +1316,9 @@
           "eu_csf_fidelity": "direct",
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1328,7 +1342,9 @@
           "seal_contribution_csi": 3,
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1352,7 +1368,9 @@
           "seal_contribution_csi": 2,
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1376,7 +1394,9 @@
           "eu_csf_fidelity": "direct",
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1409,7 +1429,9 @@
           "cada_annex_ref": "Annex III §6",
           "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and prohibits any transfer outside the Union. This question asks only for training-data jurisdiction disclosure, which is weaker than the flat prohibition. It is inferred evidence under Annex III §6 (model cards / training-source records), not a direct mapping to L2(f).",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L4.ownership == 'provider'",
+            "layer": "L4"
           }
         },
         {
@@ -1442,7 +1464,9 @@
           "cada_annex_ref": "Annex II L2(c)",
           "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and transfer outside the Union. This question addresses inference location (processing of customer data), which maps more naturally to L2(c)'s processing-localisation requirement. Re-tagged inferred from L2(c) rather than a direct mapping to L2(f).",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L4.ownership == 'provider'",
+            "layer": "L4"
           }
         },
         {
@@ -1468,7 +1492,9 @@
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models governed under EU control, minimizing dependency on non-EU technology stacks.' Customer opt-out from training data use is a governance control ensuring the customer retains sovereignty over how their data shapes model behaviour — the CF implies governance control but does not specify this mechanism.",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L4.ownership == 'provider'",
+            "layer": "L4"
           }
         },
         {
@@ -1494,7 +1520,12 @@
             4
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L2(f), L3(f), L4(f)"
+          "cada_annex_ref": "Annex II L2(f), L3(f), L4(f)",
+          "relevance": {
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "pattern": "vanish",
+            "layer": "L3"
+          }
         },
         {
           "id": "SOV-3-AI-04-AC",
@@ -1519,7 +1550,9 @@
           "eu_csf_fidelity": "inferred",
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Minimizing dependency on non-EU technology stacks.' Knowing the model provider's jurisdiction, ownership, and control chain is the prerequisite for assessing whether a dependency constitutes a non-EU technology stack risk. EU-CSF names the risk category; this question operationalizes the supply-chain disclosure needed to assess it.",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L4.ownership == 'provider'",
+            "layer": "L4"
           }
         },
         {
@@ -1542,7 +1575,9 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1566,7 +1601,12 @@
             4
           ],
           "cada_fidelity": "direct",
-          "cada_annex_ref": "Annex II L4(c)"
+          "cada_annex_ref": "Annex II L4(c)",
+          "relevance": {
+            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
+            "pattern": "vanish",
+            "layer": "L3"
+          }
         }
       ],
       "layer": "resilience"
@@ -1883,7 +1923,9 @@
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-4 CF: 'Capacity for EU operators to manage without requiring non-EU vendor involvement.' Ingress data control gateways are the network-layer enforcement mechanism for EU-bounded operations — without controlled ingress, external actors can bypass EU operational controls.",
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1907,7 +1949,9 @@
           "seal_contribution_csi": 3,
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {
@@ -1932,7 +1976,9 @@
           "seal_contribution_csi": 2,
           "c3a_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "vanish",
+            "show_when": "L3.ownership == 'provider'",
+            "layer": "L3"
           }
         },
         {

@@ -163,10 +163,10 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
            (fw.has('csi_composite') && q.applies_to_csi_composite) ||
            (fw.has('cada') && (q as any).applies_to_cada);
     if (!frameworkCheck) return false;
-    // Control-profile gate: CSI/LMIC questions with show_when hide when predicate is false
+    // Control-profile gate: apply show_when for all frameworks when a control profile is set
     const isCsiMode = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
     const showWhen: string | undefined = (q as any).relevance?.show_when;
-    if (isCsiMode && showWhen && controlProfile) {
+    if (showWhen && controlProfile) {
       if (!evaluate(showWhen, controlProfile)) return false;
     }
     // EU exclusion: csi_presentation.treatment=exclude_non_eu hides question for non-EU countries
@@ -339,6 +339,34 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
         const showBloc = !hasNational || (!isGeneralized && natVal !== undefined && !natSatisfied);
 
         const fidelityTags = questionFidelityTags(q, fw);
+
+        // Non-EU CSI mode: if question has a re-aimed non_eu text, render as flat single card
+        const isCsiModeQ = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
+        const csiPresNonEu = isCsiModeQ && !isEu ? (q as any).csi_presentation?.variants?.non_eu : undefined;
+        const csiPresText = csiPresNonEu?.shown !== false ? csiPresNonEu?.text : undefined;
+        if (csiPresText) {
+          return (
+            <QuestionCard
+              key={q.id}
+              id={q.id}
+              title={tieredTitle}
+              text={resolvePlaceholders(csiPresText, ctx)}
+              sealContribution={q.tiers.bloc.seal_contribution}
+              points={q.tiers.bloc.points}
+              source={sourceLabel(q, fw, q.tiers.bloc.source.doc, q.tiers.bloc.source.clause)}
+              isAdditionalCriterion={q.c3a_tier === 'additional'}
+              value={answers[blocKey]?.value as AnswerValue | undefined}
+              onAnswer={v => handleAnswer(blocKey, v)}
+              evidenceLevel={answers[blocKey]?.evidence_level}
+              onEvidenceLevel={level => handleEvidenceLevel(blocKey, level)}
+              answerValues={visibleAnswerValues}
+              warnPlannedForC3a={c3aInMix && q.applies_to_c3a}
+              fidelityTags={fidelityTags}
+              levelPrefix={levelPrefix}
+            />
+          );
+        }
+
         return (
           <div key={q.id} className="border border-gray-200 rounded-xl overflow-hidden">
             {fidelityTags.length > 0 && (
