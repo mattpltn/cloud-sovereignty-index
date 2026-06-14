@@ -170,7 +170,7 @@ function addAssessmentSheet(
 ) {
   const ws = wb.addWorksheet('Assessment');
 
-  // Columns: A=qid B=tier C=c3a_tier D=obj E=title F=text G=applies_to_eu_csf H=applies_to_c3a I=applies_to_csi J=ev_exp K=ev_prov L=ev_type M=ans N=guidance O=c3a_source_id P=eu_csf_source_factor Q=seal_contribution_eu_csf R=seal_contribution_csi
+  // Columns: A=qid B=tier C=c3a_tier D=obj E=title F=text G=applies_to_eu_csf H=applies_to_c3a I=applies_to_csi J=ev_exp K=ev_prov L=ev_type M=ans N=source_reference O=c3a_source_id P=eu_csf_source_factor Q=seal_contribution_eu_csf R=seal_contribution_csi
   ws.columns = [
     { key: 'qid',                    width: 16 },  // A
     { key: 'tier',                   width: 10 },  // B
@@ -185,7 +185,7 @@ function addAssessmentSheet(
     { key: 'ev_prov',                width: 50 },  // K
     { key: 'ev_type',                width: 25 },  // L
     { key: 'ans',                    width: 12 },  // M
-    { key: 'guidance',               width: 60 },  // N — read-only contextual guidance
+    { key: 'source_ref',             width: 60 },  // N — source reference (framework + clause)
     { key: 'c3a_source_id',          width: 20 },  // O — auditor traceability
     { key: 'eu_csf_source_factor',   width: 40 },  // P
     { key: 'seal_contribution_eu_csf', width: 22 }, // Q
@@ -207,7 +207,7 @@ function addAssessmentSheet(
   const header = ws.addRow([
     'question_id', 'tier', 'c3a_tier', 'objective', 'question_title', 'question_text',
     'applies_to_eu_csf', 'applies_to_c3a', 'applies_to_csi_composite',
-    'evidence_expected', 'evidence_provided', 'evidence_type', 'answer', 'guidance',
+    'evidence_expected', 'evidence_provided', 'evidence_type', 'answer', 'source_reference',
     'c3a_source_id', 'eu_csf_source_factor', 'seal_contribution_eu_csf', 'seal_contribution_csi',
     'source_framework', 'source_clause', 'fidelity', 'basis', 'relevant', 'risks_addressed',
   ]);
@@ -240,7 +240,7 @@ function addAssessmentSheet(
 
   function applyDataRow(row: ExcelJS.Row, q: Question, text: string, fill: ExcelJS.Fill,
     c3aTier: string, applyEuCsf: boolean, applyC3a: boolean, applyCsi: boolean,
-    guidance = '', c3aSourceId = '', euCsfFactor = '', sealEuCsf?: number, sealCsi?: number) {
+    _unused = '', c3aSourceId = '', euCsfFactor = '', sealEuCsf?: number, sealCsi?: number) {
     const qid = q.id;
     row.fill = fill;
     row.getCell(6).alignment = { wrapText: true, vertical: 'top' };
@@ -251,22 +251,25 @@ function addAssessmentSheet(
     row.getCell(10).value = EVIDENCE_EXPECTED[qid] ?? '';
     row.getCell(10).alignment = { wrapText: true, vertical: 'top' };
     row.getCell(11).alignment = { wrapText: true, vertical: 'top' };
-    row.getCell(14).value = guidance;
-    row.getCell(14).alignment = { wrapText: true, vertical: 'top' };
-    row.getCell(14).font = { italic: true, color: { argb: 'FF6B7280' } };
     if (c3aSourceId) row.getCell(15).value = c3aSourceId;
     if (euCsfFactor) row.getCell(16).value = euCsfFactor;
     if (sealEuCsf !== undefined) row.getCell(17).value = sealEuCsf;
     if (sealCsi !== undefined) row.getCell(18).value = sealCsi;
     row.height = Math.min(60, Math.ceil(text.length / 80) * 15 + 15);
 
-    // Provenance columns S-X (19-24)
+    // Provenance columns S-X (19-24) + source reference in N (14)
     const mode = questionPrimaryMode(q);
     const prov = buildProvenance(q, mode);
     const regEntry = sourceRegisterData.entries.find(e => e.key === prov.register_key);
     const frameworkName = regEntry?.name ?? prov.register_key ?? '';
     const isoClause = prov.source_text?.includes('not reproduced') ? prov.source_text : null;
     const clauseText = isoClause ?? prov.source_text ?? '';
+
+    // Column N: source reference visible alongside the question
+    const sourceRef = clauseText ? `${frameworkName}: ${clauseText}` : frameworkName;
+    row.getCell(14).value = sourceRef;
+    row.getCell(14).alignment = { wrapText: true, vertical: 'top' };
+    row.getCell(14).font = { italic: true, color: { argb: 'FF6B7280' } };
 
     row.getCell(19).value = frameworkName;
     row.getCell(19).font = { color: { argb: 'FF374151' } };

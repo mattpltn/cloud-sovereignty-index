@@ -58,9 +58,11 @@ if (isCsiAssessment && !rawControlProfile) {
   return Astro.redirect(`/assess/${id}/scope`);
 }
 
+let isEu = false;
 if (countryCode) {
   const all = [...countriesJson.EU, ...countriesJson.EEA_non_EU, ...countriesJson.non_EU];
   country = all.find(c => c.code === countryCode);
+  isEu = countriesJson.EU.some(c => c.code === countryCode) || countriesJson.EEA_non_EU.some(c => c.code === countryCode);
 }
 
 // Filter objectives to those with at least one visible question for the selected frameworks
@@ -152,6 +154,7 @@ const methodologyHref = selectedFrameworks.length === 1 && FW_SLUG[selectedFrame
       selectedFrameworks={selectedFrameworks}
       customerSelectedAcIds={customerSelectedAcIds}
       controlProfile={rawControlProfile as ControlProfile | undefined ?? undefined}
+      isEu={isEu}
     />
   </main>
 

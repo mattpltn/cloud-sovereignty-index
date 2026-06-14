@@ -73,6 +73,7 @@ interface Props {
   selectedFrameworks?: string[];
   customerSelectedAcIds?: string[];
   controlProfile?: ControlProfile;
+  isEu?: boolean;
 }
 
 type AnswerValue = 'yes' | 'no' | 'partial' | 'planned' | 'n/a';
@@ -142,7 +143,7 @@ function sourceLabel(q: Question, fw: Set<string>, clauseDoc: string, clauseRef:
   return fwTag || clause;
 }
 
-export default function Questionnaire({ id, objectiveId, criteria, country, variant, allObjectiveIds, selectedFrameworks = ['csi_composite'], customerSelectedAcIds = [], controlProfile }: Props) {
+export default function Questionnaire({ id, objectiveId, criteria, country, variant, allObjectiveIds, selectedFrameworks = ['csi_composite'], customerSelectedAcIds = [], controlProfile, isEu = false }: Props) {
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
@@ -169,6 +170,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
     const showWhen: string | undefined = (q as any).relevance?.show_when;
     if (isCsiMode && showWhen && controlProfile) {
       if (!evaluate(showWhen, controlProfile)) return false;
+    }
+    // EU exclusion: csi_presentation.treatment=exclude_non_eu hides question for non-EU countries
+    if (isCsiMode) {
+      const pres = (q as any).csi_presentation;
+      if (pres?.treatment === 'exclude_non_eu' && !isEu) return false;
     }
     // Fallback questions (parent_criterion_id set) only appear when parent is answered 'no'
     if (q.parent_criterion_id) {
@@ -282,17 +288,20 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
       {visibleQuestions.map(q => {
         const isExpanded = expanded[q.id];
 
-        // Determine level badge prefix: CADA-only questions show UAL, EU-CSF/CSI show SEAL, C3A-only hides
+        // Determine level badge prefix: CADA-only → UAL, CSI-only → '' (SEAL is EU-CSF/C3A concept), C3A-only → '', else SEAL
         const cadaOnly = (q as any).applies_to_cada && !q.applies_to_eu_csf && !q.applies_to_csi_composite;
         const cadaFramework = fw.has('cada') && !fw.has('eu_csf') && !fw.has('csi_composite');
+        const csiOnly = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
         const levelPrefix = (cadaOnly && cadaFramework) ? 'UAL'
-          : fw.has('c3a') && !fw.has('eu_csf') && !fw.has('csi_composite') ? ''
+          : (csiOnly || (fw.has('c3a') && !fw.has('eu_csf') && !fw.has('csi_composite'))) ? ''
           : 'SEAL';
 
         if (q.type === 'single') {
           const val = answers[q.id]?.value as AnswerValue | undefined;
           const evidLevel = answers[q.id]?.evidence_level;
-          const qText = (variant === 'Generalized' && q.text_generalized) ? q.text_generalized : q.text;
+          const isCsiModeQ = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
+          const csiPresText = isCsiModeQ && !isEu ? (q as any).csi_presentation?.variants?.non_eu?.text : undefined;
+          const qText = csiPresText ?? ((variant === 'Generalized' && q.text_generalized) ? q.text_generalized : q.text);
           const qTitle = (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
           return (
             <QuestionCard
@@ -303,14 +312,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               sealContribution={q.seal_contribution}
               points={q.points}
               source={sourceLabel(q, fw, q.source.doc, q.source.clause)}
-              supplementaryInfo={q.supplementary_info}
               isAdditionalCriterion={q.c3a_tier === 'additional'}
               value={val}
               onAnswer={v => handleAnswer(q.id, v)}
               evidenceLevel={evidLevel}
               onEvidenceLevel={level => handleEvidenceLevel(q.id, level)}
-              isExpanded={isExpanded}
-              onToggleExpand={() => setExpanded(prev => ({ ...prev, [q.id]: !isExpanded }))}
               answerValues={visibleAnswerValues}
               warnPlannedForC3a={c3aInMix && q.applies_to_c3a}
               fidelityTags={questionFidelityTags(q, fw)}
@@ -352,9 +358,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                       {country!.name} tier
                     </span>
                   </div>
-                  <span className="text-xs text-gray-400 whitespace-nowrap">
-                    {levelPrefix || 'SEAL'} {q.tiers.national!.seal_contribution} · {q.tiers.national!.points}pt
-                  </span>
+                  {levelPrefix !== '' && (
+                    <span className="text-xs text-gray-400 whitespace-nowrap">
+                      {levelPrefix} {q.tiers.national!.seal_contribution} · {q.tiers.national!.points}pt
+                    </span>
+                  )}
                 </div>
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
                   {resolvePlaceholders(
@@ -411,21 +419,6 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                 {(blocVal === 'yes' || blocVal === 'partial') && (
                   <EvidenceLevelSelect answerKey={blocKey} level={answers[blocKey]?.evidence_level} onChange={handleEvidenceLevel} />
                 )}
-                {q.supplementary_info && (
-                  <div className="mt-3">
-                    <button
-                      onClick={() => setExpanded(prev => ({ ...prev, [q.id]: !isExpanded }))}
-                      className="text-xs text-blue-600 hover:underline"
-                    >
-                      {isExpanded ? 'Hide guidance' : 'Show guidance'}
-                    </button>
-                    {isExpanded && (
-                      <p className="mt-2 text-xs text-gray-500 bg-blue-50 rounded-lg p-3 leading-relaxed">
-                        {q.supplementary_info}
-                      </p>
-                    )}
-                  </div>
-                )}
                 <div className="mt-2 text-xs text-gray-400">
                   {sourceLabel(q, fw, q.tiers.bloc.source.doc, q.tiers.bloc.source.clause)}
                 </div>
@@ -467,11 +460,10 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   );
 }
 
-function QuestionCard({ id, title, text, sealContribution, points, source, supplementaryInfo, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, isExpanded, onToggleExpand, answerValues, warnPlannedForC3a, fidelityTags, levelPrefix }: {
+function QuestionCard({ id, title, text, sealContribution, points, source, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, answerValues, warnPlannedForC3a, fidelityTags, levelPrefix }: {
   id: string; title: string; text: string; sealContribution: number; points: number; source: string;
-  supplementaryInfo?: string; isAdditionalCriterion?: boolean; value: AnswerValue | undefined;
+  isAdditionalCriterion?: boolean; value: AnswerValue | undefined;
   onAnswer: (v: AnswerValue) => void; evidenceLevel?: EvidenceLevel; onEvidenceLevel?: (l: EvidenceLevel) => void;
-  isExpanded: boolean; onToggleExpand: () => void;
   answerValues: AnswerValue[]; warnPlannedForC3a?: boolean; fidelityTags?: FidelityTagInfo[];
   levelPrefix?: string;
 }) {
@@ -513,16 +505,6 @@ function QuestionCard({ id, title, text, sealContribution, points, source, suppl
         <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mt-2 mb-0">
           'Planned' is not recognised by C3A — counts as Not Met for C3A scoring.
         </p>
-      )}
-      {supplementaryInfo && (
-        <div className="mt-2">
-          <button onClick={onToggleExpand} className="text-xs text-blue-600 hover:underline">
-            {isExpanded ? 'Hide guidance' : 'Show guidance'}
-          </button>
-          {isExpanded && (
-            <p className="mt-2 text-xs text-gray-500 bg-blue-50 rounded-lg p-3 leading-relaxed">{supplementaryInfo}</p>
-          )}
-        </div>
       )}
       <div className="mt-2 text-xs text-gray-400">Source: {source}</div>
     </div>

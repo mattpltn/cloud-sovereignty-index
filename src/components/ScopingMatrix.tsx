@@ -18,7 +18,7 @@ const LAYER_LABELS: Record<LayerId, { name: string; subtitle: string }> = {
 
 const ZONE_LABELS: Record<OwnershipZone, string> = {
   client: 'Client',
-  commercial_lessor: 'Commercial',
+  commercial_lessor: 'Commercial (rented)',
   provider: 'Provider',
 };
 
@@ -275,7 +275,7 @@ export function ScopingMatrix({ initialProfile, onProfileChange, readonly }: Pro
       <p className="text-sm text-gray-600 mb-3">
         Drag each layer to the zone that reflects who owns it. Expand facets appear automatically where they affect the risk profile.
       </p>
-      <div className="flex gap-3 items-start">
+      <div className="flex flex-col lg:flex-row gap-3 items-start">
         {(['client', 'commercial_lessor', 'provider'] as OwnershipZone[]).map(zone => (
           <DropZone
             key={zone}

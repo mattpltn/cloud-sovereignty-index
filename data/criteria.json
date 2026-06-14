@@ -89,7 +89,7 @@
           "c3a_tier": "base",
           "tiers": {
             "bloc": {
-              "text": "Does the cloud service provider operate under {{BLOC}} jurisdiction, with contract governance and dispute resolution?",
+              "text": "Does the provider operate under {{BLOC}} jurisdiction, with contract governance and dispute resolution?",
               "seal_contribution": 1,
               "points": 10,
               "source": {
@@ -98,7 +98,7 @@
               }
             },
             "national": {
-              "text": "Does the cloud service provider operate under {{COUNTRY}} jurisdiction, with contract governance and dispute resolution?",
+              "text": "Does the provider operate under {{COUNTRY}} jurisdiction, with contract governance and dispute resolution?",
               "seal_contribution": 2,
               "points": 10,
               "source": {
@@ -127,7 +127,7 @@
           "c3a_tier": "base",
           "tiers": {
             "bloc": {
-              "text": "Does the cloud service provider have a registered head office in {{BLOC}}?",
+              "text": "Does the provider have a registered head office in {{BLOC}}?",
               "seal_contribution": 1,
               "points": 10,
               "source": {
@@ -136,7 +136,7 @@
               }
             },
             "national": {
-              "text": "Does the cloud service provider have a registered head office in {{COUNTRY}}?",
+              "text": "Does the provider have a registered head office in {{COUNTRY}}?",
               "seal_contribution": 2,
               "points": 10,
               "source": {
@@ -175,7 +175,7 @@
           "c3a_tier": "base",
           "tiers": {
             "bloc": {
-              "text": "Is the cloud service provider effectively controlled by one or more {{BLOC}} corporations, with effective controls transparent to customers?",
+              "text": "Is the provider effectively controlled by one or more {{BLOC}} corporations, with effective controls transparent to customers?",
               "seal_contribution": 3,
               "points": 10,
               "source": {
@@ -184,7 +184,7 @@
               }
             },
             "national": {
-              "text": "Is the cloud service provider under the effective control of one or more {{COUNTRY}} undertakings, with effective controls transparent to customers?",
+              "text": "Is the provider under the effective control of one or more {{COUNTRY}} undertakings, with effective controls transparent to customers?",
               "seal_contribution": 4,
               "points": 10,
               "source": {
@@ -219,7 +219,7 @@
           "applies_to_c3a": true,
           "applies_to_csi_composite": true,
           "c3a_tier": "base",
-          "text": "Does the cloud service provider commit to inform customers 90 days in advance of any actual changes affecting control that could undermine the sovereignty controls assessed in this tool (e.g., changes to ownership, shareholding, or governance)?",
+          "text": "Does the provider commit to inform customers 90 days in advance of any actual changes affecting control that could undermine the sovereignty controls assessed in this tool (e.g., changes to ownership, shareholding, or governance)?",
           "seal_contribution": 2,
           "points": 10,
           "source": {
@@ -245,7 +245,7 @@
           "applies_to_c3a": false,
           "applies_to_csi_composite": true,
           "c3a_tier": "not_applicable",
-          "text": "Does the cloud service provider rely predominantly on EU-sourced financing (EU-domiciled institutional investors, EU public funding, EU capital markets), and can it demonstrate material investment in EU infrastructure, EU-based jobs, and EU value creation as part of its core operating model?",
+          "text": "Does the provider rely predominantly on EU-sourced financing (EU-domiciled institutional investors, EU public funding, EU capital markets), and can it demonstrate material investment in EU infrastructure, EU-based jobs, and EU value creation as part of its core operating model?",
           "text_generalized": "Does the cloud service provider rely predominantly on domestically-sourced or regionally-sourced financing, and can it demonstrate material investment in local infrastructure, local jobs, and local value creation as part of its core operating model?",
           "supplementary_info": "\"EU-sourced financing\" covers investors incorporated and tax-resident in EU member states, EIB/EIF instruments, and EU structural funds. Non-EU minority shareholders or bond-holders do not automatically disqualify, but a majority-non-EU investor base is material evidence against this criterion.",
           "seal_contribution": 2,
@@ -284,7 +284,7 @@
           "applies_to_c3a": false,
           "applies_to_csi_composite": true,
           "c3a_tier": "not_applicable",
-          "text": "Does the cloud service provider actively participate in EU-level digital sovereignty initiatives (e.g., Gaia-X, EUCS, IPCEI-CIS, EU Sovereign Cloud Label) and demonstrate consistency with the EU's digital, green, and industrial sovereignty objectives?",
+          "text": "Does the provider actively participate in EU-level digital sovereignty initiatives (e.g., Gaia-X, EUCS, IPCEI-CIS, EU Sovereign Cloud Label) and demonstrate consistency with the EU's digital, green, and industrial sovereignty objectives?",
           "text_generalized": "Does the cloud service provider actively participate in nationally- or regionally-endorsed cloud sovereignty or digital independence initiatives, and demonstrate consistency with the country's stated digital strategy objectives?",
           "supplementary_info": "Participation is evidenced by formal membership, published contributions, or certified compliance with initiative requirements — not self-declaration of alignment. Certification under EUCS (ENISA EU Cloud Services scheme) is the strongest evidence.",
           "seal_contribution": 3,
@@ -323,7 +323,7 @@
           "applies_to_c3a": false,
           "applies_to_csi_composite": true,
           "c3a_tier": "not_applicable",
-          "text": "Does the cloud service provider have documented legal, operational, and technical measures enabling it to continue providing the contracted service even if subject to a foreign government request to cease or suspend operations, or if a key upstream vendor withdraws support?",
+          "text": "Does the provider have documented legal, operational, and technical measures enabling it to continue providing the contracted service even if subject to a foreign government request to cease or suspend operations, or if a key upstream vendor withdraws support?",
           "supplementary_info": "Evidence includes: legal opinion on the provider's obligations under competing jurisdictions, vendor-independent operational runbooks covering the top-3 upstream dependencies, and at least one documented contingency drill in the past 12 months.",
           "seal_contribution": 3,
           "points": 10,
@@ -348,7 +348,7 @@
           "c3a_tier": "not_applicable",
           "tiers": {
             "bloc": {
-              "text": "Do EU stakeholders participate in formal governance bodies (e.g. advisory boards, customer councils, roadmap committees) that provide meaningful, documented influence over the cloud service provider's technology roadmap and service evolution?",
+              "text": "Do EU stakeholders participate in formal governance bodies (e.g. advisory boards, customer councils, roadmap committees) that provide meaningful, documented influence over the provider's technology roadmap and service evolution?",
               "seal_contribution": 3,
               "points": 10,
               "source": {
@@ -3485,8 +3485,8 @@
           "applies_to_c3a": false,
           "applies_to_csi_composite": true,
           "c3a_tier": "not_applicable",
-          "text": "Does the cloud service provider document and contractually commit to GDPR compliance for all processing of personal data under the cloud service?",
-          "text_generalized": "Does the cloud service provider document and contractually commit to compliance with the applicable national data protection law for all processing of personal data under the cloud service?",
+          "text": "Does the provider document and contractually commit to GDPR compliance for all processing of personal data under the cloud service?",
+          "text_generalized": "Does the provider document and contractually commit to compliance with the applicable national data protection law for all processing of personal data under the cloud service?",
           "seal_contribution": 1,
           "points": 10,
           "source": {
@@ -3663,7 +3663,7 @@
           "c3a_tier": "not_applicable",
           "tiers": {
             "bloc": {
-              "text": "Does the cloud service provider have a documented, operational incident disclosure process aligned with GDPR/NIS2 timelines, with contractual readiness to support EU-directed investigations and a capability for CSIRT cooperation?",
+              "text": "Does the provider have a documented, operational incident disclosure process aligned with GDPR/NIS2 timelines, with contractual readiness to support EU-directed investigations and a capability for CSIRT cooperation?",
               "seal_contribution": 2,
               "points": 10,
               "source": {
@@ -3672,7 +3672,7 @@
               }
             },
             "national": {
-              "text": "Does the cloud service provider provide real-time data sharing with EU CSIRTs, proactive vulnerability disclosure, proven incident readiness with audit-backed reporting processes, and active participation in EU threat intelligence frameworks?",
+              "text": "Does the provider provide real-time data sharing with EU CSIRTs, proactive vulnerability disclosure, proven incident readiness with audit-backed reporting processes, and active participation in EU threat intelligence frameworks?",
               "seal_contribution": 4,
               "points": 10,
               "source": {
@@ -3692,7 +3692,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Does the provider have a documented, operational incident-disclosure process with defined timelines, contractual readiness to support investigations by {country}'s authorities, and the capability to cooperate with {national_csirt}?"
+                "text": "Does the provider have a documented, operational incident-disclosure process with defined timelines, contractual readiness to support investigations by {{COUNTRY}}'s authorities, and the capability to cooperate with national CERTs/CSIRTs?"
               },
               "eu": {
                 "shown": true,

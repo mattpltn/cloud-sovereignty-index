@@ -85,6 +85,20 @@ Five fallback questions provide partial credit for providers unable to meet stri
 
 ---
 
+## Scoping flow
+
+Before the questionnaire, a scoping wizard builds your **control profile** — who owns, operates, and supports each infrastructure layer:
+
+1. **Scenario picker** — choose from: Global cloud provider, Local/regional CSP, Colocation, Own datacenter, Managed service, or Mixed
+2. **Refine table** — review and adjust pre-filled ownership/operation/dependency/location per layer (L1–L6)
+3. **Readback** — confirm the profile before the questionnaire starts
+
+The control profile drives the layered risk register on the result page: only risks relevant to your posture are surfaced, and procurement bridge clauses are filtered per layer.
+
+Layers follow established frameworks (NIST SP 500-292, EU Data Act Art. 23/30, C3A §2.4). See [Methodology §6](https://cloud-sovereignty-index.pages.dev/methodology) for the full layer alignment table.
+
+---
+
 ## Domain selector
 
 At setup, you can restrict the assessment to specific sovereignty domains (e.g. Data only, or Operational + Supply Chain). Unselected domains are excluded from the questionnaire and scoring. Default is all 8 domains.
@@ -100,12 +114,23 @@ At setup, you can restrict the assessment to specific sovereignty domains (e.g. 
 
 ---
 
+## Questionnaire design
+
+- Questions are written to be **simple and directly answerable** — editorial rewrites of framework legalese, not verbatim clause text
+- Every question shows a **source reference** (framework name + clause identifier) linking it to the original control — traceable but readable
+- Questions filtered by your scoping profile: CSI Composite uses `show_when` predicates to hide irrelevant questions based on your control profile
+- EU-specific questions (e.g. GDPR references, Gaia-X) are suppressed for non-EU/EEA assessments; re-aimed variants shown instead
+- SEAL badge appears only for EU-CSF and C3A modes — CSI Composite uses its own maturity tiers
+
+---
+
 ## Offline workflow
 
 Download a blank **XLSX template** at `/assess/template.xlsx`, fill it in, then upload it on the setup page.
 
 - **Setup sheet** — country, company name, framework checkboxes (EU-CSF / C3A / CSI Composite)
-- **Assessment sheet** — all questions with evidence and answer columns
+- **Assessment sheet** — questions with answer, evidence, and source reference columns
+- **Sources sheet** — full source register (framework citations travel with the workbook)
 - **Privacy sheet** — what data is and isn't stored
 
 The template is generated from `criteria.json` and is always in sync with the online questionnaire.

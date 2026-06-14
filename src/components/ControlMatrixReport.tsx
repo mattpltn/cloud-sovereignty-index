@@ -63,7 +63,7 @@ function RiskCard({ risk }: { risk: LayerReportRow['triggered_risks'][0] }) {
       <div className="mt-2 flex flex-wrap gap-1">
         {risk.source_anchors.map((a, i) => (
           <span key={i} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-mono">
-            {a.register_key}: {a.clause.slice(0, 60)}{a.clause.length > 60 ? '…' : ''}
+            {a.register_key}: {a.clause}
           </span>
         ))}
       </div>
@@ -87,7 +87,7 @@ function BridgeCard({ clause }: { clause: LayerReportRow['bridges'][0] }) {
       <div className="mt-1 flex flex-wrap gap-1">
         {clause.source_anchors.map((a, i) => (
           <span key={i} className="text-xs text-gray-500 font-mono">
-            {a.register_key}: {a.clause.slice(0, 50)}{a.clause.length > 50 ? '…' : ''}
+            {a.register_key}: {a.clause}
           </span>
         ))}
       </div>

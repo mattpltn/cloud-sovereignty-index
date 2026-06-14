@@ -63,15 +63,13 @@ describe('ScopingFlow', () => {
     expect(screen.getByText('← Edit profile')).toBeTruthy();
   });
 
-  test('deriveControlProfile for hyperscaler: L1/L2/L3/L5 provider, L4 commercial_lessor, L6 client', () => {
+  test('deriveControlProfile for hyperscaler: L1–L5 all provider, L6 client', () => {
     const tp = togglesFromDefaults('hyperscaler');
     const profile = deriveControlProfile(tp);
-    // L1, L2, L3, L5: owned=3p + operated=3p → provider
-    for (const layer of ['L1', 'L2', 'L3', 'L5'] as const) {
+    // L1–L5: owned=3p + operated=3p → provider
+    for (const layer of ['L1', 'L2', 'L3', 'L4', 'L5'] as const) {
       expect(profile[layer].ownership).toBe('provider');
     }
-    // L4: owned=3p + operated=client → commercial_lessor (PaaS managed by client)
-    expect(profile.L4.ownership).toBe('commercial_lessor');
     expect(profile.L6.ownership).toBe('client');
   });
 

@@ -10,8 +10,8 @@
     "L2": {"owned":"3p","operated":"3p","supported":"3p","location":"foreign"},
     "L3": {"owned":"3p","operated":"3p","supported":"3p","location":"foreign","support_nature":"proprietary_inaccessible",
            "_note":"On a hyperscaler you consume IaaS (VMs/storage), and often PaaS and SaaS on top. Confirm how deep you go: plain IaaS is far more reversible than a stack built on proprietary managed services. Your answer here and on the Managed/PaaS layer drives your lock-in assessment."},
-    "L4": {"owned":"3p","operated":"client","supported":"3p","location":"foreign","support_nature":"proprietary_inaccessible",
-           "_note":"Declare how much of the provider's proprietary managed-services/PaaS layer you actually use (managed DBs, serverless, AI services). Heavy use here is the deepest reversibility risk in the whole model. Also confirm who operates it — your own team or an integrator."},
+    "L4": {"owned":"3p","operated":"3p","supported":"3p","location":"foreign","support_nature":"proprietary_inaccessible",
+           "_note":"Declare how much of the provider's proprietary managed-services/PaaS layer you actually use (managed DBs, serverless, AI services — e.g. AWS RDS, Azure SQL, Lambda). Heavy use here is the deepest reversibility risk in the whole model. Flip operated to client only if you self-host all workloads on plain VMs and use no managed services."},
     "L5": {"owned":"3p","operated":"3p","supported":"3p","location":"foreign"},
     "L6": {"owned":"client","operated":"client","supported":"client","location":"in_country",
            "_note":"Workloads and data are the customer's. If a third party manages your applications, flip operated to third party."}
@@ -24,8 +24,8 @@
     "L2": {"owned":"3p","operated":"3p","supported":"3p","location":"in_country"},
     "L3": {"owned":"3p","operated":"3p","supported":"3p","location":"in_country","support_nature":"licensed_supported",
            "_note":"Regional CSPs frequently run a commercial stack (VMware/Nutanix/Huawei) — confirm the platform and its support, as foreign-vendor licensing risk still applies even with an in-country provider."},
-    "L4": {"owned":"3p","operated":"client","supported":"3p","location":"in_country","support_nature":"licensed_supported",
-           "_note":"Confirm who operates the managed-services layer."},
+    "L4": {"owned":"3p","operated":"3p","supported":"3p","location":"in_country","support_nature":"licensed_supported",
+           "_note":"Confirm whether the regional CSP operates the managed-services/PaaS layer on your behalf. Flip operated to client if your team manages those services independently."},
     "L5": {"owned":"3p","operated":"3p","supported":"3p","location":"in_country",
            "_note":"Confirm operations are performed in-country and not remotely from a foreign parent/affiliate."},
     "L6": {"owned":"client","operated":"client","supported":"client","location":"in_country"}

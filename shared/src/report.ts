@@ -145,12 +145,13 @@ export function buildReport(profile: ControlProfile, answers: AnswerMap): LayerR
     const narrative = buildNarrative(layerId, lc);
 
     const triggered_risks = ALL_RISKS.filter(risk => {
+      if ((risk as any).layer !== layerId) return false;
       try { return evaluate(risk.triggers, profile); }
       catch { return false; }
     });
 
     const bridge_ids = new Set(triggered_risks.flatMap(r => r.procurement_clause_ids));
-    const bridges = ALL_CLAUSES.filter(c => bridge_ids.has(c.id));
+    const bridges = ALL_CLAUSES.filter(c => bridge_ids.has(c.id) && (c as any).layer === layerId);
 
     return { layer: layerId, layer_name: LAYER_NAMES[layerId], control_channel, assurance_signal, narrative, triggered_risks, bridges };
   });
