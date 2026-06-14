@@ -136,9 +136,7 @@ function questionFidelityTags(q: Question, fw: Set<string>): FidelityTagInfo[] {
 
 function sourceLabel(q: Question, fw: Set<string>, clauseDoc: string, clauseRef: string): string {
   const fwTag = activeFrameworkTags(q, fw);
-  const docKey = clauseDoc === 'C3A' ? 'c3a' : clauseDoc === 'EU-CSF' ? 'eu_csf' : '';
-  const showClause = docKey !== '' && fw.has(docKey);
-  const clause = showClause ? `${clauseDoc} ${clauseRef}`.trim() : '';
+  const clause = clauseDoc && clauseRef ? `${clauseDoc} ${clauseRef}`.trim() : '';
   if (fwTag && clause) return `${fwTag} — ${clause}`;
   return fwTag || clause;
 }
