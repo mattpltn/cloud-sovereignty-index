@@ -574,6 +574,40 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           <em>control profile</em> — who owns, operates, and supports each layer — which determines which
           risk predicates and procurement bridges are relevant for the assessment.
         </p>
+
+        <h3 class="text-base font-semibold mt-6 mb-2">Archetype-driven relevance</h3>
+        <p class="text-sm text-gray-700 mb-3">
+          A question is relevant to your assessment based on the <em>facet of a layer</em> it interrogates,
+          never on a scenario label. Each layer has four facets — <span class="font-mono text-xs">ownership</span>,
+          <span class="font-mono text-xs">operation</span>, <span class="font-mono text-xs">dependency</span>,
+          <span class="font-mono text-xs">location</span> — with a sovereign baseline (client-owned, client-operated,
+          self-supported open source, in-country). Any deviation is a risk surface, and each question is tagged to
+          one or more <em>archetypes</em> that fire on a specific facet deviation:
+        </p>
+        <div class="overflow-x-auto mb-3">
+          <table class="w-full text-sm border border-gray-200">
+            <thead class="bg-gray-50 text-left">
+              <tr><th class="px-3 py-2">Archetype</th><th class="px-3 py-2">Fires on</th><th class="px-3 py-2">Asks</th></tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr><td class="px-3 py-2 font-mono text-xs">JURISDICTION</td><td class="px-3 py-2 text-gray-500">location ≠ in-country</td><td class="px-3 py-2">foreign-law reach over the asset, staff, or data</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs">PHYSICAL_CUSTODY</td><td class="px-3 py-2 text-gray-500">not client-owned</td><td class="px-3 py-2">landlord / hardware-holder physical access</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs">DATA_RESIDENCY_SERVICE</td><td class="px-3 py-2 text-gray-500">provider owns a data layer</td><td class="px-3 py-2">provider-offered sovereignty controls (residency, KMS, IdP, logging, erasure)</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs">THIRD_PARTY_OPERATION</td><td class="px-3 py-2 text-gray-500">operated by non-client staff</td><td class="px-3 py-2">external operator: personnel jurisdiction, control, disconnect</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs">REVERSIBILITY</td><td class="px-3 py-2 text-gray-500">licensed/proprietary software <em>or</em> provider ownership</td><td class="px-3 py-2">can you self-patch a zero-day, fork, and migrate away?</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs">SUPPORT_CONTINUITY</td><td class="px-3 py-2 text-gray-500">external software under licence/support</td><td class="px-3 py-2">continuity if the vendor exits or changes licensing</td></tr>
+              <tr><td class="px-3 py-2 font-mono text-xs">SELF_SUFFICIENCY</td><td class="px-3 py-2 text-gray-500">self-supported OSS, client-operated</td><td class="px-3 py-2">prove in-house capability to run, patch, and exit it</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-gray-500 border-l-2 border-gray-200 pl-3">
+          The decisive distinction: ownership, operation, and location questions are ruled out when you control that
+          facet — but <em>reversibility</em> questions are not. You can own and operate a platform and still be unable
+          to patch a zero-day because the software is licensed. So a third-party-owned facility is treated as a
+          physical custodian (landlord), not a cloud provider, and its data-residency / service questions vanish when
+          you own the data layers — while reversibility questions follow the software dependency, independent of who
+          owns the kit.
+        </p>
       </div>
     </section>
 
