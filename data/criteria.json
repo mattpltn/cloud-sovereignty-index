@@ -377,7 +377,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Can {country}'s government or its public-sector customers exercise documented, meaningful influence over the provider's technology roadmap and service evolution — through governance bodies, customer councils, or binding contractual commitments — for matters affecting their workloads?"
+                "text": "Can {{COUNTRY}}'s government or its public-sector customers exercise documented, meaningful influence over the provider's technology roadmap and service evolution — through governance bodies, customer councils, or binding contractual commitments — for matters affecting their workloads?"
               },
               "eu": {
                 "shown": true,
@@ -417,7 +417,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Where the provider has subsidiaries or affiliates in foreign jurisdictions, does it maintain documented and enforced legal, technical, and organisational separation ensuring that {country} operations, customer data, and service continuity cannot be directed, accessed, or disrupted by a foreign parent, sibling, or affiliate entity?"
+                "text": "Where the provider has subsidiaries or affiliates in foreign jurisdictions, does it maintain documented and enforced legal, technical, and organisational separation ensuring that {{COUNTRY}} operations, customer data, and service continuity cannot be directed, accessed, or disrupted by a foreign parent, sibling, or affiliate entity?"
               },
               "eu": {
                 "shown": true,
@@ -785,7 +785,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Is the intellectual property underpinning the cloud service governed under a legal regime that does not allow a foreign jurisdiction to restrict, revoke, or compel transfer of {country}'s access to it — through licensing terms, export controls, or government orders on the IP holder?"
+                "text": "Is the intellectual property underpinning the cloud service governed under a legal regime that does not allow a foreign jurisdiction to restrict, revoke, or compel transfer of {{COUNTRY}}'s access to it — through licensing terms, export controls, or government orders on the IP holder?"
               },
               "eu": {
                 "shown": true,
@@ -838,7 +838,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Has the provider implemented and demonstrated legal, technical, and organisational measures that prevent authorities outside {country}'s jurisdiction from compelling access to customer data or systems through any channel — with such requests rejected and customers notified of any attempt?"
+                "text": "Has the provider implemented and demonstrated legal, technical, and organisational measures that prevent authorities outside {{COUNTRY}}'s jurisdiction from compelling access to customer data or systems through any channel — with such requests rejected and customers notified of any attempt?"
               },
               "eu": {
                 "shown": true,
@@ -891,7 +891,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Does the provider contractually commit that it will not be required — by any foreign jurisdiction — to withhold, delay, or modify vulnerability disclosures to {country} customers, and that any such foreign legal requirement would be disclosed immediately?"
+                "text": "Does the provider contractually commit that it will not be required — by any foreign jurisdiction — to withhold, delay, or modify vulnerability disclosures to {{COUNTRY}} customers, and that any such foreign legal requirement would be disclosed immediately?"
               },
               "eu": {
                 "shown": true,
@@ -1187,7 +1187,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Does the provider offer a service option where derived data (telemetry, metadata, logs) and account data are stored and processed exclusively within {country}, or within {trusted_jurisdiction} where in-country is not available?"
+                "text": "Does the provider offer a service option where derived data (telemetry, metadata, logs) and account data are stored and processed exclusively within {{COUNTRY}}, or within {trusted_jurisdiction} where in-country is not available?"
               },
               "eu": {
                 "shown": true,
@@ -1955,7 +1955,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Is the entity operating and supporting the cloud service for this customer established as a standalone organisation in {country} or {trusted_jurisdiction}, without operational dependence on a foreign parent entity for day-to-day service delivery?"
+                "text": "Is the entity operating and supporting the cloud service for this customer established as a standalone organisation in {{COUNTRY}} or {trusted_jurisdiction}, without operational dependence on a foreign parent entity for day-to-day service delivery?"
               },
               "eu": {
                 "shown": true,
@@ -2542,7 +2542,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Are all infrastructure and assets used to provide the service — including those of subcontractors directly involved in delivery — physically located within {country} or {trusted_jurisdiction}, with no routing of operations through data centres outside agreed jurisdictions?"
+                "text": "Are all infrastructure and assets used to provide the service — including those of subcontractors directly involved in delivery — physically located within {{COUNTRY}} or {trusted_jurisdiction}, with no routing of operations through data centres outside agreed jurisdictions?"
               },
               "eu": {
                 "shown": true,
@@ -2610,7 +2610,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Does the provider maintain and annually test a documented migration plan covering scenarios where the provider becomes insolvent, is acquired by a foreign entity, or is subject to a foreign jurisdiction action that would impair service delivery to {country} customers?"
+                "text": "Does the provider maintain and annually test a documented migration plan covering scenarios where the provider becomes insolvent, is acquired by a foreign entity, or is subject to a foreign jurisdiction action that would impair service delivery to {{COUNTRY}} customers?"
               },
               "eu": {
                 "shown": true,
@@ -4191,7 +4191,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Does the provider enable and cooperate with audits by an auditor acceptable to {country}'s contracting authority — independent of the provider's foreign affiliates — covering all systems and data within scope of this contract?"
+                "text": "Does the provider enable and cooperate with audits by an auditor acceptable to {{COUNTRY}}'s contracting authority — independent of the provider's foreign affiliates — covering all systems and data within scope of this contract?"
               },
               "eu": {
                 "shown": true,
