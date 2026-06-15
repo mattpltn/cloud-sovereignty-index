@@ -31,12 +31,20 @@ export type ToggleProfile = Record<LayerId, LayerToggles>;
  *
  * supported=client                    → dependency: 'self_supported_oss'
  * supported=3p                        → dependency: support_nature (required)
+ *
+ * Facility special-case (L1): a third-party-owned facility is a landlord with
+ * physical access — a custodian, never a cloud service operator — regardless of who
+ * "operates" the building (power/cooling/physical security is custodial, not a service).
+ * So L1 + owned=3p → commercial_lessor. Service-ness lives at L2–L5, where the
+ * provider distinction is real. (Cookbook §2.)
  */
-export function deriveLayerControl(t: LayerToggles): LayerControl {
+export function deriveLayerControl(t: LayerToggles, layerId?: LayerId): LayerControl {
   // Ownership
   let ownership: LayerControl['ownership'];
   if (t.owned === 'client') {
     ownership = 'client';
+  } else if (layerId === 'L1') {
+    ownership = 'commercial_lessor';
   } else if (t.operated === '3p') {
     ownership = 'provider';
   } else {
@@ -64,12 +72,12 @@ export function deriveLayerControl(t: LayerToggles): LayerControl {
 
 export function deriveControlProfile(tp: ToggleProfile): ControlProfile {
   return {
-    L1: deriveLayerControl(tp.L1),
-    L2: deriveLayerControl(tp.L2),
-    L3: deriveLayerControl(tp.L3),
-    L4: deriveLayerControl(tp.L4),
-    L5: deriveLayerControl(tp.L5),
-    L6: deriveLayerControl(tp.L6),
+    L1: deriveLayerControl(tp.L1, 'L1'),
+    L2: deriveLayerControl(tp.L2, 'L2'),
+    L3: deriveLayerControl(tp.L3, 'L3'),
+    L4: deriveLayerControl(tp.L4, 'L4'),
+    L5: deriveLayerControl(tp.L5, 'L5'),
+    L6: deriveLayerControl(tp.L6, 'L6'),
   };
 }
 

@@ -63,11 +63,12 @@ describe('ScopingFlow', () => {
     expect(screen.getByText('← Edit profile')).toBeTruthy();
   });
 
-  test('deriveControlProfile for hyperscaler: L1–L5 all provider, L6 client', () => {
+  test('deriveControlProfile for hyperscaler: L1 landlord, L2–L5 provider, L6 client', () => {
     const tp = togglesFromDefaults('hyperscaler');
     const profile = deriveControlProfile(tp);
-    // L1–L5: owned=3p + operated=3p → provider
-    for (const layer of ['L1', 'L2', 'L3', 'L4', 'L5'] as const) {
+    // L1 facility is a custodian/landlord (§2); L2–L5 are provider services.
+    expect(profile.L1.ownership).toBe('commercial_lessor');
+    for (const layer of ['L2', 'L3', 'L4', 'L5'] as const) {
       expect(profile[layer].ownership).toBe('provider');
     }
     expect(profile.L6.ownership).toBe('client');

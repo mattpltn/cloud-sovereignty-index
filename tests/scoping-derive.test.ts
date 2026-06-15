@@ -36,6 +36,22 @@ describe('scoping-derive', () => {
     expect(result.dependency).toBe('licensed_supported');
   });
 
+  test('facility (L1) + owned=3p → commercial_lessor regardless of who operates it (§2)', () => {
+    // colocation L1: owned=3p, operated=3p — would be 'provider' anywhere else, but a
+    // third-party facility is a landlord/custodian, not a cloud service operator.
+    const operatedByThirdParty = deriveLayerControl({
+      owned: '3p', operated: '3p', supported: '3p',
+      location: 'in_country', support_nature: 'licensed_supported',
+    }, 'L1');
+    expect(operatedByThirdParty.ownership).toBe('commercial_lessor');
+    // same toggles at a compute layer stay 'provider'
+    const computeLayer = deriveLayerControl({
+      owned: '3p', operated: '3p', supported: '3p',
+      location: 'in_country', support_nature: 'licensed_supported',
+    }, 'L3');
+    expect(computeLayer.ownership).toBe('provider');
+  });
+
   test('owned=3p + operated=3p → provider', () => {
     const result = deriveLayerControl({
       owned: '3p', operated: '3p', supported: '3p',
@@ -106,18 +122,19 @@ describe('scoping-derive', () => {
     expect(result.success, `scenario ${scenario} failed validation: ${JSON.stringify(result.error?.issues)}`).toBe(true);
   });
 
-  test('hyperscaler: L1–L5 all provider-controlled, L6 client', () => {
+  test('hyperscaler: L1 facility is a landlord, L2–L5 provider, L6 client', () => {
     const tp = togglesFromDefaults('hyperscaler');
     const profile = deriveControlProfile(tp);
-    expect(profile.L1.ownership).toBe('provider');
+    // L1 facility: third-party-owned → landlord/custodian, not a service operator (§2)
+    expect(profile.L1.ownership).toBe('commercial_lessor');
     expect(profile.L2.ownership).toBe('provider');
     expect(profile.L6.ownership).toBe('client');
   });
 
-  test('colocation: L1 commercial_lessor (3p-owned + 3p-operated), L2 client', () => {
+  test('colocation: L1 commercial_lessor (3p-owned facility = landlord), L2 client', () => {
     const tp = togglesFromDefaults('colocation');
     const profile = deriveControlProfile(tp);
-    expect(profile.L1.ownership).toBe('provider'); // 3p-owned + 3p-operated = provider
+    expect(profile.L1.ownership).toBe('commercial_lessor'); // facility landlord (§2)
     expect(profile.L2.ownership).toBe('client');
   });
 
