@@ -1,4 +1,48 @@
 import type { ControlProfile } from './schema.js';
+import {
+  LayerOwnershipSchema,
+  LayerOperationSchema,
+  LayerDependencySchema,
+  LayerLocationSchema,
+} from './schema.js';
+
+// ── Facet vocabulary (the data contract, §1) ──────────────────────────────────
+// The ONLY values a show_when predicate may reference. Derived from the Zod enums
+// so it can never drift from the schema. A predicate that references anything
+// outside this is a defect (see lintPredicate / the relevance invariants test).
+export const FACET_VOCAB: Record<string, readonly string[]> = {
+  ownership: LayerOwnershipSchema.options,
+  operation: LayerOperationSchema.options,
+  dependency: LayerDependencySchema.options,
+  location: LayerLocationSchema.options,
+};
+
+/**
+ * Validates a predicate against the facet vocabulary. Returns a list of human-readable
+ * problems; an empty array means the predicate is well-formed and on-vocabulary.
+ * Catches: unparseable strings, unknown facets, and off-vocabulary values.
+ */
+export function lintPredicate(predicate: string): string[] {
+  let tokens: Token[];
+  try {
+    tokens = tokenize(predicate);
+  } catch (e) {
+    return [`unparseable: ${(e as Error).message}`];
+  }
+  const errors: string[] = [];
+  for (const tk of tokens) {
+    if (tk.type !== 'ATOM') continue;
+    const vocab = FACET_VOCAB[tk.facet];
+    if (!vocab) {
+      errors.push(`unknown facet "${tk.facet}" (allowed: ${Object.keys(FACET_VOCAB).join(', ')})`);
+      continue;
+    }
+    if (!vocab.includes(tk.value)) {
+      errors.push(`facet "${tk.facet}": value "${tk.value}" off-vocabulary (allowed: ${vocab.join(' | ')})`);
+    }
+  }
+  return errors;
+}
 
 // Grammar: predicates are boolean expressions over ControlProfile fields.
 // Atoms: "L3.dependency == 'value'" or "L3.dependency != 'value'"
