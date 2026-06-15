@@ -1632,6 +1632,14 @@
       "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
       "alternatives_considered": "No alternatives — clean jurisdiction and CSIRT substitution.",
       "review_status": "stable"
+    },
+    {
+      "id": "DR-P17",
+      "category": "presentation",
+      "rationale": "Re-aimed question titles (csi_presentation.title) now surface on every non-EU (Generalized) display surface, not just the questionnaire card: the result-page objective accordion, the gap/'top improvement' callout, and the CSV export. A shared helper displayTitle(q, variant) in shared/src/tier-resolution.ts is the single source of truth (precedence: csi_presentation.title → title_generalized → title for Generalized; canonical EU title for EU-CSF). The CSV export also gained a 'source' column (doc + clause) so the cited source travels with the offline workbook. Prevents a non-EU user seeing an EU-anchored heading (e.g. 'EU HPC Independence') in one place and the re-aimed one ('Independence from Foreign HPC Supply Chain') in another.",
+      "authority": "maintainer decision 2026-06-14",
+      "alternatives_considered": "Duplicate the title-precedence logic per component (rejected: drift risk — the questionnaire card and result page had already diverged).",
+      "review_status": "stable"
     }
   ],
   "DR-F1": {

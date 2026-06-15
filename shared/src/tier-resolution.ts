@@ -1,4 +1,24 @@
-import type { Country } from './schema.js';
+import type { Country, Question } from './schema.js';
+
+/**
+ * Returns the title to display for a question given the variant.
+ *
+ * Precedence for non-EU (Generalized) assessments:
+ *   csi_presentation.title (re-aimed / clean_adapt heading) → title_generalized → title
+ * EU/EEA (EU-CSF) assessments always use the canonical EU title.
+ *
+ * Keeps the questionnaire card, result-page accordion, and export in agreement so a non-EU
+ * user never sees an EU-anchored heading (e.g. "EU HPC Independence") in one place and the
+ * re-aimed one ("Independence from Foreign HPC Supply Chain") in another.
+ */
+export function displayTitle(q: Question, variant: 'EU-CSF' | 'Generalized'): string {
+  if (variant === 'Generalized') {
+    const presTitle = (q as { csi_presentation?: { title?: string } }).csi_presentation?.title;
+    if (presTitle) return presTitle;
+    if (q.title_generalized) return q.title_generalized;
+  }
+  return q.title;
+}
 
 export interface TierContext {
   variant: 'EU-CSF' | 'Generalized';

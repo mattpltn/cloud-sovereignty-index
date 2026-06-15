@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { CriteriaFile, Question } from '../../shared/src/schema.js';
-import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
+import { resolvePlaceholders, displayTitle } from '../../shared/src/tier-resolution.js';
 
 interface QuestionResult {
   question_id: string;
@@ -54,7 +54,7 @@ function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string, ctx:
   for (const obj of criteria.objectives) {
     const q = obj.questions.find((q: Question) => q.id === qid);
     if (!q) continue;
-    const title = (ctx.variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
+    const title = displayTitle(q, ctx.variant);
     if (q.type === 'single') {
       const text = (ctx.variant === 'Generalized' && q.text_generalized) ? q.text_generalized : q.text;
       return { title, text: resolvePlaceholders(text, ctx), source: q.source?.clause ?? '', supplementary: q.supplementary_info };
