@@ -119,7 +119,7 @@ At setup, you can restrict the assessment to specific sovereignty domains (e.g. 
 - Questions are written to be **simple and directly answerable** — editorial rewrites of framework legalese, not verbatim clause text
 - Every question shows a **source reference** (framework name + clause identifier) linking it to the original control — traceable but readable
 - Questions filtered by your scoping profile: CSI Composite uses `show_when` predicates to hide irrelevant questions based on your control profile
-- EU-specific questions (e.g. GDPR references, Gaia-X) are suppressed for non-EU/EEA assessments; re-aimed variants shown instead
+- EU-specific questions (e.g. GDPR references, Gaia-X) are suppressed for non-EU/EEA assessments; re-aimed variants (both question text and card title) shown instead
 - SEAL badge appears only for EU-CSF and C3A modes — CSI Composite uses its own maturity tiers
 
 ---

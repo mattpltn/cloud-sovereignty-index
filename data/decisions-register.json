@@ -1524,7 +1524,7 @@
     {
       "id": "DR-P3",
       "category": "adaptation",
-      "rationale": "SOV-1-08 (Roadmap Influence — EU Stakeholder Governance) re-aimed for non-EU mode. The original asks whether EU stakeholders exercise determinative influence over the provider roadmap — meaningless for a non-EU buyer. Re-aimed to contractual or governance-body influence by the customer country's government or public-sector customers. Same sovereignty concern (external control over roadmap), different anchor. treatment: re_aim.",
+      "rationale": "SOV-1-08 (Roadmap Influence — EU Stakeholder Governance) re-aimed for non-EU mode. The original asks whether EU stakeholders exercise determinative influence over the provider roadmap — meaningless for a non-EU buyer. Re-aimed to contractual or governance-body influence by the customer country's government or public-sector customers. Same sovereignty concern (external control over roadmap), different anchor. Both the question text AND the card title are re-aimed: non-EU mode renders csi_presentation.title ('Customer Influence Over Provider Roadmap') instead of the EU-anchored heading, so the title no longer reads 'EU Stakeholder Governance' for non-EU countries. treatment: re_aim.",
       "authority": "csi-presentation-layer-spec.md §2; maintainer decision 2026-06-12",
       "alternatives_considered": "Exclude (rejected: the underlying concern — buyer locked out of roadmap decisions — is valid in any jurisdiction)",
       "review_status": "stable"

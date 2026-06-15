@@ -298,9 +298,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
           const val = answers[q.id]?.value as AnswerValue | undefined;
           const evidLevel = answers[q.id]?.evidence_level;
           const isCsiModeQ = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
-          const csiPresText = isCsiModeQ && !isEu ? (q as any).csi_presentation?.variants?.non_eu?.text : undefined;
+          const csiPres = isCsiModeQ && !isEu ? (q as any).csi_presentation : undefined;
+          const csiPresText = csiPres?.variants?.non_eu?.text;
           const qText = csiPresText ?? ((variant === 'Generalized' && q.text_generalized) ? q.text_generalized : q.text);
-          const qTitle = (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
+          const qTitle = (csiPresText && csiPres?.title) ? csiPres.title
+            : (variant === 'Generalized' && q.title_generalized) ? q.title_generalized : q.title;
           return (
             <QuestionCard
               key={q.id}
@@ -342,14 +344,15 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
 
         // Non-EU CSI mode: if question has a re-aimed non_eu text, render as flat single card
         const isCsiModeQ = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
-        const csiPresNonEu = isCsiModeQ && !isEu ? (q as any).csi_presentation?.variants?.non_eu : undefined;
+        const csiPresTiered = isCsiModeQ && !isEu ? (q as any).csi_presentation : undefined;
+        const csiPresNonEu = csiPresTiered?.variants?.non_eu;
         const csiPresText = csiPresNonEu?.shown !== false ? csiPresNonEu?.text : undefined;
         if (csiPresText) {
           return (
             <QuestionCard
               key={q.id}
               id={q.id}
-              title={tieredTitle}
+              title={csiPresTiered?.title ?? tieredTitle}
               text={resolvePlaceholders(csiPresText, ctx)}
               sealContribution={q.tiers.bloc.seal_contribution}
               points={q.tiers.bloc.points}
