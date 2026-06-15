@@ -73,12 +73,17 @@ const TAG_MAP: Record<string, Spec> = {
   'SOV-6-11-LMIC': [t('REVERSIBILITY', 'L4')],
   'SOV-6-13-LMIC': [t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L4')], // §5.6 was orphaned on L6
 
-  // ── support continuity (C3A vendor disruption) ──
-  'SOV-6-02':    [t('SUPPORT_CONTINUITY', 'L3')],
-  'SOV-6-02-AC': [t('SUPPORT_CONTINUITY', 'L3')],
+  // ── support continuity (C3A vendor disruption) — platform and app layers ──
+  'SOV-6-02':    [t('SUPPORT_CONTINUITY', 'L3'), t('SUPPORT_CONTINUITY', 'L4')],
+  'SOV-6-02-AC': [t('SUPPORT_CONTINUITY', 'L3'), t('SUPPORT_CONTINUITY', 'L4')],
 
   // ── self-sufficiency verification (sovereign baseline) ──
   'SOV-6-03': [t('SELF_SUFFICIENCY', 'L3')],
+
+  // ── §5.7-8 authored coverage questions (CSI/LMIC only) ──
+  'SOV-2-09-CSI': [t('PHYSICAL_CUSTODY', 'L1')],                               // landlord physical access
+  'SOV-4-18-CSI': [t('THIRD_PARTY_OPERATION', 'L3'), t('THIRD_PARTY_OPERATION', 'L4')], // external platform/app operator
+  'SOV-6-14-CSI': [t('SELF_SUFFICIENCY', 'L3'), t('SELF_SUFFICIENCY', 'L4')],  // self-operation verification
 
   // ── physical custody / supply (hardware layer) ──
   'SOV-5-02':    [t('PHYSICAL_CUSTODY', 'L2'), t('JURISDICTION', 'L2')],

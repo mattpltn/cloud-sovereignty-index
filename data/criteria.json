@@ -1000,6 +1000,36 @@
           "relevance": {
             "pattern": "agnostic"
           }
+        },
+        {
+          "id": "SOV-2-09-CSI",
+          "title": "Facility Operator Physical Custody",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "applies_to_lmic": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "text": "Where a third party owns or operates the facility housing your infrastructure (for example a colocation provider), are there documented and enforced controls — tamper-evident hardware, encryption at rest under customer-held keys, escorted and logged physical access, and contractual limits on the facility operator's reach — that prevent the landlord, or anyone able to compel them, from accessing, imaging, or tampering with your systems?",
+          "seal_contribution": 2,
+          "seal_contribution_csi": 2,
+          "points": 10,
+          "source": {
+            "doc": "CSI Editorial",
+            "clause": "SOV-2-09 Facility physical custody — NIST SP 500-292 L1; Cloud Sovereignty Framework physical-control objective"
+          },
+          "relevance": {
+            "pattern": "vanish",
+            "layer": "L1",
+            "archetypes": [
+              {
+                "archetype": "PHYSICAL_CUSTODY",
+                "layer": "L1"
+              }
+            ],
+            "show_when": "(L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider' OR L1.ownership == 'mixed')"
+          }
         }
       ],
       "layer": "sovereignty"
@@ -2698,6 +2728,40 @@
               }
             ]
           }
+        },
+        {
+          "id": "SOV-4-18-CSI",
+          "title": "Reversibility of Third-Party Platform Operation",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "applies_to_lmic": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "text": "Where a third party operates your platform or application layer (a managed-service vendor, a system integrator, or the provider itself), do you hold a documented and tested capability to take over operations yourself — current runbooks, administrative credentials available to you or in escrow, knowledge transfer, and a defined transition plan — so the operator's withdrawal, acquisition, or coercion does not interrupt the service?",
+          "seal_contribution": 3,
+          "seal_contribution_csi": 3,
+          "points": 10,
+          "source": {
+            "doc": "CSI Editorial",
+            "clause": "SOV-4-18 Operational reversibility — NIST SP 500-292 L3/L4; EU Data Act Art. 23/25 switching"
+          },
+          "relevance": {
+            "pattern": "vanish",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "THIRD_PARTY_OPERATION",
+                "layer": "L3"
+              },
+              {
+                "archetype": "THIRD_PARTY_OPERATION",
+                "layer": "L4"
+              }
+            ],
+            "show_when": "(L3.operation == 'local_si' OR L3.operation == 'foreign_vendor' OR L3.operation == 'provider') OR (L4.operation == 'local_si' OR L4.operation == 'foreign_vendor' OR L4.operation == 'provider')"
+          }
         }
       ],
       "layer": "resilience"
@@ -3396,11 +3460,15 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support')",
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support')",
             "archetypes": [
               {
                 "archetype": "SUPPORT_CONTINUITY",
                 "layer": "L3"
+              },
+              {
+                "archetype": "SUPPORT_CONTINUITY",
+                "layer": "L4"
               }
             ]
           }
@@ -3428,11 +3496,15 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support')",
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support')",
             "archetypes": [
               {
                 "archetype": "SUPPORT_CONTINUITY",
                 "layer": "L3"
+              },
+              {
+                "archetype": "SUPPORT_CONTINUITY",
+                "layer": "L4"
               }
             ]
           }
@@ -3880,6 +3952,40 @@
                 "layer": "L4"
               }
             ]
+          }
+        },
+        {
+          "id": "SOV-6-14-CSI",
+          "title": "Self-Operation Capability Verification",
+          "type": "single",
+          "applies_to_eu_csf": false,
+          "applies_to_c3a": false,
+          "applies_to_csi_composite": true,
+          "applies_to_lmic": false,
+          "applies_to_cada": false,
+          "c3a_tier": "not_applicable",
+          "text": "For the platform and application layers you run yourself on open-source software, can you demonstrate the in-house capability to sustain them without external help — staff who can build from source and apply security patches, access to the source and build pipeline, and a tested procedure to recover and migrate the workload independently?",
+          "seal_contribution": 3,
+          "seal_contribution_csi": 3,
+          "points": 10,
+          "source": {
+            "doc": "CSI Editorial",
+            "clause": "SOV-6-14 Self-operation verification — C3A §2.6 autonomy intent; NIST SP 500-292 L3/L4"
+          },
+          "relevance": {
+            "pattern": "vanish",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "SELF_SUFFICIENCY",
+                "layer": "L3"
+              },
+              {
+                "archetype": "SELF_SUFFICIENCY",
+                "layer": "L4"
+              }
+            ],
+            "show_when": "(L3.dependency == 'self_supported_oss' AND L3.operation == 'client_staff') OR (L4.dependency == 'self_supported_oss' AND L4.operation == 'client_staff')"
           }
         }
       ],
