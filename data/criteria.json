@@ -619,7 +619,13 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "L1.location == 'foreign' OR L1.location == 'trusted_third'"
+            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown')",
+            "archetypes": [
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L1"
+              }
+            ]
           }
         },
         {
@@ -669,7 +675,17 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "L1.location == 'foreign' OR L2.location == 'foreign'"
+            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown') OR (L2.location == 'regional_treaty' OR L2.location == 'trusted_third' OR L2.location == 'foreign' OR L2.location == 'unknown')",
+            "archetypes": [
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L1"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L2"
+              }
+            ]
           }
         },
         {
@@ -734,7 +750,13 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "L1.location == 'foreign' OR L1.location == 'trusted_third'"
+            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown')",
+            "archetypes": [
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L1"
+              }
+            ]
           }
         },
         {
@@ -827,7 +849,13 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "L1.location == 'foreign' OR L1.location == 'trusted_third'"
+            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown')",
+            "archetypes": [
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L1"
+              }
+            ]
           }
         },
         {
@@ -874,7 +902,13 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "L1.location == 'foreign' OR L1.location == 'trusted_third'"
+            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown')",
+            "archetypes": [
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L1"
+              }
+            ]
           }
         },
         {
@@ -1023,9 +1057,23 @@
           "cada_fidelity": "direct",
           "cada_annex_ref": "Annex II L1(c), L2(c)",
           "relevance": {
-            "layer": "L1",
+            "layer": "L2",
             "pattern": "vanish",
-            "show_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+            "show_when": "(L2.ownership == 'provider') OR (L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L2"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1060,9 +1108,23 @@
           "cada_annex_ref": "Annex III §3",
           "cada_fidelity_rationale": "CADA Annex III §3 requires detailed data flow diagrams demonstrating exclusive EU data storage and processing.",
           "relevance": {
-            "layer": "L1",
+            "layer": "L2",
             "pattern": "vanish",
-            "show_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+            "show_when": "(L2.ownership == 'provider') OR (L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L2"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1104,9 +1166,23 @@
             }
           },
           "relevance": {
-            "layer": "L1",
+            "layer": "L2",
             "pattern": "vanish",
-            "show_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+            "show_when": "(L2.ownership == 'provider') OR (L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L2"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1133,9 +1209,23 @@
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Strict confinement of storage and processing to European jurisdictions.' Provider-operational data (configuration, telemetry, resource allocations) is not named explicitly in the CF, but is subject to the same confinement principle. Provider data can contain sovereignty-sensitive operational intelligence about infrastructure and capacity.",
           "c3a_fidelity": "direct",
           "relevance": {
-            "layer": "L1",
+            "layer": "L2",
             "pattern": "vanish",
-            "show_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+            "show_when": "(L2.ownership == 'provider') OR (L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L2"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1160,8 +1250,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1187,8 +1287,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1213,8 +1323,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1239,8 +1359,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1265,8 +1395,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1291,8 +1431,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1317,8 +1467,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1343,8 +1503,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1369,8 +1539,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1395,8 +1575,18 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1430,8 +1620,14 @@
           "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and prohibits any transfer outside the Union. This question asks only for training-data jurisdiction disclosure, which is weaker than the flat prohibition. It is inferred evidence under Annex III §6 (model cards / training-source records), not a direct mapping to L2(f).",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L4.ownership == 'provider'",
-            "layer": "L4"
+            "show_when": "(L4.ownership == 'provider')",
+            "layer": "L4",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1465,8 +1661,14 @@
           "cada_fidelity_rationale": "L2(f) prohibits use of service-generated data for third-country AI training and transfer outside the Union. This question addresses inference location (processing of customer data), which maps more naturally to L2(c)'s processing-localisation requirement. Re-tagged inferred from L2(c) rather than a direct mapping to L2(f).",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L4.ownership == 'provider'",
-            "layer": "L4"
+            "show_when": "(L4.ownership == 'provider')",
+            "layer": "L4",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1493,8 +1695,14 @@
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'AI models governed under EU control, minimizing dependency on non-EU technology stacks.' Customer opt-out from training data use is a governance control ensuring the customer retains sovereignty over how their data shapes model behaviour — the CF implies governance control but does not specify this mechanism.",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L4.ownership == 'provider'",
-            "layer": "L4"
+            "show_when": "(L4.ownership == 'provider')",
+            "layer": "L4",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1551,8 +1759,14 @@
           "eu_csf_fidelity_rationale": "Derived from EU-CSF SOV-3 CF: 'Minimizing dependency on non-EU technology stacks.' Knowing the model provider's jurisdiction, ownership, and control chain is the prerequisite for assessing whether a dependency constitutes a non-EU technology stack risk. EU-CSF names the risk category; this question operationalizes the supply-chain disclosure needed to assess it.",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L4.ownership == 'provider'",
-            "layer": "L4"
+            "show_when": "(L4.ownership == 'provider')",
+            "layer": "L4",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1576,8 +1790,18 @@
           "eu_csf_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider' OR L4.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              },
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -1666,7 +1890,13 @@
           "relevance": {
             "layer": "L5",
             "pattern": "vanish",
-            "show_when": "L5.operation == 'foreign_vendor'"
+            "show_when": "(L5.operation == 'local_si' OR L5.operation == 'foreign_vendor' OR L5.operation == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "THIRD_PARTY_OPERATION",
+                "layer": "L5"
+              }
+            ]
           }
         },
         {
@@ -1706,7 +1936,13 @@
           "relevance": {
             "layer": "L5",
             "pattern": "vanish",
-            "show_when": "L5.operation == 'foreign_vendor'"
+            "show_when": "(L5.operation == 'local_si' OR L5.operation == 'foreign_vendor' OR L5.operation == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "THIRD_PARTY_OPERATION",
+                "layer": "L5"
+              }
+            ]
           }
         },
         {
@@ -1729,7 +1965,13 @@
           "relevance": {
             "layer": "L5",
             "pattern": "vanish",
-            "show_when": "L5.operation == 'foreign_vendor'"
+            "show_when": "(L5.operation == 'local_si' OR L5.operation == 'foreign_vendor' OR L5.operation == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "THIRD_PARTY_OPERATION",
+                "layer": "L5"
+              }
+            ]
           }
         },
         {
@@ -1774,7 +2016,13 @@
           "relevance": {
             "layer": "L5",
             "pattern": "vanish",
-            "show_when": "L5.operation == 'foreign_vendor'"
+            "show_when": "(L5.operation == 'local_si' OR L5.operation == 'foreign_vendor' OR L5.operation == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "THIRD_PARTY_OPERATION",
+                "layer": "L5"
+              }
+            ]
           }
         },
         {
@@ -1898,7 +2146,17 @@
           "relevance": {
             "layer": "L5",
             "pattern": "vanish",
-            "show_when": "L5.location == 'foreign' OR L5.operation == 'foreign_vendor'"
+            "show_when": "(L5.operation == 'local_si' OR L5.operation == 'foreign_vendor' OR L5.operation == 'provider') OR (L5.location == 'regional_treaty' OR L5.location == 'trusted_third' OR L5.location == 'foreign' OR L5.location == 'unknown')",
+            "archetypes": [
+              {
+                "archetype": "THIRD_PARTY_OPERATION",
+                "layer": "L5"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L5"
+              }
+            ]
           }
         },
         {
@@ -1924,8 +2182,14 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              }
+            ]
           }
         },
         {
@@ -1950,8 +2214,14 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              }
+            ]
           }
         },
         {
@@ -1977,8 +2247,14 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "L3.ownership == 'provider'",
-            "layer": "L3"
+            "show_when": "(L3.ownership == 'provider')",
+            "layer": "L3",
+            "archetypes": [
+              {
+                "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L3"
+              }
+            ]
           }
         },
         {
@@ -2315,7 +2591,13 @@
           "relevance": {
             "layer": "L4",
             "pattern": "vanish",
-            "show_when": "L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider'"
+            "show_when": "(L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -2404,7 +2686,17 @@
           "relevance": {
             "layer": "L5",
             "pattern": "vanish",
-            "show_when": "L5.location == 'foreign' OR L5.operation == 'foreign_vendor'"
+            "show_when": "(L5.operation == 'local_si' OR L5.operation == 'foreign_vendor' OR L5.operation == 'provider') OR (L5.location == 'regional_treaty' OR L5.location == 'trusted_third' OR L5.location == 'foreign' OR L5.location == 'unknown')",
+            "archetypes": [
+              {
+                "archetype": "THIRD_PARTY_OPERATION",
+                "layer": "L5"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L5"
+              }
+            ]
           }
         }
       ],
@@ -2496,7 +2788,17 @@
           "relevance": {
             "layer": "L2",
             "pattern": "vanish",
-            "show_when": "L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider' OR L2.location == 'foreign'"
+            "show_when": "(L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider' OR L2.ownership == 'mixed') OR (L2.location == 'regional_treaty' OR L2.location == 'trusted_third' OR L2.location == 'foreign' OR L2.location == 'unknown')",
+            "archetypes": [
+              {
+                "archetype": "PHYSICAL_CUSTODY",
+                "layer": "L2"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L2"
+              }
+            ]
           }
         },
         {
@@ -2522,7 +2824,17 @@
           "relevance": {
             "layer": "L2",
             "pattern": "vanish",
-            "show_when": "L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider' OR L2.location == 'foreign'"
+            "show_when": "(L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider' OR L2.ownership == 'mixed') OR (L2.location == 'regional_treaty' OR L2.location == 'trusted_third' OR L2.location == 'foreign' OR L2.location == 'unknown')",
+            "archetypes": [
+              {
+                "archetype": "PHYSICAL_CUSTODY",
+                "layer": "L2"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L2"
+              }
+            ]
           }
         },
         {
@@ -2598,7 +2910,13 @@
           "relevance": {
             "layer": "L2",
             "pattern": "vanish",
-            "show_when": "L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider'"
+            "show_when": "(L2.ownership == 'commercial_lessor' OR L2.ownership == 'provider' OR L2.ownership == 'mixed')",
+            "archetypes": [
+              {
+                "archetype": "PHYSICAL_CUSTODY",
+                "layer": "L2"
+              }
+            ]
           }
         },
         {
@@ -2974,7 +3292,17 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "(L3.ownership == 'provider' AND L3.dependency == 'proprietary_inaccessible') OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'"
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L6.dependency == 'licensed_supported' OR L6.dependency == 'licensed_no_support' OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L6"
+              }
+            ]
           }
         },
         {
@@ -2998,7 +3326,17 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "(L3.ownership == 'provider' AND L3.dependency == 'proprietary_inaccessible') OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'"
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L6.dependency == 'licensed_supported' OR L6.dependency == 'licensed_no_support' OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L6"
+              }
+            ]
           }
         },
         {
@@ -3022,7 +3360,17 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "(L3.ownership == 'provider' AND L3.dependency == 'proprietary_inaccessible') OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'"
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L6.dependency == 'licensed_supported' OR L6.dependency == 'licensed_no_support' OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L6"
+              }
+            ]
           }
         },
         {
@@ -3048,7 +3396,13 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "L3.dependency == 'licensed_supported'"
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support')",
+            "archetypes": [
+              {
+                "archetype": "SUPPORT_CONTINUITY",
+                "layer": "L3"
+              }
+            ]
           }
         },
         {
@@ -3074,7 +3428,13 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "L3.dependency == 'licensed_supported'"
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support')",
+            "archetypes": [
+              {
+                "archetype": "SUPPORT_CONTINUITY",
+                "layer": "L3"
+              }
+            ]
           }
         },
         {
@@ -3100,7 +3460,13 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "L3.dependency == 'self_supported_oss' AND L3.operation == 'client_staff'"
+            "show_when": "(L3.dependency == 'self_supported_oss' AND L3.operation == 'client_staff')",
+            "archetypes": [
+              {
+                "archetype": "SELF_SUFFICIENCY",
+                "layer": "L3"
+              }
+            ]
           }
         },
         {
@@ -3138,9 +3504,7 @@
             }
           },
           "relevance": {
-            "layer": "L2",
-            "pattern": "vanish",
-            "show_when": "L2.location == 'foreign'"
+            "pattern": "agnostic"
           }
         },
         {
@@ -3287,7 +3651,13 @@
           "relevance": {
             "layer": "L4",
             "pattern": "vanish",
-            "show_when": "L4.ownership == 'provider'"
+            "show_when": "(L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -3329,7 +3699,13 @@
           "relevance": {
             "layer": "L4",
             "pattern": "vanish",
-            "show_when": "L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider'"
+            "show_when": "(L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -3360,9 +3736,19 @@
           ],
           "lmic_rationale": "This question asks the provider to match, contractually, the exact regime Art. 29 makes mandatory in the EU: disclosure up front, cost-based cap, zero switching charges. A provider already operating this regime for EU customers cannot credibly claim it is unreasonable for an LMIC government. Single binding-law anchor; qualifies under the one-binding-law rule.",
           "relevance": {
-            "layer": "L4",
+            "layer": "L3",
             "pattern": "vanish",
-            "show_when": "L4.ownership == 'provider' OR L3.ownership == 'provider'"
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -3395,7 +3781,13 @@
           "relevance": {
             "layer": "L4",
             "pattern": "vanish",
-            "show_when": "L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider'"
+            "show_when": "(L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L4"
+              }
+            ]
           }
         },
         {
@@ -3475,9 +3867,19 @@
           ],
           "lmic_rationale": "No source framework contains a verbatim IaC control; this question operationalizes ISO/IEC 19941 portability concepts. It is scored but never gated, and is labeled editorial. Providers that deploy via IaC reduce exit friction regardless of contractual terms; the question captures this empirical fact.",
           "relevance": {
-            "layer": "L6",
+            "layer": "L3",
             "pattern": "vanish",
-            "show_when": "L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider'"
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider')",
+            "archetypes": [
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L4"
+              }
+            ]
           }
         }
       ],
@@ -3574,9 +3976,7 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "layer": "L6",
-            "pattern": "vanish",
-            "show_when": "L6.ownership == 'provider' OR L6.dependency == 'proprietary_inaccessible'"
+            "pattern": "agnostic"
           }
         },
         {
@@ -3604,9 +4004,7 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "layer": "L6",
-            "pattern": "vanish",
-            "show_when": "L6.ownership == 'provider' OR L6.dependency == 'proprietary_inaccessible'"
+            "pattern": "agnostic"
           }
         },
         {

@@ -3,7 +3,7 @@ import criteriaJson from '../data/criteria.json';
 import type { CriteriaFile, ControlProfile, LayerControl } from '../shared/src/schema';
 import { lintPredicate } from '../shared/src/relevance';
 import {
-  ARCHETYPES, ALL_ARCHETYPES, archetypeFires, ALL_LAYERS,
+  ARCHETYPES, ALL_ARCHETYPES, archetypeFires, ALL_LAYERS, generateShowWhen,
   type ArchetypeId, type LayerId,
 } from '../shared/src/archetypes';
 import { firesOn, type QuestionLike } from '../shared/src/coverage';
@@ -74,6 +74,21 @@ describe('relevance.invariants (Cookbook §6c)', () => {
       }
     }
     expect(checked).toBeGreaterThan(0);
+  });
+
+  // 4b — show_when is GENERATED from the tags: a tagged question's predicate must equal
+  // generateShowWhen(its tags). Catches hand-edits that drift from the archetype model.
+  test('every tagged question has show_when in sync with generateShowWhen(tags)', () => {
+    const drift: string[] = [];
+    for (const q of csiLmic) {
+      const tags = q.relevance?.archetypes;
+      if (!tags || tags.length === 0) continue;
+      const expected = generateShowWhen(tags);
+      if (q.relevance?.show_when !== expected) {
+        drift.push(`${q.id}: show_when out of sync with tags (run gen-relevance)`);
+      }
+    }
+    expect(drift).toEqual([]);
   });
 
   // 5 — every archetype tag on a question refers to a layer that archetype supports.

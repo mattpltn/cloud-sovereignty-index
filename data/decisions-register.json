@@ -1640,6 +1640,14 @@
       "authority": "maintainer decision 2026-06-14",
       "alternatives_considered": "Duplicate the title-precedence logic per component (rejected: drift risk — the questionnaire card and result page had already diverged).",
       "review_status": "stable"
+    },
+    {
+      "id": "DR-R1",
+      "category": "derivation",
+      "rationale": "Relevance is now archetype-driven (RELEVANCE_ENGINE_COOKBOOK.md). A question is anchored to a FACET of a LAYER via relevance.archetypes tags, not to a scenario; show_when is GENERATED from the tags by scripts/gen-relevance.ts (shared/src/archetypes.ts is the 7-archetype catalog). The decisive rule: ownership/operation/location triggers are ruled out when the client controls that facet, but REVERSIBILITY/SUPPORT_CONTINUITY (the `dependency` facet) are NOT — you can own and operate a platform and still be unable to self-patch licensed software (the VMware case). Facility derivation fixed so a third-party L1 is a commercial_lessor (landlord), not a provider, so colocation's provider-residency questions vanish (client owns the data layers) while physical-custody/jurisdiction questions remain. Coverage is measured by scripts/coverage.ts against the derived profiles; CI fails on broken_wiring or unjustified missing cells.",
+      "authority": "RELEVANCE_ENGINE_COOKBOOK.md; maintainer decision 2026-06-15",
+      "alternatives_considered": "Hand-maintained per-question show_when strings (rejected: 52 bespoke predicates drifted into dead wiring — e.g. foreign-ops gated on a value no scenario emits, residency anchored to the facility instead of the data layer). Scenario→question table (rejected: re-derives on every new scenario; the durable mapping is question→dependency).",
+      "review_status": "stable"
     }
   ],
   "DR-F1": {

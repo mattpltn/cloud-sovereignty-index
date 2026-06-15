@@ -70,6 +70,15 @@ const QuestionBaseSchema = z.object({
     layer: z.enum(['L1', 'L2', 'L3', 'L4', 'L5', 'L6']).optional(),
     pattern: z.enum(['vanish', 're-aim', 'sharpen', 'agnostic']),
     show_when: z.string().optional(),
+    // Archetype tags (Cookbook §4). show_when is GENERATED from these via
+    // scripts/gen-relevance.ts — do not hand-edit show_when on tagged questions.
+    archetypes: z.array(z.object({
+      archetype: z.enum([
+        'JURISDICTION', 'PHYSICAL_CUSTODY', 'DATA_RESIDENCY_SERVICE',
+        'THIRD_PARTY_OPERATION', 'REVERSIBILITY', 'SUPPORT_CONTINUITY', 'SELF_SUFFICIENCY',
+      ]),
+      layer: z.enum(['L1', 'L2', 'L3', 'L4', 'L5', 'L6']),
+    })).optional(),
   }).optional(),
   // Presentation layer (CSI/LMIC mode only — EU-CSF/C3A/CADA modes ignore this field)
   csi_presentation: z.object({
