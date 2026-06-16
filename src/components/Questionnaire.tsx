@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
+import { resolvePlaceholders, deriveOperatorLabel, reframeOperator } from '../../shared/src/tier-resolution.js';
 import type { CriteriaFile, Country, Question, ControlProfile } from '../../shared/src/schema.js';
 import type { AnswerMap, EvidenceLevel } from '../../shared/src/types.js';
 import { setAnswer, flushNow, readCache, writeCache } from '../lib/local-cache.js';
@@ -249,6 +249,15 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
 
   const ctx = { variant, country };
 
+  // CSI mode reframes "the cloud service provider" to the actual operator (you / a
+  // provider / a vendor) from the control profile. C3A/EU-CSF stay source-faithful.
+  const isCsiComposite = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
+  const operatorLabel = deriveOperatorLabel(controlProfile);
+  const resolveText = (text: string) => {
+    const resolved = resolvePlaceholders(text, ctx);
+    return isCsiComposite ? reframeOperator(resolved, operatorLabel) : resolved;
+  };
+
   if (!objective) return <div className="text-red-600">Objective {objectiveId} not found</div>;
 
   const visibleQuestions = objective.questions.filter(isQuestionVisible);
@@ -308,7 +317,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               key={q.id}
               id={q.id}
               title={qTitle}
-              text={resolvePlaceholders(qText, ctx)}
+              text={resolveText(qText)}
               sealContribution={q.seal_contribution}
               points={q.points}
               source={sourceLabel(q, fw, q.source.doc, q.source.clause)}
@@ -353,7 +362,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               key={q.id}
               id={q.id}
               title={csiPresTiered?.title ?? tieredTitle}
-              text={resolvePlaceholders(csiPresText, ctx)}
+              text={resolveText(csiPresText)}
               sealContribution={q.tiers.bloc.seal_contribution}
               points={q.tiers.bloc.points}
               source={sourceLabel(q, fw, q.tiers.bloc.source.doc, q.tiers.bloc.source.clause)}
@@ -394,9 +403,8 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                   )}
                 </div>
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
-                  {resolvePlaceholders(
-                    (isGeneralized && q.tiers.national!.text_generalized) ? q.tiers.national!.text_generalized : q.tiers.national!.text,
-                    ctx
+                  {resolveText(
+                    (isGeneralized && q.tiers.national!.text_generalized) ? q.tiers.national!.text_generalized : q.tiers.national!.text
                   )}
                 </p>
                 <AnswerButtons questionKey={natKey} value={natVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />
@@ -439,9 +447,8 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                   </p>
                 )}
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
-                  {resolvePlaceholders(
-                    (isGeneralized && q.tiers.bloc.text_generalized) ? q.tiers.bloc.text_generalized : q.tiers.bloc.text,
-                    ctx
+                  {resolveText(
+                    (isGeneralized && q.tiers.bloc.text_generalized) ? q.tiers.bloc.text_generalized : q.tiers.bloc.text
                   )}
                 </p>
                 <AnswerButtons questionKey={blocKey} value={blocVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />
