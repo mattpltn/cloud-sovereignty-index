@@ -111,14 +111,18 @@ export interface TierContext {
  * Tokens:
  *   {{BLOC}}            → "EU" (EU-CSF) or country.name (Generalized)
  *   {{COUNTRY}}         → country.name or "—"
- *   {{NATIONAL_ADMIN}}  → country.national_admin_label or "—"
- *   {{EMERGENCY_REGIME}}→ country.emergency_regime or "—"
+ *   {{NATIONAL_ADMIN}}      → country.national_admin_label or "—"
+ *   {{EMERGENCY_REGIME}}    → country.emergency_regime or "—"
+ *   {{TRUSTED_JURISDICTION}}→ data-residency fallback phrase (EU vs generic)
  */
 export function resolvePlaceholders(text: string, ctx: TierContext): string {
   const bloc = ctx.variant === 'EU-CSF' ? 'EU' : (ctx.country?.name ?? '—');
   const country = ctx.country?.name ?? '—';
   const admin = ctx.country?.national_admin_label ?? 'the competent national authority';
   const emergency = ctx.country?.emergency_regime ?? '—';
+  const trusted = ctx.variant === 'EU-CSF'
+    ? 'the EU/EEA or an adequacy-decision country'
+    : 'a trusted partner jurisdiction';
 
   const countryAdj = ctx.country?.adj ?? '—';
 
@@ -127,7 +131,8 @@ export function resolvePlaceholders(text: string, ctx: TierContext): string {
     .replace(/\{\{COUNTRY_ADJ\}\}/g, countryAdj)
     .replace(/\{\{COUNTRY\}\}/g, country)
     .replace(/\{\{NATIONAL_ADMIN\}\}/g, admin)
-    .replace(/\{\{EMERGENCY_REGIME\}\}/g, emergency);
+    .replace(/\{\{EMERGENCY_REGIME\}\}/g, emergency)
+    .replace(/\{\{TRUSTED_JURISDICTION\}\}/g, trusted);
 }
 
 /**

@@ -1187,7 +1187,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Does the provider offer a service option where derived data (telemetry, metadata, logs) and account data are stored and processed exclusively within {{COUNTRY}}, or within {trusted_jurisdiction} where in-country is not available?"
+                "text": "Does the provider offer a service option where derived data (telemetry, metadata, logs) and account data are stored and processed exclusively within {{COUNTRY}}, or within {{TRUSTED_JURISDICTION}} where in-country is not available?"
               },
               "eu": {
                 "shown": true,
@@ -1955,7 +1955,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Is the entity operating and supporting the cloud service for this customer established as a standalone organisation in {{COUNTRY}} or {trusted_jurisdiction}, without operational dependence on a foreign parent entity for day-to-day service delivery?"
+                "text": "Is the entity operating and supporting the cloud service for this customer established as a standalone organisation in {{COUNTRY}} or {{TRUSTED_JURISDICTION}}, without operational dependence on a foreign parent entity for day-to-day service delivery?"
               },
               "eu": {
                 "shown": true,
@@ -2542,7 +2542,7 @@
             "variants": {
               "non_eu": {
                 "shown": true,
-                "text": "Are all infrastructure and assets used to provide the service — including those of subcontractors directly involved in delivery — physically located within {{COUNTRY}} or {trusted_jurisdiction}, with no routing of operations through data centres outside agreed jurisdictions?"
+                "text": "Are all infrastructure and assets used to provide the service — including those of subcontractors directly involved in delivery — physically located within {{COUNTRY}} or {{TRUSTED_JURISDICTION}}, with no routing of operations through data centres outside agreed jurisdictions?"
               },
               "eu": {
                 "shown": true,
