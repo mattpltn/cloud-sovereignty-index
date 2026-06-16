@@ -42,12 +42,14 @@ const REALISM_BADGE: Record<string, string> = {
   standard_market_term: 'bg-green-100 text-green-800',
   negotiable: 'bg-amber-100 text-amber-800',
   hard_ask: 'bg-red-100 text-red-800',
+  internal_control: 'bg-slate-100 text-slate-700',
 };
 
 const REALISM_LABEL: Record<string, string> = {
   standard_market_term: 'Standard term',
   negotiable: 'Negotiable',
   hard_ask: 'Hard ask',
+  internal_control: 'Internal control',
 };
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -153,7 +155,7 @@ function LayerAccordion({ row }: { row: LayerReportRow }) {
 
           {row.bridges.length > 0 && (
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Procurement bridges</h4>
+              <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Procurement bridges &amp; controls</h4>
               <div className="space-y-2">
                 {row.bridges.map(clause => <BridgeCard key={clause.id} clause={clause} />)}
               </div>

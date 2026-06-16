@@ -99,11 +99,11 @@
     {
       "id": "PC-L3-SKILLSCONTINUITY",
       "layer": "L3",
-      "clause_text": "The Provider shall, during the term, offer annual knowledge-transfer sessions to the Customer's operations team covering platform architecture, routine maintenance procedures, and emergency recovery procedures. On termination, the Provider shall make available a run-book and architecture guide sufficient for the Customer or a third party to assume operations within 90 days.",
+      "clause_text": "This stack is self-supported with no external vendor to bind, so the mitigation is internal: keep a current run-book and architecture guide; cross-train at least two engineers on every critical platform function so no capability rests on a single person; run an annual independent patch-and-recover exercise; and pre-qualify a commercial support subscription or system integrator that could assume maintenance within 90 days if in-house capability is lost. (If you later engage a support vendor, fold these into the contract as knowledge-transfer and exit-runbook obligations.)",
       "source_anchors": [
         { "register_key": "iso-22301", "clause": "Cl. 8.4.3: resource requirements include competent personnel and documented procedures for continuity." }
       ],
-      "realism_tag": "negotiable",
+      "realism_tag": "internal_control",
       "applies_when": "L3.dependency == 'self_supported_oss' AND L3.operation == 'client_staff'"
     },
 

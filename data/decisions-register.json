@@ -1648,6 +1648,14 @@
       "authority": "RELEVANCE_ENGINE_COOKBOOK.md; maintainer decision 2026-06-15",
       "alternatives_considered": "Hand-maintained per-question show_when strings (rejected: 52 bespoke predicates drifted into dead wiring — e.g. foreign-ops gated on a value no scenario emits, residency anchored to the facility instead of the data layer). Scenario→question table (rejected: re-derives on every new scenario; the durable mapping is question→dependency).",
       "review_status": "stable"
+    },
+    {
+      "id": "DR-R2",
+      "category": "adaptation",
+      "rationale": "CSI mode reframes the C3A-verbatim subject 'the cloud service provider' to the actor actually responsible at the question's concern layer (relevance.layer), via deriveOperatorLabel/operatorForLayer in shared/src/tier-resolution.ts — the 'frame on the fine value' half of the relevance model. Facility/hardware layers (L1/L2) resolve to 'the data center provider' when a third party owns the building (so SOV-8 sustainability addresses the colocation landlord) or 'your organisation' when client-owned; cloud layers (L3-L5) resolve to 'the cloud service provider' / 'your cloud operator' / 'your organisation' by the operation facet. C3A and EU-CSF stay source-faithful (never reframed). Relatedly, the self-managed-OSS skills risk (RISK-L3-SKILLS-01, fires when L3 is self_supported_oss + client_staff) had a procurement clause beginning 'The Provider shall…' — nonsensical when there is no vendor; reworded as an internal control (cross-training, run-books, annual recover exercise, pre-qualified fallback support) with a new realism_tag 'internal_control', and the report section retitled 'Procurement bridges & controls'.",
+      "authority": "maintainer decision 2026-06-15",
+      "alternatives_considered": "Blanket reframe to one operator label (rejected: SOV-8 facility questions would wrongly address the self-operating customer instead of the data-center landlord). Leaving the self-managed clause as a provider obligation (rejected: there is no provider to bind).",
+      "review_status": "stable"
     }
   ],
   "DR-F1": {
