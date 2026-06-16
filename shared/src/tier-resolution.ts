@@ -50,7 +50,13 @@ export function operatorForLayer(profile: ControlProfile | undefined, layer: str
   if (!lc) return deriveOperatorLabel(profile);
   if (layer === 'L1' || layer === 'L2') {
     if (lc.ownership === 'client' && lc.operation === 'client_staff') return SELF_LABEL;
-    return DC_PROVIDER_LABEL; // landlord or provider runs the physical infrastructure
+    // Third-party facility: a full provider stack (the CSP runs the cloud on top, e.g.
+    // hyperscaler) is "the cloud service provider"; a pure landlord (you run your own
+    // cloud in rented space, e.g. colocation) is "the data center provider".
+    const p = profile as Record<string, { ownership?: string; operation?: string }>;
+    const cloudIsProvider = ['L3', 'L4', 'L5'].some(
+      l => p[l]?.ownership === 'provider' || p[l]?.operation === 'provider');
+    return cloudIsProvider ? PROVIDER_LABEL : DC_PROVIDER_LABEL;
   }
   if (lc.operation === 'provider' || lc.ownership === 'provider') return PROVIDER_LABEL;
   if (lc.operation === 'foreign_vendor' || lc.operation === 'local_si') return VENDOR_LABEL;

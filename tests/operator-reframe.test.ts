@@ -45,6 +45,10 @@ describe('operator reframe (frame on the fine value)', () => {
     test('L1 facility in own datacenter → your organisation', () => {
       expect(operatorForLayer(ownDc, 'L1').subject).toBe('your organisation');
     });
+    test('L1 facility in a public CSP (full provider stack) → the cloud service provider', () => {
+      const hyper = deriveControlProfile(togglesFromDefaults('hyperscaler'));
+      expect(operatorForLayer(hyper, 'L1').subject).toBe('the cloud service provider');
+    });
     test('L3 cloud layer in colocation (self-operated) → your organisation', () => {
       expect(operatorForLayer(colo, 'L3').subject).toBe('your organisation');
     });
