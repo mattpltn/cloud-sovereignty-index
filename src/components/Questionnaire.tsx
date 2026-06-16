@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { resolvePlaceholders, deriveOperatorLabel, reframeOperator } from '../../shared/src/tier-resolution.js';
+import { resolvePlaceholders, deriveOperatorLabel, operatorForLayer, reframeOperator } from '../../shared/src/tier-resolution.js';
 import type { CriteriaFile, Country, Question, ControlProfile } from '../../shared/src/schema.js';
 import type { AnswerMap, EvidenceLevel } from '../../shared/src/types.js';
 import { setAnswer, flushNow, readCache, writeCache } from '../lib/local-cache.js';
@@ -252,10 +252,14 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   // CSI mode reframes "the cloud service provider" to the actual operator (you / a
   // provider / a vendor) from the control profile. C3A/EU-CSF stay source-faithful.
   const isCsiComposite = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
-  const operatorLabel = deriveOperatorLabel(controlProfile);
-  const resolveText = (text: string) => {
+  // Reframe the "cloud service provider" subject to the actor responsible at the
+  // question's concern layer (relevance.layer): facility questions (SOV-8 → L1)
+  // address the data-center provider, ops questions the cloud operator, etc.
+  const resolveText = (text: string, concernLayer?: string) => {
     const resolved = resolvePlaceholders(text, ctx);
-    return isCsiComposite ? reframeOperator(resolved, operatorLabel) : resolved;
+    if (!isCsiComposite) return resolved;
+    const label = concernLayer ? operatorForLayer(controlProfile, concernLayer) : deriveOperatorLabel(controlProfile);
+    return reframeOperator(resolved, label);
   };
 
   if (!objective) return <div className="text-red-600">Objective {objectiveId} not found</div>;
@@ -317,7 +321,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               key={q.id}
               id={q.id}
               title={qTitle}
-              text={resolveText(qText)}
+              text={resolveText(qText, (q as any).relevance?.layer)}
               sealContribution={q.seal_contribution}
               points={q.points}
               source={sourceLabel(q, fw, q.source.doc, q.source.clause)}
@@ -362,7 +366,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               key={q.id}
               id={q.id}
               title={csiPresTiered?.title ?? tieredTitle}
-              text={resolveText(csiPresText)}
+              text={resolveText(csiPresText, (q as any).relevance?.layer)}
               sealContribution={q.tiers.bloc.seal_contribution}
               points={q.tiers.bloc.points}
               source={sourceLabel(q, fw, q.tiers.bloc.source.doc, q.tiers.bloc.source.clause)}
@@ -404,7 +408,8 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                 </div>
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
                   {resolveText(
-                    (isGeneralized && q.tiers.national!.text_generalized) ? q.tiers.national!.text_generalized : q.tiers.national!.text
+                    (isGeneralized && q.tiers.national!.text_generalized) ? q.tiers.national!.text_generalized : q.tiers.national!.text,
+                    (q as any).relevance?.layer
                   )}
                 </p>
                 <AnswerButtons questionKey={natKey} value={natVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />
@@ -448,7 +453,8 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                 )}
                 <p className="text-sm text-gray-700 mb-4 leading-relaxed">
                   {resolveText(
-                    (isGeneralized && q.tiers.bloc.text_generalized) ? q.tiers.bloc.text_generalized : q.tiers.bloc.text
+                    (isGeneralized && q.tiers.bloc.text_generalized) ? q.tiers.bloc.text_generalized : q.tiers.bloc.text,
+                    (q as any).relevance?.layer
                   )}
                 </p>
                 <AnswerButtons questionKey={blocKey} value={blocVal} onAnswer={handleAnswer} answerValues={visibleAnswerValues} />

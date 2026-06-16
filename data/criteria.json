@@ -4308,7 +4308,8 @@
           "seal_contribution_csi": 1,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L1"
           }
         },
         {
@@ -4333,7 +4334,8 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L1"
           }
         },
         {
@@ -4358,7 +4360,8 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L1"
           }
         },
         {
@@ -4383,7 +4386,8 @@
           "seal_contribution_csi": 2,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L1"
           }
         },
         {
@@ -4408,7 +4412,8 @@
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L1"
           }
         }
       ],

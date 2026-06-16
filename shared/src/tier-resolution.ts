@@ -16,23 +16,45 @@ const PROVIDER_LABEL: OperatorLabel = {
   possessive: "the cloud service provider's", bare: 'cloud service provider',
   possessiveBare: "cloud service provider's",
 };
+const SELF_LABEL: OperatorLabel = {
+  subject: 'your organisation', Subject: 'Your organisation',
+  possessive: "your organisation's", bare: 'your organisation', possessiveBare: "your organisation's",
+};
+const VENDOR_LABEL: OperatorLabel = {
+  subject: 'your cloud operator', Subject: 'Your cloud operator',
+  possessive: "your cloud operator's", bare: 'cloud operator', possessiveBare: "cloud operator's",
+};
+const DC_PROVIDER_LABEL: OperatorLabel = {
+  subject: 'the data center provider', Subject: 'The data center provider',
+  possessive: "the data center provider's", bare: 'data center provider',
+  possessiveBare: "data center provider's",
+};
 
-/** Who operates the cloud service, derived from the platform/app/ops layers. */
+/** Who operates the cloud SERVICE, derived from the platform/app/ops layers (L3–L5).
+ *  Used as the fallback for questions with no specific concern layer. */
 export function deriveOperatorLabel(profile?: ControlProfile): OperatorLabel {
   if (!profile) return PROVIDER_LABEL;
   const ops = [profile.L3?.operation, profile.L4?.operation, profile.L5?.operation];
   if (ops.includes('provider')) return PROVIDER_LABEL;
-  if (ops.includes('foreign_vendor') || ops.includes('local_si')) {
-    return {
-      subject: 'your cloud operator', Subject: 'Your cloud operator',
-      possessive: "your cloud operator's", bare: 'cloud operator', possessiveBare: "cloud operator's",
-    };
+  if (ops.includes('foreign_vendor') || ops.includes('local_si')) return VENDOR_LABEL;
+  return SELF_LABEL; // all client_staff → self-operated
+}
+
+/** The actor responsible at a SPECIFIC layer. Facility/hardware layers (L1/L2)
+ *  resolve to the data-center provider when a third party owns the building — even
+ *  though the customer runs the cloud on top — so SOV-8 facility questions address
+ *  the landlord, not the self-operating customer. */
+export function operatorForLayer(profile: ControlProfile | undefined, layer: string): OperatorLabel {
+  if (!profile) return PROVIDER_LABEL;
+  const lc = (profile as Record<string, { ownership?: string; operation?: string }>)[layer];
+  if (!lc) return deriveOperatorLabel(profile);
+  if (layer === 'L1' || layer === 'L2') {
+    if (lc.ownership === 'client' && lc.operation === 'client_staff') return SELF_LABEL;
+    return DC_PROVIDER_LABEL; // landlord or provider runs the physical infrastructure
   }
-  // all client_staff → self-operated
-  return {
-    subject: 'your organisation', Subject: 'Your organisation',
-    possessive: "your organisation's", bare: 'your organisation', possessiveBare: "your organisation's",
-  };
+  if (lc.operation === 'provider' || lc.ownership === 'provider') return PROVIDER_LABEL;
+  if (lc.operation === 'foreign_vendor' || lc.operation === 'local_si') return VENDOR_LABEL;
+  return SELF_LABEL;
 }
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
