@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { LayerReportRow, ControlChannel, AssuranceSignal } from '../../shared/src/report';
+import RiskCard from './RiskCard';
 
 // ── Channel display maps ──────────────────────────────────────────────────────
 
@@ -53,25 +54,6 @@ const REALISM_LABEL: Record<string, string> = {
 };
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-
-function RiskCard({ risk }: { risk: LayerReportRow['triggered_risks'][0] }) {
-  return (
-    <div className="border border-gray-200 rounded-lg p-3">
-      <div className="flex items-start justify-between gap-2">
-        <span className="font-medium text-sm text-gray-800">{risk.title}</span>
-        <span className="text-xs text-gray-400 shrink-0 font-mono">{risk.id}</span>
-      </div>
-      <p className="text-sm text-gray-600 mt-1">{risk.description}</p>
-      <div className="mt-2 flex flex-wrap gap-1">
-        {risk.source_anchors.map((a, i) => (
-          <span key={i} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-mono">
-            {a.register_key}: {a.clause}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function BridgeCard({ clause }: { clause: LayerReportRow['bridges'][0] }) {
   const badgeCls = REALISM_BADGE[clause.realism_tag] ?? 'bg-gray-100 text-gray-700';

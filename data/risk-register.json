@@ -132,7 +132,7 @@
       "source_anchors": [
         { "register_key": "eu-data-act", "clause": "Art. 29(2)-(3): switching charges cost-capped to 12 Jan 2027; Art. 29(1): fully prohibited from 12 Jan 2027; Art. 2(36): definition includes data egress charges. Note: Art. 34(2) still permits cost-based egress for parallel/multi-cloud use (not switching)." }
       ],
-      "question_ids": ["SOV-6-10-LMIC"],
+      "question_ids": ["SOV-6-01-FB2", "SOV-6-10-LMIC"],
       "procurement_clause_ids": ["PC-L4-EGRESS"],
       "severity_basis": "EU law moved to prohibit these charges entirely (Art. 29(1), from 12 Jan 2027), and the three largest hyperscalers introduced free-switching programmes in 2024 — strong evidence the charge is an avoidable barrier, not an intrinsic cost."
     },
@@ -146,7 +146,7 @@
       "source_anchors": [
         { "register_key": "eu-data-act", "clause": "Art. 2(36) excludes 'early termination penalties' from the switching-charge ban; Art. 25 right to terminate on max 2-month notice; penalties must be 'proportionate', assessed under national contract/unfair-terms law (no Union-wide methodology)." }
       ],
-      "question_ids": ["SOV-6-08-LMIC"],
+      "question_ids": ["SOV-6-01-FB2", "SOV-6-08-LMIC"],
       "procurement_clause_ids": ["PC-L4-TERM"],
       "severity_basis": "Termination penalties are the residual lock-in lever the Data Act leaves to national-law proportionality review — explicitly the grey zone, hence flagged for contractual control."
     },

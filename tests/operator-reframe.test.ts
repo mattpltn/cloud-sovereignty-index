@@ -33,6 +33,28 @@ describe('operator reframe (frame on the fine value)', () => {
     expect(reframeOperator(SAMPLE, deriveOperatorLabel(undefined))).toBe(SAMPLE);
   });
 
+  // Bare "the provider" is only re-aimed when includeBareProvider is set (layer-anchored
+  // questions). Off by default so unanchored provider-relationship questions are untouched.
+  describe('bare "the provider" reframe (Fix #1, anchored questions only)', () => {
+    const vendor = deriveOperatorLabel(deriveControlProfile(togglesFromDefaults('managed_service')));
+    const BARE = "Does the provider ensure personnel are cleared? The provider's staff and the provider must comply.";
+
+    test('default (unanchored): bare "the provider" left unchanged', () => {
+      expect(reframeOperator(BARE, vendor)).toBe(BARE);
+    });
+
+    test('includeBareProvider (anchored): rewrites "the provider" to the operator', () => {
+      const out = reframeOperator(BARE, vendor, { includeBareProvider: true });
+      expect(out).toBe('Does your cloud operator ensure personnel are cleared? Your cloud operator\'s staff and your cloud operator must comply.');
+      expect(out).not.toMatch(/\bthe provider\b/i);
+    });
+
+    test('includeBareProvider is still a no-op when the operator is a provider', () => {
+      const provider = deriveOperatorLabel(deriveControlProfile(togglesFromDefaults('hyperscaler')));
+      expect(reframeOperator(BARE, provider, { includeBareProvider: true })).toBe(BARE);
+    });
+  });
+
   // Facility (L1) questions address whoever runs the building, even when the customer
   // runs the cloud on top — so SOV-8 in colocation → the data-center provider.
   describe('operatorForLayer (facility vs cloud)', () => {

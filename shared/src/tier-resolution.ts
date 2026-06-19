@@ -66,16 +66,34 @@ export function operatorForLayer(profile: ControlProfile | undefined, layer: str
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /** Rewrites "the cloud service provider" subject phrases to the operator label.
- *  A no-op when the operator is a provider (label === provider). */
-export function reframeOperator(text: string, label: OperatorLabel): string {
+ *  A no-op when the operator is a provider (label === provider).
+ *
+ *  `includeBareProvider` also rewrites the looser "the provider" phrasing — enabled
+ *  only for layer-anchored questions (relevance.layer set), where the concern-layer
+ *  operator is unambiguously the actor the question is about (e.g. SOV-4-01-FB at L5).
+ *  It is deliberately OFF for unanchored questions, whose "the provider" usually names
+ *  an external contractual party that does not cleanly re-aim to a self-run operator. */
+export function reframeOperator(
+  text: string,
+  label: OperatorLabel,
+  opts?: { includeBareProvider?: boolean },
+): string {
   if (label === PROVIDER_LABEL) return text;
-  return text
+  let out = text
     .replace(/\bThe cloud service provider's\b/g, cap(label.possessive))
     .replace(/\bthe cloud service provider's\b/g, label.possessive)
     .replace(/\bThe cloud service provider\b/g, label.Subject)
     .replace(/\bthe cloud service provider\b/g, label.subject)
     .replace(/\bcloud service provider's\b/g, label.possessiveBare)
     .replace(/\bcloud service provider\b/g, label.bare);
+  if (opts?.includeBareProvider) {
+    out = out
+      .replace(/\bThe provider's\b/g, cap(label.possessive))
+      .replace(/\bthe provider's\b/g, label.possessive)
+      .replace(/\bThe provider\b/g, label.Subject)
+      .replace(/\bthe provider\b/g, label.subject);
+  }
+  return out;
 }
 
 /**

@@ -16,8 +16,10 @@ const FILE = resolve(__dirname, '../data/criteria.json');
 const t = (archetype: ArchetypeId, layer: LayerId): ArchetypeTag => ({ archetype, layer });
 
 // 'agnostic' → always-ask (no show_when). 'manual' → keep the hand-written show_when
-// (a conjunction the OR-only generator can't express). Otherwise: archetype tags.
-type Spec = ArchetypeTag[] | 'agnostic' | 'manual';
+// (a conjunction the OR-only generator can't express). { agnostic: layer } → always-ask
+// but anchor a CONCERN layer used only to re-aim "the provider" wording to the actual
+// operator at that layer (no show_when, never hides). Otherwise: archetype tags.
+type Spec = ArchetypeTag[] | 'agnostic' | 'manual' | { agnostic: LayerId };
 
 const TAG_MAP: Record<string, Spec> = {
   // ── SOV-2 jurisdiction ──
@@ -91,9 +93,16 @@ const TAG_MAP: Record<string, Spec> = {
   'SOV-5-04':    [t('PHYSICAL_CUSTODY', 'L2')],
 
   // ── orphaned → always-ask compliance / supply (§5.5, §5.8) ──
-  'SOV-6-04': 'agnostic', // semiconductor/HPC supply origin is global — always relevant
   'SOV-7-03': 'agnostic', // NIS2 applies regardless of deployment
   'SOV-7-04': 'agnostic', // DORA applies regardless of deployment
+
+  // ── always-ask, concern-layer anchored only to re-aim "the provider" wording to the
+  //    service operator (provider scenarios resolve to provider → no reframe). Group A. ──
+  'SOV-1-07':   { agnostic: 'L5' }, // operational resilience against coercion / vendor withdrawal
+  'SOV-4-09-FB':{ agnostic: 'L5' }, // disconnect/reconnect plan & annual exercise
+  'SOV-6-04':   { agnostic: 'L3' }, // HPC supply-chain independence
+  'SOV-7-02':   { agnostic: 'L5' }, // data-protection compliance commitment
+  'SOV-7-08':   { agnostic: 'L5' }, // incident disclosure & CSIRT cooperation
 };
 
 interface QRel { layer?: string; pattern: string; show_when?: string; archetypes?: ArchetypeTag[]; }
@@ -113,11 +122,23 @@ for (const q of questions) {
 
   if (spec === 'manual') continue;
   if (spec === 'agnostic') {
-    if (rel.pattern !== 'agnostic' || rel.show_when || rel.archetypes) changes.push(`${q.id} → agnostic`);
+    if (rel.pattern !== 'agnostic' || rel.show_when || rel.archetypes || rel.layer) changes.push(`${q.id} → agnostic`);
     rel.pattern = 'agnostic';
     delete rel.show_when;
     delete rel.archetypes;
     delete rel.layer;
+    continue;
+  }
+  if (!Array.isArray(spec)) {
+    // { agnostic: layer } — always-ask, concern-layer anchored for wording re-aim only.
+    const layer = spec.agnostic;
+    if (rel.pattern !== 'agnostic' || rel.show_when || rel.archetypes || rel.layer !== layer) {
+      changes.push(`${q.id} → agnostic@${layer}`);
+    }
+    rel.pattern = 'agnostic';
+    delete rel.show_when;
+    delete rel.archetypes;
+    rel.layer = layer;
     continue;
   }
   const show_when = generateShowWhen(spec);

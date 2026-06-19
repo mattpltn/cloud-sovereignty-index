@@ -134,9 +134,23 @@ function buildNarrative(layerId: LayerId, lc: LayerControl): string {
 const ALL_RISKS = riskData.risks as Risk[];
 const ALL_CLAUSES = clauseData.clauses as ProcurementClause[];
 
+/**
+ * All risks whose control-profile predicate fires for this profile — the structural
+ * findings present regardless of any answer. Single source of truth shared by the
+ * posture report (buildReport) and the questionnaire's inline findings, so the two
+ * can never diverge on which risks are live.
+ */
+export function firedRisks(profile: ControlProfile): Risk[] {
+  return ALL_RISKS.filter(risk => {
+    try { return evaluate(risk.triggers, profile); }
+    catch { return false; }
+  });
+}
+
 export function buildReport(profile: ControlProfile, answers: AnswerMap): LayerReportRow[] {
   const layers: LayerId[] = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6'];
   const allQuestionIds = ALL_RISKS.flatMap(r => r.question_ids);
+  const fired = firedRisks(profile);
 
   return layers.map((layerId) => {
     const lc = profile[layerId];
@@ -144,11 +158,7 @@ export function buildReport(profile: ControlProfile, answers: AnswerMap): LayerR
     const assurance_signal = deriveAssuranceSignal(layerId, allQuestionIds, answers);
     const narrative = buildNarrative(layerId, lc);
 
-    const triggered_risks = ALL_RISKS.filter(risk => {
-      if ((risk as any).layer !== layerId) return false;
-      try { return evaluate(risk.triggers, profile); }
-      catch { return false; }
-    });
+    const triggered_risks = fired.filter(risk => (risk as any).layer === layerId);
 
     const bridge_ids = new Set(triggered_risks.flatMap(r => r.procurement_clause_ids));
     const bridges = ALL_CLAUSES.filter(c => bridge_ids.has(c.id) && (c as any).layer === layerId);

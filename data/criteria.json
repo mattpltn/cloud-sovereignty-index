@@ -335,7 +335,8 @@
           "seal_contribution_csi": 3,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L5"
           }
         },
         {
@@ -2460,7 +2461,8 @@
           },
           "supplementary_info": "This fallback question provides partial credit for providers that cannot yet demonstrate a fully operational disconnect/reconnect capability but have documented procedures and evidence of tabletop testing.",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L5"
           }
         },
         {
@@ -3576,7 +3578,8 @@
             }
           },
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L3"
           }
         },
         {
@@ -4054,7 +4057,8 @@
           "seal_contribution_csi": 1,
           "eu_csf_fidelity": "direct",
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L5"
           }
         },
         {
@@ -4251,7 +4255,8 @@
             }
           },
           "relevance": {
-            "pattern": "agnostic"
+            "pattern": "agnostic",
+            "layer": "L5"
           }
         },
         {
