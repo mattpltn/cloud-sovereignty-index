@@ -4,8 +4,6 @@ import type { CriteriaFile, Country, Question, ControlProfile } from '../../shar
 import type { AnswerMap, EvidenceLevel } from '../../shared/src/types.js';
 import { setAnswer, flushNow, readCache, writeCache } from '../lib/local-cache.js';
 import { evaluate } from '../../shared/src/relevance.js';
-import { firedRisks } from '../../shared/src/report.js';
-import RiskCard from './RiskCard';
 
 const EVIDENCE_LEVEL_LABELS: Record<EvidenceLevel, string> = {
   self_declared: 'Self-declared',
@@ -272,23 +270,15 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
 
   // Questions hidden by control-profile scope (CSI mode only)
   const isCsiMode = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
+  // Questions hidden by scope are listed in a quiet disclosure below. The structural
+  // risks they may carry are surfaced once, consolidated, on the review page
+  // (ScopeFindings → unaskedFiredRisks) — never silently dropped, never per-objective.
   const scopeHiddenQuestions = isCsiMode && controlProfile
     ? objective.questions.filter(q => {
         const showWhen: string | undefined = (q as any).relevance?.show_when;
         return showWhen ? !evaluate(showWhen, controlProfile) : false;
       })
     : [];
-
-  // No-silent-risk: a question hidden by scope must not bury a live structural risk.
-  // For each fired risk tied to a question hidden in this objective, surface a locked
-  // read-only finding. Remaining hidden questions are genuinely out of scope (the
-  // posture carries no risk for that facet) and stay in the quiet disclosure below.
-  const scopeHiddenIds = new Set(scopeHiddenQuestions.map(q => q.id));
-  const inlineFindings = isCsiMode && controlProfile
-    ? firedRisks(controlProfile).filter(r => r.question_ids.some(id => scopeHiddenIds.has(id)))
-    : [];
-  const coveredHiddenIds = new Set(inlineFindings.flatMap(r => r.question_ids));
-  const irrelevantHidden = scopeHiddenQuestions.filter(q => !coveredHiddenIds.has(q.id));
 
   // Count answered: each tiered question needs at least the national (or bloc) answered
   const answeredCount = visibleQuestions.filter(q => {
@@ -485,36 +475,21 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
         );
       })}
 
-      {inlineFindings.length > 0 && (
-        <div className="space-y-2">
-          <h3 className="text-sm font-medium text-gray-700">
-            Addressed automatically by your scope
-          </h3>
-          <p className="text-xs text-gray-500">
-            Your declared infrastructure carries these structural risks regardless of any
-            answer, so they are recorded as findings with a locked score rather than asked
-            as questions.
-          </p>
-          {inlineFindings.map(risk => (
-            <RiskCard key={risk.id} risk={risk} locked />
-          ))}
-        </div>
-      )}
-
-      {irrelevantHidden.length > 0 && (
+      {scopeHiddenQuestions.length > 0 && (
         <details className="border border-gray-100 rounded-lg p-3 text-xs text-gray-400">
           <summary className="cursor-pointer select-none font-medium">
-            {irrelevantHidden.length} question{irrelevantHidden.length !== 1 ? 's' : ''} hidden by your control profile
+            {scopeHiddenQuestions.length} question{scopeHiddenQuestions.length !== 1 ? 's' : ''} hidden by your control profile
           </summary>
           <ul className="mt-2 space-y-1 list-disc list-inside">
-            {irrelevantHidden.map(q => (
+            {scopeHiddenQuestions.map(q => (
               <li key={q.id}>
                 <span className="font-mono mr-1">{q.id}</span>{q.title}
               </li>
             ))}
           </ul>
           <p className="mt-2 text-gray-400">
-            These questions are not relevant to your declared infrastructure configuration.
+            Not asked because of your declared infrastructure. Any structural risks these
+            cover are recorded as findings on the review page.
             <a href={`/assess/${id}/scope`} className="ml-1 text-blue-500 hover:underline">Change profile</a>
           </p>
         </details>

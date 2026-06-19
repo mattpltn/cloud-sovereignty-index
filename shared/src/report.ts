@@ -1,4 +1,4 @@
-import type { ControlProfile, LayerControl } from './schema.js';
+import type { ControlProfile, LayerControl, CriteriaFile } from './schema.js';
 import type { AnswerMap, EvidenceStatus } from './types.js';
 import { evaluate } from './relevance.js';
 import riskData from '../../data/risk-register.json';
@@ -145,6 +145,28 @@ export function firedRisks(profile: ControlProfile): Risk[] {
     try { return evaluate(risk.triggers, profile); }
     catch { return false; }
   });
+}
+
+/**
+ * Structural findings to surface from scope: fired risks the questionnaire never asks the
+ * user about, i.e. risks with NO visible CSI bridge question. These must be recorded as
+ * findings (not silently dropped). Computed once over the whole criteria set and inherently
+ * deduplicated (one entry per risk), so a risk whose bridge questions span objectives can
+ * never appear more than once. A risk with at least one visible CSI bridge question is
+ * answered interactively and excluded here.
+ */
+export function unaskedFiredRisks(profile: ControlProfile, criteria: CriteriaFile): Risk[] {
+  const visibleCsiIds = new Set(
+    criteria.objectives
+      .flatMap(o => o.questions)
+      .filter(q => (q as any).applies_to_csi_composite)
+      .filter(q => {
+        const showWhen: string | undefined = (q as any).relevance?.show_when;
+        return showWhen ? evaluate(showWhen, profile) : true;
+      })
+      .map(q => q.id)
+  );
+  return firedRisks(profile).filter(r => !r.question_ids.some(id => visibleCsiIds.has(id)));
 }
 
 export function buildReport(profile: ControlProfile, answers: AnswerMap): LayerReportRow[] {

@@ -611,12 +611,20 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
         <p class="text-sm text-gray-700 mt-3">
           <strong>Hidden questions never hide a risk.</strong> When a question vanishes because it
           is out of scope, the questionnaire checks whether a <em>structural</em> sovereignty risk it
-          maps to is still live for your declared profile. If so, that risk is surfaced inline as a
-          read-only finding with a locked score and its source-anchored rationale — recorded, not
-          dropped. Only questions with no live risk for that facet (for example, jurisdiction
-          questions hidden because the layer is in-country) fall away quietly. An invariant test
-          guarantees that, across the reference deployment scenarios, no fired structural risk can
-          become invisible.
+          maps to is still live for your declared profile. If so, that risk is recorded as a
+          read-only finding with a locked score and its source-anchored rationale — never dropped.
+          These findings are consolidated into a single <strong>“Structural findings from your scope”</strong>
+          summary on the review page (one entry per risk, even when it spans several objectives),
+          rather than repeated inline page by page. Only questions with no live risk for that facet
+          (for example, jurisdiction questions hidden because the layer is in-country) fall away
+          quietly. An invariant test guarantees that, across the reference deployment scenarios, no
+          fired structural risk can become invisible.
+        </p>
+        <p class="text-sm text-gray-700 mt-3">
+          <strong>Domain maturity radar.</strong> The result page plots an eight-axis radar of
+          per-domain maturity across the SOV-1…SOV-8 objectives, complementing the single headline
+          score and the per-layer control posture. Axes with no answered questions are drawn dashed
+          and are not scored.
         </p>
       </div>
     </section>

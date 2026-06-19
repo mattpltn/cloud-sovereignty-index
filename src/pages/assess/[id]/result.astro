@@ -6,6 +6,7 @@ import ObjectiveAccordion from '../../../components/ObjectiveAccordion';
 import C3aObjectiveAccordion from '../../../components/C3aObjectiveAccordion';
 import PdfExportButton from '../../../components/PdfExportButton';
 import { ControlMatrixReport } from '../../../components/ControlMatrixReport';
+import DomainRadar from '../../../components/DomainRadar';
 import criteriaJson from '../../../../data/criteria.json';
 import countriesJson from '../../../../data/countries.json';
 import type { CriteriaFile, ControlProfile } from '../../../../shared/src/schema';
@@ -212,6 +213,13 @@ const euCsfBlockers = euCsfAllGaps.filter(g => g.seal_contribution != null && g.
 const euCsfMaturityGaps = euCsfAllGaps.filter(g => !euCsfBlockers.includes(g)).slice(0, 5);
 const euCsfTopGaps = euCsfAllGaps.slice(0, 5);
 const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: resolveGapTitle(g) }));
+
+// Domain maturity radar: one axis per sovereignty domain SOV-1…SOV-8 (each axis = that
+// domain's CSL). Excludes non-domain / weight-0 objectives. answered = had scoreable answers.
+const radarDomains = csiObjectives
+  .filter(o => /^SOV-[1-8]$/.test(o.objective_id))
+  .sort((a, b) => a.objective_id.localeCompare(b.objective_id))
+  .map(o => ({ id: o.objective_id, title: o.title, csl: o.csl, answered: o.max_score > 0 }));
 ---
 <!doctype html>
 <html lang="en">
@@ -399,6 +407,14 @@ const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: r
               CSI — Operational Sovereignty & Resilience Assessment
               <span class="text-xs font-normal text-gray-400 bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">editorial framework</span>
             </h2>
+
+            {/* Domain maturity radar */}
+            {radarDomains.length >= 3 && (
+              <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-800 mb-2">Domain maturity</h3>
+                <DomainRadar client:load domains={radarDomains} globalCsl={result.csi_composite.global.csl} maxCsl={variant === 'Generalized' ? 3 : 4} />
+              </div>
+            )}
 
             {/* Anti-patterns */}
             {csiAntiPatterns.length > 0 && (

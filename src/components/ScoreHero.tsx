@@ -1,4 +1,5 @@
 import type { AssessmentResult, EuCsfResult, C3aResult, CsiCompositeResult, CadaResult, C3aAttainmentBand } from '../../shared/src/types';
+import { CSI_MATURITY_NAMES, CSI_MATURITY_COLORS } from '../lib/csi-display';
 
 interface Props {
   result: AssessmentResult;
@@ -6,9 +7,6 @@ interface Props {
 
 const SEAL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovereignty', 'Digital Resilience', 'Full Digital Sovereignty'];
 const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
-
-const CSI_MATURITY_NAMES = ['Dependent', 'Managed Dependency', 'Strategic Autonomy', 'Sovereign'];
-const CSI_MATURITY_COLORS = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];
 
 const C3A_BAND_LABELS: Record<C3aAttainmentBand, string> = {
   not_attained: 'Not Attained',

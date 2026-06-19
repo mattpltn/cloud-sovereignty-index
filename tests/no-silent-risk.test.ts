@@ -1,7 +1,8 @@
 import { describe, test, expect } from 'vitest';
 import criteriaJson from '../data/criteria.json';
 import type { CriteriaFile, ControlProfile, LayerControl } from '../shared/src/schema';
-import { firedRisks } from '../shared/src/report';
+import { firedRisks, unaskedFiredRisks } from '../shared/src/report';
+import { radarPoints } from '../src/components/DomainRadar';
 import { deriveControlProfile, togglesFromDefaults, type ToggleProfile } from '../shared/src/scoping-derive';
 
 // ── The brief's four deployment scenarios (instructions.txt) + the sovereign baseline ──
@@ -83,5 +84,72 @@ describe('no-silent-risk — every fired structural risk is bridged to a CSI que
         `${id} must bridge to a CSI question`
       ).toBe(true);
     }
+  });
+});
+
+// unaskedFiredRisks consolidates the structural findings surfaced once on the review page
+// (no longer rendered per-objective in the questionnaire, which caused a cross-objective
+// duplicate). Pins that it is deduped and only includes risks with no VISIBLE CSI bridge.
+describe('unaskedFiredRisks — consolidated, deduped scope findings', () => {
+  test('no risk appears more than once for any scenario (dedup by construction)', () => {
+    for (const [name, profile] of Object.entries(SCENARIOS)) {
+      const ids = unaskedFiredRisks(profile, criteria).map(r => r.id);
+      const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+      expect(dupes, `${name}: ${dupes.join(', ')} appeared more than once`).toEqual([]);
+    }
+  });
+
+  test('colocation surfaces the facility-access finding exactly once (duplicate regression)', () => {
+    // RISK-L1-ACCESS-01 bridges SOV-3-01 + SOV-2-03 (two objectives). Both are hidden by
+    // scope in the colocation profile, so it has no visible bridge → recorded as a finding,
+    // once — previously it rendered on both the SOV-2 and SOV-3 pages.
+    const ids = unaskedFiredRisks(profileOf('colocation'), criteria).map(r => r.id);
+    expect(ids.filter(id => id === 'RISK-L1-ACCESS-01')).toEqual(['RISK-L1-ACCESS-01']);
+  });
+
+  test('a risk whose CSI bridge question is visible is NOT listed (asked interactively)', () => {
+    // The sovereign baseline asks RISK-L3-SKILLS-01's bridge question interactively
+    // (nothing is scoped out), so it must not also appear as an unasked finding.
+    const ids = unaskedFiredRisks(sovereignProfile(), criteria).map(r => r.id);
+    expect(ids).not.toContain('RISK-L3-SKILLS-01');
+  });
+
+  test('every unasked fired risk has a CSI bridge question (still no-silent-risk)', () => {
+    for (const [name, profile] of Object.entries(SCENARIOS)) {
+      for (const risk of unaskedFiredRisks(profile, criteria)) {
+        expect(
+          risk.question_ids.some(id => csiQuestionIds.has(id)),
+          `${name}: ${risk.id} surfaced as a finding but has no CSI bridge question`
+        ).toBe(true);
+      }
+    }
+  });
+});
+
+describe('radarPoints geometry', () => {
+  test('first axis (value 1) sits at 12 o\'clock, on the radius', () => {
+    const [[x, y]] = radarPoints([1, 1, 1, 1], 100, 100, 50);
+    expect(x).toBeCloseTo(100, 5); // straight up → same x as centre
+    expect(y).toBeCloseTo(50, 5);  // cy - r
+  });
+
+  test('value 0 maps to the centre; clamps out-of-range values', () => {
+    const pts = radarPoints([0, 2, -1], 100, 100, 50);
+    expect(pts[0][0]).toBeCloseTo(100, 5);
+    expect(pts[0][1]).toBeCloseTo(100, 5);
+    // value 2 clamps to 1 (full radius), value -1 clamps to 0 (centre)
+    const full = radarPoints([1, 1, 1], 100, 100, 50);
+    expect(pts[1][0]).toBeCloseTo(full[1][0], 5);
+    expect(pts[1][1]).toBeCloseTo(full[1][1], 5);
+    expect(pts[2][0]).toBeCloseTo(100, 5);
+    expect(pts[2][1]).toBeCloseTo(100, 5);
+  });
+
+  test('four equal axes are symmetric about the centre', () => {
+    const [top, right, bottom, left] = radarPoints([1, 1, 1, 1], 0, 0, 10);
+    expect(top).toEqual([expect.closeTo(0, 5), expect.closeTo(-10, 5)]);
+    expect(right).toEqual([expect.closeTo(10, 5), expect.closeTo(0, 5)]);
+    expect(bottom).toEqual([expect.closeTo(0, 5), expect.closeTo(10, 5)]);
+    expect(left).toEqual([expect.closeTo(-10, 5), expect.closeTo(0, 5)]);
   });
 });
