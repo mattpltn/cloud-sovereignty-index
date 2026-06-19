@@ -182,6 +182,21 @@
     },
 
     {
+      "id": "RISK-L5-OPSDEP-01",
+      "layer": "L5",
+      "title": "External operator holds privileged access — operational substitutability",
+      "description": "When the service is operated by an external party — a local systems integrator, a foreign vendor, or the provider itself — that party holds the privileged access and operational knowledge required to run it. Independent of jurisdiction, the operator's withdrawal, insolvency, acquisition, or a contractual dispute can interrupt service continuity unless the client holds a tested takeover capability: current runbooks, available or escrowed credentials, knowledge transfer, and a defined transition plan. A local SI is lower jurisdictional risk than a foreign vendor but the operational dependency is the same.",
+      "triggers": "L5.operation == 'local_si' OR L5.operation == 'foreign_vendor' OR L5.operation == 'provider'",
+      "source_anchors": [
+        { "register_key": "c3a", "clause": "§2.3 (Operational Substitutability): assesses whether the client can operate, maintain, or re-procure the service without the incumbent operator — an external operator with no tested takeover path fails this criterion." },
+        { "register_key": "iso-22301", "clause": "Cl. 8.4.3: business-continuity procedures must secure competent personnel and operating resources; operational knowledge held solely by an external operator is an unmet continuity-resource requirement." }
+      ],
+      "question_ids": ["SOV-4-18-CSI", "SOV-4-01"],
+      "procurement_clause_ids": ["PC-L5-OPSDEP"],
+      "severity_basis": "C3A §2.3 treats operational substitutability as a scored sovereignty criterion and ISO 22301 cl. 8.4.3 requires continuity of operating resources including competent personnel; an externally operated service with no tested, documented takeover capability is operationally a single point of failure regardless of the operator's jurisdiction — the dependency is on the operator's continued willingness and ability to perform, which the client cannot unilaterally assure."
+    },
+
+    {
       "id": "RISK-L6-EXITDRILL-01",
       "layer": "L6",
       "title": "No tested exit path for critical workloads",

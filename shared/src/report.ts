@@ -81,18 +81,18 @@ const LOCATION_LABELS: Record<string, string> = {
 };
 
 function deriveControlChannel(lc: LayerControl): ControlChannel {
-  const { ownership, operation } = lc;
-  if (ownership === 'client') return 'client';
-  if (ownership === 'commercial_lessor') {
-    return operation === 'foreign_vendor' ? 'foreign_vendor' : 'commercial';
-  }
-  if (ownership === 'provider') {
-    return operation === 'foreign_vendor' ? 'foreign_provider' : 'foreign_provider';
-  }
-  if (ownership === 'mixed') {
-    return operation === 'foreign_vendor' ? 'foreign_vendor' : 'commercial';
-  }
-  return 'client';
+  const { ownership, operation, location } = lc;
+  // Fully sovereign only when you BOTH own and operate the layer. A client-owned layer
+  // that a third party operates is not "client" control — that is the sovereign-washing
+  // case ("you own it, they hold the keys"), so operation drives the channel below.
+  if (ownership === 'client' && operation === 'client_staff') return 'client';
+  const foreign = location === 'foreign' || operation === 'foreign_vendor';
+  // Provider owns the layer: foreign jurisdiction → foreign_provider, in-country → commercial.
+  if (ownership === 'provider') return foreign ? 'foreign_provider' : 'commercial';
+  // Otherwise a third party operates a client- or commercially-held layer.
+  if (foreign) return 'foreign_vendor';
+  // In-country third-party operation (local SI, landlord, in-country provider ops).
+  return 'commercial';
 }
 
 const EVIDENCE_RANK: Record<EvidenceStatus, number> = {

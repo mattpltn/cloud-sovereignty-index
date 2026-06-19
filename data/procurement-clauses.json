@@ -177,6 +177,18 @@
     },
 
     {
+      "id": "PC-L5-OPSDEP",
+      "layer": "L5",
+      "clause_text": "Where a third party operates the Service, the contract shall guarantee the Customer's ability to resume operations on operator withdrawal, insolvency, acquisition, or termination: current operational runbooks and configuration documentation maintained and handed over on request, administrative credentials available to the Customer or held in escrow, a defined knowledge-transfer and transition plan, and at least one Customer-led or witnessed takeover rehearsal per year. The Operator shall not make continued operation contingent on undocumented knowledge held solely by its personnel.",
+      "source_anchors": [
+        { "register_key": "c3a", "clause": "§2.3 (Operational Substitutability): the Customer's ability to operate or re-procure the service without the incumbent operator is a scored criterion." },
+        { "register_key": "iso-22301", "clause": "Cl. 8.4.3: business-continuity procedures must secure competent personnel and the resources needed to operate — undocumented operator knowledge is an unmet continuity-resource requirement." }
+      ],
+      "realism_tag": "negotiable",
+      "applies_when": "L5.operation == 'local_si' OR L5.operation == 'foreign_vendor' OR L5.operation == 'provider'"
+    },
+
+    {
       "id": "PC-L6-EXITDRILL",
       "layer": "L6",
       "clause_text": "The Customer shall conduct an annual exit drill for workloads classified as critical. The Provider shall cooperate with such drills by providing: (a) a data export in the agreed portability format, (b) a functional-equivalence mapping for any proprietary services used, and (c) technical staff available to support the drill for up to 5 business days per drill event. The Provider may charge only directly incurred costs for this cooperation.",

@@ -130,4 +130,39 @@ describe('buildReport two-channel separation', () => {
       }
     }
   });
+
+  // Fix (a): control_channel must reflect WHO OPERATES, not just ownership. A client-owned
+  // layer run by a third party is the "you own it, they hold the keys" case — never 'client'.
+  describe('control_channel reflects operation (no sovereign-washing as green)', () => {
+    const lc = (o: string, op: string, loc = 'in_country') =>
+      ({ ownership: o, operation: op, dependency: 'na', location: loc } as any);
+    const channelFor = (layer: any): string =>
+      buildReport({ ...SOVEREIGN_PROFILE, L5: layer }, ANSWERS).find(r => r.layer === 'L5')!.control_channel;
+
+    test('client-owned but client-operated → client', () => {
+      expect(channelFor(lc('client', 'client_staff'))).toBe('client');
+    });
+    test('client-owned but foreign-vendor-operated → foreign_vendor (not client)', () => {
+      expect(channelFor(lc('client', 'foreign_vendor', 'foreign'))).toBe('foreign_vendor');
+    });
+    test('client-owned but local-SI-operated → commercial (not client)', () => {
+      expect(channelFor(lc('client', 'local_si'))).toBe('commercial');
+    });
+    test('provider-owned in-country → commercial; foreign → foreign_provider', () => {
+      expect(channelFor(lc('provider', 'provider', 'in_country'))).toBe('commercial');
+      expect(channelFor(lc('provider', 'provider', 'foreign'))).toBe('foreign_provider');
+    });
+  });
+
+  // Fix (b): a deployment operated by a local SI must surface an operational-dependency
+  // finding at L5 — previously the jurisdiction-centric register left it near-empty.
+  test('local-SI operation surfaces RISK-L5-OPSDEP-01 at L5', () => {
+    const siProfile: ControlProfile = {
+      ...SOVEREIGN_PROFILE,
+      L5: { ownership: 'client', operation: 'local_si', dependency: 'na', location: 'in_country' },
+    };
+    const l5 = buildReport(siProfile, ANSWERS).find(r => r.layer === 'L5')!;
+    expect(l5.triggered_risks.map(r => r.id)).toContain('RISK-L5-OPSDEP-01');
+    expect(l5.control_channel).toBe('commercial');
+  });
 });

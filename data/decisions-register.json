@@ -1664,6 +1664,14 @@
       "authority": "maintainer decision 2026-06-16",
       "alternatives_considered": "Keep findings on the results page only (rejected: the questionnaire user never learns that hiding a question left a live structural risk). Make hidden questions answerable anyway (rejected: defeats scope adaptation and asks irrelevant questions). Define the invariant away by excluding LMIC-tagged risks from CSI mode (rejected: those risks genuinely fire for CSI postures and would otherwise be silent).",
       "review_status": "stable"
+    },
+    {
+      "id": "DR-R4",
+      "category": "derivation",
+      "rationale": "Two posture-report quality fixes from scenario outcome review. (a) control_channel (shared/src/report.ts deriveControlChannel) now reflects WHO OPERATES a layer, not just ownership: a client-owned layer operated by a third party is no longer reported as green 'client'. Mapping: client+client_staff → client; provider-owned → foreign_provider if foreign/foreign_vendor else commercial; any other third-party operation → foreign_vendor if foreign reach (foreign location or foreign_vendor) else commercial (local SI, landlord, in-country provider ops). This fixes the 'sovereign-washing' under-report where a foreign vendor holds privileged access to client-owned kit (e.g. gov DC with foreign L5 support showed L5='client'). (b) Added RISK-L5-OPSDEP-01 (operational substitutability) triggering on L5.operation in {local_si, foreign_vendor, provider}, bridged to SOV-4-18-CSI + SOV-4-01 and clause PC-L5-OPSDEP, anchored to C3A §2.3 (Operational Substitutability) and ISO 22301 cl. 8.4.3. The risk register was jurisdiction-centric, so a fully local-SI-managed deployment surfaced almost no findings despite a real 'the SI holds all the keys' operational dependency; OPSDEP-01 now fires for any externally operated service regardless of jurisdiction. Verified across the four reference scenarios: hyperscaler scores lowest and the weakest-link CSL gate drops it to tier 'strategic_autonomy' while sovereign-leaning deployments reach 'sovereign'.",
+      "authority": "maintainer decision 2026-06-19",
+      "alternatives_considered": "Leave control_channel ownership-only (rejected: reports green 'Client' for client-owned-but-vendor-operated layers, contradicting the very risks fired on the same row). Trigger OPSDEP only on local_si (rejected: operational substitutability applies to any external operator; foreign_vendor and provider also lack client takeover capability — the jurisdiction risks are a separate concern). Add a distinct 'local_si' control channel (rejected: the four-channel severity gradient client<commercial<foreign_vendor<foreign_provider already places an in-country third party at 'commercial').",
+      "review_status": "stable"
     }
   ],
   "DR-F1": {
