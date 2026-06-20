@@ -33,7 +33,7 @@ function shortLabel(id: string, title: string): string {
 
 /**
  * 8-axis CSI domain maturity radar (SOV-1…SOV-8). Each axis is a domain's maturity
- * level (csl, 0–4) over MAX_CSL. Dependency-free SVG, matching the codebase's
+ * level (csl, 0–4) over maxCsl. Dependency-free SVG, matching the codebase's
  * hand-rolled charting (e.g. ControlMatrixReport). Fills the cross-section gap between
  * the headline % (ScoreHero) and the per-layer control matrix: nothing previously
  * showed per-domain maturity.
@@ -53,7 +53,7 @@ export default function DomainRadar({ domains, globalCsl, maxCsl = 4 }: { domain
         aria-label="Domain maturity radar across the eight CSI sovereignty objectives">
         {/* Concentric CSL rings */}
         {rings.map(level => {
-          const ringPts = radarPoints(domains.map(() => level / MAX_CSL), CX, CY, R)
+          const ringPts = radarPoints(domains.map(() => level / maxCsl), CX, CY, R)
             .map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
           return <polygon key={level} points={ringPts} fill="none" stroke="#e5e7eb" strokeWidth={1} />;
         })}

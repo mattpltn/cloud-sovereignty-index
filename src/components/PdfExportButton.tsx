@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CriteriaFile } from '../../shared/src/schema.js';
+import type { CriteriaFile, ControlProfile } from '../../shared/src/schema.js';
 
 interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
 
@@ -8,16 +8,17 @@ interface Props {
   criteria: CriteriaFile;
   companyName?: string;
   country?: Country;
+  controlProfile?: ControlProfile | null;
 }
 
-export default function PdfExportButton({ result, criteria, companyName, country }: Props) {
+export default function PdfExportButton({ result, criteria, companyName, country, controlProfile }: Props) {
   const [loading, setLoading] = useState(false);
 
   async function handleDownload() {
     setLoading(true);
     try {
       const { buildReportPdf } = await import('../lib/report-pdf.js');
-      const blob = await buildReportPdf(result as Parameters<typeof buildReportPdf>[0], criteria, companyName, country);
+      const blob = await buildReportPdf(result as Parameters<typeof buildReportPdf>[0], criteria, companyName, country, controlProfile);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

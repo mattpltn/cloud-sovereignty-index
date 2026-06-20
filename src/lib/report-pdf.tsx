@@ -1,6 +1,7 @@
-import type { CriteriaFile, Question } from '../../shared/src/schema.js';
+import type { CriteriaFile, Question, ControlProfile } from '../../shared/src/schema.js';
 import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult } from '../../shared/src/types.js';
 import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
+import { buildReport } from '../../shared/src/report.js';
 
 interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
 
@@ -39,6 +40,7 @@ export async function buildReportPdf(
   criteria: CriteriaFile,
   companyName?: string,
   country?: Country,
+  controlProfile?: ControlProfile | null,
 ): Promise<Blob> {
   // Import actual React PDF components — helpers must be defined AFTER this
   const { Document, Page, Text, View, StyleSheet, pdf, Svg, Line, Polygon, Rect } = await import('@react-pdf/renderer');
@@ -279,6 +281,54 @@ export async function buildReportPdf(
             }),
           ),
     ];
+  }
+
+  // Recommended contract clauses + structural risks, derived from the control profile.
+  // These are the actionable "how to improve the posture" templates — the procurement
+  // bridges attached to each fired structural risk, grouped by infrastructure layer.
+  function buildContractClausesPages() {
+    if (!controlProfile) return [];
+    const rows = buildReport(controlProfile, {});
+    const active = rows.filter(r => r.triggered_risks.length > 0 || r.bridges.length > 0);
+    if (active.length === 0) return [];
+
+    const blocks = active.flatMap(row => {
+      const items: unknown[] = [
+        h(Text, { style: styles.subSectionTitle, wrap: false }, `${row.layer} · ${row.layer_name}`),
+      ];
+      for (const risk of row.triggered_risks) {
+        items.push(h(View, { key: risk.id, style: { ...styles.weakCard, wrap: false }, wrap: false },
+          h(Text, { style: styles.cardTitle }, `Risk: ${risk.title}`),
+          h(Text, { style: styles.cardBody }, risk.description.slice(0, 320) + (risk.description.length > 320 ? '…' : '')),
+        ));
+      }
+      for (const bridge of row.bridges) {
+        const tag = (bridge as { realism_tag?: string }).realism_tag;
+        items.push(h(View, { key: bridge.id, style: { ...styles.improvCard, marginBottom: 4 }, wrap: false },
+          h(View, { style: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 3 } },
+            h(Text, { style: { ...styles.cardTitle, flex: 1 } }, `Contract clause — ${bridge.id}`),
+            tag ? h(View, { style: { backgroundColor: '#eef2ff', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 } },
+              h(Text, { style: { fontSize: 7, color: '#4338ca', fontFamily: 'Helvetica-Bold' } }, tag.replace(/_/g, ' '))) : null,
+          ),
+          h(Text, { style: { ...styles.cardBody, color: '#374151' } },
+            bridge.clause_text.slice(0, 700) + (bridge.clause_text.length > 700 ? '…' : '')),
+          bridge.source_anchors?.[0]
+            ? h(Text, { style: { ...styles.cardBody, color: '#9ca3af', marginTop: 2 } },
+                `Basis: ${bridge.source_anchors[0].register_key} — ${bridge.source_anchors[0].clause.slice(0, 160)}`)
+            : null,
+        ));
+      }
+      return items;
+    });
+
+    return [h(Page, { size: 'A4', style: styles.page },
+      pageHeader,
+      h(Text, { style: styles.sectionTitle }, 'Recommended Contract Clauses'),
+      h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
+        'Your declared infrastructure carries the structural risks below. For each, a model procurement / contract clause is suggested to close or mitigate it — negotiable templates to raise in supplier discussions, grouped by infrastructure layer.'),
+      ...blocks,
+      footer,
+    )];
   }
 
   // ── Styles ───────────────────────────────────────────────────────────────────
@@ -627,6 +677,7 @@ export async function buildReportPdf(
     ...euCsfPages,
     ...c3aPages,
     ...csiPages,
+    ...buildContractClausesPages(),
     // ── CADA detail pages ──────────────────────────────────────────────────────
     ...(result.cada ? (() => {
       const cada = result.cada!;
