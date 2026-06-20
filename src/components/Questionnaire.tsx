@@ -4,6 +4,9 @@ import type { CriteriaFile, Country, Question, ControlProfile } from '../../shar
 import type { AnswerMap, EvidenceLevel } from '../../shared/src/types.js';
 import { setAnswer, flushNow, readCache, writeCache } from '../lib/local-cache.js';
 import { evaluate } from '../../shared/src/relevance.js';
+import { STRUCTURAL_QUESTION_IDS } from '../../shared/src/structural-answers.js';
+
+const STRUCTURAL_IDS = new Set(STRUCTURAL_QUESTION_IDS);
 
 const EVIDENCE_LEVEL_LABELS: Record<EvidenceLevel, string> = {
   self_declared: 'Self-declared',
@@ -165,6 +168,9 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
     if (!frameworkCheck) return false;
     // Control-profile gate: apply show_when for all frameworks when a control profile is set
     const isCsiMode = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
+    // Structural questions are auto-answered from the control profile (jurisdiction,
+    // residency, operator location) and surfaced on the review page — never asked here.
+    if (isCsiMode && controlProfile && STRUCTURAL_IDS.has(q.id)) return false;
     const showWhen: string | undefined = (q as any).relevance?.show_when;
     if (showWhen && controlProfile) {
       if (!evaluate(showWhen, controlProfile)) return false;
@@ -263,6 +269,9 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
     // concern-layer operator is unambiguously the question's subject.
     return reframeOperator(resolved, label, { includeBareProvider: !!concernLayer });
   };
+  // The verbatim source criterion text (placeholders resolved, but NOT reframed or
+  // CSI-rewritten) — revealed under each question so every amendment stays auditable.
+  const originalSource = (text?: string) => (text ? resolvePlaceholders(text, ctx) : undefined);
 
   if (!objective) return <div className="text-red-600">Objective {objectiveId} not found</div>;
 
@@ -275,6 +284,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   // (ScopeFindings → unaskedFiredRisks) — never silently dropped, never per-objective.
   const scopeHiddenQuestions = isCsiMode && controlProfile
     ? objective.questions.filter(q => {
+        if (STRUCTURAL_IDS.has(q.id)) return false; // auto-answered → shown in the review panel
         const showWhen: string | undefined = (q as any).relevance?.show_when;
         return showWhen ? !evaluate(showWhen, controlProfile) : false;
       })
@@ -327,6 +337,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               id={q.id}
               title={qTitle}
               text={resolveText(qText, (q as any).relevance?.layer)}
+              originalText={originalSource(q.text)}
               sealContribution={q.seal_contribution}
               points={q.points}
               source={sourceLabel(q, fw, q.source.doc, q.source.clause)}
@@ -372,6 +383,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               id={q.id}
               title={csiPresTiered?.title ?? tieredTitle}
               text={resolveText(csiPresText, (q as any).relevance?.layer)}
+              originalText={originalSource((q.tiers?.bloc as any)?.text ?? (q as any).text)}
               sealContribution={q.tiers.bloc.seal_contribution}
               points={q.tiers.bloc.points}
               source={sourceLabel(q, fw, q.tiers.bloc.source.doc, q.tiers.bloc.source.clause)}
@@ -508,8 +520,8 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   );
 }
 
-function QuestionCard({ id, title, text, sealContribution, points, source, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, answerValues, warnPlannedForC3a, fidelityTags, levelPrefix }: {
-  id: string; title: string; text: string; sealContribution: number; points: number; source: string;
+function QuestionCard({ id, title, text, originalText, sealContribution, points, source, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, answerValues, warnPlannedForC3a, fidelityTags, levelPrefix }: {
+  id: string; title: string; text: string; originalText?: string; sealContribution: number; points: number; source: string;
   isAdditionalCriterion?: boolean; value: AnswerValue | undefined;
   onAnswer: (v: AnswerValue) => void; evidenceLevel?: EvidenceLevel; onEvidenceLevel?: (l: EvidenceLevel) => void;
   answerValues: AnswerValue[]; warnPlannedForC3a?: boolean; fidelityTags?: FidelityTagInfo[];
@@ -555,6 +567,12 @@ function QuestionCard({ id, title, text, sealContribution, points, source, isAdd
         </p>
       )}
       <div className="mt-2 text-xs text-gray-400">Source: {source}</div>
+      {originalText && originalText.trim() && originalText.trim() !== text.trim() && (
+        <details className="mt-1 text-xs text-gray-400">
+          <summary className="cursor-pointer select-none hover:text-gray-600">Original source wording</summary>
+          <p className="mt-1 leading-relaxed text-gray-500 border-l-2 border-gray-200 pl-2 italic">{originalText}</p>
+        </details>
+      )}
     </div>
   );
 }

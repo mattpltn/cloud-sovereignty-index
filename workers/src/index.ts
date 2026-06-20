@@ -2,8 +2,9 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { z } from 'zod';
 import { scoreAssessment } from '../../shared/src/scoring.js';
+import { mergeStructuralAnswers } from '../../shared/src/structural-answers.js';
 import criteriaJson from '../../data/criteria.json';
-import type { CriteriaFile } from '../../shared/src/schema.js';
+import type { CriteriaFile, ControlProfile } from '../../shared/src/schema.js';
 
 const criteria = criteriaJson as unknown as CriteriaFile;
 
@@ -198,7 +199,18 @@ app.post('/api/assessments/:id/submit', async (c) => {
   const selectedFrameworks = JSON.parse((row.selected_frameworks as string | null) ?? '["csi_composite"]');
   const customerSelectedAcIds = JSON.parse((row.customer_selected_ac_ids as string | null) ?? '[]');
 
-  const result = scoreAssessment(answers, criteria, id, {
+  // Auto-answer the profile-determined structural questions (jurisdiction, residency,
+  // operator location) and merge them UNDER the user's answers — manual answers win.
+  // This is the authoritative injection point: the score counts these like typed answers,
+  // so a foreign deployment cannot inflate by simply not being asked them.
+  const controlProfile = row.control_profile
+    ? (JSON.parse(row.control_profile as string) as ControlProfile)
+    : null;
+  const scoredAnswers = controlProfile
+    ? mergeStructuralAnswers(answers, controlProfile, criteria)
+    : answers;
+
+  const result = scoreAssessment(scoredAnswers, criteria, id, {
     variant: row.variant as string,
     country_code: row.national_country as string | undefined,
     scope_ids: JSON.parse(row.service_models as string),

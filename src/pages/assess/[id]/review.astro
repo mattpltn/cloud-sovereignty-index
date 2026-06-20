@@ -1,6 +1,7 @@
 ---
 import '../../../styles/global.css';
 import ScopeFindings from '../../../components/ScopeFindings';
+import AutoAnswers from '../../../components/AutoAnswers';
 import criteriaJson from '../../../../data/criteria.json';
 import type { CriteriaFile } from '../../../../shared/src/schema';
 export const prerender = false;
@@ -28,6 +29,8 @@ const { id } = Astro.params;
     </p>
 
     <div id="answer-summary" class="mb-8 text-sm text-gray-600">Loading answers…</div>
+
+    <AutoAnswers client:load id={id} criteria={criteria} />
 
     <ScopeFindings client:load id={id} criteria={criteria} />
 

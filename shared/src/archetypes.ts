@@ -50,7 +50,11 @@ export const ARCHETYPES: Record<ArchetypeId, ArchetypeDef> = {
   // any deviation is a jurisdiction surface.
   JURISDICTION: {
     id: 'JURISDICTION',
-    layers: ['L1', 'L2', 'L5'],
+    // Foreign-law reach exists wherever data is held/processed or the service is operated:
+    // the facility (L1), the hardware holding data (L2), and the operating/processing
+    // layers (L3 virtualization, L4 managed/PaaS, L5 operations). A hybrid with an
+    // in-country facility but a foreign PaaS/ops layer still carries extraterritorial exposure.
+    layers: ['L1', 'L2', 'L3', 'L4', 'L5'],
     clauseFor: (L) => or([
       `${L}.location == 'regional_treaty'`,
       `${L}.location == 'trusted_third'`,

@@ -23,12 +23,15 @@ type Spec = ArchetypeTag[] | 'agnostic' | 'manual' | { agnostic: LayerId };
 
 const TAG_MAP: Record<string, Spec> = {
   // ── SOV-2 jurisdiction ──
-  'SOV-2-01': [t('JURISDICTION', 'L1')],
-  'SOV-2-02': [t('JURISDICTION', 'L1'), t('JURISDICTION', 'L2')],
+  // Foreign-law exposure exists wherever data is held/processed or the service is
+  // operated, not just the facility — so these fire on the data/operating layers too
+  // (a hybrid with in-country facility but foreign PaaS/ops still has exposure).
+  'SOV-2-01': [t('JURISDICTION', 'L1'), t('JURISDICTION', 'L3'), t('JURISDICTION', 'L4'), t('JURISDICTION', 'L5')],
+  'SOV-2-02': [t('JURISDICTION', 'L1'), t('JURISDICTION', 'L2'), t('JURISDICTION', 'L3'), t('JURISDICTION', 'L4'), t('JURISDICTION', 'L5')],
   'SOV-2-03': 'manual', // (facility external) AND (platform external) — conjunction
-  'SOV-2-03-CSI': [t('JURISDICTION', 'L1')],
-  'SOV-2-05': [t('JURISDICTION', 'L1')],
-  'SOV-2-05-CADA': [t('JURISDICTION', 'L1')],
+  'SOV-2-03-CSI': [t('JURISDICTION', 'L1')], // host-country emergency takeover → facility jurisdiction
+  'SOV-2-05': [t('JURISDICTION', 'L1'), t('JURISDICTION', 'L2'), t('JURISDICTION', 'L3'), t('JURISDICTION', 'L4'), t('JURISDICTION', 'L5')],
+  'SOV-2-05-CADA': [t('JURISDICTION', 'L1'), t('JURISDICTION', 'L3'), t('JURISDICTION', 'L4'), t('JURISDICTION', 'L5')],
 
   // ── SOV-3 provider sovereignty-service obligations (provider controls a data layer) ──
   // Re-anchored off the facility (§5.2): residency + capability questions only apply
@@ -37,7 +40,10 @@ const TAG_MAP: Record<string, Spec> = {
   'SOV-3-01-C1': [t('DATA_RESIDENCY_SERVICE', 'L2'), t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
   'SOV-3-01-C2': [t('DATA_RESIDENCY_SERVICE', 'L2'), t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
   'SOV-3-01-C5': [t('DATA_RESIDENCY_SERVICE', 'L2'), t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
-  'SOV-3-02-C':  [t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
+  // Key control / encryption / erasure follow the DEPENDENCY too (§5.4): on a proprietary
+  // closed platform you own but cannot open, you may not control keys or guarantee erasure
+  // — so these also fire on REVERSIBILITY (licensed/proprietary), not just provider ownership.
+  'SOV-3-02-C':  [t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4'), t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L4')],
   'SOV-3-02-AC': [t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
   'SOV-3-03-C':  [t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
   'SOV-3-03-AC1':[t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
@@ -46,8 +52,8 @@ const TAG_MAP: Record<string, Spec> = {
   'SOV-3-04-C':  [t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
   'SOV-3-04-AC1':[t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
   'SOV-3-04-AC2':[t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
-  'SOV-3-05-C':  [t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
-  'SOV-3-06':    [t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4')],
+  'SOV-3-05-C':  [t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4'), t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L4')],
+  'SOV-3-06':    [t('DATA_RESIDENCY_SERVICE', 'L3'), t('DATA_RESIDENCY_SERVICE', 'L4'), t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L4')],
   'SOV-3-AI-01-AC': [t('DATA_RESIDENCY_SERVICE', 'L4')],
   'SOV-3-AI-02-AC': [t('DATA_RESIDENCY_SERVICE', 'L4')],
   'SOV-3-AI-03-AC': [t('DATA_RESIDENCY_SERVICE', 'L4')],
@@ -66,9 +72,9 @@ const TAG_MAP: Record<string, Spec> = {
 
   // ── reversibility (§5.4: independent of ownership — the VMware case) ──
   'SOV-4-15-CADA': [t('REVERSIBILITY', 'L4')],
-  'SOV-6-01':     [t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L6')],
-  'SOV-6-01-FB1': [t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L6')],
-  'SOV-6-01-FB2': [t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L6')],
+  'SOV-6-01':     [t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L4'), t('REVERSIBILITY', 'L6')],
+  'SOV-6-01-FB1': [t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L4'), t('REVERSIBILITY', 'L6')],
+  'SOV-6-01-FB2': [t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L4'), t('REVERSIBILITY', 'L6')],
   'SOV-6-08-LMIC': [t('REVERSIBILITY', 'L4')],
   'SOV-6-09-LMIC': [t('REVERSIBILITY', 'L4')],
   'SOV-6-10-LMIC': [t('REVERSIBILITY', 'L3'), t('REVERSIBILITY', 'L4')],

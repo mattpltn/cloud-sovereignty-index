@@ -626,6 +626,26 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           score and the per-layer control posture. Axes with no answered questions are drawn dashed
           and are not scored.
         </p>
+        <p class="text-sm text-gray-700 mt-3">
+          <strong>Profile-determined questions are answered for you.</strong> Some questions ask a
+          fact your declared infrastructure already fixes — whether the provider is under your
+          jurisdiction, whether data is resident in-country, where operating staff sit. Putting
+          these to you is needless friction (and, for a self-operated deployment, would ask about
+          "the provider" when there is none). They are instead <em>derived</em> from your control
+          profile, answered automatically, and listed in full on the review page
+          (<em>"Answers set by your declared infrastructure"</em>) with the reason for each and an
+          override control. These derived answers <strong>count toward your score exactly like a
+          typed answer</strong> — so a foreign provider cannot raise its score simply by not being
+          asked the questions it would fail, and an in-country deployment is credited for the
+          residency it genuinely has. Only pure facts are derived this way; anything that depends on
+          a provider's offering, a process, or a commitment (key management, client-side encryption,
+          audit cooperation, exit drills) is always asked.
+        </p>
+        <p class="text-sm text-gray-700 mt-3">
+          <strong>Every amendment is auditable.</strong> Where this tool re-words a source criterion
+          to fit your context, each question carries a collapsible <em>"Original source wording"</em>
+          revealing the verbatim source sentence beneath its source reference.
+        </p>
       </div>
     </section>
 

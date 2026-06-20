@@ -620,11 +620,23 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown')",
+            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown') OR (L3.location == 'regional_treaty' OR L3.location == 'trusted_third' OR L3.location == 'foreign' OR L3.location == 'unknown') OR (L4.location == 'regional_treaty' OR L4.location == 'trusted_third' OR L4.location == 'foreign' OR L4.location == 'unknown') OR (L5.location == 'regional_treaty' OR L5.location == 'trusted_third' OR L5.location == 'foreign' OR L5.location == 'unknown')",
             "archetypes": [
               {
                 "archetype": "JURISDICTION",
                 "layer": "L1"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L3"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L4"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L5"
               }
             ]
           }
@@ -676,7 +688,7 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown') OR (L2.location == 'regional_treaty' OR L2.location == 'trusted_third' OR L2.location == 'foreign' OR L2.location == 'unknown')",
+            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown') OR (L2.location == 'regional_treaty' OR L2.location == 'trusted_third' OR L2.location == 'foreign' OR L2.location == 'unknown') OR (L3.location == 'regional_treaty' OR L3.location == 'trusted_third' OR L3.location == 'foreign' OR L3.location == 'unknown') OR (L4.location == 'regional_treaty' OR L4.location == 'trusted_third' OR L4.location == 'foreign' OR L4.location == 'unknown') OR (L5.location == 'regional_treaty' OR L5.location == 'trusted_third' OR L5.location == 'foreign' OR L5.location == 'unknown')",
             "archetypes": [
               {
                 "archetype": "JURISDICTION",
@@ -685,6 +697,18 @@
               {
                 "archetype": "JURISDICTION",
                 "layer": "L2"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L3"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L4"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L5"
               }
             ]
           }
@@ -850,11 +874,27 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown')",
+            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown') OR (L2.location == 'regional_treaty' OR L2.location == 'trusted_third' OR L2.location == 'foreign' OR L2.location == 'unknown') OR (L3.location == 'regional_treaty' OR L3.location == 'trusted_third' OR L3.location == 'foreign' OR L3.location == 'unknown') OR (L4.location == 'regional_treaty' OR L4.location == 'trusted_third' OR L4.location == 'foreign' OR L4.location == 'unknown') OR (L5.location == 'regional_treaty' OR L5.location == 'trusted_third' OR L5.location == 'foreign' OR L5.location == 'unknown')",
             "archetypes": [
               {
                 "archetype": "JURISDICTION",
                 "layer": "L1"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L2"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L3"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L4"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L5"
               }
             ]
           }
@@ -903,11 +943,23 @@
           "relevance": {
             "layer": "L1",
             "pattern": "vanish",
-            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown')",
+            "show_when": "(L1.location == 'regional_treaty' OR L1.location == 'trusted_third' OR L1.location == 'foreign' OR L1.location == 'unknown') OR (L3.location == 'regional_treaty' OR L3.location == 'trusted_third' OR L3.location == 'foreign' OR L3.location == 'unknown') OR (L4.location == 'regional_treaty' OR L4.location == 'trusted_third' OR L4.location == 'foreign' OR L4.location == 'unknown') OR (L5.location == 'regional_treaty' OR L5.location == 'trusted_third' OR L5.location == 'foreign' OR L5.location == 'unknown')",
             "archetypes": [
               {
                 "archetype": "JURISDICTION",
                 "layer": "L1"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L3"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L4"
+              },
+              {
+                "archetype": "JURISDICTION",
+                "layer": "L5"
               }
             ]
           }
@@ -1281,7 +1333,7 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider') OR (L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider')",
             "layer": "L3",
             "archetypes": [
               {
@@ -1290,6 +1342,14 @@
               },
               {
                 "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
                 "layer": "L4"
               }
             ]
@@ -1606,7 +1666,7 @@
           "c3a_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider') OR (L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider')",
             "layer": "L3",
             "archetypes": [
               {
@@ -1615,6 +1675,14 @@
               },
               {
                 "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
                 "layer": "L4"
               }
             ]
@@ -1821,7 +1889,7 @@
           "eu_csf_fidelity": "direct",
           "relevance": {
             "pattern": "vanish",
-            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider')",
+            "show_when": "(L3.ownership == 'provider') OR (L4.ownership == 'provider') OR (L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider')",
             "layer": "L3",
             "archetypes": [
               {
@@ -1830,6 +1898,14 @@
               },
               {
                 "archetype": "DATA_RESIDENCY_SERVICE",
+                "layer": "L4"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
                 "layer": "L4"
               }
             ]
@@ -3358,11 +3434,15 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L6.dependency == 'licensed_supported' OR L6.dependency == 'licensed_no_support' OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider')",
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider') OR (L6.dependency == 'licensed_supported' OR L6.dependency == 'licensed_no_support' OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider')",
             "archetypes": [
               {
                 "archetype": "REVERSIBILITY",
                 "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L4"
               },
               {
                 "archetype": "REVERSIBILITY",
@@ -3392,11 +3472,15 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L6.dependency == 'licensed_supported' OR L6.dependency == 'licensed_no_support' OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider')",
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider') OR (L6.dependency == 'licensed_supported' OR L6.dependency == 'licensed_no_support' OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider')",
             "archetypes": [
               {
                 "archetype": "REVERSIBILITY",
                 "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L4"
               },
               {
                 "archetype": "REVERSIBILITY",
@@ -3426,11 +3510,15 @@
           "relevance": {
             "layer": "L3",
             "pattern": "vanish",
-            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L6.dependency == 'licensed_supported' OR L6.dependency == 'licensed_no_support' OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider')",
+            "show_when": "(L3.dependency == 'licensed_supported' OR L3.dependency == 'licensed_no_support' OR L3.dependency == 'proprietary_inaccessible' OR L3.ownership == 'provider') OR (L4.dependency == 'licensed_supported' OR L4.dependency == 'licensed_no_support' OR L4.dependency == 'proprietary_inaccessible' OR L4.ownership == 'provider') OR (L6.dependency == 'licensed_supported' OR L6.dependency == 'licensed_no_support' OR L6.dependency == 'proprietary_inaccessible' OR L6.ownership == 'provider')",
             "archetypes": [
               {
                 "archetype": "REVERSIBILITY",
                 "layer": "L3"
+              },
+              {
+                "archetype": "REVERSIBILITY",
+                "layer": "L4"
               },
               {
                 "archetype": "REVERSIBILITY",

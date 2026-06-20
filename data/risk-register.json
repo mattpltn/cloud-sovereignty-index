@@ -109,6 +109,21 @@
     },
 
     {
+      "id": "RISK-L3-LOCKIN-01",
+      "layer": "L3",
+      "title": "Closed-platform lock-in — owned but not reversible",
+      "description": "Where the virtualization/platform layer runs on a proprietary closed product you cannot inspect, fork, or self-patch, owning and operating it in-country does not make it reversible: a vendor exit, licence change, or unpatched flaw can still force discontinuation, with no source access to maintain or migrate the platform independently.",
+      "triggers": "L3.dependency == 'proprietary_inaccessible'",
+      "source_anchors": [
+        { "register_key": "c3a", "clause": "§2.2 Reversibility & §2.4 Technological Autonomy: structural sovereignty requires the ability to maintain and exit the platform independently of a single vendor — ownership of the asset does not confer this where the software is a closed proprietary product." },
+        { "register_key": "swipo-iaas-v3", "clause": "DP06: open-standard artefact export — a closed platform that cannot satisfy it is non-reversible regardless of who owns the hardware." }
+      ],
+      "question_ids": ["SOV-6-01", "SOV-6-01-FB2"],
+      "procurement_clause_ids": ["PC-L3-ESCROW", "PC-L3-PORTABILITY"],
+      "severity_basis": "C3A treats reversibility as a function of the software dependency, not asset ownership (the VMware/appliance case): a client-owned closed platform with no source access cannot be independently patched or exited, so the lock-in risk fires irrespective of ownership — the gap RISK-L3-HYPERSCALER-01 leaves open by requiring provider ownership."
+    },
+
+    {
       "id": "RISK-L4-LOCKIN-01",
       "layer": "L4",
       "title": "Proprietary managed-service lock-in",

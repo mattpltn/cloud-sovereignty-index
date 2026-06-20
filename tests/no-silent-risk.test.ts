@@ -114,6 +114,24 @@ describe('unaskedFiredRisks — consolidated, deduped scope findings', () => {
     expect(ids).not.toContain('RISK-L3-SKILLS-01');
   });
 
+  test('closed-platform L3 lock-in fires for a client-owned proprietary virtualization layer', () => {
+    // The "ownership without reversibility" gap: RISK-L3-HYPERSCALER-01 needs provider
+    // ownership, so a client-owned but proprietary_inaccessible L3 (the appliance) fired
+    // no L3 risk. RISK-L3-LOCKIN-01 closes it (owner-independent).
+    const appliance: ControlProfile = {
+      L1: { ownership: 'client', operation: 'client_staff', dependency: 'na', location: 'in_country' },
+      L2: { ownership: 'client', operation: 'client_staff', dependency: 'na', location: 'in_country' },
+      L3: { ownership: 'client', operation: 'client_staff', dependency: 'proprietary_inaccessible', location: 'in_country' },
+      L4: { ownership: 'client', operation: 'client_staff', dependency: 'proprietary_inaccessible', location: 'in_country' },
+      L5: { ownership: 'client', operation: 'client_staff', dependency: 'na', location: 'in_country' },
+      L6: { ownership: 'client', operation: 'client_staff', dependency: 'self_supported_oss', location: 'in_country' },
+    };
+    const fired = firedRisks(appliance).map(r => r.id);
+    expect(fired).toContain('RISK-L3-LOCKIN-01');
+    const risk = firedRisks(appliance).find(r => r.id === 'RISK-L3-LOCKIN-01')!;
+    expect(risk.question_ids.some(q => csiQuestionIds.has(q))).toBe(true);
+  });
+
   test('every unasked fired risk has a CSI bridge question (still no-silent-risk)', () => {
     for (const [name, profile] of Object.entries(SCENARIOS)) {
       for (const risk of unaskedFiredRisks(profile, criteria)) {
