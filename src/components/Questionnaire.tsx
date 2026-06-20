@@ -338,6 +338,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               title={qTitle}
               text={resolveText(qText, (q as any).relevance?.layer)}
               originalText={originalSource(q.text)}
+              supplementary={q.supplementary_info}
               sealContribution={q.seal_contribution}
               points={q.points}
               source={sourceLabel(q, fw, q.source.doc, q.source.clause)}
@@ -384,6 +385,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
               title={csiPresTiered?.title ?? tieredTitle}
               text={resolveText(csiPresText, (q as any).relevance?.layer)}
               originalText={originalSource((q.tiers?.bloc as any)?.text ?? (q as any).text)}
+              supplementary={q.supplementary_info}
               sealContribution={q.tiers.bloc.seal_contribution}
               points={q.tiers.bloc.points}
               source={sourceLabel(q, fw, q.tiers.bloc.source.doc, q.tiers.bloc.source.clause)}
@@ -441,6 +443,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                 <div className="mt-2 text-xs text-gray-400">
                   {sourceLabel(q, fw, q.tiers.national!.source.doc, q.tiers.national!.source.clause)}
                 </div>
+                <SourceDetail
+                  originalText={originalSource(q.tiers.national!.text)}
+                  shownText={resolveText((isGeneralized && q.tiers.national!.text_generalized) ? q.tiers.national!.text_generalized : q.tiers.national!.text, (q as any).relevance?.layer)}
+                  supplementary={q.supplementary_info}
+                />
               </div>
             )}
 
@@ -481,6 +488,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
                 <div className="mt-2 text-xs text-gray-400">
                   {sourceLabel(q, fw, q.tiers.bloc.source.doc, q.tiers.bloc.source.clause)}
                 </div>
+                <SourceDetail
+                  originalText={originalSource(q.tiers.bloc.text)}
+                  shownText={resolveText((isGeneralized && q.tiers.bloc.text_generalized) ? q.tiers.bloc.text_generalized : q.tiers.bloc.text, (q as any).relevance?.layer)}
+                  supplementary={q.supplementary_info}
+                />
               </div>
             )}
           </div>
@@ -520,8 +532,39 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   );
 }
 
-function QuestionCard({ id, title, text, originalText, sealContribution, points, source, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, answerValues, warnPlannedForC3a, fidelityTags, levelPrefix }: {
-  id: string; title: string; text: string; originalText?: string; sealContribution: number; points: number; source: string;
+// Collapsible "Source criterion detail" shown under the source reference on every question
+// across all frameworks (same look & feel as the CSI original-wording disclosure): the exact
+// verbatim source control text (un-reframed) and the source criterion's supplementary detail.
+// Present on every question that carries a source text — so the exact control behind each
+// question is always auditable. `shownText` only flags when the displayed text was adapted.
+function SourceDetail({ originalText, shownText, supplementary }: { originalText?: string; shownText?: string; supplementary?: string }) {
+  const v = originalText?.trim();
+  const s = supplementary?.trim();
+  if (!v && !s) return null;
+  // Show the verbatim source text when the displayed wording was adapted (CSI reframe /
+  // generalized) — or as the disclosure's content when there's no supplementary detail to
+  // show instead. This keeps a "Source criterion detail" affordance on every question
+  // without repeating text that's already visible verbatim.
+  const adapted = !!v && !!shownText && v !== shownText.trim();
+  const showVerbatim = !!v && (adapted || !s);
+  return (
+    <details className="mt-1 text-xs text-gray-400">
+      <summary className="cursor-pointer select-none hover:text-gray-600">Source criterion detail</summary>
+      {showVerbatim && (
+        <p className="mt-1 leading-relaxed text-gray-500 border-l-2 border-gray-200 pl-2 italic">
+          {adapted && <span className="not-italic text-gray-400 block mb-0.5">Exact source control text:</span>}
+          {v}
+        </p>
+      )}
+      {s && (
+        <p className="mt-1 leading-relaxed text-gray-500">{s}</p>
+      )}
+    </details>
+  );
+}
+
+function QuestionCard({ id, title, text, originalText, supplementary, sealContribution, points, source, isAdditionalCriterion, value, onAnswer, evidenceLevel, onEvidenceLevel, answerValues, warnPlannedForC3a, fidelityTags, levelPrefix }: {
+  id: string; title: string; text: string; originalText?: string; supplementary?: string; sealContribution: number; points: number; source: string;
   isAdditionalCriterion?: boolean; value: AnswerValue | undefined;
   onAnswer: (v: AnswerValue) => void; evidenceLevel?: EvidenceLevel; onEvidenceLevel?: (l: EvidenceLevel) => void;
   answerValues: AnswerValue[]; warnPlannedForC3a?: boolean; fidelityTags?: FidelityTagInfo[];
@@ -567,12 +610,7 @@ function QuestionCard({ id, title, text, originalText, sealContribution, points,
         </p>
       )}
       <div className="mt-2 text-xs text-gray-400">Source: {source}</div>
-      {originalText && originalText.trim() && originalText.trim() !== text.trim() && (
-        <details className="mt-1 text-xs text-gray-400">
-          <summary className="cursor-pointer select-none hover:text-gray-600">Original source wording</summary>
-          <p className="mt-1 leading-relaxed text-gray-500 border-l-2 border-gray-200 pl-2 italic">{originalText}</p>
-        </details>
-      )}
+      <SourceDetail originalText={originalText} shownText={text} supplementary={supplementary} />
     </div>
   );
 }
