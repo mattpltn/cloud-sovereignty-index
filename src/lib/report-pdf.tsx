@@ -433,7 +433,7 @@ export async function buildReportPdf(
   if (result.csi_composite) {
     const { csl, pct } = result.csi_composite.global;
     const color = isGeneralized ? (CSI_MATURITY_HEX[csl] ?? '#6b7280') : (SEAL_COLORS_HEX[csl] ?? '#6b7280');
-    const csiLabel = isGeneralized ? (CSI_MATURITY_LABELS[csl] ?? `Tier ${csl}`) : `${levelPrefix} ${csl} — ${SEAL_LABELS[csl]}`;
+    const csiLabel = isGeneralized ? (CSI_MATURITY_LABELS[csl] ?? `CSL ${csl}`) : `CSL ${csl} — ${SEAL_LABELS[csl]}`;
     coverResults.push(h(View, { style: { ...styles.coverSealBox, borderLeftWidth: 4, borderLeftColor: color, flex: 1 } },
       h(Text, { style: { ...styles.coverSealScore, color } }, `${Math.round(pct)}%`),
       h(Text, { style: styles.coverSealLabel }, 'CSI Composite'),
@@ -575,7 +575,7 @@ export async function buildReportPdf(
     const csiTierLabel = isGeneralized
       ? (CSI_MATURITY_LABELS[csiCsl] ?? `Tier ${csiCsl}`)
       : (SEAL_LABELS[csiCsl] ?? `Level ${csiCsl}`);
-    const csiLevelPrefix = isGeneralized ? '' : levelPrefix + ' ';
+    const csiLevelPrefix = isGeneralized ? '' : 'CSL ';
 
     const strengths = isGeneralized
       ? csiObjectives.filter(o => o.csl >= 2)
@@ -592,19 +592,19 @@ export async function buildReportPdf(
       h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
         isGeneralized
           ? `Global result: ${csiTierLabel} — ${Math.round(csiPct)}%. Progressive Sovereignty Maturity model. Not a source-standard certification.`
-          : `Global result: ${levelPrefix} ${csiCsl} — ${csiTierLabel} (${Math.round(csiPct)}%). Editorial blend of EU-CSF and C3A. Not a source-standard certification.`
+          : `Global result: CSL ${csiCsl} — ${csiTierLabel} (${Math.round(csiPct)}%). Editorial blend of EU-CSF and C3A. Not a source-standard certification.`
       ),
       // Maturity bar (non-EU only)
       isGeneralized ? buildMaturityBar(csiPct, csiCsl, pctToNext) : null,
       buildRadarChart(csiObjectives, csiLevelColors, 'csl'),
       h(Text, { style: styles.subSectionTitle }, 'Objective Scorecard'),
-      ...buildObjectiveScorecardSection(csiObjectives, 'csl', isGeneralized ? 'Tier' : levelPrefix),
+      ...buildObjectiveScorecardSection(csiObjectives, 'csl', 'CSL'),
       h(Text, { style: styles.subSectionTitle }, 'Strengths'),
       strengths.length === 0
-        ? h(Text, { style: styles.bodyText }, `No objective has reached ${isGeneralized ? 'Strategic Autonomy' : levelPrefix + ' 3'} yet.`)
+        ? h(Text, { style: styles.bodyText }, `No objective has reached ${isGeneralized ? 'Strategic Autonomy' : 'CSL 3'} yet.`)
         : h(View, {}, ...strengths.map(obj => {
             const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
-            const lbl = isGeneralized ? (CSI_MATURITY_LABELS[obj.csl] ?? `Tier ${obj.csl}`) : `${levelPrefix} ${obj.csl}`;
+            const lbl = `CSL ${obj.csl}`;
             return h(View, { key: obj.objective_id, style: styles.strengthCard, wrap: false },
               h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${lbl}, ${pct}%`),
             );
@@ -615,7 +615,7 @@ export async function buildReportPdf(
         : h(View, {}, ...weaknesses.map(obj => {
             const pct = obj.max_score > 0 ? Math.round((obj.raw_score / obj.max_score) * 100) : 0;
             const topGap = result.csi_composite!.gap_report.find(g => g.objective_id === obj.objective_id);
-            const lbl = isGeneralized ? (CSI_MATURITY_LABELS[obj.csl] ?? `Tier ${obj.csl}`) : `${levelPrefix} ${obj.csl}`;
+            const lbl = `CSL ${obj.csl}`;
             return h(View, { key: obj.objective_id, style: styles.weakCard, wrap: false },
               h(Text, { style: styles.cardTitle }, `${obj.title} (${obj.objective_id}) — ${lbl}, ${pct}%`),
               topGap ? h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`) : null,
@@ -771,8 +771,8 @@ export async function buildReportPdf(
         ) : null,
         result.csi_composite ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
           isGeneralized
-            ? 'CSI Composite (non-EU): Progressive Sovereignty Maturity model. No weakest-link gate. Tiers: Dependent (0–40%), Managed Dependency (41–70%), Strategic Autonomy (71–90%), Sovereign (91–100%). "planned" answers earn 25% of question points. Fallback questions SOV-4-01-FB and SOV-4-09-FB available for providers unable to meet strict EU criteria.'
-            : 'CSI Composite (EU/EEA): editorial blend of EU-CSF and C3A with the same SEAL 0–4 weakest-link gate. Not a source-standard certification.'
+            ? 'CSI Composite (non-EU): Progressive Sovereignty Maturity — coverage % gated by the weakest-link CSL (the headline tier cannot exceed the weakest sovereignty domain; SOV-8 environmental does not gate). Tiers: Dependent (0–40%), Managed Dependency (41–70%), Strategic Autonomy (71–90%), Sovereign (91–100%). "planned" answers earn 25% of question points. Fallback questions SOV-4-01-FB and SOV-4-09-FB available for providers unable to meet strict criteria.'
+            : 'CSI Composite (EU/EEA): editorial blend of EU-CSF and C3A on a CSL 0–4 weakest-link gate. Not a source-standard certification.'
         ) : null,
         result.cada ? h(Text, { style: { ...styles.bodyText, marginBottom: 4 } },
           'CADA results follow the Cloud and AI Development Act (COM(2026) 502), proposed EU Regulation. ' +

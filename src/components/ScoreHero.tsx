@@ -155,35 +155,63 @@ function MaturityBar({ pct, csl }: { pct: number; csl: number }) {
   );
 }
 
+// %-coverage → maturity tier (mirrors scoring CSI_TIER_THRESHOLDS); used only to detect
+// when the headline tier has been GATED below the coverage it would otherwise earn.
+const CSI_TIER_THRESHOLDS = [0, 0.41, 0.71, 0.91];
+function pctToTier(pct: number): number {
+  const f = pct / 100;
+  if (f >= CSI_TIER_THRESHOLDS[3]) return 3;
+  if (f >= CSI_TIER_THRESHOLDS[2]) return 2;
+  if (f >= CSI_TIER_THRESHOLDS[1]) return 1;
+  return 0;
+}
+
 function CsiCard({ csi, variant }: { csi: CsiCompositeResult; variant: string }) {
   const isGeneralized = variant === 'Generalized';
   const csl = csi.global.csl;
   const pct = csi.global.pct;
   const pctToNext = csi.global.pct_to_next_tier;
+  const gatingIds = csi.global.gating_objective_ids ?? [];
+  const gatingTitles = gatingIds.map(id => csi.per_objective[id]?.title ?? id);
 
+  // CSI speaks in CSL / maturity tiers — never SEAL. Generalized uses the maturity names;
+  // the EU/EEA CSI uses the sovereignty names on the 0–4 CSL ladder (labelled "CSL", not SEAL).
   const color = isGeneralized ? (CSI_MATURITY_COLORS[csl] ?? '#6b7280') : (SEAL_COLORS[csl] ?? '#6b7280');
-  const label = isGeneralized ? (CSI_MATURITY_NAMES[csl] ?? `Tier ${csl}`) : (SEAL_NAMES[csl] ?? `Level ${csl}`);
+  const label = isGeneralized ? (CSI_MATURITY_NAMES[csl] ?? `CSL ${csl}`) : (SEAL_NAMES[csl] ?? `CSL ${csl}`);
+
+  // Gated when the weakest-link assurance gate held the tier below what coverage would earn.
+  const gated = isGeneralized && pctToTier(pct) > csl && gatingTitles.length > 0;
 
   return (
     <div className="border border-blue-100 bg-blue-50 rounded-xl p-6 flex-1 min-w-0">
       <div className="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-3">CSI Composite <span className="normal-case font-normal text-blue-400">(editorial)</span></div>
-      <div className="text-5xl font-bold tabular-nums mb-2" style={{ color }}>{Math.round(pct)}%</div>
+      <div className="text-5xl font-bold tabular-nums mb-1" style={{ color }}>{Math.round(pct)}%</div>
+      <div className="text-xs text-gray-400 mb-2">sovereignty readiness (coverage)</div>
       <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-medium text-white mb-3"
         style={{ backgroundColor: color }}>
-        {isGeneralized ? label : `SEAL ${csl} — ${label}`}
+        {isGeneralized ? label : `CSL ${csl} — ${label}`}
       </div>
       {isGeneralized && <MaturityBar pct={pct} csl={csl} />}
+      {gated && (
+        <div className="mt-3 px-3 py-2 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
+          Assurance gate: held at <strong>{label}</strong> by{' '}
+          <strong>{gatingTitles.join(', ')}</strong>. Your {Math.round(pct)}% coverage would
+          reach {CSI_MATURITY_NAMES[pctToTier(pct)]}, but the weakest domain caps the tier —
+          raise it to lift the gate.
+        </div>
+      )}
       <p className="text-xs text-gray-500 mt-3">
-        CSI editorial blend of EU-CSF + C3A. Not a source-standard certification.
+        CSI editorial blend of EU-CSF + C3A. Headline tier is gated by the weakest sovereignty
+        domain (weakest-link). Not a source-standard certification.
       </p>
-      {isGeneralized && pctToNext !== null && pctToNext > 0 && (
+      {isGeneralized && !gated && pctToNext !== null && pctToNext > 0 && (
         <div className="mt-2 pt-2 border-t border-blue-200">
           <p className="text-xs font-medium text-blue-700">
-            To reach {CSI_MATURITY_NAMES[csl + 1]}: {pctToNext}% more needed
+            To reach {CSI_MATURITY_NAMES[csl + 1]}: {pctToNext}% more coverage needed
           </p>
         </div>
       )}
-      {isGeneralized && pctToNext === null && (
+      {isGeneralized && !gated && csl >= 3 && (
         <div className="mt-2 pt-2 border-t border-blue-200">
           <p className="text-xs font-medium text-green-700">Sovereign tier achieved.</p>
         </div>

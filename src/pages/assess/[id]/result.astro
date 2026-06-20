@@ -89,12 +89,13 @@ const secondaryScore = result?.csi_composite
   ? {
       label: 'CSI Composite',
       value: `${Math.round(result.csi_composite.global.pct)}%`,
-      detail: `SEAL ${result.csi_composite.global.csl}`,
+      detail: `CSL ${result.csi_composite.global.csl}`,
     }
   : undefined;
 const companyName = (record?.company_name as string | undefined) || undefined;
 const countryCode = (record?.national_country as string | undefined) || undefined;
-const levelPrefix = 'SEAL';
+// EU-CSF uses SEAL; a CSI-only assessment uses CSL (CSI never says "SEAL").
+const levelPrefix = result?.eu_csf ? 'SEAL' : 'CSL';
 
 const rawDate = (record?.finalized_at as string | null) ?? result?.assessed_at ?? null;
 const assessedAt = rawDate
@@ -127,10 +128,19 @@ const csiObjectives = result?.csi_composite
   ? Object.values(result.csi_composite.per_objective)
   : [];
 const csiCsl = result?.csi_composite?.global.csl ?? 0;
-const csiBottlenecks = csiCsl < 4
-  ? csiObjectives.filter(o => o.csl === csiCsl)
-  : [];
+const csiWeakestCsl = result?.csi_composite?.global.weakest_link_csl ?? 0;
+const csiGatingIds = result?.csi_composite?.global.gating_objective_ids ?? [];
 const csiGaps = result?.csi_composite?.gap_report ?? [];
+// Blocking objectives: the weakest-link domains that gate the assurance tier, plus any other
+// sovereignty domain at CSL ≤ 1 — excluding SOV-8 (ESG, non-gating). These are what to fix.
+const csiBlockers = csiObjectives
+  .filter(o => o.objective_id !== 'SOV-8' && o.objective_id !== 'SOV-9' && o.max_score > 0)
+  .filter(o => csiGatingIds.includes(o.objective_id) || o.csl <= 1)
+  .sort((a, b) => a.csl - b.csl)
+  .map(o => {
+    const topGap = (csiGaps as Array<{ objective_id: string; question_id: string }>).find(g => g.objective_id === o.objective_id);
+    return { ...o, topGap, gating: csiGatingIds.includes(o.objective_id) };
+  });
 
 // Layer grouping for CSI Composite
 const CSI_LAYERS = [
@@ -409,11 +419,40 @@ const radarDomains = csiObjectives
               <span class="text-xs font-normal text-gray-400 bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">editorial framework</span>
             </h2>
 
+            {/* Blocking objectives — these gate the assurance tier */}
+            {csiBlockers.length > 0 && (
+              <div class="mb-5 p-4 rounded-xl border border-amber-200 bg-amber-50">
+                <p class="text-sm font-semibold text-amber-800 mb-1">
+                  {csiBlockers.length} blocking objective{csiBlockers.length > 1 ? 's' : ''} — these gate your assurance level (CSL {csiCsl})
+                </p>
+                <p class="text-xs text-amber-700 mb-2">
+                  The headline tier is the weakest-link assurance gate. Raising the lowest domain(s) below lifts it — a high coverage % cannot offset a blocking domain.
+                </p>
+                <div class="space-y-1.5">
+                  {csiBlockers.map(b => (
+                    <div class="flex items-start gap-3 p-2.5 rounded-lg bg-white border border-amber-100">
+                      <span class="text-xs font-bold px-2 py-0.5 rounded-full text-white shrink-0 self-start"
+                        style={`background-color: ${SEAL_COLORS[b.csl] ?? '#6b7280'}`}>CSL {b.csl}</span>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-800">
+                          {b.title} <span class="font-mono text-xs text-gray-400">{b.objective_id}</span>
+                          {b.gating && <span class="ml-2 text-xs text-amber-700 font-semibold">· gating</span>}
+                        </p>
+                        {b.topGap && (
+                          <p class="text-xs text-gray-500 mt-0.5">Top gap: {resolveGapTitle(b.topGap as GapItem)} ({b.topGap.question_id})</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Domain maturity radar */}
             {radarDomains.length >= 3 && (
               <div class="mb-6">
-                <h3 class="text-sm font-semibold text-gray-800 mb-2">Domain maturity</h3>
-                <DomainRadar client:load domains={radarDomains} globalCsl={result.csi_composite.global.csl} maxCsl={variant === 'Generalized' ? 3 : 4} />
+                <h3 class="text-sm font-semibold text-gray-800 mb-2">Domain maturity <span class="text-xs font-normal text-gray-400">CSL per domain (assurance, not %)</span></h3>
+                <DomainRadar client:load domains={radarDomains} globalCsl={result.csi_composite.global.csl} maxCsl={4} />
               </div>
             )}
 
@@ -462,6 +501,7 @@ const radarDomains = csiObjectives
                     country={country}
                     variant={variant as 'EU-CSF' | 'Generalized'}
                     overallSeal={csiCsl}
+                    levelLabel="CSL"
                   />
                 </div>
               );

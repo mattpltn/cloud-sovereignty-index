@@ -71,6 +71,38 @@ describe('CSI Composite mode', () => {
     }
   });
 
+  // Helper: flip one objective's questions to 'no' on an otherwise all-yes sheet.
+  function allYesExcept(objId: string): AnswerMap {
+    const map = allYesAnswers('national');
+    const obj = criteria.objectives.find(o => o.id === objId)!;
+    for (const q of obj.questions) {
+      if (q.type === 'single') map[q.id] = { tier: 'single', value: 'no' };
+      else { map[`${q.id}:national`] = { tier: 'national', value: 'no' }; map[`${q.id}:bloc`] = { tier: 'bloc', value: 'no' }; }
+    }
+    return map;
+  }
+
+  const metaGen = { ...metaComposite, variant: 'Generalized' as const };
+
+  it('weakest-link gate (Generalized): a CSL-0 sovereignty domain caps the headline despite high coverage', () => {
+    const result = scoreAssessment(allYesExcept('SOV-6'), criteria, 'test-gate', metaGen);
+    const g = result.csi_composite!.global;
+    expect(result.csi_composite!.per_objective['SOV-6'].csl).toBe(0);
+    expect(g.pct).toBeGreaterThan(70);            // coverage stays high
+    expect(g.weakest_link_csl).toBe(0);
+    expect(g.gating_objective_ids).toContain('SOV-6');
+    expect(g.csl).toBe(0);                         // headline gated to the weakest link
+    expect(g.maturity_tier).toBe('dependent');
+  });
+
+  it('SOV-8 (ESG) does NOT gate the headline even at CSL 0', () => {
+    const result = scoreAssessment(allYesExcept('SOV-8'), criteria, 'test-esg', metaGen);
+    const g = result.csi_composite!.global;
+    expect(result.csi_composite!.per_objective['SOV-8'].csl).toBe(0);
+    expect(g.gating_objective_ids).not.toContain('SOV-8');
+    expect(g.csl).toBeGreaterThan(0);              // environmental never gates sovereignty
+  });
+
   it('national no + bloc yes → scores at bloc level', () => {
     const answers: AnswerMap = {
       'SOV-1-01:national': { tier: 'national', value: 'no' },

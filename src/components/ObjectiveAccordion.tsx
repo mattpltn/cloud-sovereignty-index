@@ -32,6 +32,8 @@ interface Props {
   country?: Country;
   variant: 'EU-CSF' | 'Generalized';
   overallSeal: number;
+  /** Level badge label. CSI passes "CSL" (it never says "SEAL"); EU-CSF defaults by variant. */
+  levelLabel?: string;
 }
 
 const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
@@ -87,7 +89,7 @@ const STATUS_CONFIG = {
   na:       { label: 'N/A',      bg: 'bg-gray-50',  border: 'border-transparent', badge: 'bg-gray-100 text-gray-500', dot: '–' },
 };
 
-export default function ObjectiveAccordion({ objectives, criteria, country, variant, overallSeal }: Props) {
+export default function ObjectiveAccordion({ objectives, criteria, country, variant, overallSeal, levelLabel }: Props) {
   const [open, setOpen] = useState<Set<string>>(new Set());
   const ctx = { variant, country };
 
@@ -147,7 +149,7 @@ export default function ObjectiveAccordion({ objectives, criteria, country, vari
                 </div>
               )}
               <div className="text-xs px-2 py-0.5 rounded-full text-white font-medium shrink-0" style={{ backgroundColor: color }}>
-                {variant === 'Generalized' ? 'Level' : 'SEAL'} {seal}
+                {levelLabel ?? (variant === 'Generalized' ? 'Level' : 'SEAL')} {seal}
               </div>
               <div className="text-gray-400 text-xs shrink-0">{isOpen ? '▲' : '▼'}</div>
             </button>

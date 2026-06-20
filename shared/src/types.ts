@@ -105,7 +105,13 @@ export interface CsiObjectiveResult {
 
 export interface CsiCompositeResult {
   per_objective: Record<string, CsiObjectiveResult>;
-  global: { csl: number; pct: number; pct_to_next_tier: number | null; maturity_tier?: CsiMaturityTier };
+  global: {
+    csl: number; pct: number; pct_to_next_tier: number | null; maturity_tier?: CsiMaturityTier;
+    /** Lowest objective CSL across sovereignty-relevant objectives (the assurance gate). */
+    weakest_link_csl?: number;
+    /** Objective ids sitting at the weakest link — what gates the headline tier. */
+    gating_objective_ids?: string[];
+  };
   gap_report: GapItem[];
 }
 

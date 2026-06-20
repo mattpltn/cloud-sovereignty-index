@@ -556,16 +556,37 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile, variant: 
   const globalPct = computeSovereigntyScorePct(values);
   const globalPctFraction = globalPct / 100;
 
+  // Weakest-link CSL across SOVEREIGNTY-relevant objectives: scored (max_score > 0) and
+  // excluding SOV-8 (ESG/environmental — explicitly does not gate sovereignty attainment)
+  // and SOV-9 (no questions). This is the assurance gate.
+  const gateContributors = values.filter(
+    o => o.max_score > 0 && o.objective_id !== 'SOV-8' && o.objective_id !== 'SOV-9'
+  );
+  const weakest_link_csl = gateContributors.length > 0
+    ? Math.min(...gateContributors.map(o => o.csl))
+    : 0;
+  const gating_objective_ids = gateContributors
+    .filter(o => o.csl === weakest_link_csl)
+    .map(o => o.objective_id);
+
   let globalCsl: number;
   let pct_to_next_tier: number | null;
   if (isGeneralized) {
-    globalCsl = pctToMaturityLevel(globalPctFraction);
-    const nextThreshold = CSI_TIER_THRESHOLDS[globalCsl + 1] ?? null;
-    pct_to_next_tier = nextThreshold !== null ? Math.max(0, Math.round((nextThreshold - globalPctFraction) * 100)) : null;
+    // The headline tier is the %-maturity tier GATED by the weakest link: an objective at a
+    // low assurance level (e.g. a failed weakest-link gate) caps the headline, so a high
+    // coverage % cannot read "Strategic Autonomy" while a domain is "Dependent". The
+    // objective CSL is the 0–4 ladder; the maturity tier is 0–3, so cap the bound at 3.
+    const pctTier = pctToMaturityLevel(globalPctFraction);
+    globalCsl = Math.min(pctTier, Math.min(3, weakest_link_csl));
+    // pct-to-next only meaningful when the % itself (not the gate) is the binding constraint.
+    if (globalCsl < pctTier) {
+      pct_to_next_tier = null; // gated — advancement is closing the blocking objective(s)
+    } else {
+      const nextThreshold = CSI_TIER_THRESHOLDS[globalCsl + 1] ?? null;
+      pct_to_next_tier = nextThreshold !== null ? Math.max(0, Math.round((nextThreshold - globalPctFraction) * 100)) : null;
+    }
   } else {
-    // Only include objectives with CSI questions (max_score > 0) in the CSL gate
-    const cslContributors = values.filter(o => o.max_score > 0);
-    globalCsl = cslContributors.length > 0 ? Math.min(...cslContributors.map(o => o.csl)) : 0;
+    globalCsl = weakest_link_csl;
     pct_to_next_tier = null;
   }
 
@@ -575,7 +596,7 @@ function scoreCsiComposite(answers: AnswerMap, criteria: CriteriaFile, variant: 
 
   return {
     per_objective: perObjective,
-    global: { csl: globalCsl, pct: globalPct, pct_to_next_tier, maturity_tier },
+    global: { csl: globalCsl, pct: globalPct, pct_to_next_tier, maturity_tier, weakest_link_csl, gating_objective_ids },
     gap_report: buildGapReport(values.map(o => ({ objective_id: o.objective_id, seal_level: o.csl, weight: o.weight, questions: o.questions }))),
   };
 }
