@@ -7,12 +7,15 @@ import C3aObjectiveAccordion from '../../../components/C3aObjectiveAccordion';
 import PdfExportButton from '../../../components/PdfExportButton';
 import { ControlMatrixReport } from '../../../components/ControlMatrixReport';
 import DomainRadar from '../../../components/DomainRadar';
+import ActionTracks from '../../../components/ActionTracks';
+import type { ActionItem } from '../../../components/ActionTracks';
 import criteriaJson from '../../../../data/criteria.json';
 import countriesJson from '../../../../data/countries.json';
-import type { CriteriaFile, ControlProfile } from '../../../../shared/src/schema';
+import type { CriteriaFile, ControlProfile, Question } from '../../../../shared/src/schema';
 import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult, C3aResult, CadaResult, AnswerMap } from '../../../../shared/src/types';
 import { buildReport } from '../../../../shared/src/report';
 import { displayTitle } from '../../../../shared/src/tier-resolution';
+import { actionOwnerForQuestion, actionOwnerForClause, ACTION_OWNER_LABEL, type ActionOwner } from '../../../../shared/src/action-owner';
 export const prerender = false;
 
 const criteria = criteriaJson as unknown as CriteriaFile;
@@ -118,9 +121,6 @@ const euCsfObjectives = result?.eu_csf
   ? Object.values(result.eu_csf.per_objective)
   : [];
 const euCsfSeal = result?.eu_csf?.global.seal ?? 0;
-const euCsfBottlenecks = euCsfSeal < 4
-  ? euCsfObjectives.filter(o => o.seal === euCsfSeal)
-  : [];
 const euCsfGaps = result?.eu_csf?.gap_report ?? [];
 
 // ── CSI Composite analysis helpers ──────────────────────────────────────────
@@ -142,32 +142,65 @@ const csiBlockers = csiObjectives
     return { ...o, topGap, gating: csiGatingIds.includes(o.objective_id) };
   });
 
+// ── Action ownership (supplier-management vs internal-improvement) ────────────
+// Single source: shared/src/action-owner.ts. Used for the two-track "What to do next"
+// summary and the owner pills throughout the report.
+const questionById = new Map<string, Question>();
+for (const o of criteria.objectives) for (const q of o.questions) questionById.set(q.id, q);
+const ownerForQuestionId = (qid?: string): ActionOwner =>
+  qid && questionById.has(qid)
+    ? actionOwnerForQuestion(questionById.get(qid)!, rawControlProfile as ControlProfile | null)
+    : 'supplier';
+
+const OWNER_PILL: Record<ActionOwner, { label: string; cls: string }> = {
+  supplier: { label: ACTION_OWNER_LABEL.supplier, cls: 'bg-indigo-100 text-indigo-700' },
+  internal: { label: ACTION_OWNER_LABEL.internal, cls: 'bg-emerald-100 text-emerald-700' },
+};
+const LAYER_NAMES: Record<string, string> = {
+  L1: 'Facility', L2: 'Hardware', L3: 'Virtualization', L4: 'Managed/PaaS', L5: 'Operations', L6: 'Consumption',
+};
+function clauseLabel(text: string): string {
+  const first = text.split('. ')[0];
+  return first.length > 120 ? `${first.slice(0, 117)}…` : first;
+}
+// Procurement-clause templates from the control matrix, deduped across layers.
+const clauseItems: ActionItem[] = (() => {
+  const seen = new Set<string>();
+  const out: ActionItem[] = [];
+  for (const row of controlMatrixRows) {
+    for (const c of row.bridges as Array<{ id: string; clause_text: string; realism_tag?: string }>) {
+      if (seen.has(c.id)) continue;
+      seen.add(c.id);
+      out.push({
+        id: c.id, label: clauseLabel(c.clause_text), owner: actionOwnerForClause(c),
+        kind: 'clause', layer: `${row.layer} · ${LAYER_NAMES[row.layer] ?? row.layer}`,
+      });
+    }
+  }
+  return out;
+})();
+
+// CSI "what to do next": the blocking objectives (as gaps, classified by owner) + the
+// recommended clause templates — split into the two tracks by the component.
+const csiActionItems: ActionItem[] = result?.csi_composite
+  ? [
+      ...clauseItems,
+      ...csiBlockers.map((b): ActionItem => ({
+        id: b.topGap?.question_id ?? b.objective_id,
+        label: b.title,
+        detail: b.topGap ? resolveGapTitle(b.topGap as GapItem) : undefined,
+        owner: ownerForQuestionId(b.topGap?.question_id),
+        kind: 'gap', severity: b.csl,
+      })),
+    ]
+  : [];
+
 // Layer grouping for CSI Composite
 const CSI_LAYERS = [
   { id: 'sovereignty', label: 'Sovereignty', description: 'Who ultimately controls the system', objectives: ['SOV-1', 'SOV-2'] },
   { id: 'resilience', label: 'Resilience', description: 'Can it survive disruption', objectives: ['SOV-3', 'SOV-4', 'SOV-5'] },
   { id: 'operational_viability', label: 'Operational Viability', description: 'Can it realistically operate locally', objectives: ['SOV-6', 'SOV-7', 'SOV-8'] },
 ] as const;
-
-// Anti-patterns: static rules evaluated against per-objective CSI scores
-function csiObjPct(objId: string): number {
-  return result?.csi_composite?.per_objective[objId]?.pct ?? 0;
-}
-const csiAntiPatterns: Array<{ name: string; explanation: string }> = [];
-if (result?.csi_composite) {
-  if (csiObjPct('SOV-3') >= 70 && csiObjPct('SOV-4') < 50)
-    csiAntiPatterns.push({ name: 'Data sovereign but operationally dependent', explanation: 'Data residency controls are in place but operational continuity under disconnection is not assured.' });
-  if (csiObjPct('SOV-2') >= 70 && csiObjPct('SOV-5') < 50)
-    csiAntiPatterns.push({ name: 'Legally compliant but not survivable', explanation: 'Jurisdictional requirements are met but supply-chain dependencies could disrupt operations under geopolitical stress.' });
-  if (csiObjPct('SOV-6') >= 70 && csiObjPct('SOV-4') < 50)
-    csiAntiPatterns.push({ name: 'Open-source but operationally dependent', explanation: 'Technology stack favours open standards but operational sovereignty is not demonstrated.' });
-  if (csiObjPct('SOV-4') >= 70 && csiObjPct('SOV-2') < 50)
-    csiAntiPatterns.push({ name: 'Resilient but not autonomous', explanation: 'Operational continuity measures exist but legal and jurisdictional control remains external.' });
-  if (csiObjPct('SOV-3') >= 60 && csiObjPct('SOV-1') < 50)
-    csiAntiPatterns.push({ name: 'Localised but externally controlled', explanation: 'Data is held locally but strategic and governance control remains with a foreign authority.' });
-  if (csiObjPct('SOV-7') >= 70 && (csiObjPct('SOV-2') < 50 || csiObjPct('SOV-4') < 50))
-    csiAntiPatterns.push({ name: 'Secure but not sovereign', explanation: 'Security posture is strong but sovereignty prerequisites — legal autonomy or operational continuity — are not met.' });
-}
 
 // ── C3A failed criteria ──────────────────────────────────────────────────────
 const c3aFailedCriteria = result?.c3a?.failed_criteria ?? [];
@@ -221,8 +254,6 @@ const euCsfAllGaps = (euCsfGaps as GapItem[]).slice(0, 8).map(g => ({ ...g, titl
 // Sovereignty blockers: failing criteria that gate SEAL advancement (seal_contribution ≤ euCsfSeal + 1)
 const euCsfBlockers = euCsfAllGaps.filter(g => g.seal_contribution != null && g.seal_contribution > 0 && g.seal_contribution <= euCsfSeal + 1);
 const euCsfMaturityGaps = euCsfAllGaps.filter(g => !euCsfBlockers.includes(g)).slice(0, 5);
-const euCsfTopGaps = euCsfAllGaps.slice(0, 5);
-const csiTopGaps = (csiGaps as GapItem[]).slice(0, 5).map(g => ({ ...g, title: resolveGapTitle(g) }));
 
 // Domain maturity radar: one axis per sovereignty domain SOV-1…SOV-8 (each axis = that
 // domain's CSL). Excludes non-domain / weight-0 objectives. answered = had scoreable answers.
@@ -298,20 +329,6 @@ const radarDomains = csiObjectives
               <span class="text-xs font-normal text-gray-400">EU-CSF v1.2.1</span>
             </h2>
 
-            {euCsfSeal < 4 && euCsfBottlenecks.length > 0 && (
-              <div class="mb-4 p-4 rounded-xl border border-amber-100 bg-amber-50 text-sm text-gray-700">
-                <p>
-                  {levelPrefix} {euCsfSeal} — bottleneck{euCsfBottlenecks.length > 1 ? 's' : ''}:
-                  <strong> {euCsfBottlenecks.map(o => o.title).join(', ')}</strong>.
-                </p>
-                {euCsfTopGaps[0] && (
-                  <p class="text-xs text-gray-600 mt-1">
-                    Top priority: <strong>{euCsfTopGaps[0].title}</strong> ({euCsfTopGaps[0].question_id})
-                  </p>
-                )}
-              </div>
-            )}
-
             {euCsfBlockers.length > 0 && (
               <div class="mb-4">
                 <h3 class="text-sm font-semibold text-red-700 mb-2">Sovereignty blockers</h3>
@@ -321,7 +338,10 @@ const radarDomains = csiObjectives
                       <div class="text-xs font-bold text-red-500 mt-0.5 w-5 shrink-0">#{i + 1}</div>
                       <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium">{item.title}</p>
-                        <p class="text-xs text-gray-500 mt-0.5">{item.question_id} · {item.tier} tier</p>
+                        <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                          <span class={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${OWNER_PILL[ownerForQuestionId(item.question_id)].cls}`}>{OWNER_PILL[ownerForQuestionId(item.question_id)].label}</span>
+                          {item.question_id} · {item.tier} tier
+                        </p>
                       </div>
                       {item.seal_contribution != null && (
                         <div class="text-xs font-semibold px-2 py-0.5 rounded-full text-white shrink-0 self-start mt-0.5"
@@ -343,7 +363,10 @@ const radarDomains = csiObjectives
                       <div class="text-xs font-bold text-amber-600 mt-0.5 w-5 shrink-0">#{i + 1}</div>
                       <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium">{item.title}</p>
-                        <p class="text-xs text-gray-500 mt-0.5">{item.question_id} · {item.tier} tier</p>
+                        <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                          <span class={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${OWNER_PILL[ownerForQuestionId(item.question_id)].cls}`}>{OWNER_PILL[ownerForQuestionId(item.question_id)].label}</span>
+                          {item.question_id} · {item.tier} tier
+                        </p>
                       </div>
                       {item.seal_contribution != null && (
                         <div class="text-xs font-semibold px-2 py-0.5 rounded-full text-white shrink-0 self-start mt-0.5"
@@ -371,6 +394,7 @@ const radarDomains = csiObjectives
               country={country}
               variant={variant as 'EU-CSF' | 'Generalized'}
               overallSeal={euCsfSeal}
+              profile={rawControlProfile}
             />
           </section>
         )}
@@ -419,55 +443,23 @@ const radarDomains = csiObjectives
               <span class="text-xs font-normal text-gray-400 bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">editorial framework</span>
             </h2>
 
-            {/* Blocking objectives — these gate the assurance tier */}
+            {/* Assurance gate — which domains hold the headline tier (one line; detail is in the tracks/accordions) */}
             {csiBlockers.length > 0 && (
-              <div class="mb-5 p-4 rounded-xl border border-amber-200 bg-amber-50">
-                <p class="text-sm font-semibold text-amber-800 mb-1">
-                  {csiBlockers.length} blocking objective{csiBlockers.length > 1 ? 's' : ''} — these gate your assurance level (CSL {csiCsl})
-                </p>
-                <p class="text-xs text-amber-700 mb-2">
-                  The headline tier is the weakest-link assurance gate. Raising the lowest domain(s) below lifts it — a high coverage % cannot offset a blocking domain.
-                </p>
-                <div class="space-y-1.5">
-                  {csiBlockers.map(b => (
-                    <div class="flex items-start gap-3 p-2.5 rounded-lg bg-white border border-amber-100">
-                      <span class="text-xs font-bold px-2 py-0.5 rounded-full text-white shrink-0 self-start"
-                        style={`background-color: ${SEAL_COLORS[b.csl] ?? '#6b7280'}`}>CSL {b.csl}</span>
-                      <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-800">
-                          {b.title} <span class="font-mono text-xs text-gray-400">{b.objective_id}</span>
-                          {b.gating && <span class="ml-2 text-xs text-amber-700 font-semibold">· gating</span>}
-                        </p>
-                        {b.topGap && (
-                          <p class="text-xs text-gray-500 mt-0.5">Top gap: {resolveGapTitle(b.topGap as GapItem)} ({b.topGap.question_id})</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <p class="mb-4 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                <span class="font-semibold">Assurance gate (CSL {csiCsl}):</span>{' '}
+                held by <strong>{csiBlockers.filter(b => b.gating).map(b => b.objective_id).join(', ') || csiBlockers.map(b => b.objective_id).join(', ')}</strong>.
+                A high coverage % cannot offset a blocking domain — raise the lowest domain(s) to lift the tier.
+              </p>
             )}
+
+            {/* What to do next — supplier vs internal */}
+            <ActionTracks items={csiActionItems} levelLabel="CSL" />
 
             {/* Domain maturity radar */}
             {radarDomains.length >= 3 && (
               <div class="mb-6">
                 <h3 class="text-sm font-semibold text-gray-800 mb-2">Domain maturity <span class="text-xs font-normal text-gray-400">CSL per domain (assurance, not %)</span></h3>
                 <DomainRadar client:load domains={radarDomains} globalCsl={result.csi_composite.global.csl} maxCsl={4} />
-              </div>
-            )}
-
-            {/* Anti-patterns */}
-            {csiAntiPatterns.length > 0 && (
-              <div class="mb-4 p-4 rounded-xl border border-red-100 bg-red-50">
-                <p class="text-sm font-semibold text-red-700 mb-2">Detected sovereignty anti-patterns</p>
-                <div class="space-y-2">
-                  {csiAntiPatterns.map(ap => (
-                    <div>
-                      <p class="text-sm font-medium text-red-800">{ap.name}</p>
-                      <p class="text-xs text-red-600 mt-0.5">{ap.explanation}</p>
-                    </div>
-                  ))}
-                </div>
               </div>
             )}
 
@@ -502,6 +494,7 @@ const radarDomains = csiObjectives
                     variant={variant as 'EU-CSF' | 'Generalized'}
                     overallSeal={csiCsl}
                     levelLabel="CSL"
+                    profile={rawControlProfile}
                   />
                 </div>
               );
@@ -597,10 +590,11 @@ const radarDomains = csiObjectives
                         <div class="text-xs font-bold text-red-500 mt-0.5 w-5 shrink-0">#{item.priority}</div>
                         <div class="flex-1 min-w-0">
                           <p class="text-sm font-medium">{item.title}</p>
-                          <p class="text-xs text-gray-500 mt-0.5">
+                          <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                            <span class={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${OWNER_PILL[ownerForQuestionId(item.question_id)].cls}`}>{OWNER_PILL[ownerForQuestionId(item.question_id)].label}</span>
                             {item.question_id}
-                            {annex && <span class="ml-2 font-mono text-purple-600">{annex}</span>}
-                            <span class="ml-2">· Blocks UAL {item.blocks_level}</span>
+                            {annex && <span class="font-mono text-purple-600">{annex}</span>}
+                            <span>· Blocks UAL {item.blocks_level}</span>
                           </p>
                           {hint && (
                             <p class="text-xs text-red-700 mt-1 leading-relaxed">

@@ -2,6 +2,9 @@ import type { CriteriaFile, Question, ControlProfile } from '../../shared/src/sc
 import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult } from '../../shared/src/types.js';
 import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
 import { buildReport } from '../../shared/src/report.js';
+import { actionOwnerForQuestion, ACTION_OWNER_LABEL, type ActionOwner } from '../../shared/src/action-owner.js';
+
+const OWNER_HEX: Record<ActionOwner, string> = { supplier: '#4f46e5', internal: '#059669' };
 
 interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
 
@@ -33,6 +36,14 @@ function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string) {
 
 function getQuestionTitle(criteria: CriteriaFile, qid: string): string {
   return getQuestionMeta(criteria, qid, 'bloc').title;
+}
+
+function findQuestion(criteria: CriteriaFile, qid: string): Question | undefined {
+  for (const obj of criteria.objectives) {
+    const q = obj.questions.find((q: Question) => q.id === qid);
+    if (q) return q;
+  }
+  return undefined;
 }
 
 export async function buildReportPdf(
@@ -261,9 +272,14 @@ export async function buildReportPdf(
               const rawText = resolve(meta.text);
               const rawSupp = resolve(meta.supplementary);
               const sealColor = gap.seal_contribution != null ? (SEAL_COLORS_HEX[gap.seal_contribution] ?? '#6b7280') : '#6b7280';
+              const gapQ = findQuestion(criteria, gap.question_id);
+              const owner: ActionOwner = gapQ ? actionOwnerForQuestion(gapQ, controlProfile) : 'supplier';
               const children: unknown[] = [
                 h(View, { style: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 3 } },
                   h(Text, { style: { ...styles.cardTitle, flex: 1 } }, `#${i + 1}. ${meta.title} — ${gap.question_id}`),
+                  h(View, { style: { backgroundColor: OWNER_HEX[owner], borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 } },
+                    h(Text, { style: { fontSize: 7, color: '#ffffff', fontFamily: 'Helvetica-Bold' } }, ACTION_OWNER_LABEL[owner])
+                  ),
                   gap.seal_contribution != null
                     ? h(View, { style: { backgroundColor: sealColor, borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 } },
                         h(Text, { style: { fontSize: 7, color: '#ffffff', fontFamily: 'Helvetica-Bold' } }, `${levelLabel} ${gap.seal_contribution}`)
@@ -305,10 +321,15 @@ export async function buildReportPdf(
       }
       for (const bridge of row.bridges) {
         const tag = (bridge as { realism_tag?: string }).realism_tag;
+        const isInternal = tag === 'internal_control';
         items.push(h(View, { key: bridge.id, style: { ...styles.improvCard, marginBottom: 4 }, wrap: false },
           h(View, { style: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 3 } },
-            h(Text, { style: { ...styles.cardTitle, flex: 1 } }, `Contract clause — ${bridge.id}`),
-            tag ? h(View, { style: { backgroundColor: '#eef2ff', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 } },
+            h(Text, { style: { ...styles.cardTitle, flex: 1 } },
+              `${isInternal ? 'Internal control' : 'Contract clause'} — ${bridge.id}`),
+            h(View, { style: { backgroundColor: isInternal ? '#059669' : '#4f46e5', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 } },
+              h(Text, { style: { fontSize: 7, color: '#ffffff', fontFamily: 'Helvetica-Bold' } },
+                isInternal ? ACTION_OWNER_LABEL.internal : ACTION_OWNER_LABEL.supplier)),
+            tag && !isInternal ? h(View, { style: { backgroundColor: '#eef2ff', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 } },
               h(Text, { style: { fontSize: 7, color: '#4338ca', fontFamily: 'Helvetica-Bold' } }, tag.replace(/_/g, ' '))) : null,
           ),
           h(Text, { style: { ...styles.cardBody, color: '#374151' } },
@@ -324,9 +345,9 @@ export async function buildReportPdf(
 
     return [h(Page, { size: 'A4', style: styles.page },
       pageHeader,
-      h(Text, { style: styles.sectionTitle }, 'Recommended Contract Clauses'),
+      h(Text, { style: styles.sectionTitle }, 'What to Require & Build — by Layer'),
       h(Text, { style: { ...styles.bodyText, color: '#6b7280' } },
-        'Your declared infrastructure carries the structural risks below. For each, a model procurement / contract clause is suggested to close or mitigate it — negotiable templates to raise in supplier discussions, grouped by infrastructure layer.'),
+        'Your declared infrastructure carries the structural risks below. Each carries a model action, tagged by who must act: "Provider / contract" items are negotiable clause templates to raise with your supplier; "Internal" items are controls your own organisation must build and operate. Grouped by infrastructure layer.'),
       ...blocks,
       footer,
     )];
@@ -636,18 +657,8 @@ export async function buildReportPdf(
             : 'Sovereign Tier Achieved'
         ),
         pctToNext !== null && pctToNext > 0
-          ? h(View, {},
-              h(Text, { style: styles.bodyText },
-                `To advance from ${csiTierLabel} to ${CSI_MATURITY_LABELS[csiCsl + 1]}, an additional ${pctToNext}% of weighted points is needed.`
-              ),
-              h(Text, { style: { ...styles.bodyText, fontFamily: 'Helvetica-Bold' } }, 'Top actions to close the gap:'),
-              ...result.csi_composite!.gap_report.slice(0, 3).map((gap, i) => {
-                const meta = getQuestionMeta(criteria, gap.question_id, gap.tier);
-                return h(View, { key: i, style: { ...styles.improvCard, marginBottom: 4 }, wrap: false },
-                  h(Text, { style: styles.cardTitle }, `${i + 1}. ${meta.title} (${gap.question_id})`),
-                  meta.source ? h(Text, { style: { ...styles.cardBody, color: '#9ca3af' } }, `Ref: ${meta.source}`) : null,
-                );
-              }),
+          ? h(Text, { style: styles.bodyText },
+              `To advance from ${csiTierLabel} to ${CSI_MATURITY_LABELS[csiCsl + 1]}, an additional ${pctToNext}% of weighted points is needed. The priority actions above (with owner) are the fastest route.`
             )
           : h(Text, { style: styles.bodyText },
               'This assessment has achieved the Sovereign tier — the highest level in the CSI Progressive Sovereignty model.'
@@ -740,8 +751,14 @@ export async function buildReportPdf(
           ...cada.gap_report.slice(0, 8).map((item, i) => {
             const q = criteria.objectives.flatMap(o => o.questions).find(q => q.id === item.question_id);
             const annex = (q as any)?.cada_annex_ref ?? '';
+            const owner: ActionOwner = q ? actionOwnerForQuestion(q, controlProfile) : 'supplier';
             return h(View, { key: i, style: { ...styles.weakCard, marginBottom: 5 } },
-              h(Text, { style: styles.cardTitle }, `#${item.priority}. ${item.title}`),
+              h(View, { style: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 } },
+                h(Text, { style: { ...styles.cardTitle, flex: 1 } }, `#${item.priority}. ${item.title}`),
+                h(View, { style: { backgroundColor: OWNER_HEX[owner], borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 } },
+                  h(Text, { style: { fontSize: 7, color: '#ffffff', fontFamily: 'Helvetica-Bold' } }, ACTION_OWNER_LABEL[owner])
+                ),
+              ),
               h(Text, { style: styles.cardBody }, `${item.question_id}${annex ? ` · ${annex}` : ''} · Blocks UAL ${item.blocks_level}`),
             );
           }),

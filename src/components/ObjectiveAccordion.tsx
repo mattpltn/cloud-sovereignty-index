@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import type { CriteriaFile, Question } from '../../shared/src/schema.js';
+import type { CriteriaFile, Question, ControlProfile } from '../../shared/src/schema.js';
 import { resolvePlaceholders, displayTitle } from '../../shared/src/tier-resolution.js';
+import { actionOwnerForQuestion, ACTION_OWNER_LABEL } from '../../shared/src/action-owner.js';
 
 interface QuestionResult {
   question_id: string;
@@ -34,7 +35,14 @@ interface Props {
   overallSeal: number;
   /** Level badge label. CSI passes "CSL" (it never says "SEAL"); EU-CSF defaults by variant. */
   levelLabel?: string;
+  /** Declared control profile — drives the supplier-vs-internal owner pill on action rows. */
+  profile?: ControlProfile | null;
 }
+
+const OWNER_PILL_CLS = {
+  supplier: 'bg-indigo-100 text-indigo-700',
+  internal: 'bg-emerald-100 text-emerald-700',
+} as const;
 
 const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
 
@@ -89,9 +97,11 @@ const STATUS_CONFIG = {
   na:       { label: 'N/A',      bg: 'bg-gray-50',  border: 'border-transparent', badge: 'bg-gray-100 text-gray-500', dot: '–' },
 };
 
-export default function ObjectiveAccordion({ objectives, criteria, country, variant, overallSeal, levelLabel }: Props) {
+export default function ObjectiveAccordion({ objectives, criteria, country, variant, overallSeal, levelLabel, profile }: Props) {
   const [open, setOpen] = useState<Set<string>>(new Set());
   const ctx = { variant, country };
+  const questionById = new Map<string, Question>();
+  for (const o of criteria.objectives) for (const q of o.questions) questionById.set(q.id, q);
 
   // Open and scroll to objective targeted by URL hash (e.g. #obj-SOV-5)
   function handleHash(hash: string) {
@@ -198,6 +208,16 @@ export default function ObjectiveAccordion({ objectives, criteria, country, vari
                             <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${cfg.badge}`}>
                               {cfg.label}
                             </span>
+                            {(status === 'blocking' || status === 'gap' || status === 'partial') && (() => {
+                              const fq = questionById.get(q.question_id);
+                              if (!fq) return null;
+                              const owner = actionOwnerForQuestion(fq, profile);
+                              return (
+                                <span className={`ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-semibold ${OWNER_PILL_CLS[owner]}`}>
+                                  {ACTION_OWNER_LABEL[owner]}
+                                </span>
+                              );
+                            })()}
                           </td>
                         </tr>
                       );

@@ -63,6 +63,12 @@ export function operatorForLayer(profile: ControlProfile | undefined, layer: str
   return SELF_LABEL;
 }
 
+/** True when an operator label is the customer themselves (self-operated), as opposed to a
+ *  provider, external vendor, or data-centre landlord. Used to classify action ownership. */
+export function isSelfOperated(label: OperatorLabel): boolean {
+  return label.subject === SELF_LABEL.subject;
+}
+
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /** Rewrites "the cloud service provider" subject phrases to the operator label.
