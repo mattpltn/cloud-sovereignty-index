@@ -3,8 +3,8 @@ import { resolvePlaceholders, deriveOperatorLabel, operatorForLayer, reframeOper
 import type { CriteriaFile, Country, Question, ControlProfile } from '../../shared/src/schema.js';
 import type { AnswerMap, EvidenceLevel } from '../../shared/src/types.js';
 import { setAnswer, flushNow, readCache, writeCache } from '../lib/local-cache.js';
-import { evaluate } from '../../shared/src/relevance.js';
-import { STRUCTURAL_QUESTION_IDS } from '../../shared/src/structural-answers.js';
+import { evaluate, isQuestionApplicable } from '../../shared/src/relevance.js';
+import { STRUCTURAL_QUESTION_IDS, structuralAnswers } from '../../shared/src/structural-answers.js';
 
 const STRUCTURAL_IDS = new Set(STRUCTURAL_QUESTION_IDS);
 
@@ -154,6 +154,19 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   const c3aOnly = fw.has('c3a') && fw.size === 1;
   const acIdSet = new Set(customerSelectedAcIds);
 
+  // Typed answers with structural auto-answers (jurisdiction/residency/operator) merged
+  // underneath, so applicability_condition / parent gating resolve against the same facts
+  // the scorer sees. Manual answers always win.
+  const effectiveAnswers: AnswerMap = controlProfile
+    ? structuralAnswers(controlProfile).reduce<AnswerMap>(
+        (acc, sa) => {
+          if (acc[sa.answerKey] == null) acc[sa.answerKey] = { tier: sa.tier, value: sa.value };
+          return acc;
+        },
+        { ...answers },
+      )
+    : answers;
+
   // Filter questions to those relevant to at least one selected framework
   // AC questions also require customer selection
   function isQuestionVisible(q: Question): boolean {
@@ -166,31 +179,21 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
            (fw.has('csi_composite') && q.applies_to_csi_composite) ||
            (fw.has('cada') && (q as any).applies_to_cada);
     if (!frameworkCheck) return false;
-    // Control-profile gate: apply show_when for all frameworks when a control profile is set
-    const isCsiMode = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
     // Structural questions are auto-answered from the control profile (jurisdiction,
     // residency, operator location) and surfaced on the review page — never asked here.
-    if (isCsiMode && controlProfile && STRUCTURAL_IDS.has(q.id)) return false;
-    const showWhen: string | undefined = (q as any).relevance?.show_when;
-    if (showWhen && controlProfile) {
-      if (!evaluate(showWhen, controlProfile)) return false;
-    }
+    // This applies to EVERY framework: a foreign provider is foreign whether you score it
+    // against CSI, EU-CSF, C3A, or CADA, so these in-country facts are not put to the user.
+    if (controlProfile && STRUCTURAL_IDS.has(q.id)) return false;
     // EU exclusion: csi_presentation.treatment=exclude_non_eu hides question for non-EU countries
+    const isCsiMode = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
     if (isCsiMode) {
       const pres = (q as any).csi_presentation;
       if (pres?.treatment === 'exclude_non_eu' && !isEu) return false;
     }
-    // Fallback questions (parent_criterion_id set) only appear when parent is answered 'no'
-    if (q.parent_criterion_id) {
-      const parentId = q.parent_criterion_id;
-      const parentQ = criteria.objectives.flatMap(o => o.questions).find(p => p.id === parentId);
-      if (!parentQ) return false;
-      const parentAnswer = parentQ.type === 'tiered'
-        ? (answers[`${parentId}:national`]?.value ?? answers[`${parentId}:bloc`]?.value)
-        : answers[parentId]?.value;
-      return parentAnswer === 'no';
-    }
-    return true;
+    // Profile show_when, applicability_condition, and parent_criterion_id gating — the single
+    // source of truth shared with the scorers (so the gate never demands a question we hid).
+    // Dependencies are resolved against structural auto-answers merged under typed answers.
+    return isQuestionApplicable(q, controlProfile ?? null, effectiveAnswers);
   }
 
   // 'planned' (25% credit) is only available in CSI Composite Generalized mode

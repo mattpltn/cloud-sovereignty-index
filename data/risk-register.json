@@ -6,16 +6,16 @@
     {
       "id": "RISK-L1-ACCESS-01",
       "layer": "L1",
-      "title": "Co-location facility access revocation",
-      "description": "When the facility is owned or leased by a commercial third party or provider, the client's physical access can be revoked on contract termination or provider insolvency, with no legally guaranteed transition period for equipment removal.",
+      "title": "Facility access / exit revocation",
+      "description": "When the facility is leased by the client from a commercial lessor (colocation) or operated by the cloud provider (hyperscaler), continued access can be lost on contract termination or provider insolvency, with no legally guaranteed transition period. The remedy differs by arrangement: a colocation client needs guaranteed physical access to remove its own hardware; a hyperscaler client owns no hardware on site and instead needs audited assurance of facility controls plus a cooperative, contractually-binding exit and data-export procedure.",
       "triggers": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'",
       "source_anchors": [
         { "register_key": "dora", "clause": "Art. 30(2)(j): ICT third-party contracts for critical functions must include exit plans ensuring continuity of service, including transfer of assets and data to the client." },
         { "register_key": "eu-data-act", "clause": "Art. 25(2)(g): switching assistance obligation; clients must retain the right to migrate data and workloads within an agreed transition period." }
       ],
       "question_ids": ["SOV-3-01", "SOV-2-03"],
-      "procurement_clause_ids": ["PC-L1-ACCESS", "PC-L1-NOTICE"],
-      "severity_basis": "DORA Art. 30(2)(j) treats the absence of a documented exit plan for critical ICT dependencies as a gap in the ICT risk management framework; facility exit without an agreed procedure creates immediate service disruption risk — the client has no guaranteed right of continued access to their own hardware during a dispute."
+      "procurement_clause_ids": ["PC-L1-ACCESS", "PC-L1-AUDIT", "PC-L1-NOTICE"],
+      "severity_basis": "DORA Art. 30(2)(j) treats the absence of a documented exit plan for critical ICT dependencies as a gap in the ICT risk management framework; facility exit without an agreed procedure creates immediate service disruption risk. For colocation the client has no guaranteed right of continued access to its own hardware during a dispute; for a provider-operated facility the client cannot act on the facility directly and depends on audited assurance and provider exit cooperation."
     },
 
     {

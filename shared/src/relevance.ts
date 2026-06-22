@@ -1,4 +1,5 @@
-import type { ControlProfile } from './schema.js';
+import type { ControlProfile, Question } from './schema.js';
+import type { AnswerMap } from './types.js';
 import {
   LayerOwnershipSchema,
   LayerOperationSchema,
@@ -181,6 +182,51 @@ function parseToFn(predicate: string): (profile: ControlProfile) => boolean {
 
 export function evaluate(predicate: string, profile: ControlProfile): boolean {
   return parseToFn(predicate)(profile);
+}
+
+// ── Applicability (single source of truth for "does this question apply?") ─────
+// Shared by the questionnaire UI (which questions to show) and the scorers (which
+// questions enter the gate / denominator). It does NOT decide framework membership
+// or AC selection — callers filter those first. It answers only the three
+// profile/answer-driven concerns:
+//   1. relevance.show_when  — the control-profile predicate
+//   2. applicability_condition — a dependency on another question's answer
+//   3. parent_criterion_id  — fallback questions apply only when the parent is 'no'
+// A question whose dependency cannot be satisfied for the profile is NOT applicable,
+// so a scorer must never count it as a failure (the bug that pinned CADA at UAL 0).
+
+/** Read an answer regardless of how it was keyed (bare id, or a tiered `:national`/`:bloc`). */
+function answerValue(answers: AnswerMap, id: string): string | undefined {
+  return (
+    answers[id]?.value ??
+    answers[`${id}:national`]?.value ??
+    answers[`${id}:bloc`]?.value
+  );
+}
+
+export function isQuestionApplicable(
+  q: Question,
+  profile: ControlProfile | null | undefined,
+  answers: AnswerMap,
+): boolean {
+  const showWhen: string | undefined = (q as any).relevance?.show_when;
+  if (showWhen && profile) {
+    if (!evaluate(showWhen, profile)) return false;
+  }
+
+  const ac: { depends_on?: string; value?: string; when_unmet?: string } | undefined =
+    (q as any).applicability_condition;
+  if (ac?.depends_on && ac.when_unmet === 'exclude') {
+    const dep = answerValue(answers, ac.depends_on);
+    // Include only when the dependency answer matches; exclude when unmet.
+    if (dep !== ac.value) return false;
+  }
+
+  if (q.parent_criterion_id) {
+    return answerValue(answers, q.parent_criterion_id) === 'no';
+  }
+
+  return true;
 }
 
 // ── Excel formula compiler ────────────────────────────────────────────────────

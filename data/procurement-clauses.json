@@ -11,7 +11,19 @@
         { "register_key": "dora", "clause": "Art. 30(2)(j): exit plans ensuring continuity including transfer of data and assets." }
       ],
       "realism_tag": "standard_market_term",
-      "applies_when": "L1.ownership == 'commercial_lessor' OR L1.ownership == 'provider'"
+      "applies_when": "L1.ownership == 'commercial_lessor'"
+    },
+
+    {
+      "id": "PC-L1-AUDIT",
+      "layer": "L1",
+      "clause_text": "Because the facility is operated by the Provider and the Customer holds no equipment on site, facility-level physical and continuity controls sit between the Provider and the data-centre operator, not between the Provider and the Customer. The Customer shall instead have: (a) the right, directly or via an independent third party, to audit — or to receive current independent attestations (e.g. ISO 27001, SOC 2, or equivalent) evidencing — the physical-security, access-control, and continuity controls of the facility hosting the Customer's workloads; (b) at least 90 days written notice of any termination, expiry, non-renewal, or relocation of the Customer's workloads off the facility; and (c) a documented, contractually-binding exit and data-export procedure, with the Provider's active cooperation, enabling the Customer to migrate workloads and retrieve all data in open formats before access ceases. The Customer shall not be required to obtain physical access to Provider-owned hardware.",
+      "source_anchors": [
+        { "register_key": "dora", "clause": "Art. 30(2)(j): exit plans ensuring continuity; Art. 30(3): right to audit/inspect ICT third parties supporting critical functions." },
+        { "register_key": "eu-data-act", "clause": "Art. 25(2)(g): switching assistance — provider cooperation in migrating data and workloads within an agreed transition period." }
+      ],
+      "realism_tag": "standard_market_term",
+      "applies_when": "L1.ownership == 'provider'"
     },
 
     {

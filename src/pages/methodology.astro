@@ -70,8 +70,8 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
             <p class="font-semibold text-purple-900 mb-1">CSI Composite <span class="text-xs font-normal text-purple-600">(CSI editorial framework)</span></p>
             <p class="text-purple-800 text-xs">
               Output depends on variant:<br/>
-              <span class="font-medium">EU/EEA:</span> SEAL 0–4 per objective and globally (same weakest-link gate as EU-CSF).<br/>
-              <span class="font-medium">Non-EU (Generalized):</span> Sovereignty Ladder tier — Dependent, Managed Dependency, Strategic Autonomy, or Sovereign — based on percentage score. No weakest-link gate. "planned" answers earn 25% of question points.
+              <span class="font-medium">EU/EEA:</span> CSL 0–4 (Cloud Sovereignty Level) per objective and globally — the same 0–4 weakest-link model as EU-CSF's SEAL, under the CSI name.<br/>
+              <span class="font-medium">Non-EU (Generalized):</span> Sovereignty Ladder tier — Dependent, Managed Dependency, Strategic Autonomy, or Sovereign — based on percentage score, capped by the weakest sovereignty domain. "planned" answers earn 25% of question points.
             </p>
           </div>
         </div>
@@ -108,8 +108,8 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
 
       <h3 class="text-base font-semibold mb-2 mt-6">3.1 SEAL Levels</h3>
       <p class="text-sm text-gray-600 mb-4">
-        The <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level) is defined in EU-CSF §3.
-        SEAL applies to EU-CSF mode and to CSI Composite EU/EEA variant assessments.
+        The <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level) is defined in EU-CSF §3 and is the output of EU-CSF mode.
+        CSI Composite EU/EEA assessments apply the identical 0–4 weakest-link model under the CSI name <strong>CSL</strong> (Cloud Sovereignty Level); the level definitions below apply to both.
         Non-EU assessments using CSI Composite (Generalized) produce a <strong>Sovereignty Ladder tier</strong> instead — see §3.3.
       </p>
       <div class="space-y-3 mb-6">
@@ -165,7 +165,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
       <h3 class="text-base font-semibold mb-2">3.3 CSI Composite — Levels by Variant</h3>
       <div class="text-sm text-gray-700 space-y-3 leading-relaxed">
         <p>
-          For <strong>EU/EEA assessments</strong>, CSI Composite uses the same SEAL 0–4 scale and weakest-link gate as EU-CSF (see §3.1).
+          For <strong>EU/EEA assessments</strong>, CSI Composite uses the same 0–4 weakest-link scale and gate as EU-CSF, named CSL (Cloud Sovereignty Level) rather than SEAL (see §3.1).
         </p>
         <p>
           For <strong>non-EU (Generalized) assessments</strong>, CSI Composite uses the <strong>Sovereignty Ladder</strong> model:
@@ -469,28 +469,29 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           <p>Can the provider keep operating if external connections or vendors are severed? These criteria verify there are no hidden dependencies that would force discontinuation:</p>
           <table class="w-full text-xs border-collapse mt-1">
             <tbody>
-              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium w-48">SOV-4-09 / SOV-4-10</td><td class="py-1 text-slate-600">Can sever all non-EU network connections without service impairment; process documented and tested annually (SEAL 3)</td></tr>
-              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-6-01</td><td class="py-1 text-slate-600">Source code + build toolchain held locally (max 24 h old); can operate without any external dependency (SEAL 4 — highest contribution)</td></tr>
-              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-6-02 / AC</td><td class="py-1 text-slate-600">Documented contingency strategies if a third-party software vendor is lost; internal engineering capability to patch independently (SEAL 3–4)</td></tr>
-              <tr><td class="py-1 pr-3 font-medium">SOV-6-03</td><td class="py-1 text-slate-600">Internal tooling and talent to maintain and update the platform without vendor dependency (SEAL 3)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium w-48">SOV-4-09 / SOV-4-10</td><td class="py-1 text-slate-600">Can sever all non-EU network connections without service impairment; process documented and tested annually (contribution 3)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-6-01</td><td class="py-1 text-slate-600">Source code + build toolchain held locally (max 24 h old); can operate without any external dependency (contribution 4 — highest)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-6-02 / AC</td><td class="py-1 text-slate-600">Documented contingency strategies if a third-party software vendor is lost; internal engineering capability to patch independently (contribution 3–4)</td></tr>
+              <tr><td class="py-1 pr-3 font-medium">SOV-6-03</td><td class="py-1 text-slate-600">Internal tooling and talent to maintain and update the platform without vendor dependency (contribution 3)</td></tr>
             </tbody>
           </table>
-          <p class="font-medium mt-2">Dimension 2 — Customer-side exit portability <span class="font-normal text-slate-500">(partially covered by SOV-3 and SOV-5)</span></p>
-          <p>Can the customer take their data and identities elsewhere? These criteria ensure the customer retains the technical means to leave with data intact:</p>
+          <p class="font-medium mt-2">Dimension 2 — Customer-side exit &amp; portability <span class="font-normal text-slate-500">(covered by SOV-3, SOV-5 and SOV-6)</span></p>
+          <p>Can the customer take their data and identities elsewhere, with contractual terms that make exit real? These criteria ensure the customer retains the technical and contractual means to leave with data intact:</p>
           <table class="w-full text-xs border-collapse mt-1">
             <tbody>
-              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium w-48">SOV-3-02-C</td><td class="py-1 text-slate-600">Customer holds encryption keys <em>outside</em> the provider — can exit with all keys intact (SEAL 3)</td></tr>
-              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-05-C</td><td class="py-1 text-slate-600">Client-side encryption: only the customer can decrypt; maximum data independence (SEAL 4)</td></tr>
-              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-03-C + AC1/2/3</td><td class="py-1 text-slate-600">Identity lives outside the provider via open standards; stateless auth prevents account lock-in (SEAL 2–3)</td></tr>
-              <tr><td class="py-1 pr-3 font-medium">SOV-5-01/02/03-AC</td><td class="py-1 text-slate-600">Documented architectural flexibility to substitute software, hardware, and services (SEAL 3 — Additional Criteria)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium w-48">SOV-3-02-C</td><td class="py-1 text-slate-600">Customer holds encryption keys <em>outside</em> the provider — can exit with all keys intact (contribution 3)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-05-C</td><td class="py-1 text-slate-600">Client-side encryption: only the customer can decrypt; maximum data independence (contribution 4)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-3-03-C + AC1/2/3</td><td class="py-1 text-slate-600">Identity lives outside the provider via open standards; stateless auth prevents account lock-in (contribution 2–3)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">SOV-6 exit/portability</td><td class="py-1 text-slate-600">Tested data export in open, documented formats; standards-based API/data-plane portability conformance (e.g. OpenStack Powered / RefStack) (contribution 3–4)</td></tr>
+              <tr class="border-b border-slate-200"><td class="py-1 pr-3 font-medium">CADA Art. 25 / erasure</td><td class="py-1 text-slate-600">Switching, notice, transitional and data-retrieval periods, plus verifiable erasure after exit (contribution 3–4)</td></tr>
+              <tr><td class="py-1 pr-3 font-medium">SOV-5-01/02/03-AC</td><td class="py-1 text-slate-600">Documented architectural flexibility to substitute software, hardware, and services (contribution 3 — Additional Criteria)</td></tr>
             </tbody>
           </table>
-          <p class="font-medium mt-2 text-slate-700">What this framework does not assess</p>
-          <p>These are out of scope by design: <strong>data export SLAs</strong> (format and timeline for data return on contract termination); <strong>API portability standards</strong> (CNCF, OCI, TOSCA); <strong>contractual exit rights</strong> (termination clauses, data deletion obligations, exit fees, notice periods). Those are procurement and legal concerns.</p>
+          <p class="font-medium mt-2 text-slate-700">What this framework does — and does not — do</p>
+          <p>The instrument assesses both the <em>technical</em> reversibility above and the <em>contractual</em> controls that make exit enforceable — data-return SLAs and formats, API portability, termination/notice/transitional periods, data-deletion obligations, and licensing-change notice + no-penalty termination rights (SWIPO TR05). Where a control is missing, your report's <strong>Recommended Contract Clauses</strong> section lists the model procurement clause to require.</p>
           <p>
-            This position is consistent with C3A §1.2: the framework measures <em>structural sovereignty</em> — whether the provider has built the controls that make exit technically possible — not <em>contractual portability</em>, which depends on the customer's negotiated terms. Both are necessary for genuine reversibility; this tool addresses the technical half.
+            What it does <strong>not</strong> do is audit <em>your signed contract</em> or negotiate on your behalf: it measures whether the provider has built the controls and tells you which clauses to demand, but confirming your executed agreement reflects them — and any exit fees specific to your deal — remains your responsibility. This is consistent with C3A §1.2: structural sovereignty is assessed; the final legal review is yours.
           </p>
-          <p class="text-slate-500 italic">Recommended procurement complement: documented data return SLA (format, timeline, cost); termination assistance period; data deletion certification after exit; API compatibility commitments.</p>
         </div>
       </div>
     </section>
@@ -541,7 +542,7 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
               L6 is a <em>scoping dimension</em>, not a traditional infrastructure layer.
               It captures workload ownership, data classification, and criticality context — information that infrastructure
               frameworks do not address but that determines which sovereignty controls are actually relevant.
-              A SEAL 0 answer on an L6 question means "this layer applies to the client"; it does not indicate a
+              A level 0 answer on an L6 question means "this layer applies to the client"; it does not indicate a
               sovereignty failure at L6 itself.
             </p>
           </div>

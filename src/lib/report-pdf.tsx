@@ -248,6 +248,7 @@ export async function buildReportPdf(
   function buildGapSection(
     gaps: Array<{ objective_id: string; question_id: string; tier: string; gap_score: number; seal_contribution?: number }>,
     sectionLabel: string,
+    levelLabel: string = 'SEAL',
   ) {
     const topGaps = gaps.slice(0, 5);
     return [
@@ -265,7 +266,7 @@ export async function buildReportPdf(
                   h(Text, { style: { ...styles.cardTitle, flex: 1 } }, `#${i + 1}. ${meta.title} — ${gap.question_id}`),
                   gap.seal_contribution != null
                     ? h(View, { style: { backgroundColor: sealColor, borderRadius: 4, paddingHorizontal: 5, paddingVertical: 2 } },
-                        h(Text, { style: { fontSize: 7, color: '#ffffff', fontFamily: 'Helvetica-Bold' } }, `SEAL ${gap.seal_contribution}`)
+                        h(Text, { style: { fontSize: 7, color: '#ffffff', fontFamily: 'Helvetica-Bold' } }, `${levelLabel} ${gap.seal_contribution}`)
                       )
                     : null,
                 ),
@@ -367,6 +368,8 @@ export async function buildReportPdf(
 
   const CSI_MATURITY_LABELS = ['Dependent', 'Managed Dependency', 'Strategic Autonomy', 'Sovereign'];
   const CSI_MATURITY_HEX = ['#dc2626', '#f97316', '#22c55e', '#16a34a'];
+  // CSI EU/EEA names on the 0–4 CSL ladder — CSI speaks in CSL, never SEAL (matches ScoreHero).
+  const CSI_CSL_NAMES = ['No Sovereignty', 'Jurisdictional Sovereignty', 'Data Sovereignty', 'Digital Resilience', 'Full Digital Sovereignty'];
 
   const C3A_BAND_LABELS: Record<string, string> = {
     not_attained: 'Not Attained',
@@ -433,7 +436,7 @@ export async function buildReportPdf(
   if (result.csi_composite) {
     const { csl, pct } = result.csi_composite.global;
     const color = isGeneralized ? (CSI_MATURITY_HEX[csl] ?? '#6b7280') : (SEAL_COLORS_HEX[csl] ?? '#6b7280');
-    const csiLabel = isGeneralized ? (CSI_MATURITY_LABELS[csl] ?? `CSL ${csl}`) : `CSL ${csl} — ${SEAL_LABELS[csl]}`;
+    const csiLabel = isGeneralized ? (CSI_MATURITY_LABELS[csl] ?? `CSL ${csl}`) : `CSL ${csl} — ${CSI_CSL_NAMES[csl] ?? ''}`;
     coverResults.push(h(View, { style: { ...styles.coverSealBox, borderLeftWidth: 4, borderLeftColor: color, flex: 1 } },
       h(Text, { style: { ...styles.coverSealScore, color } }, `${Math.round(pct)}%`),
       h(Text, { style: styles.coverSealLabel }, 'CSI Composite'),
@@ -474,7 +477,7 @@ export async function buildReportPdf(
   // ── EU-CSF detail pages ──────────────────────────────────────────────────────
   const euCsfPages: unknown[] = [];
   if (result.eu_csf) {
-    const euObjectives = Object.values(result.eu_csf.per_objective);
+    const euObjectives = Object.values(result.eu_csf.per_objective).filter(o => o.max_score > 0);
     const euSeal = result.eu_csf.global.seal;
     const strengths = euObjectives.filter(o => o.seal >= 3);
     const weaknesses = euObjectives.filter(o => o.seal <= 1 || (o.seal === euSeal && euSeal < 4));
@@ -566,7 +569,10 @@ export async function buildReportPdf(
   // ── CSI Composite detail pages ───────────────────────────────────────────────
   const csiPages: unknown[] = [];
   if (result.csi_composite) {
-    const csiObjectives = Object.values(result.csi_composite.per_objective);
+    // Exclude zero-weight objectives (e.g. SOV-9, LMIC-only) — they have no questions in a
+    // CSI assessment and would otherwise render as phantom "CSL 0" rows. Matches the web report
+    // and the weakest-link gate, which already exclude SOV-8/SOV-9.
+    const csiObjectives = Object.values(result.csi_composite.per_objective).filter(o => o.max_score > 0);
     const csiCsl = result.csi_composite.global.csl;
     const csiPct = result.csi_composite.global.pct;
     const pctToNext = result.csi_composite.global.pct_to_next_tier;
@@ -574,7 +580,7 @@ export async function buildReportPdf(
     const csiLevelColors = isGeneralized ? CSI_MATURITY_HEX : SEAL_COLORS_HEX;
     const csiTierLabel = isGeneralized
       ? (CSI_MATURITY_LABELS[csiCsl] ?? `Tier ${csiCsl}`)
-      : (SEAL_LABELS[csiCsl] ?? `Level ${csiCsl}`);
+      : (CSI_CSL_NAMES[csiCsl] ?? `CSL ${csiCsl}`);
     const csiLevelPrefix = isGeneralized ? '' : 'CSL ';
 
     const strengths = isGeneralized
@@ -621,7 +627,7 @@ export async function buildReportPdf(
               topGap ? h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`) : null,
             );
           })),
-      ...buildGapSection(result.csi_composite.gap_report, 'CSI Composite'),
+      ...buildGapSection(result.csi_composite.gap_report, 'CSI Composite', 'CSL'),
       // Roadmap to next tier (non-EU only)
       isGeneralized ? h(View, { style: { marginTop: 12 } },
         h(Text, { style: styles.subSectionTitle },

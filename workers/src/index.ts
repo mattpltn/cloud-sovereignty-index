@@ -218,6 +218,7 @@ app.post('/api/assessments/:id/submit', async (c) => {
     instrument_version: row.instrument_version as string,
     selected_frameworks: selectedFrameworks,
     customer_selected_ac_ids: customerSelectedAcIds,
+    control_profile: controlProfile,
   });
 
   const ts = now();

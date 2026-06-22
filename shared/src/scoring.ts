@@ -1,4 +1,5 @@
-import type { CriteriaFile, Question, LadderRung } from './schema.js';
+import type { CriteriaFile, Question, LadderRung, ControlProfile } from './schema.js';
+import { isQuestionApplicable } from './relevance.js';
 import type {
   AssessmentResult, EuCsfResult, EuCsfObjectiveResult,
   C3aResult, C3aObjectiveTierResult, C3aAttainmentBand, C3aQuestionResult,
@@ -626,29 +627,53 @@ const CADA_LEVEL_LABELS = [
   'Union Assurance Level 4 — Highest Assurance',
 ];
 
-function scoreCada(answers: AnswerMap, criteria: CriteriaFile): CadaResult {
-  // Collect all CADA-applicable questions with their level requirements
+function scoreCada(
+  answers: AnswerMap,
+  criteria: CriteriaFile,
+  controlProfile?: ControlProfile | null,
+): CadaResult {
+  // Collect all CADA-applicable questions with their level requirements.
+  // A question is gated only if it is APPLICABLE for the declared profile — questions
+  // the questionnaire hides (relevance.show_when false, an excluding applicability_condition,
+  // or an unmet parent_criterion_id) can never be answered, so counting them as gate
+  // failures wrongly pins the result at UAL 0. We mirror the questionnaire's visibility.
   const cadaQuestions: Array<{
     question_id: string;
     title: string;
     objective_id: string;
     cada_assurance_level: number[];
     min_level: number;
+    tiered: boolean;
   }> = [];
 
   for (const obj of criteria.objectives) {
     for (const q of obj.questions) {
       const qa = q as any;
       if (!qa.applies_to_cada || !qa.cada_assurance_level?.length) continue;
+      if (!isQuestionApplicable(q, controlProfile, answers)) continue;
       cadaQuestions.push({
         question_id: q.id,
         title: q.title,
         objective_id: obj.id,
         cada_assurance_level: qa.cada_assurance_level,
         min_level: Math.min(...qa.cada_assurance_level),
+        tiered: q.type === 'tiered',
       });
     }
   }
+
+  // A CADA gate is binary pass/fail. Tiered answers are keyed `:national`/`:bloc`; either
+  // tier reading 'yes' satisfies the criterion (in-country is stronger than in-bloc).
+  const passes = (q: { question_id: string; tiered: boolean }): boolean => {
+    if (q.tiered) {
+      return (
+        answers[`${q.question_id}:national`]?.value === 'yes' ||
+        answers[`${q.question_id}:bloc`]?.value === 'yes' ||
+        answers[q.question_id]?.value === 'yes'
+      );
+    }
+    return answers[q.question_id]?.value === 'yes';
+  };
 
   // For each level L, gates[L] = all questions required for that level (cumulative: min_level <= L)
   const levels: CadaLevelResult[] = [];
@@ -656,10 +681,7 @@ function scoreCada(answers: AnswerMap, criteria: CriteriaFile): CadaResult {
 
   for (let L = 1; L <= 4; L++) {
     const gated = cadaQuestions.filter(q => q.min_level <= L);
-    const failing = gated.filter(q => {
-      const ans = answers[q.question_id];
-      return !ans || ans.value !== 'yes';
-    });
+    const failing = gated.filter(q => !passes(q));
     const passed = gated.length - failing.length;
     const gate_passed = failing.length === 0;
 
@@ -721,6 +743,7 @@ export function scoreAssessment(
     instrument_version: string;
     selected_frameworks?: string[];
     customer_selected_ac_ids?: string[];
+    control_profile?: ControlProfile | null;
   }
 ): AssessmentResult {
   const frameworks = (meta.selected_frameworks ?? ['csi_composite']) as FrameworkMode[];
@@ -747,7 +770,7 @@ export function scoreAssessment(
     result.csi_composite = scoreCsiComposite(answers, criteria, meta.variant);
   }
   if (frameworks.includes('cada')) {
-    result.cada = scoreCada(answers, criteria);
+    result.cada = scoreCada(answers, criteria, meta.control_profile);
   }
 
   return result;

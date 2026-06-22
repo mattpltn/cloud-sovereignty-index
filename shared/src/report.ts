@@ -183,7 +183,16 @@ export function buildReport(profile: ControlProfile, answers: AnswerMap): LayerR
     const triggered_risks = fired.filter(risk => (risk as any).layer === layerId);
 
     const bridge_ids = new Set(triggered_risks.flatMap(r => r.procurement_clause_ids));
-    const bridges = ALL_CLAUSES.filter(c => bridge_ids.has(c.id) && (c as any).layer === layerId);
+    // A clause's applies_when narrows it within its risk's (broader) trigger, so the right
+    // remedy is shown per profile — e.g. "remove your hardware" for a colocation lessor vs an
+    // audit/transparency right for a hyperscaler-operated facility where the customer owns nothing.
+    const bridges = ALL_CLAUSES.filter(c => {
+      if (!bridge_ids.has(c.id) || (c as any).layer !== layerId) return false;
+      const appliesWhen = (c as any).applies_when as string | undefined;
+      if (!appliesWhen) return true;
+      try { return evaluate(appliesWhen, profile); }
+      catch { return true; }
+    });
 
     return { layer: layerId, layer_name: LAYER_NAMES[layerId], control_channel, assurance_signal, narrative, triggered_risks, bridges };
   });

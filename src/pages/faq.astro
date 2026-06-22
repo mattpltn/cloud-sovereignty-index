@@ -37,7 +37,7 @@ import '../styles/global.css';
               It is a structured self-assessment instrument that lets organisations evaluate how well
               a cloud service supports their digital sovereignty goals. You answer a set of questions
               about a cloud provider or deployment, and the tool produces a weighted score from 0–100%
-              and a result level — a SEAL (0–4) for EU/EEA assessments, or a Progressive Sovereignty Maturity tier (Foundational, Developing, Advanced, Pioneering) for non-EU assessments.
+              and a result level — a 0–4 assurance level (SEAL for EU-CSF, CSL for CSI Composite) for EU/EEA assessments, or a Progressive Sovereignty Maturity tier (Dependent, Managed Dependency, Strategic Autonomy, Sovereign) for non-EU assessments.
             </p>
           </div>
 
@@ -207,14 +207,14 @@ import '../styles/global.css';
             </p>
             <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-2">
               <li>
-                <strong>EU/EEA assessments (EU-CSF and CSI Composite EU/EEA):</strong> output is a <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level, defined in EU-CSF §3), on a 0–4 scale.
+                <strong>EU/EEA assessments:</strong> output is a 0–4 assurance level — a <strong>SEAL</strong> (Sovereignty Effectiveness Assurance Level, defined in EU-CSF §3) for EU-CSF, and the equivalent <strong>CSL</strong> (Cloud Sovereignty Level) for CSI Composite EU/EEA.
                 0 = No Sovereignty, 1 = Jurisdictional Sovereignty, 2 = Data Sovereignty, 3 = Digital Resilience, 4 = Full Digital Sovereignty.
-                The SEAL is computed with a weakest-link gate: each criterion carries a contribution level (1–4); the objective SEAL is the highest level L where every criterion with contribution ≤ L is answered Yes.
-                A single failed criterion at level 1 drops the objective to SEAL 0.
-                The overall SEAL is the minimum across all objectives.
+                The level is computed with a weakest-link gate: each criterion carries a contribution level (1–4); the objective level is the highest L where every criterion with contribution ≤ L is answered Yes.
+                A single failed criterion at level 1 drops the objective to level 0.
+                The overall level is the minimum across all objectives.
               </li>
               <li>
-                <strong>Non-EU assessments (CSI Composite Generalized):</strong> output is a <strong>Progressive Sovereignty Maturity</strong> tier — Foundational (0–40%), Developing (41–70%), Advanced (71–90%), or Pioneering (91–100%) — derived from the weighted percentage score.
+                <strong>Non-EU assessments (CSI Composite Generalized):</strong> output is a <strong>Progressive Sovereignty Maturity</strong> tier — Dependent (0–40%), Managed Dependency (41–70%), Strategic Autonomy (71–90%), or Sovereign (91–100%) — derived from the weighted percentage score, then gated by the weakest sovereignty domain (the headline tier cannot exceed your weakest domain's CSL).
                 There is no weakest-link gate: a single No on a strict EU criterion does not collapse the result.
               </li>
               <li>
@@ -224,19 +224,20 @@ import '../styles/global.css';
           </div>
 
           <div>
-            <h3 class="text-sm font-semibold mb-1">Why is my overall score high but my SEAL level low?</h3>
+            <h3 class="text-sm font-semibold mb-1">Why is my overall score high but my assurance level low?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              This applies to EU-CSF and EU/EEA CSI Composite assessments. The percentage score and the SEAL level measure different things. The score is a
+              This applies to EU-CSF (SEAL) and EU/EEA CSI Composite (CSL) assessments. The percentage score and the assurance level measure different things. The score is a
               weighted average of how many points you earned across all questions — partial answers
-              count toward it. The SEAL level is a strict threshold: a single No or Partial on a
-              foundational criterion (contribution level 1) drops the objective to SEAL 0,
+              count toward it. The assurance level is a strict threshold: a single No or Partial on a
+              foundational criterion (contribution level 1) drops the objective to level 0,
               regardless of how well you scored on everything else. This is intentional — the level
               is designed to identify the most critical sovereignty gaps, not be averaged away.
             </p>
             <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              For non-EU assessments (CSI Composite Generalized), there is no weakest-link gate.
-              The maturity tier (Foundational, Developing, Advanced, Pioneering) is derived directly
-              from the weighted percentage, so a high score always produces a high tier.
+              For non-EU assessments (CSI Composite Generalized), there is no per-criterion weakest-link
+              gate, but the headline maturity tier (Dependent, Managed Dependency, Strategic Autonomy,
+              Sovereign) is still capped by your weakest sovereignty domain — so a high percentage will
+              not read "Strategic Autonomy" while one domain remains "Dependent".
             </p>
           </div>
         </div>
@@ -270,16 +271,16 @@ import '../styles/global.css';
           <div>
             <h3 class="text-sm font-semibold mb-1">Does this tool assess whether I can exit my cloud provider?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              Partially. Reversibility has two dimensions the framework handles differently.
+              Yes — substantially, across both dimensions of reversibility.
             </p>
             <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              <strong>Provider-side operational independence — well covered.</strong> The framework assesses whether the provider can keep operating if external connections or vendors are severed: SOV-4-09/10 (Disconnect/Reconnect, SEAL 3), SOV-6-01 (source code and build toolchain held locally, SEAL 4 — the highest single contribution in the framework), and SOV-6-02/03 (contingency strategies and internal engineering capability).
+              <strong>Provider-side operational independence.</strong> Whether the provider can keep operating if external connections or vendors are severed: SOV-4-09/10 (Disconnect/Reconnect, CSL 3), SOV-6-01 (source code and build toolchain held locally, CSL 4 — the highest single contribution in the framework), and SOV-6-02/03 (contingency strategies and internal engineering capability).
             </p>
             <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              <strong>Customer-side exit portability — partially covered.</strong> The framework assesses whether the customer retains the technical means to leave with data intact: SOV-3-04 (customer holds encryption keys outside the provider), SOV-3-07 (client-side encryption, SEAL 4), and SOV-3-05 + AC1/2/3 (identity via open standards, stateless auth, no account lock-in).
+              <strong>Customer-side exit &amp; portability.</strong> Whether you retain the technical and contractual means to leave with your data intact: tested data export in open, documented formats (SOV-6 exit/portability), standards-based API and data-plane portability conformance (e.g. OpenStack Powered / RefStack), switching, notice, transitional and data-retrieval periods plus verifiable erasure (CADA Art. 25 / CADA verifiable-erasure), notice and a no-penalty termination right on material licensing-model changes (SWIPO TR05), and customer-held keys / client-side encryption (SOV-3-04/07) and open-standard identity (SOV-3-05 + AC1/2/3).
             </p>
             <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              <strong>What is not assessed:</strong> data export SLAs, API portability standards, termination clauses, data deletion obligations, exit fees, and notice periods. Those are procurement and legal concerns. The framework measures <em>structural sovereignty</em> — whether the provider has built the controls that make exit technically possible — not <em>contractual portability</em>, which depends on the terms the customer has negotiated. Both matter; only the technical half is assessed here.
+              <strong>What it does not do:</strong> it does not audit <em>your signed contract</em> or negotiate terms on your behalf. It measures whether the provider has built the controls that make exit possible, and your report includes a <em>Recommended Contract Clauses</em> section listing the procurement clauses to require — but confirming your executed agreement actually reflects them (and any exit fees specific to your deal) remains your job.
             </p>
             <p class="text-sm text-gray-700 leading-relaxed mt-2">
               See the <a href="/methodology" class="text-blue-600 underline">Methodology page</a> for the full criteria mapping and procurement complement checklist.
@@ -321,8 +322,8 @@ import '../styles/global.css';
               CSI Composite solves this with two variants:
             </p>
             <ul class="text-sm text-gray-700 space-y-2 list-disc pl-5 leading-relaxed mt-1">
-              <li><strong>EU/EEA variant:</strong> Identical to EU-CSF — same SEAL 0–4 levels, same weakest-link gate. Suitable for EU procurement comparison.</li>
-              <li><strong>Generalized (non-EU) variant:</strong> Replaces the weakest-link gate with a <em>Progressive Sovereignty Maturity</em> model. Score is a weighted percentage mapped to four tiers: Foundational (0–40%), Developing (41–70%), Advanced (71–90%), Pioneering (91–100%). This rewards genuine progress without penalising providers for failing EU-specific staffing or legal requirements that don't apply in their jurisdiction.</li>
+              <li><strong>EU/EEA variant:</strong> Same 0–4 weakest-link model as EU-CSF, expressed as CSL (Cloud Sovereignty Level) rather than SEAL. Suitable for EU procurement comparison.</li>
+              <li><strong>Generalized (non-EU) variant:</strong> Replaces the per-criterion weakest-link gate with a <em>Progressive Sovereignty Maturity</em> model. Score is a weighted percentage mapped to four tiers — Dependent (0–40%), Managed Dependency (41–70%), Strategic Autonomy (71–90%), Sovereign (91–100%) — then capped by the weakest sovereignty domain. This rewards genuine progress without penalising providers for failing EU-specific staffing or legal requirements that don't apply in their jurisdiction.</li>
             </ul>
             <p class="text-sm text-gray-700 leading-relaxed mt-2">
               CSI Composite is an editorial framework — it is not published by BSI or the European Commission and does not constitute EU-CSF or C3A certification.
@@ -386,10 +387,10 @@ import '../styles/global.css';
           <div>
             <h3 class="text-sm font-semibold mb-1">What is the difference between the EU/EEA and non-EU (Generalized) variants?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
-              The <strong>EU/EEA variant</strong> uses EU-CSF as its primary lens. Questions reference the EU as the bloc-level jurisdiction. When you select a specific EU or EEA member state (e.g. France), a second tier of stricter <em>national-level</em> questions also appears — for example, "data stored in France" (national tier) in addition to "data stored in the EU" (bloc tier). The output is a SEAL level with weakest-link gate.
+              The <strong>EU/EEA variant</strong> uses EU-CSF as its primary lens. Questions reference the EU as the bloc-level jurisdiction. When you select a specific EU or EEA member state (e.g. France), a second tier of stricter <em>national-level</em> questions also appears — for example, "data stored in France" (national tier) in addition to "data stored in the EU" (bloc tier). The output is a CSL level with weakest-link gate.
             </p>
             <p class="text-sm text-gray-700 leading-relaxed mt-2">
-              The <strong>Generalized (non-EU) variant</strong> adapts the same criteria for any country outside the EU/EEA. The "bloc" level references your selected country's jurisdiction instead of the EU. Only country-level questions appear — there is no national sub-tier. The output is a Progressive Sovereignty Maturity tier with no weakest-link gate, which avoids penalising providers for failing EU-specific requirements that don't apply in their jurisdiction.
+              The <strong>Generalized (non-EU) variant</strong> adapts the same criteria for any country outside the EU/EEA. The "bloc" level references your selected country's jurisdiction instead of the EU. Only country-level questions appear — there is no national sub-tier. The output is a Progressive Sovereignty Maturity tier (no per-criterion weakest-link gate, though the headline tier is still capped by your weakest sovereignty domain), which avoids penalising providers for failing EU-specific requirements that don't apply in their jurisdiction.
             </p>
             <p class="text-sm text-gray-700 leading-relaxed mt-2">
               Both variants use the same merged Assessment sheet in the Excel template — the "tier" column on each row identifies whether a question applies to the EU/EEA context, the Generalized context, or both.
@@ -454,7 +455,7 @@ import '../styles/global.css';
             <h3 class="text-sm font-semibold mb-1">What is the public corpus?</h3>
             <p class="text-sm text-gray-700 leading-relaxed">
               When submitting an assessment, you can opt in to share an anonymised version of your
-              results with the public corpus. If you do, we publish: your score, result level (SEAL or maturity tier),
+              results with the public corpus. If you do, we publish: your score, result level (SEAL, CSL, or maturity tier),
               variant, country, service model, role, and the month/year of submission (not the
               exact date). Company name is never included. The corpus is browsable at
               <a href="/corpus" class="text-blue-600 underline">/corpus</a> and is intended for
