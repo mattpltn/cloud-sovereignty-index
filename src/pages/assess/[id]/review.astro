@@ -8,6 +8,18 @@ export const prerender = false;
 
 const criteria = criteriaJson as unknown as CriteriaFile;
 const { id } = Astro.params;
+
+// If this assessment is already submitted, never show a re-submittable review page —
+// send the user straight to their result. (Re-opening /review for a finalized assessment
+// is what reads as a phantom "auto-submit": the page would otherwise let you submit again.)
+const apiBase = new URL('/api', Astro.request.url).toString();
+try {
+  const res = await fetch(`${apiBase}/assessments/${id}`);
+  if (res.ok) {
+    const rec = await res.json() as Record<string, unknown>;
+    if (rec?.status === 'submitted') return Astro.redirect(`/assess/${id}/result`);
+  }
+} catch { /* Workers unavailable — fall through to the normal review page */ }
 ---
 <!doctype html>
 <html lang="en">

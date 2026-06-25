@@ -18,6 +18,12 @@ export interface ActionItem {
   severity?: number;
   /** Infrastructure layer for clauses (e.g. "L1 · Facility"). */
   layer?: string;
+  /** Full clause/question text — revealed when the item is expanded (no truncation). */
+  fullText?: string;
+  /** Source / evidence basis shown under the full text. */
+  basis?: string;
+  /** The concrete recommended action ("Add this clause…" / "Implement & document…"). */
+  action?: string;
 }
 
 interface Props {
@@ -60,15 +66,19 @@ function Track({ owner, items, levelLabel }: { owner: ActionOwner; items: Action
         <p className="text-xs text-gray-400 italic">Nothing flagged in this track.</p>
       ) : (
         <ul className="space-y-2">
-          {sorted.map(item => (
-            <li key={`${item.kind}-${item.id}`} className="bg-white/70 rounded-lg border border-white px-3 py-2">
+          {sorted.map(item => {
+            const expandable = !!(item.fullText || item.action || item.basis);
+            const head = (
               <div className="flex items-start gap-2">
                 <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded shrink-0 mt-0.5 ${
                   item.kind === 'clause' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
                   {item.kind === 'clause' ? 'Clause' : 'Gap'}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-gray-800">{item.label}</p>
+                  <p className="text-sm font-medium text-gray-800">
+                    {item.label}
+                    {expandable && <span className="text-gray-400 font-normal ml-1 text-xs">— details ▸</span>}
+                  </p>
                   {item.detail && <p className="text-xs text-gray-500 mt-0.5">{item.detail}</p>}
                   <p className="text-[11px] text-gray-400 mt-0.5 font-mono">
                     {item.layer ? `${item.layer} · ` : ''}{item.id}
@@ -76,8 +86,27 @@ function Track({ owner, items, levelLabel }: { owner: ActionOwner; items: Action
                   </p>
                 </div>
               </div>
-            </li>
-          ))}
+            );
+            const body = expandable && (
+              <div className="mt-2 pl-7 space-y-1.5 border-t border-gray-100 pt-2">
+                {item.fullText && <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">{item.fullText}</p>}
+                {item.action && (
+                  <p className="text-xs">
+                    <span className="font-semibold text-gray-700">{owner === 'supplier' ? 'Add to contract: ' : 'Implement & document: '}</span>
+                    <span className="text-gray-600">{item.action}</span>
+                  </p>
+                )}
+                {item.basis && <p className="text-[11px] text-gray-400">{item.basis}</p>}
+              </div>
+            );
+            return (
+              <li key={`${item.kind}-${item.id}`} className="bg-white/70 rounded-lg border border-white px-3 py-2">
+                {expandable
+                  ? <details className="group"><summary className="cursor-pointer list-none marker:hidden">{head}</summary>{body}</details>
+                  : head}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

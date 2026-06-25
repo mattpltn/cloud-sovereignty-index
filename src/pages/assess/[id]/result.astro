@@ -14,7 +14,9 @@ import countriesJson from '../../../../data/countries.json';
 import type { CriteriaFile, ControlProfile, Question } from '../../../../shared/src/schema';
 import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult, C3aResult, CadaResult, AnswerMap } from '../../../../shared/src/types';
 import { buildReport } from '../../../../shared/src/report';
-import { displayTitle } from '../../../../shared/src/tier-resolution';
+import { displayTitle, resolvePlaceholders } from '../../../../shared/src/tier-resolution';
+import RiskRegisterExport from '../../../components/RiskRegisterExport';
+import type { RegisterRow } from '../../../components/RiskRegisterExport';
 import { actionOwnerForQuestion, actionOwnerForClause, ACTION_OWNER_LABEL, type ActionOwner } from '../../../../shared/src/action-owner';
 export const prerender = false;
 
@@ -163,34 +165,77 @@ function clauseLabel(text: string): string {
   const first = text.split('. ')[0];
   return first.length > 120 ? `${first.slice(0, 117)}…` : first;
 }
-// Procurement-clause templates from the control matrix, deduped across layers.
-const clauseItems: ActionItem[] = (() => {
+// Full text + evidence for a gap question (placeholders resolved, no truncation).
+function gapDetail(qid: string, tier: string): { title: string; text: string; supplementary: string; source: string } {
+  const q = questionById.get(qid);
+  const ctx = { variant, country } as any;
+  const v = variant as 'EU-CSF' | 'Generalized';
+  if (!q) return { title: qid, text: '', supplementary: '', source: '' };
+  const src = (s?: { doc?: string; clause?: string }) => s ? `${s.doc ?? ''} ${s.clause ?? ''}`.trim() : '';
+  if (q.type === 'single') {
+    return { title: displayTitle(q, v), text: resolvePlaceholders((q as any).text ?? '', ctx), supplementary: q.supplementary_info ?? '', source: src((q as any).source) };
+  }
+  const td = tier === 'national' ? (q as any).tiers?.national : (q as any).tiers?.bloc;
+  return { title: displayTitle(q, v), text: resolvePlaceholders(td?.text ?? '', ctx), supplementary: q.supplementary_info ?? '', source: src(td?.source) };
+}
+
+// ── Risk register: every recommendation as a row (clauses + all gaps), enriched with
+// full text + the concrete action, classified supplier vs internal. Drives both the
+// expandable on-screen tracks and the CSV/XLSX export.
+type Bridge = { id: string; clause_text: string; realism_tag?: string; source_anchors?: Array<{ register_key: string; clause: string }> };
+const clauseRows: RegisterRow[] = (() => {
   const seen = new Set<string>();
-  const out: ActionItem[] = [];
+  const out: RegisterRow[] = [];
   for (const row of controlMatrixRows) {
-    for (const c of row.bridges as Array<{ id: string; clause_text: string; realism_tag?: string }>) {
+    for (const c of row.bridges as Bridge[]) {
       if (seen.has(c.id)) continue;
       seen.add(c.id);
+      const owner = actionOwnerForClause(c);
       out.push({
-        id: c.id, label: clauseLabel(c.clause_text), owner: actionOwnerForClause(c),
-        kind: 'clause', layer: `${row.layer} · ${LAYER_NAMES[row.layer] ?? row.layer}`,
+        owner, kind: 'clause', group: `${row.layer} · ${LAYER_NAMES[row.layer] ?? row.layer}`,
+        id: c.id, title: clauseLabel(c.clause_text), severity: null,
+        fullText: c.clause_text,
+        basis: c.source_anchors?.[0] ? `${c.source_anchors[0].register_key} — ${c.source_anchors[0].clause}` : '',
+        expected: '',
+        action: owner === 'internal'
+          ? 'Establish this control internally and retain evidence (runbook, logs, attestation).'
+          : 'Insert this clause into the provider contract / SLA and confirm written acceptance.',
       });
     }
   }
   return out;
 })();
+const gapRows: RegisterRow[] = result?.csi_composite
+  ? (csiGaps as Array<{ objective_id: string; question_id: string; tier: string; seal_contribution?: number }>).map((g): RegisterRow => {
+      const d = gapDetail(g.question_id, g.tier);
+      const owner = ownerForQuestionId(g.question_id);
+      const obj = csiObjectives.find(o => o.objective_id === g.objective_id);
+      return {
+        owner, kind: 'gap', group: obj?.title ?? g.objective_id, objectiveId: g.objective_id,
+        id: g.question_id, title: d.title, severity: g.seal_contribution ?? obj?.csl ?? null,
+        fullText: d.text, basis: d.source, expected: d.supplementary,
+        action: owner === 'supplier'
+          ? `Require the provider to evidence this control (or add a matching contract clause).${d.supplementary ? ` Expected evidence: ${d.supplementary}` : ''}`
+          : `Implement this control in-house and document the process and evidence.${d.supplementary ? ` Expected: ${d.supplementary}` : ''}`,
+      };
+    })
+  : [];
+const riskRegister: RegisterRow[] = [...clauseRows, ...gapRows];
 
-// CSI "what to do next": the blocking objectives (as gaps, classified by owner) + the
-// recommended clause templates — split into the two tracks by the component.
+// On-screen "what to do next": all clause templates + the gaps for blocking objectives
+// (the priority), each expandable to full text. The export carries the complete register.
+const blockingObjIds = new Set(csiBlockers.map(b => b.objective_id));
 const csiActionItems: ActionItem[] = result?.csi_composite
   ? [
-      ...clauseItems,
-      ...csiBlockers.map((b): ActionItem => ({
-        id: b.topGap?.question_id ?? b.objective_id,
-        label: b.title,
-        detail: b.topGap ? resolveGapTitle(b.topGap as GapItem) : undefined,
-        owner: ownerForQuestionId(b.topGap?.question_id),
-        kind: 'gap', severity: b.csl,
+      ...clauseRows.map((r): ActionItem => ({
+        id: r.id, label: r.title, owner: r.owner, kind: 'clause', layer: r.group,
+        fullText: r.fullText, basis: r.basis ? `Basis: ${r.basis}` : undefined,
+      })),
+      ...gapRows.filter(r => r.objectiveId && blockingObjIds.has(r.objectiveId)).map((r): ActionItem => ({
+        id: r.id, label: r.title, detail: r.group, owner: r.owner, kind: 'gap',
+        severity: r.severity ?? undefined, fullText: r.fullText,
+        basis: r.basis ? `Source: ${r.basis}` : undefined,
+        action: r.expected || (r.owner === 'supplier' ? 'Require the provider to evidence this control.' : 'Implement this control and document the process & evidence.'),
       })),
     ]
   : [];
@@ -454,6 +499,15 @@ const radarDomains = csiObjectives
 
             {/* What to do next — supplier vs internal */}
             <ActionTracks items={csiActionItems} levelLabel="CSL" />
+
+            {riskRegister.length > 0 && (
+              <div class="mb-6 -mt-2">
+                <RiskRegisterExport client:load rows={riskRegister} assessmentId={id!} company={companyName} />
+                <p class="text-xs text-gray-400 mt-1">
+                  Full register: every recommendation with its complete text, owner, and concrete action — vendor clauses to add and internal controls to implement &amp; document.
+                </p>
+              </div>
+            )}
 
             {/* Domain maturity radar */}
             {radarDomains.length >= 3 && (
