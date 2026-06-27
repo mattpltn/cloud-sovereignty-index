@@ -48,8 +48,8 @@ const TRACK = {
     chip: 'bg-emerald-100 text-emerald-700',
   },
   inherent: {
-    title: 'Residual / inherent risk',
-    sub: 'In-country mandates this provider cannot satisfy — mitigate by choosing an in-country/sovereign provider, or accept & document.',
+    title: 'Structural — a tradeoff to decide',
+    sub: 'Not closable with this provider by any clause. Either move the layer to an in-country/sovereign provider, or make a deliberate, documented decision to accept and govern the exposure (data-sensitivity scoping, customer-held keys, exit plan). Lower sovereignty here can be a legitimate risk-based tradeoff — weigh it against security maturity and cost, not in isolation.',
     accent: 'border-amber-200 bg-amber-50',
     head: 'text-amber-900',
     chip: 'bg-amber-100 text-amber-700',
@@ -59,7 +59,7 @@ const TRACK = {
 const ACTION_VERB: Record<ActionOwner, string> = {
   supplier: 'Add to contract: ',
   internal: 'Implement & document: ',
-  inherent: 'Mitigation: ',
+  inherent: 'Decide & document: ',
 };
 
 function Track({ owner, items, levelLabel }: { owner: ActionOwner; items: ActionItem[]; levelLabel: string }) {
@@ -135,7 +135,7 @@ export default function ActionTracks({ items, levelLabel = 'CSL' }: Props) {
     <div className="mb-6">
       <h3 className="text-sm font-semibold text-gray-800 mb-1">What to do next</h3>
       <p className="text-xs text-gray-500 mb-3">
-        Every action below is sorted by who must act — what to require from your provider, what to build in-house, and what can't be closed with this provider.
+        Every action below is sorted by who must act — what to require from your provider, what to build in-house, and where the gap is structural (a deliberate provider/architecture tradeoff to decide, not just a residual risk).
       </p>
       <div className="flex flex-col md:flex-row gap-3">
         <Track owner="supplier" items={supplier} levelLabel={levelLabel} />

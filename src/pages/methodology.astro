@@ -704,6 +704,34 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
           is not binding in itself." The score is an indicative measure. Results depend on the accuracy
           and honesty of responses. No liability is accepted for decisions made based on assessment results.
         </p>
+        <div class="border border-slate-200 bg-slate-50 rounded-lg p-4 text-xs text-slate-700 space-y-2">
+          <p class="font-semibold text-slate-800">Sovereignty is one axis, assessed assuming a security baseline — read the score that way.</p>
+          <p>
+            <strong>Sovereignty ≠ security.</strong> This instrument scores <em>sovereignty</em> (control × jurisdiction
+            per layer) and <em>presupposes</em> a security baseline (BSI&nbsp;C5:2026 or equivalent) that it does not
+            verify. Security and operational maturity are <strong>assumed, not assessed</strong>. A mature external
+            provider may be materially <em>more</em> secure, available, and resilient than an in-house build, so a low
+            sovereignty score is not a verdict on safety. It must be complemented by a security/risk assessment
+            (ISO&nbsp;27001, SOC&nbsp;2, BSI&nbsp;C5), which weighs the same decision on different axes and can point the
+            opposite way — toward the external provider.
+          </p>
+          <p>
+            <strong>In-country / in-house is not automatically sovereign.</strong> The model does not reward localisation
+            per se: supply-chain origin (SOV-5, the heaviest objective) and continuity under coercion (SOV-7) gate a
+            self-built solution exactly as hard as a foreign one. A local operator running foreign hardware and
+            non-exitable foreign licences scores low — location is not control.
+          </p>
+          <p>
+            <strong>Sovereignty is a deliberate, outcome-based tradeoff, not a maximisation target.</strong> Consistent
+            with the World Bank's outcome-based view (Wong, Ng, Reynolds, Satola &amp; Anthony, <em>Moving toward an
+            outcome-based approach for digital sovereignty</em>, June&nbsp;2026), blanket data localisation carries real
+            cost (the World Bank cites OECD evidence of 15–55% higher hosting cost, especially for SMEs) and does not by
+            itself create accountability, which also depends on regulatory and enforcement capacity. The instrument
+            therefore treats <em>accept-and-govern</em> as a first-class outcome: a structural (inherent) gap surfaced
+            against a foreign provider is a risk-based choice to make consciously per the workload's sensitivity — not a
+            defect the tool expects every deployment to close.
+          </p>
+        </div>
         <ul class="list-disc pl-5 space-y-1 text-gray-600 text-xs">
           <li><strong>Fallback question scoring:</strong> Fallback questions (SOV-4-01-FB, SOV-4-09-FB) are hidden in the web questionnaire unless the parent criterion is answered No. If an XLSX import includes answers to fallback questions when the parent is already answered Yes, both are scored — this is intentional (a provider meeting the strict criterion inherently satisfies the fallback) and cannot unfairly inflate scores. Mechanically: unanswered questions are excluded from both numerator and denominator entirely (the scoring engine skips them). When parent=Yes and the FB question also has an answer, both contribute points — but the denominator increases by the same max_score, so the percentage ratio is unchanged. The FB question also carries a lower seal_contribution than its parent, so parent=Yes already satisfies the FB SEAL gate — no gate inflation is possible.</li>
           <li><strong>"Planned" answer:</strong> 25% credit is available only in CSI Composite Generalized mode. It must be backed by a documented artefact. In EU-CSF and C3A modes, "Planned" scores as 0. Roadmap commitments do not satisfy compliance certification requirements.</li>

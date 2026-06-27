@@ -1,6 +1,6 @@
 import type { Question, ControlProfile } from './schema.js';
 import { operatorForLayer, deriveOperatorLabel, isSelfOperated } from './tier-resolution.js';
-import { providerForeign } from './structural-answers.js';
+import { providerForeign, structuralNoIds } from './structural-answers.js';
 
 // ── Action ownership (supplier-management vs internal-improvement) ─────────────
 //
@@ -30,8 +30,16 @@ interface ArchetypeTag { archetype: string; layer: string }
  *     With no profile (offline) the strategic/provider-phrased default is supplier.
  */
 export function actionOwnerForQuestion(q: Question, profile?: ControlProfile | null): ActionOwner {
-  // 0. A criterion the chosen (foreign) provider structurally cannot satisfy → inherent.
+  // 0a. A criterion the chosen (foreign) provider structurally cannot satisfy → inherent.
   if ((q as { foreign_provider_precluded?: boolean }).foreign_provider_precluded && profile && providerForeign(profile)) {
+    return 'inherent';
+  }
+  // 0b. A pure jurisdiction/residency/operations FACT the profile fixes to 'no' (e.g. provider
+  //     domicile, data residence, operating personnel located abroad). You cannot require a
+  //     provider to be domestic via a clause — this is an inherent/residual gap, never a
+  //     supplier contract action. (Closes the "Add to contract: be under {country} jurisdiction"
+  //     defect for foreign providers.)
+  if (profile && structuralNoIds(profile).has(q.id)) {
     return 'inherent';
   }
   const archetypes = (q as { relevance?: { archetypes?: ArchetypeTag[]; layer?: string } }).relevance?.archetypes;

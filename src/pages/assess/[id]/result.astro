@@ -236,7 +236,7 @@ const gapRows: RegisterRow[] = result?.csi_composite
         fullText: d.text, basis: d.source, expected: d.supplementary,
         action:
           owner === 'inherent'
-            ? 'Inherent sovereignty limitation of a global/foreign provider — cannot be added as a provider contract clause. Residual risk: move this layer to an in-country/sovereign provider to close it, or formally accept and document the risk.'
+            ? 'Structural to a global/foreign provider — no contract clause closes it. Decide the tradeoff: move this layer to an in-country/sovereign provider, or make a documented, risk-based decision to accept and govern it (scope by data sensitivity, hold your own keys, keep an exit plan). Weigh this against the provider\'s security maturity and cost — lower sovereignty is not automatically the worse choice.'
             : owner === 'supplier'
               ? `Require the provider to evidence this control (or add a matching contract clause).${d.supplementary ? ` Expected evidence: ${d.supplementary}` : ''}`
               : `Implement this control in-house and document the process and evidence.${d.supplementary ? ` Expected: ${d.supplementary}` : ''}`,
@@ -259,7 +259,7 @@ const csiActionItems: ActionItem[] = result?.csi_composite
         severity: r.severity ?? undefined, fullText: r.fullText,
         basis: r.basis ? `Source: ${r.basis}` : undefined,
         action: r.owner === 'inherent'
-          ? 'Inherent limitation of a global/foreign provider — not a contract clause. Residual risk: use an in-country/sovereign provider for this layer, or accept & document.'
+          ? 'Structural to a global/foreign provider — not a contract clause. Decide the tradeoff: in-country/sovereign provider for this layer, or accept & govern it (data-sensitivity scoping, customer-held keys, exit plan), weighed against security maturity and cost.'
           : r.expected || (r.owner === 'supplier' ? 'Require the provider to evidence this control.' : 'Implement this control and document the process & evidence.'),
       })),
     ]
@@ -521,6 +521,33 @@ const radarDomains = csiObjectives
                 A high coverage % cannot offset a blocking domain — raise the lowest domain(s) to lift the tier.
               </p>
             )}
+
+            {/* How to read this score — sovereignty is one axis, assessed assuming a security baseline */}
+            <div class="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <h3 class="text-sm font-semibold text-slate-800 mb-2">How to read this score</h3>
+              <ul class="text-xs text-slate-600 space-y-1.5 list-disc pl-4">
+                <li>
+                  <strong>This measures sovereignty, not security.</strong> A baseline of security and operational
+                  maturity is <em>assumed, not verified</em> here. A mature external provider may be <em>more</em>
+                  secure and resilient than an in-house build — so a low sovereignty score is not, by itself, a
+                  verdict on safety. Complement this with a security/risk assessment (e.g. BSI&nbsp;C5, ISO&nbsp;27001,
+                  SOC&nbsp;2), which can weight the same tradeoff differently — sometimes in favour of an external provider.
+                </li>
+                <li>
+                  <strong>In-country / in-house does not by itself confer sovereignty.</strong> Supply-chain origin
+                  (SOV-5, the heaviest objective) and continuity-under-coercion (SOV-7) gate a self-built solution
+                  exactly as hard as a foreign one: a local operator running foreign hardware and non-exitable
+                  foreign licences is still exposed. Location is not control.
+                </li>
+                <li>
+                  <strong>Sovereignty is a deliberate, outcome-based tradeoff — not a maximisation target.</strong>
+                  Blanket localisation carries real cost (per the World Bank, 15–55% higher hosting cost for SMEs)
+                  and does not guarantee accountability, which also depends on regulatory and enforcement capacity.
+                  Accepting and governing a structural gap can be the right risk-based decision for a given workload's
+                  sensitivity. Items in the amber track are choices to make consciously, not failures to fix.
+                </li>
+              </ul>
+            </div>
 
             {/* What to do next — supplier vs internal */}
             <ActionTracks items={csiActionItems} levelLabel="CSL" />

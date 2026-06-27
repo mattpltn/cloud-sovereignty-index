@@ -1,6 +1,6 @@
 import type { CriteriaFile, Question, ControlProfile } from '../../shared/src/schema.js';
 import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult } from '../../shared/src/types.js';
-import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
+import { resolvePlaceholders, displayTitle } from '../../shared/src/tier-resolution.js';
 import { buildReport } from '../../shared/src/report.js';
 import { actionOwnerForQuestion, ACTION_OWNER_LABEL, type ActionOwner } from '../../shared/src/action-owner.js';
 import countriesJson from '../../data/countries.json';
@@ -16,18 +16,21 @@ function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string, useN
   for (const obj of criteria.objectives) {
     const q = obj.questions.find((q: Question) => q.id === qid);
     if (!q) continue;
-    // Non-EU CSI mode: prefer the adapted csi_presentation text/title — match the form & web report.
+    // Non-EU CSI mode: titles must use the adapted/Generalized heading (csi_presentation.title →
+    // title_generalized → title) — never the EU-native q.title — to match the form & web report.
+    const title = useNonEu ? displayTitle(q, 'Generalized') : q.title;
+    // Non-EU CSI mode: prefer the adapted csi_presentation text — match the form & web report.
     const nonEu = useNonEu ? (q as any).csi_presentation?.variants?.non_eu : undefined;
     if (nonEu && nonEu.shown !== false && typeof nonEu.text === 'string' && nonEu.text.length > 0) {
       return {
-        title: (q as any).csi_presentation?.title ?? q.title,
+        title,
         source: (q as any).source?.clause ?? (q as any).tiers?.bloc?.source?.clause ?? '',
         text: nonEu.text as string,
         supplementary: q.supplementary_info ?? '',
       };
     }
     if (q.type === 'single') return {
-      title: q.title,
+      title,
       source: q.source?.clause ?? '',
       text: q.text,
       supplementary: q.supplementary_info ?? '',
@@ -35,7 +38,7 @@ function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string, useN
     if (q.type === 'tiered') {
       const tierData = tier === 'national' ? q.tiers.national : q.tiers.bloc;
       return {
-        title: q.title,
+        title,
         source: tierData?.source?.clause ?? '',
         text: tierData?.text ?? '',
         supplementary: q.supplementary_info ?? '',
@@ -668,6 +671,15 @@ export async function buildReportPdf(
               topGap ? h(Text, { style: styles.cardBody }, `Top gap: ${getQuestionTitle(criteria, topGap.question_id)} (${topGap.question_id})`) : null,
             );
           })),
+      h(View, { style: { marginTop: 10, marginBottom: 4 } },
+        h(Text, { style: styles.subSectionTitle }, 'How to read this score'),
+        h(Text, { style: { ...styles.cardBody, marginBottom: 2 } },
+          'Sovereignty, not security. A baseline of security and operational maturity is assumed, not verified here. A mature external provider may be more secure and resilient than an in-house build, so a low sovereignty score is not by itself a verdict on safety — complement it with a security/risk assessment (BSI C5, ISO 27001, SOC 2), which can weight the same tradeoff differently.'),
+        h(Text, { style: { ...styles.cardBody, marginBottom: 2 } },
+          'In-country / in-house is not automatically sovereign. Supply-chain origin (SOV-5) and continuity under coercion (SOV-7) gate a self-built solution as hard as a foreign one: a local operator on foreign hardware and non-exitable foreign licences is still exposed.'),
+        h(Text, { style: styles.cardBody },
+          'Sovereignty is a deliberate, outcome-based tradeoff, not a maximisation target. Blanket localisation carries real cost (World Bank: 15–55% higher hosting cost for SMEs) and does not by itself guarantee accountability. Accepting and governing a structural gap can be the right risk-based decision for a given workload — the residual/inherent items are choices to make consciously, not failures to fix.'),
+      ),
       ...buildGapSection(result.csi_composite.gap_report, 'CSI Composite', 'CSL'),
       // Roadmap to next tier (non-EU only)
       isGeneralized ? h(View, { style: { marginTop: 12 } },

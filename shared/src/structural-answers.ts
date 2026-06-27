@@ -58,12 +58,28 @@ function nameList(layers: LayerId[]): string {
   return layers.map(L => LAYER_NAME[L]).join(', ');
 }
 
-/** Fact resolver over a set of layers: 'yes' iff every layer is domestic. */
+/** Fact resolver over a set of layers: 'yes' iff every layer is domestic (jurisdiction sense:
+ *  non-domestic if foreign-located OR foreign-vendor-operated). Use for CONTROL/operation facts
+ *  (provider domicile, operating personnel, SOC) where a foreign operator defeats the fact. */
 function locatedDomestic(layers: LayerId[], yes: string, noun: string): Resolver {
   return {
     test: (p) => offending(p, layers).length === 0,
     yes,
     no: (p) => `${noun} — a non-domestic jurisdiction applies at the ${nameList(offending(p, layers))} layer.`,
+  };
+}
+
+/** Residency resolver: 'yes' iff every layer is physically in-country — LOCATION ONLY. Data
+ *  residence is a placement fact, not a control fact: a foreign vendor OPERATING an in-country
+ *  layer does not move the bytes abroad (that exposure is captured by the jurisdiction/compelled-
+ *  access criteria, not here). Conflating the two would state the literal falsehood "data is not
+ *  resident" about data that physically sits in-country. */
+function residentDomestic(layers: LayerId[], yes: string, noun: string): Resolver {
+  const offendingLoc = (p: ControlProfile) => layers.filter(L => p[L].location !== 'in_country');
+  return {
+    test: (p) => offendingLoc(p).length === 0,
+    yes,
+    no: (p) => `${noun} is hosted outside the country — the ${nameList(offendingLoc(p))} layer sits in a non-domestic location.`,
   };
 }
 
@@ -78,10 +94,12 @@ const STRUCTURAL_MAP: Record<string, Resolver> = {
   'SOV-1-02': locatedDomestic(SERVICE_LAYERS, 'the operator is established in-country.', 'the operator'),
   'SOV-1-03': locatedDomestic(SERVICE_LAYERS, 'the operating layers are all domestic, so effective control is in-country.', 'effective control of the service'),
 
-  // SOV-3 — data residency: determined by where the data-bearing layers (L2–L4) sit.
-  'SOV-3-01':    locatedDomestic(DATA_LAYERS, 'all data-bearing layers are in-country, so customer data is resident domestically.', 'customer data'),
-  'SOV-3-01-C2': locatedDomestic(DATA_LAYERS, 'all data-bearing layers are in-country, so derived and account data are resident domestically.', 'derived/account data'),
-  'SOV-3-01-C5': locatedDomestic(DATA_LAYERS, 'all data-bearing layers are in-country, so provider data is resident domestically.', 'provider data'),
+  // SOV-3 — data residency: determined by where the data-bearing layers (L2–L4) are LOCATED
+  // (placement, not control: a foreign vendor operating an in-country layer does not move the
+  // bytes — that exposure is the jurisdiction/compelled-access criteria, not residency).
+  'SOV-3-01':    residentDomestic(DATA_LAYERS, 'all data-bearing layers are located in-country, so customer data is resident domestically.', 'customer data'),
+  'SOV-3-01-C2': residentDomestic(DATA_LAYERS, 'all data-bearing layers are located in-country, so derived and account data are resident domestically.', 'derived/account data'),
+  'SOV-3-01-C5': residentDomestic(DATA_LAYERS, 'all data-bearing layers are located in-country, so provider data is resident domestically.', 'provider data'),
 
   // SOV-4 — operating personnel & SOC: determined by the operations layer (L5).
   'SOV-4-01':    locatedDomestic(['L5'], 'operations are run in-country, so operating personnel are local.', 'operating personnel'),
@@ -89,8 +107,8 @@ const STRUCTURAL_MAP: Record<string, Resolver> = {
   'SOV-4-01-FB': locatedDomestic(['L5'], 'privileged personnel operate from in-country.', 'privileged personnel'),
   'SOV-4-04':    locatedDomestic(['L5'], 'the SOC is operated in-country.', 'the security operations centre'),
 
-  // SOV-4-13-CADA — infrastructure & assets location (L1–L4).
-  'SOV-4-13-CADA': locatedDomestic(INFRA_LAYERS, 'all infrastructure and assets are located in-country.', 'service infrastructure and assets'),
+  // SOV-4-13-CADA — infrastructure & assets LOCATION (L1–L4): a placement fact (location only).
+  'SOV-4-13-CADA': residentDomestic(INFRA_LAYERS, 'all infrastructure and assets are located in-country.', 'service infrastructure and assets'),
 };
 
 /** Question ids the engine ALWAYS auto-answers (pure facts, every profile). */
@@ -148,6 +166,19 @@ export function structuralAnswers(profile: ControlProfile, criteria?: CriteriaFi
  *  provider is foreign, the foreign-precluded criteria. */
 export function structuralDroppedIds(profile: ControlProfile, criteria?: CriteriaFile): Set<string> {
   return new Set(structuralAnswers(profile, criteria).map(s => s.questionId));
+}
+
+/** Pure-fact questions the profile fixes to a foregone 'no' (jurisdiction/residency/operations
+ *  location facts). These are structural location/jurisdiction gaps that cannot be closed by a
+ *  contract clause — you cannot require a provider to be domestic — so any gap keyed by one of
+ *  these is an inherent/residual risk, not a supplier action. Pure facts only (no criteria arg);
+ *  the foreign-precluded criteria carry their own `foreign_provider_precluded` flag. */
+export function structuralNoIds(profile: ControlProfile): Set<string> {
+  return new Set(
+    structuralAnswers(profile)
+      .filter(s => s.value === 'no')
+      .map(s => s.questionId)
+  );
 }
 
 /**

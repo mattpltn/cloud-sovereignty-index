@@ -1,6 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import criteriaJson from '../data/criteria.json';
 import type { CriteriaFile, Question } from '../shared/src/schema';
+import { displayTitle } from '../shared/src/tier-resolution';
 
 // Closure invariant for the presentation layer: in CSI-only mode for a NON-EU country, no
 // question that is shown/scored may render EU-native wording ("EU", "EEA", "member state",
@@ -36,5 +37,15 @@ describe('non-EU presentation has no EU bleed', () => {
     const bleeders = csiQ.filter(q => nonEuTexts(q).some(t => EU_TOKEN.test(t)))
       .map(q => `${q.id} ("${q.title}")`);
     expect(bleeders, `these CSI questions leak EU wording to a non-EU user — add a csi_presentation.non_eu variant:\n${bleeders.join('\n')}`).toEqual([]);
+  });
+
+  // TITLES bleed too: the AutoAnswers panel, gap list, risk register and PDF all render the
+  // Generalized title via displayTitle(q,'Generalized'). It must resolve EU-free (csi_presentation
+  // .title → title_generalized → title), or a non-EU report names "EU"/"European" in a heading.
+  test('every CSI-applicable question has an EU-free Generalized title', () => {
+    const csiQ = criteria.objectives.flatMap(o => o.questions).filter(q => (q as { applies_to_csi_composite?: boolean }).applies_to_csi_composite) as Question[];
+    const bleeders = csiQ.filter(q => EU_TOKEN.test(displayTitle(q, 'Generalized')))
+      .map(q => `${q.id} → "${displayTitle(q, 'Generalized')}"`);
+    expect(bleeders, `these CSI titles leak EU wording in Generalized mode — add a csi_presentation.title or title_generalized:\n${bleeders.join('\n')}`).toEqual([]);
   });
 });
