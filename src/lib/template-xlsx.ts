@@ -2,6 +2,7 @@ import type ExcelJS from 'exceljs';
 import type { CriteriaFile, Question } from '../../shared/src/schema.js';
 import { buildProvenance } from '../../shared/src/provenance.js';
 import { buildSheetRefs, toExcelFormula } from '../../shared/src/relevance.js';
+import { displayTitle } from '../../shared/src/tier-resolution.js';
 import sourceRegisterData from '../../data/source-register.json';
 import riskRegisterData from '../../data/risk-register.json';
 
@@ -28,6 +29,26 @@ const QUESTION_RISK_MAP: Map<string, string[]> = (() => {
 })();
 
 interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
+
+// Non-EU (Generalized) adapted body text for a question, mirroring the questionnaire/report
+// presentation layer: csi_presentation.variants.non_eu.text → text_generalized → null (no
+// distinct generalized wording). `excluded` = the question is dropped from non-EU mode entirely
+// (csi_presentation exclude_non_eu), so the template must not present a generalized row for it.
+// The Generalized TITLE always comes from displayTitle(q,'Generalized') (presentation.title →
+// title_generalized → title). This keeps the blank template's non-EU wording identical to what
+// the questionnaire and the result/report path show — the "two parallel paths must agree" rule
+// extended to the third (XLSX) path.
+export function generalizedFor(q: Question): { text: string | null; excluded: boolean } {
+  const pres = (q as { csi_presentation?: { variants?: { non_eu?: { shown?: boolean; text?: string } } } }).csi_presentation;
+  const ne = pres?.variants?.non_eu;
+  if (ne) {
+    if (ne.shown === false) return { text: null, excluded: true };
+    if (typeof ne.text === 'string' && ne.text.length > 0) return { text: ne.text, excluded: false };
+  }
+  const tg = (q as { text_generalized?: string }).text_generalized;
+  if (tg) return { text: tg, excluded: false };
+  return { text: null, excluded: false };
+}
 interface CountriesFile { EU: Country[]; EEA_non_EU: Country[]; non_EU: Country[] }
 
 // EU + EEA country codes — used in both the __eu_codes__ hidden sheet and the parseXlsx fallback
@@ -310,18 +331,28 @@ function addAssessmentSheet(
       const sealEu = (q as Record<string, unknown>).seal_contribution_eu_csf as number | undefined;
       const sealCsi = (q as Record<string, unknown>).seal_contribution_csi as number | undefined;
 
-      if (q.type === 'single') {
-        if (q.text_generalized) {
-          // Emit EU-specific and generalized rows; conditional formatting greys the irrelevant one
-          const euTitle  = q.title;
-          const genTitle = q.title_generalized ?? q.title;
-          const euRow  = ws.addRow([q.id, 'eu_csf',      c3aTier, obj.id, euTitle,  q.text,             '', '', '', '', '', '', '']);
-          applyDataRow(euRow,  q, q.text,             fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
-          const genRow = ws.addRow([q.id, 'generalized', c3aTier, obj.id, genTitle, q.text_generalized, '', '', '', '', '', '', '']);
-          applyDataRow(genRow, q, q.text_generalized, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+      // 'single' and 'tiered_ladder' both carry a flat `text` and score under the bare question id
+      // (the scorer's non-tiered path); only true 'tiered' questions use the bloc/national tiers.
+      if (q.type !== 'tiered') {
+        const qText = (q as { text?: string }).text ?? '';
+        const gen = generalizedFor(q);
+        if (gen.excluded) {
+          // EU-only criterion (e.g. EU-industrial-policy financing): emit the EU row only. It
+          // greys out for a non-EU country, so a non-EU filler cannot answer it → excluded from
+          // scoring, exactly as the questionnaire drops it.
+          const row = ws.addRow([q.id, 'eu_csf', c3aTier, obj.id, q.title, qText, '', '', '', '', '', '', '']);
+          applyDataRow(row, q, qText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+        } else if (gen.text) {
+          // EU-specific and generalized rows; conditional formatting greys the irrelevant one by
+          // country. Generalized text/title come from the presentation layer (csi_presentation
+          // non_eu → text_generalized) so non-EU wording matches the form & report.
+          const euRow  = ws.addRow([q.id, 'eu_csf',      c3aTier, obj.id, q.title, qText,   '', '', '', '', '', '', '']);
+          applyDataRow(euRow,  q, qText,   fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+          const genRow = ws.addRow([q.id, 'generalized', c3aTier, obj.id, displayTitle(q, 'Generalized'), gen.text, '', '', '', '', '', '', '']);
+          applyDataRow(genRow, q, gen.text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
         } else {
-          const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, q.text, '', '', '', '', '', '', '']);
-          applyDataRow(row, q, q.text, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
+          const row = ws.addRow([q.id, 'single', c3aTier, obj.id, q.title, qText, '', '', '', '', '', '', '']);
+          applyDataRow(row, q, qText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', c3aSrc, euFactor, sealEu, sealCsi);
         }
       } else {
         // Always emit both bloc and national rows.
@@ -332,9 +363,16 @@ function addAssessmentSheet(
         applyDataRow(blocRow, q, blocText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', blocC3aSrc, euFactor, sealEu, sealCsi);
 
         if (q.tiers.national) {
-          const natText = q.tiers.national.text;
+          // The national row is the one a non-EU filler answers (the bloc row greys out for a
+          // non-EU country). Use the Generalized title and, where the question carries a re-aimed
+          // non-EU variant, its wording — so the non-EU-visible row matches the questionnaire and
+          // never bleeds EU phrasing (e.g. SOV-1-08, SOV-7-08). Text is display-only; the answer
+          // still scores at the national tier key, so scoring is unchanged.
+          const gen = generalizedFor(q);
+          const natTitle = displayTitle(q, 'Generalized');
+          const natText = gen.text ?? q.tiers.national.text;
           const natC3aSrc = applyC3a ? (q.tiers.national.source.clause.split(' ').pop() ?? '') : '';
-          const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, q.title, natText, '', '', '', '', '', '', '']);
+          const natRow = ws.addRow([q.id, 'national', c3aTier, obj.id, natTitle, natText, '', '', '', '', '', '', '']);
           applyDataRow(natRow, q, natText, fill, c3aTier, applyEuCsf, applyC3a, applyCsi, q.supplementary_info ?? '', natC3aSrc, euFactor, sealEu, sealCsi);
         }
       }
