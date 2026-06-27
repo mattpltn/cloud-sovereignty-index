@@ -46,11 +46,11 @@ const LAYER_NAME: Record<LayerId, string> = {
 };
 
 /** A layer is non-domestic if its location is anything but in-country, or a foreign vendor operates it. */
-function nonDomestic(lc: LayerControl): boolean {
+export function nonDomestic(lc: LayerControl): boolean {
   return lc.location !== 'in_country' || lc.operation === 'foreign_vendor';
 }
 
-function offending(p: ControlProfile, layers: LayerId[]): LayerId[] {
+export function offending(p: ControlProfile, layers: LayerId[]): LayerId[] {
   return layers.filter(L => nonDomestic(p[L]));
 }
 
@@ -93,11 +93,41 @@ const STRUCTURAL_MAP: Record<string, Resolver> = {
   'SOV-4-13-CADA': locatedDomestic(INFRA_LAYERS, 'all infrastructure and assets are located in-country.', 'service infrastructure and assets'),
 };
 
-/** Question ids the engine auto-answers (used by the questionnaire to drop them from the flow). */
+/** Question ids the engine ALWAYS auto-answers (pure facts, every profile). */
 export const STRUCTURAL_QUESTION_IDS: readonly string[] = Object.keys(STRUCTURAL_MAP);
 
-/** Resolve the determined answers for a control profile. */
-export function structuralAnswers(profile: ControlProfile, _criteria?: CriteriaFile): StructuralAnswer[] {
+/** The provider is out-of-country when any operating/service layer (L3–L5) is non-domestic.
+ *  This is the condition under which jurisdiction/location mandates become a foregone 'no'. */
+export function providerForeign(p: ControlProfile): boolean {
+  return offending(p, SERVICE_LAYERS).length > 0;
+}
+
+/** Criteria a foreign provider structurally cannot satisfy (data-flagged). Auto-resolved to
+ *  'no' ONLY when the provider is foreign — an in-country provider is still asked. */
+function foreignPrecludedAnswers(profile: ControlProfile, criteria: CriteriaFile): StructuralAnswer[] {
+  if (!providerForeign(profile)) return [];
+  const reason = "the provider operates outside the assessed country's jurisdiction, so it will not submit to local authority, be compelled by local law, or locate this in-country — a structural gap.";
+  const out: StructuralAnswer[] = [];
+  for (const obj of criteria.objectives) {
+    for (const q of obj.questions) {
+      if (!(q as { foreign_provider_precluded?: boolean }).foreign_provider_precluded) continue;
+      if (STRUCTURAL_MAP[q.id]) continue; // already handled as a pure fact
+      const tiered = q.type === 'tiered' || q.type === 'tiered_ladder';
+      out.push({
+        questionId: q.id,
+        answerKey: tiered ? `${q.id}:bloc` : q.id,
+        tier: tiered ? 'bloc' : 'single',
+        value: 'no',
+        reason,
+      });
+    }
+  }
+  return out;
+}
+
+/** Resolve the determined answers for a control profile (pure facts always; foreign-precluded
+ *  criteria only when the provider is out-of-country and `criteria` is supplied). */
+export function structuralAnswers(profile: ControlProfile, criteria?: CriteriaFile): StructuralAnswer[] {
   const out: StructuralAnswer[] = [];
   for (const [questionId, r] of Object.entries(STRUCTURAL_MAP)) {
     const yes = r.test(profile);
@@ -110,7 +140,14 @@ export function structuralAnswers(profile: ControlProfile, _criteria?: CriteriaF
       reason: yes ? r.yes : r.no(profile),
     });
   }
+  if (criteria) out.push(...foreignPrecludedAnswers(profile, criteria));
   return out;
+}
+
+/** Ids to drop from the questionnaire for this profile: pure-fact structurals plus, when the
+ *  provider is foreign, the foreign-precluded criteria. */
+export function structuralDroppedIds(profile: ControlProfile, criteria?: CriteriaFile): Set<string> {
+  return new Set(structuralAnswers(profile, criteria).map(s => s.questionId));
 }
 
 /**

@@ -47,7 +47,20 @@ const TRACK = {
     head: 'text-emerald-900',
     chip: 'bg-emerald-100 text-emerald-700',
   },
+  inherent: {
+    title: 'Residual / inherent risk',
+    sub: 'In-country mandates this provider cannot satisfy — mitigate by choosing an in-country/sovereign provider, or accept & document.',
+    accent: 'border-amber-200 bg-amber-50',
+    head: 'text-amber-900',
+    chip: 'bg-amber-100 text-amber-700',
+  },
 } as const;
+
+const ACTION_VERB: Record<ActionOwner, string> = {
+  supplier: 'Add to contract: ',
+  internal: 'Implement & document: ',
+  inherent: 'Mitigation: ',
+};
 
 function Track({ owner, items, levelLabel }: { owner: ActionOwner; items: ActionItem[]; levelLabel: string }) {
   const t = TRACK[owner];
@@ -92,7 +105,7 @@ function Track({ owner, items, levelLabel }: { owner: ActionOwner; items: Action
                 {item.fullText && <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">{item.fullText}</p>}
                 {item.action && (
                   <p className="text-xs">
-                    <span className="font-semibold text-gray-700">{owner === 'supplier' ? 'Add to contract: ' : 'Implement & document: '}</span>
+                    <span className="font-semibold text-gray-700">{ACTION_VERB[owner]}</span>
                     <span className="text-gray-600">{item.action}</span>
                   </p>
                 )}
@@ -117,15 +130,17 @@ export default function ActionTracks({ items, levelLabel = 'CSL' }: Props) {
   if (items.length === 0) return null;
   const supplier = items.filter(i => i.owner === 'supplier');
   const internal = items.filter(i => i.owner === 'internal');
+  const inherent = items.filter(i => i.owner === 'inherent');
   return (
     <div className="mb-6">
       <h3 className="text-sm font-semibold text-gray-800 mb-1">What to do next</h3>
       <p className="text-xs text-gray-500 mb-3">
-        Every action below is sorted by who must act — what to require from your provider, and what to build in-house.
+        Every action below is sorted by who must act — what to require from your provider, what to build in-house, and what can't be closed with this provider.
       </p>
       <div className="flex flex-col md:flex-row gap-3">
         <Track owner="supplier" items={supplier} levelLabel={levelLabel} />
         <Track owner="internal" items={internal} levelLabel={levelLabel} />
+        {inherent.length > 0 && <Track owner="inherent" items={inherent} levelLabel={levelLabel} />}
       </div>
     </div>
   );

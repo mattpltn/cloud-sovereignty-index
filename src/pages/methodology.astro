@@ -449,6 +449,13 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
         </p>
 
         <p>
+          For a non-EU (Generalized) assessment these adaptations are applied <strong>identically in the questionnaire and in the result/report</strong>: a
+          question carrying a Generalized variant is shown — and scored — with its adapted, jurisdiction-neutral wording in both places, and a
+          criterion that is EU-industrial-policy-only is excluded from both. The on-screen report, the PDF, and the exported risk register never
+          fall back to the EU-native phrasing for a non-EU country.
+        </p>
+
+        <p>
           All adaptations are documented in the{' '}
           <a href="/methodology/decisions" class="text-blue-600 underline">Decisions Register</a>.
         </p>
@@ -487,8 +494,9 @@ const SOURCE_LINKS: Record<string, Array<{ url: string; label: string }>> = {
               <tr><td class="py-1 pr-3 font-medium">SOV-5-01/02/03-AC</td><td class="py-1 text-slate-600">Documented architectural flexibility to substitute software, hardware, and services (contribution 3 — Additional Criteria)</td></tr>
             </tbody>
           </table>
-          <p class="font-medium mt-2 text-slate-700">Who must act — supplier vs internal</p>
-          <p>Every finding in the report is tagged by <strong>who must act</strong>: <span class="font-medium text-indigo-700">Provider / contract</span> (require it from the provider or negotiate a clause) vs <span class="font-medium text-emerald-700">Internal</span> (a control your own organisation must build and operate). This is derived, not hand-set — from the control archetype and the resolved operator of each layer — so the same reversibility gap is an internal engineering action on a self-run open-source stack but a supplier contract ask against a hyperscaler. The result page leads with a <strong>"What to do next"</strong> summary split into those two tracks, surfacing model procurement-clause templates for the supplier track.</p>
+          <p class="font-medium mt-2 text-slate-700">Who must act — supplier, internal, or inherent</p>
+          <p>Every finding in the report is tagged by <strong>who must act</strong>: <span class="font-medium text-indigo-700">Provider / contract</span> (require it from the provider or negotiate a clause), <span class="font-medium text-emerald-700">Internal</span> (a control your own organisation must build and operate), or <span class="font-medium text-amber-700">Residual / inherent</span>. This is derived, not hand-set — from the control archetype and the resolved operator of each layer — so the same reversibility gap is an internal engineering action on a self-run open-source stack but a supplier contract ask against a hyperscaler. The result page leads with a <strong>"What to do next"</strong> summary split into those tracks, surfacing model procurement-clause templates for the supplier track.</p>
+          <p>The <span class="font-medium text-amber-700">Residual / inherent</span> track exists because some criteria are a <strong>foregone outcome</strong> once scoping says the provider operates out-of-country. A provider outside the assessed jurisdiction will not submit to the national authority, be taken over by the state, resist its own home government, or relocate data, inference, source code, administration, or connectivity in-country. Rather than put these as questions you can only answer "no", the tool <strong>auto-scores them silently and lists them in the transparency panel</strong> — the question is suppressed, never the gap, so the score is unchanged and honest. In the report they appear as residual risk: not a contract clause (telling a hyperscaler to "base a connectivity provider in-country" is not negotiable), but something to close by moving that layer to an in-country/sovereign provider, or to formally accept and document. When the provider <em>is</em> in-country these same criteria are genuinely answerable, so they are asked normally.</p>
           <p class="font-medium mt-2 text-slate-700">What this framework does — and does not — do</p>
           <p>The instrument assesses both the <em>technical</em> reversibility above and the <em>contractual</em> controls that make exit enforceable — data-return SLAs and formats, API portability, termination/notice/transitional periods, data-deletion obligations, and licensing-change notice + no-penalty termination rights (SWIPO TR05). Where a control is missing, the report lists the model procurement clause to require or the internal control to build.</p>
           <p>

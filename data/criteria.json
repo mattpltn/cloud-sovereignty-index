@@ -644,6 +644,7 @@
         {
           "id": "SOV-2-02",
           "title": "Audit Rights",
+          "foreign_provider_precluded": true,
           "type": "tiered",
           "applies_to_eu_csf": false,
           "applies_to_c3a": true,
@@ -716,6 +717,7 @@
         {
           "id": "SOV-2-03",
           "title": "State of Defense Takeover",
+          "foreign_provider_precluded": true,
           "type": "tiered",
           "applies_to_eu_csf": false,
           "applies_to_c3a": true,
@@ -741,6 +743,20 @@
               }
             }
           },
+          "csi_presentation": {
+            "title": "State of Defense Takeover",
+            "treatment": "re_aim",
+            "variants": {
+              "non_eu": {
+                "shown": true,
+                "text": "If {{COUNTRY}} invokes a state of defense or equivalent national-emergency powers, can the provider enable {{NATIONAL_ADMIN}} (or another competent national authority) to take over the capabilities required to operate the cloud — including physical assets and personnel — within the framework of legal possibilities?"
+              },
+              "eu": {
+                "shown": true,
+                "text": "If a {{BLOC}} member state declares a state of defense, can the provider enable that state to take over the capabilities required to operate the cloud (including physical assets and personnel) within the framework of legal possibilities?"
+              }
+            }
+          },
           "supplementary_info": "This usually means that documentation, source code, and administration tools are held in a portable format so that the competent national authority can use them.",
           "c3a_source_id": "SOV-2-03-C1",
           "seal_contribution_eu_csf": 3,
@@ -757,6 +773,7 @@
         {
           "id": "SOV-2-03-CSI",
           "title": "Emergency Takeover — National Constitutional Regime",
+          "foreign_provider_precluded": true,
           "type": "single",
           "applies_to_eu_csf": false,
           "applies_to_c3a": false,
@@ -825,6 +842,7 @@
         {
           "id": "SOV-2-05",
           "title": "Data Access Pathways — Non-EU Authority Compelled Access",
+          "foreign_provider_precluded": true,
           "type": "tiered",
           "applies_to_eu_csf": true,
           "applies_to_c3a": false,
@@ -902,6 +920,7 @@
         {
           "id": "SOV-2-05-CADA",
           "title": "Third-Country Vulnerability Disclosure Prohibition",
+          "foreign_provider_precluded": true,
           "type": "single",
           "applies_to_eu_csf": false,
           "applies_to_c3a": false,
@@ -1732,6 +1751,7 @@
         {
           "id": "SOV-3-AI-02-AC",
           "title": "AI — Inference Location",
+          "foreign_provider_precluded": true,
           "type": "single",
           "applies_to_eu_csf": false,
           "applies_to_c3a": false,
@@ -2084,6 +2104,7 @@
         {
           "id": "SOV-4-02",
           "title": "Remote Work",
+          "foreign_provider_precluded": true,
           "type": "tiered",
           "applies_to_eu_csf": false,
           "applies_to_c3a": true,
@@ -2135,6 +2156,7 @@
         {
           "id": "SOV-4-03",
           "title": "Redundant Connectivity",
+          "foreign_provider_precluded": true,
           "type": "single",
           "applies_to_eu_csf": false,
           "applies_to_c3a": true,
@@ -2473,6 +2495,7 @@
         {
           "id": "SOV-4-09",
           "title": "Disconnect",
+          "foreign_provider_precluded": true,
           "type": "single",
           "applies_to_eu_csf": false,
           "applies_to_c3a": true,
@@ -2544,6 +2567,7 @@
         {
           "id": "SOV-4-10",
           "title": "Reconnect",
+          "foreign_provider_precluded": true,
           "type": "single",
           "applies_to_eu_csf": false,
           "applies_to_c3a": true,
@@ -3064,6 +3088,7 @@
         {
           "id": "SOV-5-05",
           "title": "Capacity Management",
+          "foreign_provider_precluded": true,
           "type": "tiered",
           "applies_to_eu_csf": false,
           "applies_to_c3a": true,
@@ -3414,6 +3439,7 @@
         {
           "id": "SOV-6-01",
           "title": "Source Code Availability",
+          "foreign_provider_precluded": true,
           "type": "single",
           "applies_to_eu_csf": true,
           "applies_to_c3a": true,
@@ -3454,6 +3480,7 @@
         {
           "id": "SOV-6-01-FB1",
           "title": "Source Code — Local Build Capability",
+          "foreign_provider_precluded": true,
           "type": "single",
           "applies_to_eu_csf": false,
           "applies_to_c3a": false,
@@ -4233,6 +4260,7 @@
         {
           "id": "SOV-7-06",
           "title": "Patch Autonomy",
+          "foreign_provider_precluded": true,
           "type": "single",
           "applies_to_eu_csf": true,
           "applies_to_c3a": false,
@@ -4258,6 +4286,7 @@
         {
           "id": "SOV-7-07",
           "title": "Independent EU Audit Capacity",
+          "foreign_provider_precluded": true,
           "title_generalized": "Independent Local Audit Capacity",
           "type": "single",
           "applies_to_eu_csf": true,

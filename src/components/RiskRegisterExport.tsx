@@ -28,7 +28,7 @@ interface Props {
   company?: string;
 }
 
-const OWNER_LABEL: Record<ActionOwner, string> = { supplier: 'Provider / contract', internal: 'Internal' };
+const OWNER_LABEL: Record<ActionOwner, string> = { supplier: 'Provider / contract', internal: 'Internal', inherent: 'Residual / inherent' };
 const KIND_LABEL = { clause: 'Contract clause', gap: 'Control gap' } as const;
 
 const HEADERS = [
@@ -62,6 +62,7 @@ function buildCsv(rows: RegisterRow[]): string {
     '# Cloud Sovereignty Index — Vendor & Internal Risk Register',
     '# "Provider / contract" rows = require from your supplier (clause to add or evidence to demand).',
     '# "Internal" rows = a control your own organisation must implement and document.',
+    '# "Residual / inherent" rows = in-country mandates this provider cannot satisfy; mitigate by choosing an in-country/sovereign provider, or accept & document.',
     '#',
     HEADERS.join(','),
     ...rows.map(r => rowCells(r).map(csvCell).join(',')),
@@ -75,6 +76,7 @@ export default function RiskRegisterExport({ rows, assessmentId, company }: Prop
 
   const supplier = rows.filter(r => r.owner === 'supplier');
   const internal = rows.filter(r => r.owner === 'internal');
+  const inherent = rows.filter(r => r.owner === 'inherent');
   const base = `csi-risk-register-${assessmentId.slice(0, 8)}-${new Date().toISOString().slice(0, 10)}`;
 
   function done(fmt: string) {
@@ -115,6 +117,9 @@ export default function RiskRegisterExport({ rows, assessmentId, company }: Prop
 
     addSheet('Provider & contract', 'Require these from your provider: add the clause to the contract / SLA, or demand the evidence. Negotiable templates.', supplier);
     addSheet('Internal actions', 'Controls your own organisation must implement and document (process, runbook, evidence).', internal);
+    if (inherent.length > 0) {
+      addSheet('Residual & inherent', 'In-country mandates this provider cannot satisfy — not contractable. Mitigate by choosing an in-country/sovereign provider, or formally accept and document the residual risk.', inherent);
+    }
 
     const buf = await wb.xlsx.writeBuffer();
     downloadBlob(buf, `${base}.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -126,7 +131,7 @@ export default function RiskRegisterExport({ rows, assessmentId, company }: Prop
       <span className="text-sm text-gray-600">Risk register:</span>
       <button onClick={exportXlsx}
         className="text-sm px-3 py-1.5 border border-gray-300 rounded-lg hover:border-gray-500 transition">
-        XLSX ({supplier.length} provider · {internal.length} internal)
+        XLSX ({supplier.length} provider · {internal.length} internal{inherent.length > 0 ? ` · ${inherent.length} residual` : ''})
       </button>
       <button onClick={exportCsv}
         className="text-sm px-3 py-1.5 border border-gray-300 rounded-lg hover:border-gray-500 transition">

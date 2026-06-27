@@ -3,18 +3,29 @@ import type { AssessmentResult, EuCsfObjectiveResult, CsiObjectiveResult } from 
 import { resolvePlaceholders } from '../../shared/src/tier-resolution.js';
 import { buildReport } from '../../shared/src/report.js';
 import { actionOwnerForQuestion, ACTION_OWNER_LABEL, type ActionOwner } from '../../shared/src/action-owner.js';
+import countriesJson from '../../data/countries.json';
 
-const OWNER_HEX: Record<ActionOwner, string> = { supplier: '#4f46e5', internal: '#059669' };
+const OWNER_HEX: Record<ActionOwner, string> = { supplier: '#4f46e5', internal: '#059669', inherent: '#d97706' };
 
 interface Country { code: string; name: string; adj?: string; national_admin_label?: string; emergency_regime?: string }
 
 const SEAL_LABELS = ['No Sovereignty', 'Minimal Sovereignty', 'Partial Sovereignty', 'Substantial Sovereignty', 'Full Digital Sovereignty'];
 const SEAL_COLORS_HEX = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
 
-function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string) {
+function getQuestionMeta(criteria: CriteriaFile, qid: string, tier: string, useNonEu = false) {
   for (const obj of criteria.objectives) {
     const q = obj.questions.find((q: Question) => q.id === qid);
     if (!q) continue;
+    // Non-EU CSI mode: prefer the adapted csi_presentation text/title — match the form & web report.
+    const nonEu = useNonEu ? (q as any).csi_presentation?.variants?.non_eu : undefined;
+    if (nonEu && nonEu.shown !== false && typeof nonEu.text === 'string' && nonEu.text.length > 0) {
+      return {
+        title: (q as any).csi_presentation?.title ?? q.title,
+        source: (q as any).source?.clause ?? (q as any).tiers?.bloc?.source?.clause ?? '',
+        text: nonEu.text as string,
+        supplementary: q.supplementary_info ?? '',
+      };
+    }
     if (q.type === 'single') return {
       title: q.title,
       source: q.source?.clause ?? '',
@@ -256,6 +267,15 @@ export async function buildReportPdf(
   const tierCtx = { variant: result.variant, country: country as Parameters<typeof resolvePlaceholders>[1]['country'] };
   function resolve(text: string): string { return resolvePlaceholders(text, tierCtx); }
 
+  // Match the questionnaire/web-report presentation gate: CSI-only mode + non-EU country
+  // renders the adapted non_eu wording, never the EU-native text. (CLAUDE.md "two paths agree".)
+  const fwSet = new Set(result.selected_frameworks ?? []);
+  const isCsiMode = fwSet.has('csi_composite') && !fwSet.has('eu_csf') && !fwSet.has('c3a') && !fwSet.has('cada');
+  const isEuCountry = country
+    ? countriesJson.EU.some(c => c.code === country.code) || countriesJson.EEA_non_EU.some(c => c.code === country.code)
+    : false;
+  const useNonEuPresentation = isCsiMode && !isEuCountry;
+
   function buildGapSection(
     gaps: Array<{ objective_id: string; question_id: string; tier: string; gap_score: number; seal_contribution?: number }>,
     sectionLabel: string,
@@ -268,7 +288,7 @@ export async function buildReportPdf(
         ? h(Text, { style: styles.bodyText }, 'No improvement areas identified.')
         : h(View, {},
             ...topGaps.map((gap, i) => {
-              const meta = getQuestionMeta(criteria, gap.question_id, gap.tier);
+              const meta = getQuestionMeta(criteria, gap.question_id, gap.tier, useNonEuPresentation);
               const rawText = resolve(meta.text);
               const rawSupp = resolve(meta.supplementary);
               const sealColor = gap.seal_contribution != null ? (SEAL_COLORS_HEX[gap.seal_contribution] ?? '#6b7280') : '#6b7280';

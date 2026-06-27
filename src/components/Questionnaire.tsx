@@ -4,9 +4,7 @@ import type { CriteriaFile, Country, Question, ControlProfile } from '../../shar
 import type { AnswerMap, EvidenceLevel } from '../../shared/src/types.js';
 import { setAnswer, flushNow, readCache, writeCache } from '../lib/local-cache.js';
 import { evaluate, isQuestionApplicable } from '../../shared/src/relevance.js';
-import { STRUCTURAL_QUESTION_IDS, structuralAnswers } from '../../shared/src/structural-answers.js';
-
-const STRUCTURAL_IDS = new Set(STRUCTURAL_QUESTION_IDS);
+import { structuralAnswers, structuralDroppedIds } from '../../shared/src/structural-answers.js';
 
 const EVIDENCE_LEVEL_LABELS: Record<EvidenceLevel, string> = {
   self_declared: 'Self-declared',
@@ -157,8 +155,11 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   // Typed answers with structural auto-answers (jurisdiction/residency/operator) merged
   // underneath, so applicability_condition / parent gating resolve against the same facts
   // the scorer sees. Manual answers always win.
+  // Ids auto-resolved for this profile (pure facts always; foreign-precluded criteria when the
+  // provider is out-of-country) — dropped from the form and surfaced in the review panel.
+  const droppedIds = controlProfile ? structuralDroppedIds(controlProfile, criteria) : new Set<string>();
   const effectiveAnswers: AnswerMap = controlProfile
-    ? structuralAnswers(controlProfile).reduce<AnswerMap>(
+    ? structuralAnswers(controlProfile, criteria).reduce<AnswerMap>(
         (acc, sa) => {
           if (acc[sa.answerKey] == null) acc[sa.answerKey] = { tier: sa.tier, value: sa.value };
           return acc;
@@ -183,7 +184,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
     // residency, operator location) and surfaced on the review page — never asked here.
     // This applies to EVERY framework: a foreign provider is foreign whether you score it
     // against CSI, EU-CSF, C3A, or CADA, so these in-country facts are not put to the user.
-    if (controlProfile && STRUCTURAL_IDS.has(q.id)) return false;
+    if (controlProfile && droppedIds.has(q.id)) return false;
     // EU exclusion: csi_presentation.treatment=exclude_non_eu hides question for non-EU countries
     const isCsiMode = fw.has('csi_composite') && !fw.has('eu_csf') && !fw.has('c3a') && !fw.has('cada');
     if (isCsiMode) {
@@ -287,7 +288,7 @@ export default function Questionnaire({ id, objectiveId, criteria, country, vari
   // (ScopeFindings → unaskedFiredRisks) — never silently dropped, never per-objective.
   const scopeHiddenQuestions = isCsiMode && controlProfile
     ? objective.questions.filter(q => {
-        if (STRUCTURAL_IDS.has(q.id)) return false; // auto-answered → shown in the review panel
+        if (droppedIds.has(q.id)) return false; // auto-answered → shown in the review panel
         const showWhen: string | undefined = (q as any).relevance?.show_when;
         return showWhen ? !evaluate(showWhen, controlProfile) : false;
       })

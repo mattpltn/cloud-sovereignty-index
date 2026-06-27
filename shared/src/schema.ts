@@ -65,6 +65,15 @@ const QuestionBaseSchema = z.object({
   lmic_rationale: z.string().optional(),
   lmic_axis: z.enum(['autonomy', 'assurance', 'both', 'none']).optional(),
   evidence_status_required: z.enum(['demonstrated', 'documented', 'any']).optional(),
+  // A criterion an OUT-OF-COUNTRY provider structurally cannot satisfy: it requires the
+  // provider to submit to local jurisdiction/authority, be taken over by the state, resist
+  // its own home government, or locate data/inference/source/ops in-country (e.g. "inference
+  // exclusively within {{BLOC}}", "national authority audit", "non-{{BLOC}} compelled access").
+  // When the provider is foreign (operating layers non-domestic) this is a foregone 'no':
+  // auto-scored silently, dropped from the form, shown as inherent/residual in the report.
+  // Conditional on the profile — an in-country provider is still asked. See structural-answers.ts
+  // and action-owner.ts.
+  foreign_provider_precluded: z.boolean().optional(),
   // Relevance layer (CSI/LMIC mode only — controls show/hide per control profile)
   relevance: z.object({
     layer: z.enum(['L1', 'L2', 'L3', 'L4', 'L5', 'L6']).optional(),

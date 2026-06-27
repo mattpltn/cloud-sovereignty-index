@@ -113,6 +113,17 @@ const assessedAt = rawDate
 const allCountries = [...countriesJson.EU, ...countriesJson.EEA_non_EU, ...countriesJson.non_EU];
 const country = countryCode ? allCountries.find(c => c.code === countryCode) : undefined;
 
+// Presentation-layer gate (mirrors Questionnaire.tsx): in CSI-only mode for a non-EU country,
+// questions are rendered via their csi_presentation.variants.non_eu text — NOT the EU-native
+// `text`. The report path must agree with the form path, or non-EU reports leak EU wording
+// ("within the EU", "non-EU", "member state"). See CLAUDE.md invariant "two parallel paths".
+const selectedFw = new Set(result?.selected_frameworks ?? []);
+const isCsiMode = selectedFw.has('csi_composite') && !selectedFw.has('eu_csf') && !selectedFw.has('c3a') && !selectedFw.has('cada');
+const isEu = countryCode
+  ? countriesJson.EU.some(c => c.code === countryCode) || countriesJson.EEA_non_EU.some(c => c.code === countryCode)
+  : false;
+const useNonEuPresentation = isCsiMode && !isEu;
+
 interface HistoryEntry { id: number; submitted_at: string; seal_level: number; overall_score: number }
 const history = (record?.history as HistoryEntry[]) ?? [];
 
@@ -157,6 +168,7 @@ const ownerForQuestionId = (qid?: string): ActionOwner =>
 const OWNER_PILL: Record<ActionOwner, { label: string; cls: string }> = {
   supplier: { label: ACTION_OWNER_LABEL.supplier, cls: 'bg-indigo-100 text-indigo-700' },
   internal: { label: ACTION_OWNER_LABEL.internal, cls: 'bg-emerald-100 text-emerald-700' },
+  inherent: { label: ACTION_OWNER_LABEL.inherent, cls: 'bg-amber-100 text-amber-700' },
 };
 const LAYER_NAMES: Record<string, string> = {
   L1: 'Facility', L2: 'Hardware', L3: 'Virtualization', L4: 'Managed/PaaS', L5: 'Operations', L6: 'Consumption',
@@ -172,6 +184,14 @@ function gapDetail(qid: string, tier: string): { title: string; text: string; su
   const v = variant as 'EU-CSF' | 'Generalized';
   if (!q) return { title: qid, text: '', supplementary: '', source: '' };
   const src = (s?: { doc?: string; clause?: string }) => s ? `${s.doc ?? ''} ${s.clause ?? ''}`.trim() : '';
+  // Non-EU CSI mode: prefer the adapted csi_presentation text/title (and its placeholders)
+  // over the EU-native wording, exactly as the questionnaire renders it.
+  const pres = useNonEuPresentation ? (q as any).csi_presentation : undefined;
+  const nonEu = pres?.variants?.non_eu;
+  const presTitle = pres?.title as string | undefined;
+  if (nonEu && nonEu.shown !== false && typeof nonEu.text === 'string' && nonEu.text.length > 0) {
+    return { title: presTitle ?? displayTitle(q, v), text: resolvePlaceholders(nonEu.text, ctx), supplementary: q.supplementary_info ?? '', source: src((q as any).source ?? (q as any).tiers?.bloc?.source) };
+  }
   if (q.type === 'single') {
     return { title: displayTitle(q, v), text: resolvePlaceholders((q as any).text ?? '', ctx), supplementary: q.supplementary_info ?? '', source: src((q as any).source) };
   }
@@ -214,9 +234,12 @@ const gapRows: RegisterRow[] = result?.csi_composite
         owner, kind: 'gap', group: obj?.title ?? g.objective_id, objectiveId: g.objective_id,
         id: g.question_id, title: d.title, severity: g.seal_contribution ?? obj?.csl ?? null,
         fullText: d.text, basis: d.source, expected: d.supplementary,
-        action: owner === 'supplier'
-          ? `Require the provider to evidence this control (or add a matching contract clause).${d.supplementary ? ` Expected evidence: ${d.supplementary}` : ''}`
-          : `Implement this control in-house and document the process and evidence.${d.supplementary ? ` Expected: ${d.supplementary}` : ''}`,
+        action:
+          owner === 'inherent'
+            ? 'Inherent sovereignty limitation of a global/foreign provider — cannot be added as a provider contract clause. Residual risk: move this layer to an in-country/sovereign provider to close it, or formally accept and document the risk.'
+            : owner === 'supplier'
+              ? `Require the provider to evidence this control (or add a matching contract clause).${d.supplementary ? ` Expected evidence: ${d.supplementary}` : ''}`
+              : `Implement this control in-house and document the process and evidence.${d.supplementary ? ` Expected: ${d.supplementary}` : ''}`,
       };
     })
   : [];
@@ -235,7 +258,9 @@ const csiActionItems: ActionItem[] = result?.csi_composite
         id: r.id, label: r.title, detail: r.group, owner: r.owner, kind: 'gap',
         severity: r.severity ?? undefined, fullText: r.fullText,
         basis: r.basis ? `Source: ${r.basis}` : undefined,
-        action: r.expected || (r.owner === 'supplier' ? 'Require the provider to evidence this control.' : 'Implement this control and document the process & evidence.'),
+        action: r.owner === 'inherent'
+          ? 'Inherent limitation of a global/foreign provider — not a contract clause. Residual risk: use an in-country/sovereign provider for this layer, or accept & document.'
+          : r.expected || (r.owner === 'supplier' ? 'Require the provider to evidence this control.' : 'Implement this control and document the process & evidence.'),
       })),
     ]
   : [];

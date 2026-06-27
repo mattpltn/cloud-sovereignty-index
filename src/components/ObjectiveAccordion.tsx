@@ -42,6 +42,7 @@ interface Props {
 const OWNER_PILL_CLS = {
   supplier: 'bg-indigo-100 text-indigo-700',
   internal: 'bg-emerald-100 text-emerald-700',
+  inherent: 'bg-amber-100 text-amber-700',
 } as const;
 
 const SEAL_COLORS = ['#dc2626', '#f97316', '#eab308', '#22c55e', '#16a34a'];
